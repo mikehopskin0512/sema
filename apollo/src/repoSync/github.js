@@ -54,7 +54,7 @@ export default function createGitHubImporter(octokit) {
 
 async function createNewSmartComment({ githubComment, pullRequest }) {
   const type = getType(githubComment);
-  const text = githubComment.body;
+  const text = removeSemaSignature(githubComment.body);
   const { id } = githubComment;
   const { repo } = pullRequest.base;
   const githubMetadata = {
@@ -152,4 +152,11 @@ async function findDuplicate(githubComment, otherComments) {
   const existing = candidates[bestMatchIndex];
 
   return await SmartComment.findById(existing._id);
+}
+
+function removeSemaSignature(text) {
+  return text
+    ?.trim()
+    .replace(/__(\r)?\n\[!\[sema-logo\].*/im, '')
+    .trim();
 }

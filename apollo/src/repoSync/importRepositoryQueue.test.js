@@ -317,9 +317,7 @@ describe('Import Repository Queue', () => {
         });
 
         it('should have comment body', () => {
-          expect(comment.comment).toBe(
-            'Test \r\n\r\n__\r\n[![sema-logo](https://app.semasoftware.com/img/sema-tray-logo.svg)](http://semasoftware.com/gh) &nbsp;**Summary:** :trophy: This code is awesome&nbsp; | &nbsp;**Tags:** Fault-tolerant\r\n'
-          );
+          expect(comment.comment).toBe('Test');
         });
 
         it('should have no tags', () => {
@@ -1098,6 +1096,70 @@ describe('Import Repository Queue', () => {
           it('should not have sync error message', () => {
             expect(repository.sync.error).toBeFalsy();
           });
+        });
+      });
+    });
+
+    describe('importing a comment created using the Chrome extension', () => {
+      beforeAll(async () => {
+        resetNocks();
+        await SmartComment.deleteMany();
+        repository.sync = {};
+        await repository.save();
+      });
+
+      beforeAll(() => {
+        const firstComment = getFirstPageOfPullRequestComments()[0];
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, [
+            {
+              ...firstComment,
+              body: 'LGTM \r\n\r\n__\r\n[![sema-logo](https://app.semasoftware.com/img/sema-tray-logo.svg)](http://semasoftware.com/gh) &nbsp;**Summary:** :trophy: This code is awesome&nbsp; | &nbsp;**Tags:** Fault-tolerant\r\n',
+            },
+          ]);
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query(() => true)
+          .reply(200, []);
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls')
+          .query(() => true)
+          .reply(200, []);
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/3')
+          .reply(200, getPullRequestDetailPR3());
+      });
+
+      beforeAll(async () => {
+        await handler({ id: repository.id });
+      });
+
+      beforeAll(async () => {
+        comments = await findSmartCommentsByExternalId(repository.externalId);
+      });
+
+      describe('imported comment', () => {
+        let comment;
+
+        beforeAll(() => {
+          comment = comments.find(
+            (c) => c.githubMetadata.type === 'pullRequestComment'
+          );
+        });
+
+        it('should trim the Sema signature', () => {
+          expect(comment.comment).toBe('LGTM');
         });
       });
     });
