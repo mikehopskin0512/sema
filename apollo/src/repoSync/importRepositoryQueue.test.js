@@ -1116,7 +1116,10 @@ describe('Import Repository Queue', () => {
           .reply(200, [
             {
               ...firstComment,
-              body: 'LGTM \r\n\r\n__\r\n[![sema-logo](https://app.semasoftware.com/img/sema-tray-logo.svg)](http://semasoftware.com/gh) &nbsp;**Summary:** :trophy: This code is awesome&nbsp; | &nbsp;**Tags:** Fault-tolerant\r\n',
+              // Intentionally including ":throphy:" here
+              // to verify that we get the reaction from the
+              // right place.
+              body: 'LGTM :trophy:\r\n\r\n__\r\n[![sema-logo](https://app.semasoftware.com/img/sema-tray-logo.svg)](http://semasoftware.com/gh) &nbsp;**Summary:** :ok_hand: This code looks good&nbsp; | &nbsp;**Tags:** Fault-tolerant, Maintainable\r\n',
             },
           ]);
       });
@@ -1159,7 +1162,18 @@ describe('Import Repository Queue', () => {
         });
 
         it('should trim the Sema signature', () => {
-          expect(comment.comment).toBe('LGTM');
+          expect(comment.comment).toBe('LGTM :trophy:');
+        });
+
+        it('should have tags', () => {
+          expect(comment.tags.map((id) => id.toString())).toEqual([
+            '607f0594ab1bc1aecbe2ce55',
+            '607f0594ab1bc1aecbe2ce57',
+          ]);
+        });
+
+        it('should have reaction', () => {
+          expect(comment.reaction).toEqualID('607f0d1ed7f45b000ec2ed72');
         });
       });
     });
@@ -2151,7 +2165,7 @@ function getFirstPageOfIssueComments() {
       created_at: '2022-05-18T13:21:37Z',
       updated_at: '2022-05-18T13:21:37Z',
       author_association: 'CONTRIBUTOR',
-      body: 'Test \r\n\r\n__\r\n[![sema-logo](https://app.semasoftware.com/img/sema-tray-logo.svg)](http://semasoftware.com/gh) &nbsp;**Summary:** :trophy: This code is awesome&nbsp; | &nbsp;**Tags:** Fault-tolerant\r\n',
+      body: 'Test',
       reactions: {
         'url':
           'https://api.github.com/repos/Semalab/phoenix/issues/comments/1130011291/reactions',
@@ -2188,7 +2202,7 @@ function getFirstPageOfIssueComments() {
       created_at: '2022-05-18T13:21:07Z',
       updated_at: '2022-05-18T13:21:07Z',
       author_association: 'CONTRIBUTOR',
-      body: 'Test\r\n\r\n__\r\n[![sema-logo](https://app.semasoftware.com/img/sema-tray-logo.svg)](http://semasoftware.com/gh) &nbsp;**Tags:** Not maintainable\r\n',
+      body: 'Test',
       reactions: {
         'url':
           'https://api.github.com/repos/Semalab/phoenix/issues/comments/1130010655/reactions',

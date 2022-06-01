@@ -1,10 +1,15 @@
+import assert from 'assert';
 import Cache from 'caching-map';
 import { findBestMatch } from 'string-similarity';
 import logger from '../shared/logger';
 import * as jaxon from '../shared/apiJaxon';
-import { findOneByTitle as findReactionByTitle } from '../comments/reaction/reactionService';
+import {
+  findOneByTitle as findReactionByTitle,
+  findById as findReactionById,
+} from '../comments/reaction/reactionService';
 import { findOneByLabel as findTagByLabel } from '../comments/tags/tagService';
 import SmartComment from '../comments/smartComments/smartCommentModel';
+import { EMOJIS } from '../comments/suggestedComments/constants';
 
 export default function createGitHubImporter(octokit) {
   const commentsWithoutID = new Cache(10);
@@ -54,7 +59,7 @@ export default function createGitHubImporter(octokit) {
 
 async function createNewSmartComment({ githubComment, pullRequest }) {
   const type = getType(githubComment);
-  const text = removeSemaSignature(githubComment.body);
+  const text = githubComment.body;
   const { id } = githubComment;
   const { repo } = pullRequest.base;
   const githubMetadata = {
@@ -78,8 +83,9 @@ async function createNewSmartComment({ githubComment, pullRequest }) {
     getReaction(text),
   ]);
 
+  const sanitizedText = removeSemaSignature(text);
   return await SmartComment.findOrCreate({
-    comment: text,
+    comment: sanitizedText,
     githubMetadata,
     reaction: reaction?._id,
     tags: tags.map((t) => t._id),
@@ -92,7 +98,9 @@ async function createNewSmartComment({ githubComment, pullRequest }) {
 }
 
 async function getTags(text) {
-  const textTags = await jaxon.getTags(text);
+  const textTags = looksLikeSemaComment(text)
+    ? extractTagsFromSemaComment(text)
+    : await jaxon.getTags(text);
   const tags = await Promise.all(
     textTags.map((tag) => findTagByLabel(tag, 'smartComment'))
   );
@@ -100,6 +108,9 @@ async function getTags(text) {
 }
 
 async function getReaction(text) {
+  if (looksLikeSemaComment(text))
+    return await extractReactionFromSemaComment(text);
+
   const [textReaction] = await jaxon.getSummaries(text);
   if (textReaction) {
     return await findReactionByTitle(textReaction);
@@ -135,8 +146,7 @@ async function findDuplicate(githubComment, otherComments) {
     .sort((a, b) => timeDifference(a) - timeDifference(b));
 
   if (candidates.length === 0) {
-    const looksLikeSemaComment = githubComment.body.includes('[![sema-logo]');
-    if (looksLikeSemaComment) {
+    if (looksLikeSemaComment(githubComment.body)) {
       logger.warn(
         'This looks like a Sema comment, yet could not match it to a smart comment in our database',
         githubComment
@@ -155,8 +165,48 @@ async function findDuplicate(githubComment, otherComments) {
 }
 
 function removeSemaSignature(text) {
-  return text
-    ?.trim()
-    .replace(/__(\r)?\n\[!\[sema-logo\].*/im, '')
-    .trim();
+  const [body] = splitSemaComment(text);
+  return body;
+}
+
+function splitSemaComment(text) {
+  const [rawBody, rawSignature] = text.split(
+    /__\r?\n\[!\[sema-logo\].*?&nbsp;/im
+  );
+
+  if (rawSignature) {
+    const signature = rawSignature
+      .replace(/&nbsp;/g, ' ')
+      .replace(/\*\*/g, '')
+      .trim();
+    const body = rawBody.trimEnd();
+    return [body, signature];
+  }
+
+  return [rawBody];
+}
+
+function looksLikeSemaComment(text) {
+  return text.includes('[![sema-logo]');
+}
+
+function extractTagsFromSemaComment(text) {
+  const [, signature] = splitSemaComment(text);
+  return (
+    signature
+      .match(/Tags:(.*)$/im)?.[1]
+      .split(',')
+      .map((s) => s.trim()) ?? []
+  );
+}
+
+async function extractReactionFromSemaComment(text) {
+  const [, signature] = splitSemaComment(text);
+  const emoji = EMOJIS.find((e) => signature.includes(e.github_emoji));
+  if (emoji) {
+    const reaction = await findReactionById(emoji._id);
+    assert(reaction, `Expected to find reaction with ID ${emoji._id}`);
+    return reaction;
+  }
+  return null;
 }

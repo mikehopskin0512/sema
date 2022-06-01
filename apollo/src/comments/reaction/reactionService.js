@@ -31,3 +31,6 @@ export const findOneByTitle = async (title) => {
   const regexp = new RegExp(`^${escapeRegExp(title)}$`, 'i');
   return await Reaction.findOne({ title: regexp, isActive: true });
 };
+
+export const findById = async (_id) =>
+  await Reaction.findOne({ _id, isActive: true });
