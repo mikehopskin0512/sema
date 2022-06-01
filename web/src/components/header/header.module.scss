@@ -39,7 +39,7 @@
   &:hover {
     background-color: $gray-300;
     svg {
-      fill: $blue-700;
+      fill: $blue-700 !important;
     }
   }
 }
