@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import { range } from 'lodash';
 import usePermission from '../../../hooks/usePermission';
 import RepoCard from '../repoCard';
 import TeamReposList from '../../../components/teamReposList';
 import RepoTable from '../repoTable';
 import styles from './repoList.module.scss';
-import { ListIcon, GridIcon, PlusIcon, FilterBarsIcon, SearchIcon } from '../../Icons';
+import repoStyles from '../repoCard/repoCard.module.scss';
+import { FilterBarsIcon, GridIcon, ListIcon, PlusIcon, SearchIcon } from '../../Icons';
 import { triggerAlert } from '../../../state/features/alerts/actions';
 import { fetchTeamRepos } from '../../../state/features/teams/actions';
 import { updateTeamRepositories } from '../../../state/features/teams/operations';
@@ -16,6 +18,7 @@ import { getCommentsCountLastMonth } from '../../../utils/codeStats';
 import InputField from '../../../components/inputs/InputField';
 import { blue700 } from '../../../../styles/_colors.module.scss';
 import { alertOperations } from '../../../state/features/alerts';
+import RepoSkeleton from '../../../components/skeletons/repoSkeleton';
 
 const LIST_TYPE = {
   FAVORITES: 'Favorite Repos',
@@ -37,6 +40,7 @@ const RepoList = ({
   onSearchChange,
   search,
   withSearch,
+  isLoaded
 }) => {
   const dispatch = useDispatch();
   const { token, selectedTeam } = useSelector((state) => state.authState);
@@ -180,7 +184,19 @@ const RepoList = ({
         </div>
         {view === 'grid' ? (
           <div className="is-flex is-flex-wrap-wrap is-align-content-stretch">
-            {renderCards(filteredRepos)}
+            {!isLoaded ? range(9).map(_ => (
+              <div
+                className={clsx(
+                  'p-10 is-flex is-flex-grow-1 is-clickable',
+                  repoStyles['card-width-3c'],
+                )}
+                aria-hidden
+              >
+                <div className={repoStyles['repo-skeleton-background']}>
+                  <RepoSkeleton />
+                </div>
+              </div>
+            )) : renderCards(filteredRepos)}
           </div>
         ) : null}
         {view === 'list' ? (
@@ -193,10 +209,12 @@ const RepoList = ({
 
 RepoList.defaultProps = {
   repos: [],
+  isLoaded: true
 };
 
 RepoList.propTypes = {
   type: PropTypes.string.isRequired,
+  isLoaded: PropTypes.bool
   // Repos model isn't currently updated in RepoType
   // repos: PropTypes.arrayOf(
   //  PropTypes.exact(RepoType),
