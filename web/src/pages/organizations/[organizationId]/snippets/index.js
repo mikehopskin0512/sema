@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import withLayout from '../../../../components/layout';
 import { OrganizationDashboardHelmet } from '../../../../components/utils/Helmet';
-import withSelectedOrganization from '@/components/auth/withSelectedOrganization';
+import withSelectedOrganization from '../../../../components/auth/withSelectedOrganization';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import { getCollectionById } from '../../../../state/features/comments/actions';
 

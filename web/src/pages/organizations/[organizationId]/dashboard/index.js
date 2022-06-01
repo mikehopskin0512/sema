@@ -9,7 +9,7 @@ import { OrganizationDashboardHelmet } from '../../../../components/utils/Helmet
 import { PATHS, SEMA_FAQ_SLUGS, SEMA_INTERCOM_FAQ_URL } from '../../../../utils/constants';
 import styles from './dashboard.module.scss';
 import { organizationsOperations } from '../../../../state/features/organizations[new]';
-import withSelectedOrganization from '@/components/auth/withSelectedOrganization';
+import withSelectedOrganization from '../../../../components/auth/withSelectedOrganization';
 import OnboardingModal from '../../../../components/onboarding/onboardingModal';
 import useLocalStorage from '../../../../hooks/useLocalStorage';
 import { authOperations } from '../../../../state/features/auth';
