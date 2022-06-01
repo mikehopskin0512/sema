@@ -6,7 +6,11 @@ import yaml from 'yamljs';
 import path from 'path';
 import logger from '../../shared/logger';
 import { github, orgDomain, version } from '../../config';
-import { getProfile, getUserEmails } from './utils';
+import {
+  getProfile,
+  getUserEmails,
+  getRepositoriesForAuthenticatedUser,
+} from './utils';
 import {
   findByUsernameOrIdentity,
   updateIdentity,
@@ -154,6 +158,23 @@ export default (app) => {
       console.log('Error ', error);
     }
     return res.redirect(`${orgDomain}/dashboard`);
+  });
+
+  route.get('/repositories/:token', async (req, res) => {
+    try {
+      const { token } = req.params;
+      const { perPage, page } = req.query;
+      const repositories = await getRepositoriesForAuthenticatedUser(
+        token,
+        perPage,
+        page
+      );
+
+      return res.status(200).json(repositories);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
   });
 
   // Swagger route

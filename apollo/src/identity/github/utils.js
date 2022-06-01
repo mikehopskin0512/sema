@@ -54,3 +54,29 @@ export const getRepositoryList = async (token) => {
   const { data } = await octokit.request('GET /user/repos');
   return data;
 };
+
+export const getRepositoriesForAuthenticatedUser = async (
+  token,
+  perPage = 100,
+  page = 1
+) => {
+  const octokit = new Octokit({ auth: `token ${token}` });
+  const { data } = await octokit.repos.listForAuthenticatedUser({
+    per_page: perPage,
+    page,
+  });
+
+  const repositories =
+    data && data.length
+      ? data.map((repoData) => ({
+          repoId: repoData.id,
+          repoName: repoData.name,
+          description: repoData.description,
+          organizationId: repoData.owner?.id,
+          organizationName: repoData.owner?.login,
+          isPrivate: repoData.private,
+        }))
+      : [];
+
+  return repositories;
+};
