@@ -18,6 +18,17 @@ components:
       bearerFormat: JWT
 
   schemas:
+    Organization:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        avatarUrl:
+          type: string
+
     Repository:
       properties:
         repoId:
@@ -64,6 +75,31 @@ paths:
       responses:
         200:
           description: redierct dashboard
+        400:
+          description: bad input parameter
+
+  /v1/identities/github/organizations/{token}:
+    get:
+      summary: get organization list for the current authenticated user
+      parameters:
+        - in: path
+          name: token
+          description: github auth token or github access token
+          required: true
+        - in: query
+          name: perPage
+          description: count of records per page
+          required: false
+        - in: query
+          name: page
+          description: current page
+          required: false
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
         400:
           description: bad input parameter
 

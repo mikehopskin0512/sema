@@ -7,7 +7,7 @@ import path from 'path';
 import logger from '../../shared/logger';
 
 import { github, orgDomain, version } from '../../config';
-import { getProfile, getUserEmails, getRepositoryList, getRepositoriesForAuthenticatedUser } from './utils';
+import { getProfile, getUserEmails, getRepositoryList, getRepositoriesForAuthenticatedUser, getGithubOrgsForAuthenticatedUser } from './utils';
 import {
    findByUsernameOrIdentity, updateIdentity,
 } from '../../users/userService';
@@ -130,6 +130,19 @@ export default (app) => {
       console.log('Error ', error);
     }
     return res.redirect(`${orgDomain}/dashboard`);
+  });
+  
+  route.get('/organizations/:token', async (req, res) => {
+    try {
+      const { token } = req.params;
+      const { perPage, page } = req.query;
+      const orgs = await getGithubOrgsForAuthenticatedUser(token, perPage, page);
+      
+      res.status(200).json(orgs);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
   });
   
   route.get('/repositories/:token', async (req, res) => {
