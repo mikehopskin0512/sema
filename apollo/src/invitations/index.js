@@ -122,7 +122,10 @@ export default (app, passport) => {
       user,
     } = req;
     try {
-      const invitations = await getInvitationsBySender(user._id);
+      const invitations = await getInvitationsBySender({
+        senderId: user._id,
+      });
+
       const invitation = invitations.find(({ _id }) => _id.toString() === id);
       if (!invitation) {
         return res

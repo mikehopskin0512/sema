@@ -93,7 +93,7 @@ export const getInvitationsBySender = async (params) => {
       query.where('recipient', new RegExp(search, 'gi'))
     }
     query.skip((page - 1) * perPage).limit(perPage)
-    const invites = await query.populate({path: 'senderId', model: 'User' }).lean().exec();
+    const invites = await query.populate({ path: 'senderId', model: 'User' }).populate({ path: 'redemptions.userId', model: 'User' }).lean().exec();
     const recipientUsers = await User.find({ username: { $in: invites.map(invite => invite.recipient) } });
     const result = [];
 
