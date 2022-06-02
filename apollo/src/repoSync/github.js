@@ -9,6 +9,7 @@ import {
 } from '../comments/reaction/reactionService';
 import { findOneByLabel as findTagByLabel } from '../comments/tags/tagService';
 import SmartComment from '../comments/smartComments/smartCommentModel';
+import { findByGitHubUsername as findUserByGitHubUsername } from '../users/userService';
 import { EMOJIS } from '../comments/suggestedComments/constants';
 
 export default function createGitHubImporter(octokit) {
@@ -47,6 +48,7 @@ export default function createGitHubImporter(octokit) {
       existingComment.githubMetadata.type = type;
       existingComment.githubMetadata.id = id;
       await existingComment.save();
+      await linkCommentToExistingUser(existingComment);
       return existingComment;
     }
 
@@ -83,9 +85,11 @@ async function createNewSmartComment({ githubComment, pullRequest }) {
     getReaction(text),
   ]);
 
+  const user = await findUserByGitHubUsername(githubMetadata.user.login);
   const sanitizedText = removeSemaSignature(text);
   return await SmartComment.findOrCreate({
     comment: sanitizedText,
+    userId: user,
     githubMetadata,
     reaction: reaction?._id,
     tags: tags.map((t) => t._id),
@@ -209,4 +213,12 @@ async function extractReactionFromSemaComment(text) {
     return reaction;
   }
   return null;
+}
+
+async function linkCommentToExistingUser(comment) {
+  const { login } = comment.githubMetadata.user;
+  const user = await findUserByGitHubUsername(login);
+  if (user) {
+    await comment.updateOne({ userId: user._id });
+  }
 }

@@ -699,3 +699,12 @@ export const findByHandle = async (handle) => {
     return error;
   }
 };
+
+export const findByGitHubUsername = async (username) => await User.findOne({
+    identities: {
+      $elemMatch: {
+        provider: 'github',
+        username,
+      },
+    },
+  });
