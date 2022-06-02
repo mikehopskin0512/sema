@@ -33,6 +33,7 @@ describe('GET /comments/smart', () => {
 
     beforeAll(async () => {
       const laterComment = await SmartComment.create({
+        userId: user,
         comment: 'The later comment',
         location: 'conversation',
         suggestedComments: [],
@@ -54,6 +55,7 @@ describe('GET /comments/smart', () => {
         },
       });
       const earlierComment = await SmartComment.create({
+        userId: user,
         comment: 'The earlier comment',
         location: 'conversation',
         suggestedComments: [],
