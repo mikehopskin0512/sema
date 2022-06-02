@@ -50,8 +50,8 @@ const AddCommentCollection = () => {
   }, [showAlert, dispatch]);
 
   const onSubmit = async (data) => {
-    const isTeamView = auth.profileViewMode === PROFILE_VIEW_MODE.TEAM_VIEW;
-    const collectionType = isTeamView ? COLLECTION_TYPE.TEAM : COLLECTION_TYPE.PERSONAL;
+    const isOrganizationView = auth.profileViewMode === PROFILE_VIEW_MODE.ORGANIZATION_VIEW;
+    const collectionType = isOrganizationView ? COLLECTION_TYPE.ORGANIZATION : COLLECTION_TYPE.PERSONAL;
     setLoading(true);
     const { languages, others, comments, author, isActive, sourceName, sourceLink, name, description } = data;
     const collection = {
@@ -71,7 +71,7 @@ const AddCommentCollection = () => {
     try {
       await dispatch(createCollections({
         collection,
-        teamId: auth.selectedTeam ? auth.selectedTeam._id : null,
+        organizationId: auth.selectedOrganization ? auth.selectedOrganization._id : null,
       }, token));
       await router.push(PATHS.SNIPPETS._);
     } finally {

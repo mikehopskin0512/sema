@@ -7,7 +7,7 @@ module.exports = {
         permanent: false,
       },
       {
-        source: '/team',
+        source: '/organization',
         destination: '/dashboard',
         permanent: false,
       },

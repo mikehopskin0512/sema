@@ -71,10 +71,10 @@ export const updateUserRole = (userRoleId, data, token) => async (dispatch) => {
   }
 };
 
-export const removeUserRole = (teamId, userRoleId, token) => async (dispatch) => {
+export const removeUserRole = (organizationId, userRoleId, token) => async (dispatch) => {
   try {
     dispatch(removeUserRoleRequest());
-    await deleteUserRole(teamId, userRoleId, token);
+    await deleteUserRole(organizationId, userRoleId, token);
     dispatch(removeUserRoleSuccess());
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;

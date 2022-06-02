@@ -13,13 +13,13 @@ import ActionGroup from '../actionGroup';
 import Helmet from '../../utils/Helmet';
 import Toaster from '../../toaster';
 import Loader from '../../Loader';
-import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants';
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
 import usePermission from '../../../hooks/usePermission';
 import useAuthEffect from '../../../hooks/useAuthEffect';
-import {isSemaDefaultCollection, isTeamDefaultCollection} from '../../../utils';
+import {isSemaDefaultCollection, isOrganizationDefaultCollection} from '../../../utils';
 import { black950 } from '../../../../styles/_colors.module.scss';
 
 const { getCollectionById } = commentsOperations;
@@ -36,7 +36,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
     alerts: state.alertsState,
   }));
 
-  const { token, user, selectedTeam } = auth;
+  const { token, user, selectedOrganization } = auth;
   const { collection: { name = '', comments = [], _id,  }, isFetching } = collectionState;
   const { showAlert, alertType, alertLabel } = alerts;
 
@@ -45,7 +45,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const [tagFilters, setTagFilters] = useState([]);
   const [languageFilters, setLanguageFilters] = useState([]);
   const [selectedComments, setSelectedComments] = useState([]);
-  const { checkAccess, checkTeamPermission } = usePermission();
+  const { checkAccess, checkOrganizationPermission } = usePermission();
   const [isParsing, setIsParsing] = useState(true);
 
   useAuthEffect(() => {
@@ -131,8 +131,8 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const unarchiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
     .indexOf(item._id) !== -1 && item.isActive), [selectedComments, commentsFiltered]);
 
-  const canCreate = useMemo(() => checkTeamPermission('canCreateSnippets') || isSemaDefaultCollection(name) || isTeamDefaultCollection(selectedTeam, { name }), [user, name]);
-  const canEdit = useMemo(() => checkTeamPermission('canEditSnippets') || isSemaDefaultCollection(name) || isTeamDefaultCollection(selectedTeam, { name }), [user, name]);
+  const canCreate = useMemo(() => checkOrganizationPermission('canCreateSnippets') || isSemaDefaultCollection(name) || isOrganizationDefaultCollection(selectedOrganization, { name }), [user, name]);
+  const canEdit = useMemo(() => checkOrganizationPermission('canEditSnippets') || isSemaDefaultCollection(name) || isOrganizationDefaultCollection(selectedOrganization, { name }), [user, name]);
 
   return (
     <div>

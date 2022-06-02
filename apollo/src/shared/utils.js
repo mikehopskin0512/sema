@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { orgDomain, semaCorporateTeamId } from '../config';
+import { orgDomain, semaCorporateOrganizationId } from '../config';
 import { sendEmail } from './emailService';
 import Tag from '../comments/tags/tagModel';
 import UserRole from '../userRoles/userRoleModel';
@@ -52,7 +52,7 @@ export const fullName = (user) => {
 
 export const getTokenData = async (user) => {
   const roles = await UserRole.find({ user: user._id })
-    .populate('team')
+    .populate('organization')
     .populate('role');
 
   // user fields on jwt.
@@ -72,7 +72,7 @@ export const getTokenData = async (user) => {
 };
 
 export const isSemaAdmin = (userData) => {
-  const semaAdminRole = userData?.roles?.find((userRole) => userRole?.team?._id == semaCorporateTeamId && userRole?.role?.name === 'Admin');
+  const semaAdminRole = userData?.roles?.find((userRole) => userRole?.organization?._id == semaCorporateOrganizationId && userRole?.role?.name === 'Admin');
   return !!semaAdminRole;
 }
 
@@ -107,15 +107,15 @@ export const mapTags = async (tagsString) => {
   return mappedTags;
 };
 
-export const _checkPermission = (teamId = '', permission, user) => {
-  if (teamId && permission) {
-    const role = user?.roles?.find((item) => item.role && item.role[permission] && item?.team?._id == teamId);
+export const _checkPermission = (organizationId = '', permission, user) => {
+  if (organizationId && permission) {
+    const role = user?.roles?.find((item) => item.role && item.role[permission] && item?.organization?._id == organizationId);
     if (role) {
       return true
     }
   }
   if (permission) {
-    if (!isEmpty(user.roles.team)) {
+    if (!isEmpty(user.roles.organization)) {
       const role = user?.roles?.find((item) => item.role && item.role[permission]);
       if (role) {
         return true

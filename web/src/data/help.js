@@ -17,14 +17,14 @@ export const articles = [
   }, {
     id: 3,
     author: 'Simple Programmer',
-    title: '10 Reasons Why Code Reviews Make Better Code and Better Teams',
+    title: '10 Reasons Why Code Reviews Make Better Code and Better Organizations',
     date: 'May 28, 2018',
     mins: 15,
     link: 'https://simpleprogrammer.com/why-code-reviews-make-better-code-teams/',
   }, {
     id: 5,
     author: 'Shopify Engineering',
-    title: 'Great Code Reviews—The Superpower Your Team Needs',
+    title: 'Great Code Reviews—The Superpower Your Organization Needs',
     date: 'Feb 10, 2020',
     mins: 8,
     link: 'https://shopify.engineering/great-code-reviews',

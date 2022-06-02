@@ -25,14 +25,14 @@ module.exports = {
 
     try {
       // -- Sema Community Collections
-      const [semaTeam] = await db.collection('teams').find({ name: 'Sema Corporate Team' }).toArray();
-      const communityCollections = semaTeam.collections.map(({ _id, collectionData }) => ({ collectionData: new ObjectId(collectionData), _id, isActive: true }));
+      const [semaOrganization] = await db.collection('organizations').find({ name: 'Sema Corporate Organization' }).toArray();
+      const communityCollections = semaOrganization.collections.map(({ _id, collectionData }) => ({ collectionData: new ObjectId(collectionData), _id, isActive: true }));
 
       // -- Personal Snippets Users
       await updateCollections('users', communityCollections);
 
-      // -- Teams
-      await updateCollections('teams', communityCollections);
+      // -- Organizations
+      await updateCollections('organizations', communityCollections);
     } catch (e) {
       console.log('error__', e);
     }

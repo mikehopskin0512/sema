@@ -60,7 +60,7 @@ const RegistrationForm = (props) => {
 
   const { invitation = {} } = props;
   const { token: inviteToken, recipient } = invitation;
-  const { token: authToken, user, team: teamId } = auth;
+  const { token: authToken, user, organization: organizationId } = auth;
   const { _id: userId } = user;
 
   // If Github login, use that primarily. Fallback to invite recipient.
@@ -73,7 +73,7 @@ const RegistrationForm = (props) => {
       // User is redeeming invite, but already exists (likely on waitlist)
       dispatch(redeemInvite(inviteToken, userId, authToken));
       dispatch(partialUpdateUser(userId, { isWaitlist: false }, authToken));
-      router.push(teamId ? `${PATHS.DASHBOARD}/?teamId=${teamId}` : PATHS.DASHBOARD);
+      router.push(organizationId ? `${PATHS.DASHBOARD}/?organizationId=${organizationId}` : PATHS.DASHBOARD);
       trackRedeemedInvite(email);
     } else {
       // New user

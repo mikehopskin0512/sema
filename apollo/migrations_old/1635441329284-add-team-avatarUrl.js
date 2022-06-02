@@ -12,7 +12,7 @@ const options = {
 exports.up = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
-    const bulkUpdateTeams = data.map((item) => {
+    const bulkUpdateOrganizations = data.map((item) => {
       return {
         updateOne: {
           filter: { name: item.name },
@@ -20,8 +20,8 @@ exports.up = async (next) => {
         }
       }
     });
-    await mongoose.connection.collection('teams')
-      .bulkWrite(bulkUpdateTeams, { ordered: true });
+    await mongoose.connection.collection('organizations')
+      .bulkWrite(bulkUpdateOrganizations, { ordered: true });
   } catch (error) {
     next(error);
   }
@@ -31,7 +31,7 @@ exports.up = async (next) => {
 exports.down = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
-    const bulkUpdateTeams = data.map((item) => {
+    const bulkUpdateOrganizations = data.map((item) => {
       return {
         updateOne: {
           filter: { name: item.name },
@@ -39,8 +39,8 @@ exports.down = async (next) => {
         }
       }
     });
-    await mongoose.connection.collection('teams')
-      .bulkWrite(bulkUpdateTeams, { ordered: true });
+    await mongoose.connection.collection('organizations')
+      .bulkWrite(bulkUpdateOrganizations, { ordered: true });
   } catch (error) {
     next(error);
   }

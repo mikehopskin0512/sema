@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
@@ -8,15 +8,15 @@ import Avatar from 'react-avatar';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from '../header.module.scss';
-import TeamMenuItem from '../TeamMenuItem';
+import OrganizationMenuItem from '../OrganizationMenuItem';
 import useOutsideClick from '../../../utils/useOutsideClick';
-import { PATHS, PROFILE_VIEW_MODE, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { PATHS, PROFILE_VIEW_MODE, SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants';
 import { authOperations } from '../../../state/features/auth';
 import usePermission from "../../../hooks/usePermission";
 import { TrophyIcon } from '../../Icons';
 import UserMenuItem from '../UserMenuItem';
 import Tooltip from '../../Tooltip';
-const { setSelectedTeam, setProfileViewMode } = authOperations;
+const { setSelectedOrganization, setProfileViewMode } = authOperations;
 
 const HeaderMenu = ({
   handleLogout,
@@ -31,10 +31,10 @@ const HeaderMenu = ({
     handle
   } = user;
   const fullName = `${firstName} ${lastName}`;
-  const { auth: { selectedTeam, token }, teams, portfolios } = useSelector(
+  const { auth: { selectedOrganization, token }, organizations, portfolios } = useSelector(
     (state) => ({
       auth: state.authState,
-      teams: state.teamsState.teams,
+      organizations: state.organizationsNewState.organizations,
       portfolios: state.portfoliosState.data.portfolios
     }),
   );
@@ -42,7 +42,7 @@ const HeaderMenu = ({
   const dispatch = useDispatch();
   const router = useRouter();
   const { checkAccess } = usePermission();
-  const orderedTeams = Object.values(teams);
+  const orderedOrganizations = Object.values(organizations);
 
   const toggleUserMenu = (status) => {
     if (userMenu.current) {
@@ -64,14 +64,14 @@ const HeaderMenu = ({
   useOutsideClick(userMenu, onClickOutside);
 
   const avatarUrl = useMemo(() => {
-    if (selectedTeam?.team) {
-      return selectedTeam?.team?.avatarUrl;
+    if (selectedOrganization?.organization) {
+      return selectedOrganization?.organization?.avatarUrl;
     }
     return user.avatarUrl;
-  }, [selectedTeam, user]);
+  }, [selectedOrganization, user]);
 
   const onSwitchPersonalAccount = () => {
-    dispatch(setSelectedTeam({}));
+    dispatch(setSelectedOrganization({}));
     dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
     toggleUserMenu(false);
     router.push(PATHS.DASHBOARD);
@@ -79,36 +79,36 @@ const HeaderMenu = ({
 
   const getAvatarName = useMemo(() => {
     let name = fullName
-    if (selectedTeam?.team?.name) {
-      name = selectedTeam?.team.name;
+    if (selectedOrganization?.organization?.name) {
+      name = selectedOrganization?.organization.name;
     }
     return name;
-  }, [selectedTeam, user])
+  }, [selectedOrganization, user])
 
   const renderMenuItems = useMemo(() => {
-    // Sort teams, first one should be the selected team.
-    const selectedTeamIndex = orderedTeams.splice(orderedTeams.findIndex(team => team.team?._id === selectedTeam?.team?._id), 1)[0];
-    selectedTeamIndex && orderedTeams.unshift(selectedTeamIndex);
+    // Sort organizations, first one should be the selected organization.
+    const selectedOrganizationIndex = orderedOrganizations.splice(orderedOrganizations.findIndex(organization => organization.organization?._id === selectedOrganization?.organization?._id), 1)[0];
+    selectedOrganizationIndex && orderedOrganizations.unshift(selectedOrganizationIndex);
 
-    const menuItems = orderedTeams.map((team, index) => (
-      <TeamMenuItem role={team} toggleUserMenu={toggleUserMenu} key={`team-${team._id}`} index={index} isSelected={team.team?._id === selectedTeam?.team?._id}/>
+    const menuItems = orderedOrganizations.map((organization, index) => (
+      <OrganizationMenuItem role={organization} toggleUserMenu={toggleUserMenu} key={`organization-${organization._id}`} index={index} isSelected={organization.organization?._id === selectedOrganization?.organization?._id}/>
     ))
 
     const userMenu =
       <>
-        <UserMenuItem user={user} onSwitchPersonalAccount={onSwitchPersonalAccount} isSelected={Object.keys(selectedTeam).length === 0} />
+        <UserMenuItem user={user} onSwitchPersonalAccount={onSwitchPersonalAccount} isSelected={Object.keys(selectedOrganization).length === 0} />
         <hr className="navbar-divider m-0 has-background-gray-300" />
       </>
 
-    Object.keys(selectedTeam).length ? menuItems.push(userMenu) : menuItems.unshift(userMenu);
+    Object.keys(selectedOrganization).length ? menuItems.push(userMenu) : menuItems.unshift(userMenu);
     return menuItems;
-  }, [orderedTeams]);
+  }, [orderedOrganizations]);
 
   const portfolioRedirect = () => {
     router.push(`${PATHS.PORTFOLIO.PORTFOLIOS}`);
   };
 
-  const isNoTeams = !teams.length;
+  const isNoOrganizations = !organizations.length;
 
   return (
     <>
@@ -117,11 +117,11 @@ const HeaderMenu = ({
           <TrophyIcon />
         </div>
       </Tooltip>
-      <div className={clsx('navbar-item has-dropdown', styles.team)} ref={userMenu}>
+      <div className={clsx('navbar-item has-dropdown', styles.organization)} ref={userMenu}>
         {/* Menu Items */}
         <div className={clsx(styles['menu-item-container'], "navbar-dropdown is-right p-0 border-radius-8px")}>
           {renderMenuItems}
-          <Link href={PATHS.TEAM_CREATE}>
+          <Link href={PATHS.ORGANIZATION_CREATE}>
           <a
             aria-hidden="true"
             type="button"
@@ -129,7 +129,7 @@ const HeaderMenu = ({
             onClick={toggleUserMenu}
           >
             <div>
-              <span>{isNoTeams ? 'Create a Team' : 'Add a Team'}</span>
+              <span>{isNoOrganizations ? 'Create an Organization' : 'Add an Organization'}</span>
               <span className="is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>
             </div>
           </a>
@@ -137,7 +137,7 @@ const HeaderMenu = ({
           <hr className="navbar-divider m-0 has-background-gray-300" />
 
           {
-            checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && (
+            checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canEditUsers') && (
               <>
           <Link href={`${PATHS.SEMA_ADMIN}/users`}>
             <span
