@@ -15,7 +15,7 @@ import Loader from '../../Loader';
 
 import { engGuidesOperations } from '../../../state/features/engGuides';
 import usePermission from '../../../hooks/usePermission';
-import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { PATHS, SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import { black950 } from '../../../../styles/_colors.module.scss';
 
@@ -117,7 +117,7 @@ const CollectionEngGuides = ({ collectionId }) => {
   const unarchiveGuides = useMemo(() => engGuideFilter.filter((item) => selectedGuides
     .indexOf(item._id) !== -1 && item.isActive), [selectedGuides, engGuideFilter]);
 
-  const isEditable = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditSnippets'), [checkAccess]);
+  const isEditable = useMemo(() => checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canEditSnippets'), [checkAccess]);
 
   if (engGuideState.isFetching && auth.isFetching && !engGuide) {
     return (

@@ -79,7 +79,7 @@ const Invite = () => {
     setRecipient(email);
     const response = await dispatch(createInviteAndHydrateUser(invitation, token));
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_SEND_INVITATION, { recipient: email });
-    
+
     // send segment event tracking
     trackSendInvite(email, invitation.senderName, invitation.senderEmail, 'user');
     const isSent = response.status === 201;
@@ -124,8 +124,9 @@ const Invite = () => {
 
   const renderErrorMessage = () => {
     if (!isEmpty(errors)) {
-      const error = errors.email.message;
-      if (error.search("has already been invited by another user.") >= 0) {
+      console.log(errors);
+      const error = errors.email.message ?? '';
+      if (error && error.search("has already been invited by another user.") >= 0) {
         return <span>{error} <a onClick={() => RESEND_INVITE(recipient)}>Click here</a> to remind them.</span>
       }
       return error;
