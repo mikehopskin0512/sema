@@ -1,39 +1,33 @@
 import { connect } from 'getstream';
+import _ from 'lodash';
 import { NOTIFICATION_TYPE } from '../constants';
 import { getstream } from '../config';
-const client = connect(getstream.apiKey, getstream.apiKeySecret, getstream.appId);
+const client = connect(
+  getstream.apiKey,
+  getstream.apiKeySecret,
+  getstream.appId
+);
 
-export const getUserNotificationToken = userId => {
+const getUserNotificationToken = userId => {
   return client.createUserToken(userId.toString());
 };
 
-export const getOrCreateNotificationUser = async (userId, user) => {
-  // const rsp = await client.user(userId).delete();
-  // console.log(
-  //   '\n\n\n\n======getOrCreateNotificationUser -> user',
-  //   user,
-  //   '-----\n',
-  //   rsp
-  // );
+const getOrCreateNotificationUser = async (userId, user) => {
   return client.user(userId.toString()).getOrCreate({
     profileImage: user.avatarUrl,
     name: `${user.firstName} ${user.lastName}`,
     username: user.username,
-    email: user.identities[0].emails[0] // TODO change to _.get
+    email: _.get(user, 'identities[0].emails[0]')
   });
 };
 
 export const getOrCreateUserAndToken = async user => {
   const userId = user._id;
   await getOrCreateNotificationUser(userId, user);
-  // const userFeed = await client.feed('notification', userId);
-  // const notifications = await userFeed.get({ limit: 10 });
-  // console.log('\n\n\n\n[][][]', notifications);
-
   return getUserNotificationToken(userId);
 };
 
-export const addUserActivity = async (
+const addUserActivity = async (
   userId,
   recepientId,
   verb,
@@ -41,7 +35,6 @@ export const addUserActivity = async (
 ) => {
   // TODO don't create every time client.feed
   const userFeed = client.feed('notification', recepientId.toString());
-  // const rsp = await client.user(userId.toString()).delete();
   const activity_data = {
     actor: client.user(userId.toString()).ref(),
     verb,
