@@ -190,6 +190,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
   const onCopy = () => {
     navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(userData.handle, portfolio._id)}`);
     changeIsCopied(true);
+    setTimeout(() => changeIsCopied(false), 5000);
   };
 
   useEffect(() => {
@@ -323,10 +324,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
                 {!pdfView && isOwner && isIndividualView && <>
                   <div className="is-flex is-align-items-center ml-20 pr-40">
                     <div className="field sema-toggle switch-input m-0 is-flex is-align-items-center" onClick={onClickChild} aria-hidden>
-                      <div className={clsx(styles['textContainer'])}>
-                        {isPublicPortfolio ?
-                          (isCopied && hover && 'Copied! This portfolio is viewable with this link.') :
-                          (hover && 'Change status to “Public” in order to copy sharable link.')}
+                      <div className={clsx('border-radius-4px', styles['textContainer'])}>
+                      {isPublicPortfolio ?
+                        (isCopied && hover && <div className='px-5 py-4'>Copied! This portfolio is viewable with this link.</div>) :
+                        (hover && <div className='px-5 py-4'>Change status to “Public” in order to copy sharable link.</div>)}
                       </div>
                       <span className="mr-10 is-size-5">Public</span>
                       <input
@@ -340,7 +341,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
                       <label htmlFor={`activeSwitch-${portfolio._id}`} />
                     </div>
                     <div
-                      className="is-flex ml-20"
+                      className="is-flex ml-20 is-clickable"
                       onClick={isPublicPortfolio ? onCopy : () => { }}
                       onMouseEnter={() => setHover(true)}
                       onMouseLeave={() => setHover(false)}
