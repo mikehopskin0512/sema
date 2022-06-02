@@ -7,9 +7,7 @@ import { NotificationCustom } from './NotificationCustom';
 
 const { fetchNotificationsToken } = notificationsOperations;
 
-const NotificationFeed = () => {
-  const APP_KEY = '';
-  const APP_ID = '';
+const NotificationFeed = ({ APP_KEY, APP_ID }) => {
   const dispatch = useDispatch();
   const auth = useSelector(state => state.authState);
   const { user = {}, token } = auth;

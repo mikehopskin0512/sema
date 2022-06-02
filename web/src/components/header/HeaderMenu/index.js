@@ -121,9 +121,9 @@ const HeaderMenu = ({
         </div>
       </Tooltip>
       {
-        notificationFeed &&
+        notificationFeed && process.env.NEXT_PUBLIC_GETSTREAM_APP_ID && process.env.NEXT_PUBLIC_GETSTREAM_APP_KEY &&
         <div className={clsx('is-flex is-align-items-center is-justify-content-center border-radius-24px py-20', styles['notifications-container'])}>
-          <NotificationFeed />
+          <NotificationFeed APP_ID={process.env.NEXT_PUBLIC_GETSTREAM_APP_ID} APP_KEY={process.env.NEXT_PUBLIC_GETSTREAM_APP_KEY} />
         </div>
       }
       <div className={clsx('navbar-item has-dropdown', styles.team)} ref={userMenu}>
