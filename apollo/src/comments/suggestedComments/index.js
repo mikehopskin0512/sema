@@ -42,7 +42,12 @@ export default (app, passport) => {
       allCollections = false,
     } = req.query;
     try {
-      const topResult = await searchComments(user, organization, q, allCollections);
+      const topResult = await searchComments(
+        user,
+        organization,
+        q,
+        allCollections
+      );
       return res.status(201).send({ searchResults: topResult });
     } catch (error) {
       logger.error(error);
