@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { InputField } from 'adonis';
@@ -12,6 +12,7 @@ import { DROPDOWN_SORTING_TYPES, SEMA_CORPORATE_TEAM_ID } from '../../../utils/c
 import usePermission from '../../../hooks/usePermission';
 import styles from './snippetCollectionFilter.module.scss';
 import { gray500 } from '../../../../styles/_colors.module.scss';
+import { value } from 'lodash/seq';
 
 const { fetchTagList } = tagsOperations;
 
@@ -25,6 +26,19 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
   const { token } = auth;
   const { checkAccess, isTeamAdminOrLibraryEditor } = usePermission();
   const isSemaAdminOrLibraryEditor = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canCreateCollections');
+
+  const getRelevantTags = useCallback((types) => {
+    if (!tags.length) return [];
+    const tagsIds = collections?.reduce((acc, item) => {
+      acc.push(item?.collectionData?.tags?.map(i => i.tag));
+      return acc;
+    }, []);
+    const tagsToDisplay = addTags(tags, types);
+
+    const ids = new Set(tagsIds?.flat());
+    return tagsToDisplay?.filter(tag => ids.has(tag.value));
+  }, [tags])
+
 
   useAuthEffect(() => {
     dispatch(fetchTagList(token));
@@ -74,7 +88,7 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
         <div className={clsx(`column ${styles['filter-box']}`)}>
           <CustomSelect
             selectProps={{
-              options: addTags(tags, ['guide', 'other', 'custom']),
+              options: getRelevantTags(['guide', 'other', 'custom']),
               placeholder: '',
               isMulti: true,
               onChange: value => onChangeFilter('labels', value),
@@ -88,7 +102,7 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
         <div className={clsx(`column ${styles['filter-box']}`)}>
           <CustomSelect
             selectProps={{
-              options: addTags(tags, ['language']),
+              options: getRelevantTags(['language']),
               placeholder: '',
               isMulti: true,
               onChange: value => onChangeFilter('languages', value),
