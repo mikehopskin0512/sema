@@ -1635,175 +1635,176 @@ describe('Import Repository Queue', () => {
         expect(comment2.source.id).toBe('pullRequestComment:545313646');
       });
     });
+  });
 
-    describe('when comment author is a user of Sema', () => {
-      let pangeawareUser;
+  describe('when comment author is a user of Sema', () => {
+    let comment;
+    let pangeawareUser;
 
+    beforeAll(async () => {
+      resetNocks();
+      await SmartComment.deleteMany();
+    });
+
+    beforeAll(async () => {
+      pangeawareUser = await userService.create({
+        username: 'Pangeaware',
+        password: 's3cr3t',
+        firstName: 'Chris',
+        lastName: 'Smith',
+        identities: [
+          {
+            email: 'pangeaware@example.com',
+            provider: 'github',
+            repositories: [],
+            username: 'pangeaware',
+          },
+        ],
+        terms: true,
+      });
+    });
+
+    describe('comment is new', () => {
       beforeAll(async () => {
-        resetNocks();
         await SmartComment.deleteMany();
       });
 
       beforeAll(async () => {
-        pangeawareUser = await userService.create({
-          username: 'Pangeaware',
-          password: 's3cr3t',
-          firstName: 'Chris',
-          lastName: 'Smith',
-          identities: [
-            {
-              email: 'pangeaware@example.com',
-              provider: 'github',
-              repositories: [],
-              username: 'pangeaware',
-            },
-          ],
-          terms: true,
+        repository = await createRepository({
+          name: 'phoenix',
+          type: 'github',
+          id: '237888452',
+          installationId: '25676597',
+          addedBy: user,
+          cloneUrl: 'https://github.com/Semalab/phoenix',
         });
       });
 
-      describe('comment is new', () => {
-        beforeAll(async () => {
-          await SmartComment.deleteMany();
-        });
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, getFirstPageOfPullRequestComments().slice(0, 1), {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=1&sort=created&direction=desc>; rel="last"',
+          })
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, [])
+          .get('/repos/Semalab/phoenix/pulls')
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 1,
+            state: 'all',
+          })
+          .reply(200, []);
+      });
 
-        beforeAll(async () => {
-          repository = await createRepository({
-            name: 'phoenix',
-            type: 'github',
-            id: '237888452',
-            installationId: '25676597',
-            addedBy: user,
-            cloneUrl: 'https://github.com/Semalab/phoenix',
-          });
-        });
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/3')
+          .reply(200, getPullRequestDetailPR3());
+      });
 
-        beforeAll(() => {
-          nock('https://api.github.com')
-            .get('/repos/Semalab/phoenix/pulls/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
-            .reply(200, getFirstPageOfPullRequestComments().slice(0, 1), {
-              Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=1&sort=created&direction=desc>; rel="last"',
-            })
-            .get('/repos/Semalab/phoenix/issues/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
-            .reply(200, [])
-            .get('/repos/Semalab/phoenix/pulls')
-            .query({
-              sort: 'created',
-              direction: 'desc',
-              page: 1,
-              state: 'all',
-            })
-            .reply(200, []);
-        });
+      beforeAll(async () => {
+        await handler({ id: repository.id });
+        comment = await SmartComment.findOne();
+      });
 
-        beforeAll(() => {
-          nock('https://api.github.com')
-            .get('/repos/Semalab/phoenix/pulls/3')
-            .reply(200, getPullRequestDetailPR3());
-        });
+      it('should reference the Sema user', () => {
+        expect(comment.userId).toEqualID(pangeawareUser);
+      });
+    });
 
-        beforeAll(async () => {
-          await handler({ id: repository.id });
-          comment = await SmartComment.findOne();
-        });
+    describe('when comment exists in the database', () => {
+      beforeAll(async () => {
+        await SmartComment.deleteMany();
+      });
 
-        it('should reference the Sema user', () => {
-          expect(comment.userId).toEqualID(pangeawareUser);
+      beforeAll(async () => {
+        comment = await createSmartComment({
+          comment:
+            '@jrock17 this function feels like it should live somewhere else as well with repo code.',
+          location: 'files changed',
+          suggestedComments: [],
+          reaction: '607f0d1ed7f45b000ec2ed71',
+          tags: [],
+          // Bogus user ID, just to pass validation.
+          userId: user.id,
+          githubMetadata: {
+            commentId: null,
+            filename: null,
+            repo: 'phoenix',
+            repo_id: '237888452',
+            url: 'https://github.com/Semalab/phoenix',
+            created_at: '2020-12-17T18:35:40Z',
+            updated_at: '2020-12-17T20:30:14Z',
+            user: {
+              // At the time of writing, githubMetadata.user.id
+              // contains bogus information. Comparing by login for now.
+              // https://semasoftware.slack.com/archives/C01MXTW3DRS/p1653602721759599
+              // This doesn't match the user ID for pangeaware
+              // on purpose, to ensure the code matches by login.
+              id: '2045024',
+              login: 'pangeaware',
+            },
+            requester: 'jrock17',
+          },
+        });
+        // Blank user ID, matches state of database on June 2022.
+        await comment.updateOne({ $set: { userId: null } });
+      });
+
+      beforeAll(async () => {
+        repository = await createRepository({
+          name: 'phoenix',
+          type: 'github',
+          id: '237888452',
+          installationId: '25676597',
+          addedBy: user,
+          cloneUrl: 'https://github.com/Semalab/phoenix',
         });
       });
 
-      describe('when comment exists in the database', () => {
-        beforeAll(async () => {
-          await SmartComment.deleteMany();
-        });
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, getFirstPageOfPullRequestComments().slice(0, 1), {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=1&sort=created&direction=desc>; rel="last"',
+          })
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, [])
+          .get('/repos/Semalab/phoenix/pulls')
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 1,
+            state: 'all',
+          })
+          .reply(200, []);
+      });
 
-        beforeAll(async () => {
-          comment = await createSmartComment({
-            comment:
-              '@jrock17 this function feels like it should live somewhere else as well with repo code.',
-            location: 'files changed',
-            suggestedComments: [],
-            reaction: '607f0d1ed7f45b000ec2ed71',
-            tags: [],
-            // Bogus user ID, just to pass validation.
-            userId: user.id,
-            githubMetadata: {
-              commentId: null,
-              filename: null,
-              repo: 'phoenix',
-              repo_id: '237888452',
-              url: 'https://github.com/Semalab/phoenix',
-              created_at: '2020-12-17T18:35:40Z',
-              updated_at: '2020-12-17T20:30:14Z',
-              user: {
-                // At the time of writing, githubMetadata.user.id
-                // contains bogus information. Comparing by login for now.
-                // https://semasoftware.slack.com/archives/C01MXTW3DRS/p1653602721759599
-                // This doesn't match the user ID for pangeaware
-                // on purpose, to ensure the code matches by login.
-                id: '2045024',
-                login: 'pangeaware',
-              },
-              requester: 'jrock17',
-            },
-          });
-          // Blank user ID, matches state of database on June 2022.
-          await comment.updateOne({ $set: { userId: null } });
-        });
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/3')
+          .reply(200, getPullRequestDetailPR3());
+      });
 
-        beforeAll(async () => {
-          repository = await createRepository({
-            name: 'phoenix',
-            type: 'github',
-            id: '237888452',
-            installationId: '25676597',
-            addedBy: user,
-            cloneUrl: 'https://github.com/Semalab/phoenix',
-          });
-        });
+      beforeAll(async () => {
+        await handler({ id: repository.id });
+        comment = await SmartComment.findById(comment._id);
+      });
 
-        beforeAll(() => {
-          nock('https://api.github.com')
-            .get('/repos/Semalab/phoenix/pulls/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
-            .reply(200, getFirstPageOfPullRequestComments().slice(0, 1), {
-              Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=1&sort=created&direction=desc>; rel="last"',
-            })
-            .get('/repos/Semalab/phoenix/issues/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
-            .reply(200, [])
-            .get('/repos/Semalab/phoenix/pulls')
-            .query({
-              sort: 'created',
-              direction: 'desc',
-              page: 1,
-              state: 'all',
-            })
-            .reply(200, []);
-        });
+      it('should match with existing comment', async () => {
+        const count = await SmartComment.countDocuments();
+        expect(count).toBe(1);
+        expect(comment.source.id).toBe('pullRequestComment:545313646');
+      });
 
-        beforeAll(() => {
-          nock('https://api.github.com')
-            .get('/repos/Semalab/phoenix/pulls/3')
-            .reply(200, getPullRequestDetailPR3());
-        });
-
-        beforeAll(async () => {
-          await handler({ id: repository.id });
-          comment = await SmartComment.findById(comment._id);
-        });
-
-        it('should match with existing comment', async () => {
-          const count = await SmartComment.countDocuments();
-          expect(count).toBe(1);
-          expect(comment.source.id).toBe('pullRequestComment:545313646');
-        });
-
-        it('should reference the Sema user', () => {
-          expect(comment.userId).toEqualID(pangeawareUser);
-        });
+      it('should reference the Sema user', () => {
+        expect(comment.userId).toEqualID(pangeawareUser);
       });
     });
   });
