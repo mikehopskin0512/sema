@@ -1,78 +1,108 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import logger from '../shared/logger';
-import { createUserCollection, getDefaultCollections } from '../comments/collections/collectionService';
-const { Types: { ObjectId } } = mongoose;
+import {
+  createUserCollection,
+  getDefaultCollections,
+} from '../comments/collections/collectionService';
 
-const userOrgSchema = mongoose.Schema({
-  id: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization', index: true },
-  orgName: String,
-  isActive: { type: Boolean, default: true },
-  isAdmin: { type: Boolean, default: false },
-  invitedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-}, { _id: false, timestamps: true });
+const {
+  Types: { ObjectId },
+} = mongoose;
 
-const repositoryScheme = mongoose.Schema({
-  id: String,
-  name: String,
-  fullName: String,
-  githubUrl: String,
-  isFavorite: { type: Boolean, default: false },
-}, { _id: false });
-
-const identitySchema = mongoose.Schema({
-  provider: String,
-  id: String,
-  username: String,
-  email: String,
-  emails: [],
-  firstName: String,
-  lastName: String,
-  profileUrl: String,
-  avatarUrl: String,
-  repositories: [repositoryScheme],
-}, { _id: false });
-
-const userSchema = mongoose.Schema({
-  username: String,
-  password: {
-    type: String,
-    select: false,
-  },
-  firstName: String,
-  lastName: String,
-  organizations: [userOrgSchema],
-  jobTitle: String,
-  company: String,
-  avatarUrl: String,
-  inviteCount: { type: Number, default: 10 },
-  isActive: { type: Boolean, default: true },
-  isVerified: { type: Boolean, default: false },
-  isWaitlist: { type: Boolean, default: false },
-  isOnboarded: { type: Date, default: null },
-  banners: {
-    teamCreate: { type: Boolean, default: true }
-  },
-  verificationToken: String,
-  verificationExpires: Date,
-  resetToken: String,
-  resetExpires: Date,
-  handle: String,
-  identities: [identitySchema],
-  termsAccepted: { type: Boolean, default: false },
-  termsAcceptedAt: { type: Date },
-  lastLogin: { type: Date, default: null },
-  origin: { type: String, enum: ['invitation', 'waitlist', 'signup'] },
-  isSemaAdmin: { type: Boolean, default: false },
-  collections: [{
-    collectionData: { type: mongoose.Schema.Types.ObjectId, ref: 'Collection' },
+const userOrgSchema = mongoose.Schema(
+  {
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Organization',
+      index: true,
+    },
+    orgName: String,
     isActive: { type: Boolean, default: true },
-  }],
-  companyName: String,
-  cohort: String,
-  notes: String,
-  hasExtension: { type: Boolean, default: false },
-}, { timestamps: true });
+    isAdmin: { type: Boolean, default: false },
+    invitedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  },
+  { _id: false, timestamps: true }
+);
+
+const repositoryScheme = mongoose.Schema(
+  {
+    id: String,
+    name: String,
+    fullName: String,
+    githubUrl: String,
+    isFavorite: { type: Boolean, default: false },
+  },
+  { _id: false }
+);
+
+const identitySchema = mongoose.Schema(
+  {
+    provider: String,
+    id: String,
+    username: String,
+    email: String,
+    emails: [],
+    firstName: String,
+    lastName: String,
+    profileUrl: String,
+    avatarUrl: String,
+    repositories: [repositoryScheme],
+  },
+  { _id: false }
+);
+
+const userSchema = mongoose.Schema(
+  {
+    username: String,
+    password: {
+      type: String,
+      select: false,
+    },
+    firstName: String,
+    lastName: String,
+    organizations: [userOrgSchema],
+    jobTitle: String,
+    company: String,
+    avatarUrl: String,
+    inviteCount: { type: Number, default: 10 },
+    isActive: { type: Boolean, default: true },
+    isVerified: { type: Boolean, default: false },
+    isWaitlist: { type: Boolean, default: false },
+    isOnboarded: { type: Date, default: null },
+    banners: {
+      teamCreate: { type: Boolean, default: true },
+    },
+    verificationToken: String,
+    verificationExpires: Date,
+    resetToken: String,
+    resetExpires: Date,
+    handle: String,
+    identities: [identitySchema],
+    termsAccepted: { type: Boolean, default: false },
+    termsAcceptedAt: { type: Date },
+    lastLogin: { type: Date, default: null },
+    origin: {
+      type: String,
+      enum: ['invitation', 'waitlist', 'signup', 'sync'],
+    },
+    isSemaAdmin: { type: Boolean, default: false },
+    collections: [
+      {
+        collectionData: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Collection',
+        },
+        isActive: { type: Boolean, default: true },
+      },
+    ],
+    companyName: String,
+    cohort: String,
+    notes: String,
+    hasExtension: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
 
 const SALT_WORK_FACTOR = 10;
 
@@ -102,7 +132,9 @@ userSchema.pre('save', async function save(next) {
 // For update pre hook, isModified won't work. Need to get data first and use this.set.
 userSchema.pre('findOneAndUpdate', async function findOneAndUpdate(next) {
   const data = this.getUpdate();
-  const { $set: { password } } = data;
+  const {
+    $set: { password },
+  } = data;
   if (!password) {
     return next();
   }
@@ -145,7 +177,7 @@ userSchema.methods.validatePassword = async function validatePassword(data) {
   return bcrypt.compare(data, this.password);
 };
 
-userSchema.index({ username: 1, 'identities.id': 1 });
+userSchema.index({ 'username': 1, 'identities.id': 1 });
 userSchema.index({ orgId: 1 });
 
 export default mongoose.model('User', userSchema);

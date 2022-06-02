@@ -700,12 +700,9 @@ export const findByHandle = async (handle) => {
   }
 };
 
-export const findByGitHubUsername = async (username) =>
-  await User.findOne({
-    identities: {
-      $elemMatch: {
-        provider: 'github',
-        username,
-      },
-    },
+export const createGhostUser = async (attributes) =>
+  await User.create({
+    ...attributes,
+    isActive: false,
+    origin: 'sync',
   });

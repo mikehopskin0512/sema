@@ -1,5 +1,16 @@
 import nock from 'nock';
 import { addDays } from 'date-fns';
+import fs from 'fs';
+import path from 'path';
+import glob from 'glob';
+
+const fixtures = glob
+  .sync(path.join(__dirname, '../fixtures/github/users/*.json'))
+  .reduce((accum, filename) => {
+    const payload = JSON.parse(fs.readFileSync(filename));
+    accum.set(payload.login, payload);
+    return accum;
+  }, new Map());
 
 export default function github() {
   nock('https://api.github.com')
@@ -24,5 +35,11 @@ export default function github() {
         vulnerability_alerts: 'read',
       },
       repository_selection: 'selected',
+    })
+    .get(/\/users\/.*/)
+    .reply((pathname) => {
+      const [, , username] = pathname.split('/');
+      if (fixtures.has(username)) return [200, fixtures.get(username)];
+      return [404, { message: `User ${username} not found` }];
     });
 }

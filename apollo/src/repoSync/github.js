@@ -9,7 +9,10 @@ import {
 } from '../comments/reaction/reactionService';
 import { findOneByLabel as findTagByLabel } from '../comments/tags/tagService';
 import SmartComment from '../comments/smartComments/smartCommentModel';
-import { findByGitHubUsername as findUserByGitHubUsername } from '../users/userService';
+import {
+  findByUsernameOrIdentity,
+  createGhostUser,
+} from '../users/userService';
 import { EMOJIS } from '../comments/suggestedComments/constants';
 
 export default function createGitHubImporter(octokit) {
@@ -18,6 +21,10 @@ export default function createGitHubImporter(octokit) {
 
   const octokitCache = new Cache(50);
   octokitCache.materialize = async (url) => await octokit.request(url);
+
+  const userCache = new Cache(100);
+  userCache.materialize = async (login) =>
+    (await octokit.request('/users/{login}', { login }))?.data;
 
   async function loadCommentsWithoutID(repoID) {
     return await SmartComment.find({
@@ -41,25 +48,53 @@ export default function createGitHubImporter(octokit) {
       githubComment.issue_url.replace('/issues/', '/pulls/');
     const { data: pullRequest } = await octokitCache.get(pullRequestURL);
     const { repo } = pullRequest.base;
-    const { id } = githubComment;
     const otherComments = await commentsWithoutID.get(repo.id);
     const existingComment = await findDuplicate(githubComment, otherComments);
+
     if (existingComment) {
-      existingComment.githubMetadata.type = type;
-      existingComment.githubMetadata.id = id;
-      await existingComment.save();
-      await linkCommentToExistingUser(existingComment);
-      return existingComment;
+      return await updateExistingSmartComment({
+        githubComment,
+        existingComment,
+        userCache,
+      });
     }
 
     return await createNewSmartComment({
       githubComment,
       pullRequest,
+      userCache,
     });
   };
 }
 
-async function createNewSmartComment({ githubComment, pullRequest }) {
+async function updateExistingSmartComment({
+  githubComment,
+  existingComment,
+  userCache,
+}) {
+  const type = getType(githubComment);
+  const { id } = githubComment;
+  existingComment.set('githubMetadata.type', type);
+  existingComment.set('githubMetadata.id', id);
+
+  if (!existingComment.userId) {
+    const user = await findOrCreateGitHubUser({
+      id: githubComment.user.id,
+      username: githubComment.user.login,
+      userCache,
+    });
+    existingComment.set('userId', user);
+  }
+
+  await existingComment.save();
+  return existingComment;
+}
+
+async function createNewSmartComment({
+  githubComment,
+  pullRequest,
+  userCache,
+}) {
   const type = getType(githubComment);
   const text = githubComment.body;
   const { id } = githubComment;
@@ -85,7 +120,12 @@ async function createNewSmartComment({ githubComment, pullRequest }) {
     getReaction(text),
   ]);
 
-  const user = await findUserByGitHubUsername(githubMetadata.user.login);
+  const user = await findOrCreateGitHubUser({
+    id: githubComment.user.id,
+    username: githubComment.user.login,
+    userCache,
+  });
+
   const sanitizedText = removeSemaSignature(text);
   return await SmartComment.findOrCreate({
     comment: sanitizedText,
@@ -215,10 +255,25 @@ async function extractReactionFromSemaComment(text) {
   return null;
 }
 
-async function linkCommentToExistingUser(comment) {
-  const { login } = comment.githubMetadata.user;
-  const user = await findUserByGitHubUsername(login);
-  if (user) {
-    await comment.updateOne({ userId: user._id });
-  }
+async function findOrCreateGitHubUser({ id, username, userCache }) {
+  const existingUser = await findByUsernameOrIdentity('', {
+    provider: 'github',
+    id,
+  });
+  if (existingUser) return existingUser;
+
+  const githubUser = await userCache.get(username);
+  return await createGhostUser({
+    handle: githubUser.login,
+    username: githubUser.login,
+    identities: [
+      {
+        provider: 'github',
+        id: githubUser.id.toString(),
+        username: githubUser.login,
+        avatarUrl: githubUser.avatar_url,
+      },
+    ],
+    avatarUrl: githubUser.avatar_url,
+  });
 }

@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { addDays, differenceInMinutes } from 'date-fns';
 import nock from 'nock';
+import mongoose from 'mongoose';
 import resetNocks from '../../test/nocks';
 import * as userService from '../users/userService';
 import {
@@ -10,7 +11,12 @@ import {
 import { create as createRepository } from '../repositories/repositoryService';
 import Repository from '../repositories/repositoryModel';
 import SmartComment from '../comments/smartComments/smartCommentModel';
+import User from '../users/userModel';
 import handler from './importRepositoryQueue';
+
+const {
+  Types: { ObjectId },
+} = mongoose;
 
 describe('Import Repository Queue', () => {
   let user;
@@ -129,10 +135,6 @@ describe('Import Repository Queue', () => {
           expect(comment.source.origin).toBe('repoSync');
         });
 
-        it('should not reference a user', () => {
-          expect(comment.userId).toBeFalsy();
-        });
-
         it('should have comment body', () => {
           expect(comment.comment).toBe(
             '@jrock17 i know this is the logic you were referring to yesterday... looks awesome and elegant'
@@ -222,10 +224,6 @@ describe('Import Repository Queue', () => {
           expect(comment.source.origin).toBe('repoSync');
         });
 
-        it('should not reference a user', () => {
-          expect(comment.userId).toBeFalsy();
-        });
-
         it('should have comment body', () => {
           expect(comment.comment).toBe('LGTM');
         });
@@ -310,10 +308,6 @@ describe('Import Repository Queue', () => {
 
         it('should have source origin "repoSync"', () => {
           expect(comment.source.origin).toBe('repoSync');
-        });
-
-        it('should not reference a user', () => {
-          expect(comment.userId).toBeFalsy();
         });
 
         it('should have comment body', () => {
@@ -1644,6 +1638,7 @@ describe('Import Repository Queue', () => {
     beforeAll(async () => {
       resetNocks();
       await SmartComment.deleteMany();
+      await User.deleteMany();
     });
 
     beforeAll(async () => {
@@ -1655,6 +1650,7 @@ describe('Import Repository Queue', () => {
         identities: [
           {
             email: 'pangeaware@example.com',
+            id: '1045023',
             provider: 'github',
             repositories: [],
             username: 'pangeaware',
@@ -1708,7 +1704,7 @@ describe('Import Repository Queue', () => {
 
       beforeAll(async () => {
         await handler({ id: repository.id });
-        comment = await SmartComment.findOne();
+        comment = await SmartComment.findOne().populate('userId');
       });
 
       it('should reference the Sema user', () => {
@@ -1805,6 +1801,225 @@ describe('Import Repository Queue', () => {
 
       it('should reference the Sema user', () => {
         expect(comment.userId).toEqualID(pangeawareUser);
+      });
+    });
+  });
+
+  describe('when comment author is not a user of Sema', () => {
+    let comment;
+
+    beforeAll(async () => {
+      await User.deleteMany();
+    });
+
+    beforeAll(async () => {
+      repository = await createRepository({
+        name: 'phoenix',
+        type: 'github',
+        id: '237888452',
+        installationId: '25676597',
+        addedBy: user,
+        cloneUrl: 'https://github.com/Semalab/phoenix',
+      });
+    });
+
+    describe('comment is new', () => {
+      beforeAll(async () => {
+        resetNocks();
+        await SmartComment.deleteMany();
+        repository.sync = {};
+        await repository.save();
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, getFirstPageOfPullRequestComments().slice(1, 2), {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=1&sort=created&direction=desc>; rel="last"',
+          })
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query(() => true)
+          .reply(200, [])
+          .get('/repos/Semalab/phoenix/pulls')
+          .query(() => true)
+          .reply(200, []);
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/3')
+          .reply(200, getPullRequestDetailPR3());
+      });
+
+      beforeAll(async () => {
+        await handler({ id: repository.id });
+        comment = await SmartComment.findOne().populate('userId');
+        user = comment.userId;
+      });
+
+      describe('ghost user', () => {
+        it('should have username', () => {
+          expect(user.username).toBe('jrock17');
+        });
+
+        it('should have handle', () => {
+          expect(user.handle).toBe('jrock17');
+        });
+
+        it('should be inactive', () => {
+          expect(user.isActive).toBe(false);
+        });
+
+        it('should have GitHub identity', () => {
+          const identity = user.identities[0];
+          expect(identity.provider).toBe('github');
+          expect(identity.id).toBe('1270524');
+          expect(identity.username).toBe('jrock17');
+          expect(identity.avatarUrl).toBe(
+            'https://avatars.githubusercontent.com/u/1270524?v=4'
+          );
+        });
+
+        it('should have origin "sync"', () => {
+          expect(user.origin).toBe('sync');
+        });
+
+        it('should have avatar', () => {
+          expect(user.avatarUrl).toBe(
+            'https://avatars.githubusercontent.com/u/1270524?v=4'
+          );
+        });
+
+        it('should not have accepted terms', () => {
+          expect(user.termsAcceptedAt).toBeFalsy();
+        });
+
+        it('should not be onboarded', () => {
+          expect(user.isOnboarded).toBeFalsy();
+        });
+
+        it('should not have last login timestamp', () => {
+          expect(user.lastLogin).toBeFalsy();
+        });
+      });
+    });
+
+    describe('when comment exists in the database', () => {
+      beforeAll(async () => {
+        resetNocks();
+        await SmartComment.deleteMany();
+        await User.deleteMany();
+        repository.sync = {};
+        await repository.save();
+      });
+
+      beforeAll(async () => {
+        comment = await createSmartComment({
+          comment:
+            'Renamed to `completedAt` since that mirrors the timestamp vars like `createdAt`',
+          location: 'files changed',
+          suggestedComments: [],
+          reaction: '607f0d1ed7f45b000ec2ed71',
+          tags: [],
+          // Bogus user ID, just to pass validation.
+          userId: new ObjectId(),
+          githubMetadata: {
+            commentId: null,
+            filename: null,
+            repo: 'phoenix',
+            repo_id: '237888452',
+            url: 'https://github.com/Semalab/phoenix',
+            created_at: '2020-12-17T18:41:25Z',
+            updated_at: '2020-12-17T20:30:14Z',
+            user: {
+              id: '2045024',
+              login: 'jrock17',
+            },
+            requester: 'pangeaware',
+          },
+        });
+        // Blank user ID, matches state of database on June 2022.
+        await comment.updateOne({ $set: { userId: null } });
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, getFirstPageOfPullRequestComments().slice(1, 2), {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=1&sort=created&direction=desc>; rel="last"',
+          })
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query(() => true)
+          .reply(200, [])
+          .get('/repos/Semalab/phoenix/pulls')
+          .query(() => true)
+          .reply(200, []);
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/3')
+          .reply(200, getPullRequestDetailPR3());
+      });
+
+      beforeAll(async () => {
+        await handler({ id: repository.id });
+        comment = await SmartComment.findOne().populate('userId');
+        user = comment.userId;
+      });
+
+      it('should match with existing comment', async () => {
+        const count = await SmartComment.countDocuments();
+        expect(count).toBe(1);
+        expect(comment.source.id).toBe('pullRequestComment:545317389');
+      });
+
+      describe('ghost user', () => {
+        it('should have username', () => {
+          expect(user.username).toBe('jrock17');
+        });
+
+        it('should have handle', () => {
+          expect(user.handle).toBe('jrock17');
+        });
+
+        it('should be inactive', () => {
+          expect(user.isActive).toBe(false);
+        });
+
+        it('should have GitHub identity', () => {
+          const identity = user.identities[0];
+          expect(identity.provider).toBe('github');
+          expect(identity.id).toBe('1270524');
+          expect(identity.username).toBe('jrock17');
+          expect(identity.avatarUrl).toBe(
+            'https://avatars.githubusercontent.com/u/1270524?v=4'
+          );
+        });
+
+        it('should have origin "sync"', () => {
+          expect(user.origin).toBe('sync');
+        });
+
+        it('should have avatar', () => {
+          expect(user.avatarUrl).toBe(
+            'https://avatars.githubusercontent.com/u/1270524?v=4'
+          );
+        });
+
+        it('should not have accepted terms', () => {
+          expect(user.termsAcceptedAt).toBeFalsy();
+        });
+
+        it('should not be onboarded', () => {
+          expect(user.isOnboarded).toBeFalsy();
+        });
+
+        it('should not have last login timestamp', () => {
+          expect(user.lastLogin).toBeFalsy();
+        });
       });
     });
   });
