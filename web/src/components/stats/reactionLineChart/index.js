@@ -1,16 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { TooltipWrapper } from '@nivo/tooltip';
 import { format, isValid } from 'date-fns';
-import { round, find, findIndex } from 'lodash';
-import LineChart from './lineChart'
+import { find, findIndex, round } from 'lodash';
+import LineChart from './lineChart';
 import SnapshotButton from '../../snapshots/snapshotButton';
 import styles from './reactionLineChart.module.scss';
 import { ArrowDownIcon, ArrowUpIcon } from '../../Icons';
 import { BAR_CHART_MIN_TOP, EMOJIS } from '../../../utils/constants';
 import { checkIfDateHasMonth, getTotalReactions } from '../../../utils/codeStats';
-
+import LineChartSkeleton from '../../../components/skeletons/lineChartSkeleton';
 
 const ReactionLineChart = ({
   reactions, className, groupBy, isSnapshot, onClick, isLoading
@@ -153,19 +153,21 @@ const ReactionLineChart = ({
   return (
     <>
       <div className={clsx(`is-flex-grow-1 ${isSnapshot ? 'mb-10 pl-5' : 'mb-20 px-10'} ${className}`, containerStyles)} onMouseMove={handleTooltipPosition}>
-        <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-          <div className="is-flex">
-            <p className="has-text-black-950 has-text-weight-semibold">Summaries</p>
-            {!emptyChart && !isSnapshot && onClick && <SnapshotButton onClick={onClick} />}
-          </div>
-          {!isLoading && <LineChart
-            data={lineChartData}
-            emptyChart={emptyChart}
-            renderTooltip={renderTooltip}
-          />}
-          {isLoading && <div className={clsx("is-flex is-align-items-center is-justify-content-center", styles.loader)} >
-            <img src="/img/onboarding/logo_loader.gif" alt="loader" />
-          </div>}
+        <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow, isLoading && styles['loading-container'])}>
+          {!isLoading && (
+            <>
+              <div className="is-flex">
+                <p className="has-text-black-950 has-text-weight-semibold">Summaries</p>
+                {!emptyChart && !isSnapshot && onClick && <SnapshotButton onClick={onClick} />}
+              </div>
+              <LineChart
+                data={lineChartData}
+                emptyChart={emptyChart}
+                renderTooltip={renderTooltip}
+              />
+            </>
+          )}
+          {isLoading && <LineChartSkeleton />}
         </div>
       </div>
     </>
@@ -178,6 +180,7 @@ ReactionLineChart.defaultProps = {
   className: '',
   groupBy: 'day',
   isSnapshot: false,
+  isLoading: false
 };
 
 ReactionLineChart.propTypes = {
@@ -186,6 +189,7 @@ ReactionLineChart.propTypes = {
   groupBy: PropTypes.string,
   isSnapshot: PropTypes.bool,
   onClick: PropTypes.bool,
+  isLoading: PropTypes.bool
 };
 
 export default ReactionLineChart;
