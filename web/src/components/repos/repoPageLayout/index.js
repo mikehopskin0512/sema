@@ -13,13 +13,18 @@ import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { getUserRepositories, fetchReposByIds } = repositoriesOperations;
 
-function RepoPageLayout({ children, dates, isTeamRepo, ...sidebarProps }) {
+function RepoPageLayout({
+  children,
+  dates,
+  isOrganizationRepo,
+  ...sidebarProps
+}) {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { auth, repositories, teams } = useSelector((state) => ({
+  const { auth, repositories, organizations } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
-    teams: state.teamsState,
+    organizations: state.organizationsState,
   }));
   const {
     data: { overview = {} },
@@ -29,25 +34,25 @@ function RepoPageLayout({ children, dates, isTeamRepo, ...sidebarProps }) {
     query: { repoId = '' },
     pathname = '',
   } = router;
-  const { token, selectedTeam } = auth;
+  const { token, selectedOrganization } = auth;
   const [selectedRepo, setSelectedRepo] = useState({});
   const [repoOptions, setRepoOptions] = useState([]);
   const [initialLoading, setInitialLoading] = useState(true);
 
   useAuthEffect(() => {
-    if (!isTeamRepo) {
+    if (!isOrganizationRepo) {
       const { repositories: userRepos } = auth.user.identities[0] || {};
       if (userRepos?.length && !repositories?.data?.repositories?.length) {
         dispatch(getUserRepositories(userRepos, token));
       }
     } else {
-      const { repos } = selectedTeam.team;
+      const { repos } = selectedOrganization.organization;
       if (repos?.length) {
         const idsParamString = repos.join('-');
         dispatch(fetchReposByIds(idsParamString, token));
       }
     }
-  }, [isTeamRepo]);
+  }, [isOrganizationRepo]);
 
   useEffect(() => {
     if (smartcomments) {
@@ -55,9 +60,9 @@ function RepoPageLayout({ children, dates, isTeamRepo, ...sidebarProps }) {
     }
   }, [smartcomments]);
 
-  const repoList = isEmpty(selectedTeam)
+  const repoList = isEmpty(selectedOrganization)
     ? repositories.data?.repositories
-    : teams?.repos;
+    : organizations?.repos;
 
   const formatOptions = useCallback(() => {
     if (repoList) {

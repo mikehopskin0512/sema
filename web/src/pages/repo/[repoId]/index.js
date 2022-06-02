@@ -9,7 +9,7 @@ import RepoPageLayout from '../../../components/repos/repoPageLayout';
 import StatsPage from '../../../components/stats';
 import Helmet from '../../../components/utils/Helmet';
 import { repositoriesOperations } from '../../../state/features/repositories';
-import { teamsOperations } from '../../../state/features/teams';
+import { organizationsOperations } from '../../../state/features/organizations[new]';
 import { getDateSub } from '../../../utils/parsing';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import FilterBar from '../../../components/repos/repoPageLayout/components/FilterBar';
@@ -19,7 +19,7 @@ import styles from './styles.module.scss';
 import * as api from '../../../state/utils/api';
 
 const { fetchRepositoryOverview, fetchReposByIds } = repositoriesOperations;
-const { fetchTeamRepos } = teamsOperations;
+const { fetchOrganizationRepos } = organizationsOperations;
 
 const tabTitle = {
   activity: 'Activity Log',
@@ -34,7 +34,7 @@ function RepoPage() {
     auth: state.authState,
     repositories: state.repositoriesState,
   }));
-  const { token, selectedTeam } = auth;
+  const { token, selectedOrganization } = auth;
   const {
     data: { overview },
   } = repositories;
@@ -71,21 +71,28 @@ function RepoPage() {
   const [filterUserList, setFilterUserList] = useState([]);
   const [filterRequesterList, setFilterRequesterList] = useState([]);
   const [filterPRList, setFilterPRList] = useState([]);
-  const [isTeamRepo, setIsTeamRepo] = useState(!isEmpty(selectedTeam));
+  const [isOrganizationRepo, setIsOrganizationRepo] = useState(
+    !isEmpty(selectedOrganization)
+  );
 
   useEffect(() => {
-    setIsTeamRepo(!isEmpty(selectedTeam));
-  }, [selectedTeam]);
+    setIsOrganizationRepo(!isEmpty(selectedOrganization));
+  }, [selectedOrganization]);
 
   useAuthEffect(() => {
-    if (!isEmpty(selectedTeam)) {
-      dispatch(fetchTeamRepos({ teamId: selectedTeam.team._id }, token));
+    if (!isEmpty(selectedOrganization)) {
+      dispatch(
+        fetchOrganizationRepos(
+          { organizationId: selectedOrganization.organization._id },
+          token
+        )
+      );
     }
   }, []);
 
   useAuthEffect(() => {
-    if (isTeamRepo) {
-      const { repos } = selectedTeam.team;
+    if (isOrganizationRepo) {
+      const { repos } = selectedOrganization.organization;
       if (repos?.length) {
         const idsParamString = repos.join('-');
         dispatch(fetchReposByIds(idsParamString, token));
@@ -221,7 +228,7 @@ function RepoPage() {
       selectedTab={selectedTab}
       dates={dates}
       onDateChange={onDateChange}
-      isTeamRepo={isTeamRepo}
+      isOrganizationRepo={isOrganizationRepo}
     >
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
 

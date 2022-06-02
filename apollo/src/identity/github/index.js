@@ -123,19 +123,19 @@ export default (app) => {
           await createRefreshToken(tokenData)
         );
 
-        // Join the user to the selected team
+        // Join the user to the selected organization
         if (inviteToken) {
           const invitation = await checkIfInvitedByToken(inviteToken);
           await createUserRole({
-            team: invitation.team,
+            organization: invitation.organization,
             user: user._id,
             role: invitation.role,
           });
           await redeemInvite(inviteToken, user._id, invitation._id);
 
-          if (!isWaitlist && invitation.team) {
+          if (!isWaitlist && invitation.organization) {
             return res.redirect(
-              `${orgDomain}/dashboard?inviteTeamId=${invitation.team}`
+              `${orgDomain}/dashboard?inviteOrganizationId=${invitation.organization}`
             );
           }
         }

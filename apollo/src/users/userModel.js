@@ -71,7 +71,7 @@ const userSchema = mongoose.Schema(
     isWaitlist: { type: Boolean, default: false },
     isOnboarded: { type: Date, default: null },
     banners: {
-      teamCreate: { type: Boolean, default: true },
+      organizationCreate: { type: Boolean, default: true },
     },
     verificationToken: String,
     verificationExpires: Date,

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
@@ -8,7 +7,7 @@ import CustomSelect from '../../activity/select';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import { tagsOperations } from '../../../state/features/tags';
 import { addTags } from '../../../utils';
-import { DROPDOWN_SORTING_TYPES, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { DROPDOWN_SORTING_TYPES, SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants';
 import usePermission from '../../../hooks/usePermission';
 import styles from './snippetCollectionFilter.module.scss';
 import { gray500 } from '../../../../styles/_colors.module.scss';
@@ -24,8 +23,8 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
   }));
   const { tags } = tagState;
   const { token } = auth;
-  const { checkAccess, isTeamAdminOrLibraryEditor } = usePermission();
-  const isSemaAdminOrLibraryEditor = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canCreateCollections');
+  const { isOrganizationAdminOrLibraryEditor, checkAccess } = usePermission();
+  const isSemaAdminOrLibraryEditor = checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canCreateCollections');
 
   const getRelevantTags = useCallback((types) => {
     if (!tags.length) return [];
@@ -127,7 +126,7 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
             outlined
           />
         </div>
-        {isTeamAdminOrLibraryEditor() && <div className={clsx(`column ${styles['filter-box']}`)}>
+        {isOrganizationAdminOrLibraryEditor() && <div className={clsx(`column ${styles['filter-box']}`)}>
           <CustomSelect
             selectProps={{
               options: authors,

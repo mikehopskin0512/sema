@@ -3,7 +3,7 @@ import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
 
-import { version, semaCorporateTeamId } from '../config';
+import { version, semaCorporateOrganizationId } from '../config';
 import logger from '../shared/logger';
 import checkAccess from '../middlewares/checkAccess';
 import { createUserRole, updateRole, deleteUserRole } from './userRoleService';
@@ -44,9 +44,9 @@ export default (app, passport) => {
     },
   );
 
-  // TODO: need to be refactored to get teamId
+  // TODO: need to be refactored to get organizationId
   route.delete(
-    '/:teamId/:userRoleId',
+    '/:organizationId/:userRoleId',
     passport.authenticate(['bearer'], { session: false }),
     checkAccess('canEditUsers'),
     async (req, res) => {

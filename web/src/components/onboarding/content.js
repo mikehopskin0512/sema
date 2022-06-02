@@ -24,8 +24,8 @@ export const content = [
     img: '/img/onboarding/install-extension.png'
   },
   {
-    title: 'Sema is Better With Your Team!',
-    subtitle: ['Set up shared repos, insights and team snippets to help your team do more.'],
+    title: 'Sema is Better With Your Organization!',
+    subtitle: ['Set up shared repos, insights and organization snippets to help your organization do more.'],
     img: '/img/onboarding/part-of-us.png'
   },
 ];

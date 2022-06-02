@@ -17,7 +17,7 @@ export const create = async (invitation) => {
       sender,
       senderName,
       senderEmail,
-      team,
+      organization,
       role,
     } = invitation;
 
@@ -40,7 +40,7 @@ export const create = async (invitation) => {
       senderEmail,
       token,
       tokenExpires,
-      team: team || null,
+      organization: organization || null,
       role: role || null,
     });
     const savedInvite = await newInvite.save();
