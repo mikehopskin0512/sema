@@ -1,5 +1,5 @@
 export const getOrCreateUserAndToken = async user => {
-  return userId;
+  return user.username;
 };
 
 // ‘First_name_Last_name’ has joined Sema.
