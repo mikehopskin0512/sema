@@ -20,6 +20,7 @@ import { ON_INPUT_DEBOUNCE_INTERVAL_MS, PATHS, PROFILE_VIEW_MODE } from '../../u
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
+
 const {
   updateUser,
   updateUserHasExtension,
@@ -31,6 +32,7 @@ const {
 const {
   setSelectedTeam,
   setProfileViewMode,
+  trackUserLogin,
 } = authOperations;
 
 const Dashboard = () => {
@@ -146,6 +148,7 @@ const Dashboard = () => {
   // }
 
   if (redirectUser) {
+    trackUserLogin();
     setRedirectUser(false);
     if (selectedTeam) {
       router.push(`${PATHS.TEAMS._}/${selectedTeam._id}${PATHS.DASHBOARD}`);
