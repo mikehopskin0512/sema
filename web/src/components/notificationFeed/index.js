@@ -3,7 +3,7 @@ import { StreamApp, NotificationDropdown, FlatFeed } from 'react-activity-feed';
 import 'react-activity-feed/dist/index.css';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { notificationsOperations } from '../../state/features/notifications';
-import { NotificationCustom, NotificationCustom2 } from './NotificationCustom';
+import { NotificationCustom } from './NotificationCustom';
 
 const { fetchNotificationsToken } = notificationsOperations;
 

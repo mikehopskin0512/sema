@@ -12,7 +12,6 @@ const getUsers = activities => activities.map(item => item.actor);
 const getHeaderText = (t, activitiesLen, verb, actorName, activityVerb) => {
   if (activitiesLen === 1) {
     switch (verb) {
-      case 'follow':
       case NOTIFICATION_TYPE.JOINED_SEMA:
         return t('{actorName} has joined Sema.', {
           actorName
@@ -27,7 +26,6 @@ const getHeaderText = (t, activitiesLen, verb, actorName, activityVerb) => {
 
   if (activitiesLen > 1 && activitiesLen < 3) {
     switch (verb) {
-      case 'follow':
       case NOTIFICATION_TYPE.JOINED_SEMA:
         return t('{actorName} and 1 other has joined Sema.', {
           actorName
@@ -42,7 +40,6 @@ const getHeaderText = (t, activitiesLen, verb, actorName, activityVerb) => {
 
   const countOtherActors = activitiesLen - 1;
   switch (verb) {
-    case 'follow':
     case NOTIFICATION_TYPE.JOINED_SEMA:
       return t('{actorName} and {countOtherActors} others has joined Sema.', {
         actorName,
@@ -156,6 +153,3 @@ export const NotificationCustom = ({
     </div>
   );
 };
-
-export const NotificationCustom2 = group =>
-  console.log(group) || <div>{group.activityGroup.group}</div>;
