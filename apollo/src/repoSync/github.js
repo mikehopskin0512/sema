@@ -134,7 +134,7 @@ async function createNewSmartComment({
     reaction: reaction?._id,
     tags: tags.map((t) => t._id),
     source: {
-      origin: 'repoSync',
+      origin: 'sync',
       provider: 'github',
       id: `${type}:${id}`,
     },

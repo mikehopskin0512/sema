@@ -131,8 +131,8 @@ describe('Import Repository Queue', () => {
           );
         });
 
-        it('should have source origin "repoSync"', () => {
-          expect(comment.source.origin).toBe('repoSync');
+        it('should have source origin "sync"', () => {
+          expect(comment.source.origin).toBe('sync');
         });
 
         it('should have comment body', () => {
@@ -220,8 +220,8 @@ describe('Import Repository Queue', () => {
           );
         });
 
-        it('should have source origin "repoSync"', () => {
-          expect(comment.source.origin).toBe('repoSync');
+        it('should have source origin "sync"', () => {
+          expect(comment.source.origin).toBe('sync');
         });
 
         it('should have comment body', () => {
@@ -306,8 +306,8 @@ describe('Import Repository Queue', () => {
           );
         });
 
-        it('should have source origin "repoSync"', () => {
-          expect(comment.source.origin).toBe('repoSync');
+        it('should have source origin "sync"', () => {
+          expect(comment.source.origin).toBe('sync');
         });
 
         it('should have comment body', () => {

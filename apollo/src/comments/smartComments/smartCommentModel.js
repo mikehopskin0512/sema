@@ -56,7 +56,7 @@ const smartCommentSchema = new Schema(
         // see https://semalab.atlassian.net/browse/DESIGN-830
         if (!this.isNew) return false;
 
-        return this.source.origin !== 'repoSync';
+        return this.source.origin !== 'sync';
       },
     },
     location: { type: String, enum: ['conversation', 'files changed'] },
@@ -69,7 +69,7 @@ const smartCommentSchema = new Schema(
     source: {
       origin: {
         type: String,
-        enum: ['extension', 'repoSync'],
+        enum: ['extension', 'sync'],
         default: 'extension',
       },
       provider: {

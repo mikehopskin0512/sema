@@ -77,7 +77,7 @@ describe('GET /comments/smart', () => {
         },
         source: {
           provider: 'github',
-          origin: 'repoSync',
+          origin: 'sync',
         },
       });
 
