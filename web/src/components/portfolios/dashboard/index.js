@@ -340,7 +340,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
                     <label htmlFor={`activeSwitch-${portfolio._id}`} />
                   </div>
                   <div
-                    className="is-flex"
+                    className="is-flex ml-20"
                     onClick={isPublicPortfolio ? onCopy : () => { }}
                     onMouseEnter={() => setHover(true)}
                     onMouseLeave={() => setHover(false)}
