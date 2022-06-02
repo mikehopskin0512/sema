@@ -700,7 +700,8 @@ export const findByHandle = async (handle) => {
   }
 };
 
-export const findByGitHubUsername = async (username) => await User.findOne({
+export const findByGitHubUsername = async (username) =>
+  await User.findOne({
     identities: {
       $elemMatch: {
         provider: 'github',
