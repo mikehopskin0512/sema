@@ -95,7 +95,7 @@ const CollectionRow = ({ data }) => {
         </td>
         <td className="py-15 has-background-white px-10 is-hidden-mobile">
           <div className="is-flex is-flex-direction-column is-justify-content-center">
-            <p className="is-size-7">
+            <p className={clsx("is-size-7", styles.description)}>
               {description}
             </p>
           </div>

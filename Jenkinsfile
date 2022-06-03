@@ -36,8 +36,11 @@ pipeline {
                     case ['qa', 'qa1']:
                             env.ENVIRONMENT = GIT_BRANCH
                             break
-                    case ~/$release_regex/:
+                    case 'develop':
                             env.ENVIRONMENT = 'staging'
+                            break
+                    case ~/$release_regex/:
+                            env.ENVIRONMENT = 'release'
                             break
                     default:
                             env.ENVIRONMENT = 'undefined'
