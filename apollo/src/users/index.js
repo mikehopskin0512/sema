@@ -18,6 +18,7 @@ import {
   initiatePasswordReset, validatePasswordReset, resetPassword,
 } from './userService';
 import { setRefreshToken, createRefreshToken, createAuthToken } from '../auth/authService';
+import { addAcceptedInviteActivity } from '../notifications/notificationService';
 import { redeemInvite, checkIfInvited } from '../invitations/invitationService';
 import { sendEmail } from '../shared/emailService';
 import { getPortfoliosByUser } from '../portfolios/portfolioService';
@@ -82,6 +83,12 @@ export default (app, passport) => {
 
         // Redeem invite
         await redeemInvite(token, userId);
+
+        // send notification to sender - no need to await that action
+        (async (newUser, senderId) => {
+          const senderUser = await findById(sender);
+          return addAcceptedInviteActivity(newUser._id, newUser, senderId, senderUser);
+        }) (newUser, sender);
       }
 
       // Check if user has been previously invited
