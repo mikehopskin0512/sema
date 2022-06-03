@@ -270,9 +270,9 @@ export const setUser = function (user) {
   };
 };
 
-export const setSelectedTeamSuccess = (selectedTeam) => ({
-  type: types.SET_SELECTED_TEAM,
-  selectedTeam,
+export const setSelectedOrganizationSuccess = (selectedOrganization) => ({
+  type: types.SET_SELECTED_ORGANIZATION,
+  selectedOrganization,
 });
 
 export const setProfileViewModeSuccess = (profileViewMode) => ({
@@ -280,9 +280,9 @@ export const setProfileViewModeSuccess = (profileViewMode) => ({
   profileViewMode,
 });
 
-export const setSelectedTeam = (selectedTeam) => (dispatch) => {
-  localStorage.setItem('sema_selected_team', JSON.stringify(selectedTeam));
-  dispatch(setSelectedTeamSuccess(selectedTeam));
+export const setSelectedOrganization = (selectedOrganization) => (dispatch) => {
+  localStorage.setItem('sema_selected_organization', JSON.stringify(selectedOrganization));
+  dispatch(setSelectedOrganizationSuccess(selectedOrganization));
 };
 
 export const setProfileViewMode = (profileViewMode) => (dispatch) => {

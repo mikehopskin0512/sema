@@ -6,15 +6,15 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import styles from './card.module.scss';
-import { COLLECTION_TYPES, DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants'
+import { COLLECTION_TYPES, DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants'
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
 import usePermission from '../../../hooks/usePermission';
 import { PlusIcon, CommentsIcon, OptionsIcon, TeamIcon } from '../../../components/Icons';
 import { isSemaDefaultCollection } from '../../../utils';
 import { isEmpty } from 'lodash';
-import { updateTeamCollectionIsActiveAndFetchCollections } from '../../../state/features/teams/operations';
-import { fetchTeamCollections } from '../../../state/features/teams/actions';
+import { updateOrganizationCollectionIsActiveAndFetchCollections } from '../../../state/features/organizations[new]/operations';
+import { fetchOrganizationCollections } from '../../../state/features/organizations[new]/actions';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 import { orange600 } from '../../../../styles/_colors.module.scss';
 
@@ -38,15 +38,15 @@ const Tag = ({ tag, _id, type }) => (
 const Card = ({ isActive, collectionData, addNewComment, type }) => {
   const titleRef = useRef(null);
   const {
-    isTeamAdmin,
-    isTeamAdminOrLibraryEditor,
+    isOrganizationAdmin,
+    isOrganizationAdminOrLibraryEditor,
     isSemaAdmin,
     isIndividualUser,
-    checkTeamPermission
+    checkOrganizationPermission
   } = usePermission();
   const popupRef = useRef(null);
   const router = useRouter();
-  const { token, user, selectedTeam } = useSelector((state) => state.authState);
+  const { token, user, selectedOrganization } = useSelector((state) => state.authState);
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const { asPath } = router;
@@ -89,14 +89,14 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
   if (collectionData) {
     const { _id = '', name = '', description = '', comments = [], commentsCount, author = '', source, guides = [], languages = [], isActive: isNotArchived } = collectionData;
 
-    const isTeamSnippet = selectedTeam?.team?.name?.toLowerCase() === author?.toLowerCase() || false
-    const isAddButtonNeeded = isTeamAdminOrLibraryEditor() || isSemaAdmin();
+    const isOrganizationSnippet = selectedOrganization?.organization?.name?.toLowerCase() === author?.toLowerCase() || false
+    const isAddButtonNeeded = isOrganizationAdminOrLibraryEditor() || isSemaAdmin();
 
     const onChangeToggle = (e) => {
       e.stopPropagation();
       // TODO: would be great to add error handling here in case of network error
-      if (!isEmpty(selectedTeam)) {
-        dispatch(updateTeamCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
+      if (!isEmpty(selectedOrganization)) {
+        dispatch(updateOrganizationCollectionIsActiveAndFetchCollections(_id, selectedOrganization.organization?._id, token));
       } else {
         dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));
       }
@@ -110,11 +110,11 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
       try {
         await dispatch(updateCollection(_id, { collection: { isActive: false } }, token));
         if(isActive) {
-          dispatch(updateTeamCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
+          dispatch(updateOrganizationCollectionIsActiveAndFetchCollections(_id, selectedOrganization.organization?._id, token));
         }
         dispatch(triggerAlert('Collection archived!', 'success'));
         dispatch(fetchAllUserCollections(token));
-        dispatch(fetchTeamCollections(selectedTeam?.team?._id, token));
+        dispatch(fetchOrganizationCollections(selectedOrganization?.organization?._id, token));
       } catch (error) {
         dispatch(triggerAlert('Unable to archive collection', 'error'));
       }
@@ -125,21 +125,21 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
       if (collection) {
         dispatch(triggerAlert('Collection unarchived!', 'success'));
         dispatch(fetchAllUserCollections(token));
-        dispatch(fetchTeamCollections(selectedTeam?.team?._id, token));
+        dispatch(fetchOrganizationCollections(selectedOrganization?.organization?._id, token));
         return;
       }
       dispatch(triggerAlert('Unable to unarchived collection', 'error'));
     }
 
     const isMyComments = name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom snippets';
-    const isTeamIconNeeded = collectionData.type === COLLECTION_TYPES.TEAM;
-    const isHighlightNeeded = collectionData.type === COLLECTION_TYPES.PERSONAL || isTeamIconNeeded;
+    const isOrganizationIconNeeded = collectionData.type === COLLECTION_TYPES.ORGANIZATION;
+    const isHighlightNeeded = collectionData.type === COLLECTION_TYPES.PERSONAL || isOrganizationIconNeeded;
 
     const isMenuShown = () => {
-      const isTeamSnippet = selectedTeam?.team?.name?.toLowerCase() === author?.toLowerCase() || false
+      const isOrganizationSnippet = selectedOrganization?.organization?.name?.toLowerCase() === author?.toLowerCase() || false
 
-      if (isTeamAdminOrLibraryEditor() || isSemaAdmin()) return true;
-      if (isTeamAdmin() && isTeamSnippet) return true
+      if (isOrganizationAdminOrLibraryEditor() || isSemaAdmin()) return true;
+      if (isOrganizationAdmin() && isOrganizationSnippet) return true
       if (isIndividualUser()) return collectionData.author.toLowerCase() === user.username.toLowerCase()
 
       return false;
@@ -151,7 +151,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
           <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
             <div className={clsx('is-full-width', styles['card-bar'], isHighlightNeeded ? 'has-background-orange-300' : type === 'active' ? 'has-background-primary' : 'has-background-gray-400')} />
             <div className="is-flex is-justify-content-space-between px-25 pb-10 pt-20 is-align-items-center">
-              {isTeamIconNeeded && <div className={clsx('is-circular has-background-orange-50 is-flex is-align-items-center is-justify-content-center', styles['team-icon-container'])}>
+              {isOrganizationIconNeeded && <div className={clsx('is-circular has-background-orange-50 is-flex is-align-items-center is-justify-content-center', styles['organization-icon-container'])}>
                 <TeamIcon color={orange600} size='small'/>
               </div>}
               <OverflowTooltip ref={titleRef} text={name}>
@@ -182,7 +182,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                   </div>
                 )} */}
               </div>
-              <div className={`is-flex is-justify-content-space-between is-align-items-center has-background-gray-300 ${styles['card-bottom-section']} ${(isMyComments || isTeamSnippet) && 'is-flex-wrap-wrap'}`}>
+              <div className={`is-flex is-justify-content-space-between is-align-items-center has-background-gray-300 ${styles['card-bottom-section']} ${(isMyComments || isOrganizationSnippet) && 'is-flex-wrap-wrap'}`}>
                 <div className={clsx(
                   'border-radius-8px p-10 is-flex is-align-items-center',
                 )}>
@@ -193,7 +193,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                   <p className={clsx('is-size-7 has-text-weight-semibold has-text-blue-500')}>snippets</p>
                 </div>
                 <div className='is-flex is-align-items-center'>
-                  {((isMyComments || (isTeamSnippet && checkTeamPermission('canCreateSnippets') && isAddButtonNeeded))) && (
+                  {((isMyComments || (isOrganizationSnippet && checkOrganizationPermission('canCreateSnippets') && isAddButtonNeeded))) && (
                     <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden >
                       <div
                         className={clsx('button has-text-primary has-background-white-0 is-outlined is-clickable is-fullwidth has-text-weight-semibold',

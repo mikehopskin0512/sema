@@ -143,13 +143,13 @@ const Tags = ({ current }) => (
         </div>
         <div className="tile is-4 is-parent is-vertical mt-70">
           <p className="title">Add Tags</p>
-          <p className="subtitle">Describe the code in positive or constructive coding characteristics -- so the team can learn and grow, and great code can be tagged for future training.</p>
+          <p className="subtitle">Describe the code in positive or constructive coding characteristics -- so the organization can learn and grow, and great code can be tagged for future training.</p>
         </div>
       </div>
       {/* Mobile View */}
       <div className="is-hidden-desktop is-flex is-flex-direction-column px-50">
         <p className="is-size-5-mobile has-text-weight-semibold">Add Tags</p>
-        <p className="is-size-6-mobile">Describe the code in positive or constructive coding characteristics -- so the team can learn and grow, and great code can be tagged for future training.</p>
+        <p className="is-size-6-mobile">Describe the code in positive or constructive coding characteristics -- so the organization can learn and grow, and great code can be tagged for future training.</p>
         <figure className="image is-4by3 mt-20">
           <img src={carouselData[1]} alt="tags" className={styles['mobile-img']} />
         </figure>

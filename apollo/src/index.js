@@ -21,7 +21,6 @@ import sources from './sources';
 import suggestedComments from './comments/suggestedComments';
 import support from './support';
 import tags from './comments/tags';
-import team from './teams';
 import userRoles from './userRoles';
 import users from './users';
 
@@ -49,7 +48,6 @@ export default function attachRoutes(app, passport) {
   searchQueries(app, passport);
   snapshots(app, passport);
   support(app, passport);
-  team(app, passport);
   roles(app, passport);
   userRoles(app, passport);
 }

@@ -1,6 +1,6 @@
 export const modalDetails = [
   {
-    content: 'You can go to your Personal or Team Profile, Activity Log and click “Snapshot for Portfolio”',
+    content: 'You can go to your Personal or Organization Profile, Activity Log and click “Snapshot for Portfolio”',
     img: '/img/portfolio/portfolio-guide-1.png',
     alt: 'guide-1',
     width: '456px',

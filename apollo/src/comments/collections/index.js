@@ -3,10 +3,10 @@ import swaggerUi from "swagger-ui-express";
 import yaml from "yamljs";
 import path from "path";
 
-import { semaCorporateTeamId, version } from '../../config';
+import { semaCorporateOrganizationId, version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import { create, findByAuthor, findById, getUserCollectionsById, toggleActiveCollection, toggleTeamsActiveCollection, update } from './collectionService';
+import { create, findByAuthor, findById, getUserCollectionsById, toggleActiveCollection, toggleOrganizationsActiveCollection, update } from './collectionService';
 import { _checkPermission } from '../../shared/utils';
 import checkEnv from "../../middlewares/checkEnv";
 import { COLLECTION_TYPE } from './constants';
@@ -18,13 +18,13 @@ export default (app, passport) => {
   app.use(`/${version}/comments/collections`, route);
 
   route.put('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { body: { collection, teamId }, params: { id }, user } = req;
+    const { body: { collection, organizationId }, params: { id }, user } = req;
     const { _id } = user;
     try {
       let payload;
       if (collection) {
         if (collection?.author === 'sema') {
-          if (!(_checkPermission(semaCorporateTeamId, 'canEditCollections', user))) {
+          if (!(_checkPermission(semaCorporateOrganizationId, 'canEditCollections', user))) {
             throw new errors.Unauthorized('User does not have permission');
           }
         }
@@ -32,11 +32,11 @@ export default (app, passport) => {
       } else {
         const collectionData = await findById(id)
         if (collectionData?.author === 'sema') {
-          if (!(_checkPermission(semaCorporateTeamId, 'canEditCollections', user))) {
+          if (!(_checkPermission(semaCorporateOrganizationId, 'canEditCollections', user))) {
             throw new errors.Unauthorized('User does not have permission');
           }
         }
-        payload = teamId ? await toggleTeamsActiveCollection(teamId, id, collectionData.type) : await toggleActiveCollection(_id, id, collectionData.type);
+        payload = organizationId ? await toggleOrganizationsActiveCollection(organizationId, id, collectionData.type) : await toggleActiveCollection(_id, id, collectionData.type);
         if (payload.status == 400) {
           return res.status('400').send(payload);
         }
@@ -50,9 +50,9 @@ export default (app, passport) => {
   });
 
   route.get('/all', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { user: { _id }, query: { teamId } } = req;
+    const { user: { _id }, query: { organizationId } } = req;
     try {
-      const collections = await getUserCollectionsById(_id, teamId);
+      const collections = await getUserCollectionsById(_id, organizationId);
       return res.status(200).send(collections);
     } catch (error) {
       logger.error(error);
@@ -61,7 +61,7 @@ export default (app, passport) => {
   });
 
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { collection, teamId } = req.body;
+    const { collection, organizationId } = req.body;
     const { _id: userId } = req.user;
 
     try {
@@ -70,7 +70,7 @@ export default (app, passport) => {
         return res.status(error.statusCode).send(error);
       }
 
-      const createdCollection = await create(collection, userId, teamId);
+      const createdCollection = await create(collection, userId, organizationId);
       if (!createdCollection) {
         throw new errors.BadRequest('Collections create error');
       }

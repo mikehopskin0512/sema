@@ -16,7 +16,7 @@ import { fullName } from '../../shared/utils';
 import { suggest } from '../../comments/suggestedComments/commentSuggestions';
 import Reaction from '../../comments/reaction/reactionModel';
 import UserRole from '../../userRoles/userRoleModel';
-import Team from '../../teams/teamModel';
+import Organization from '../../organizations/organizationModel';
 import Role from '../../roles/roleModel';
 
 export const listUsers = async (params, listAll = false) => {
@@ -59,7 +59,7 @@ export const listUsers = async (params, listAll = false) => {
       });
     }
   }
-  
+
   const totalCount = await User.aggregate([
     ...pipeline,
     { $count: 'total' }
@@ -85,10 +85,10 @@ export const listUsers = async (params, listAll = false) => {
     },
     {
       $lookup: {
-        from: 'teams',
-        localField: 'userRole.team',
+        from: 'organizations',
+        localField: 'userRole.organization',
         foreignField: '_id',
-        as: 'teams',
+        as: 'organizations',
       }
     },
     {
@@ -200,7 +200,7 @@ export const findUser = async (userId) => {
   });
 
   const roles = await UserRole.find({ user: userId })
-    .populate('team')
+    .populate('organization')
     .populate('role');
   return { ...user.toJSON(), roles };
 };

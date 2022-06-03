@@ -134,16 +134,16 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-  
+
   route.post('/accept/:inviteToken', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
       const {
         params: { inviteToken },
         user,
       } = req;
-  
+
       const invitation = await checkIfInvitedByToken(inviteToken);
-      await createUserRole({ team: invitation.team, user: user._id, role: invitation.role });
+      await createUserRole({ organization: invitation.organization, user: user._id, role: invitation.role });
       await redeemInvite(inviteToken, user._id, invitation._id);
       return res.sendStatus(200);
     } catch (error) {

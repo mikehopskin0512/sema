@@ -1,7 +1,7 @@
 /* eslint react/no-danger: 0, max-len: 0 */
 import React from 'react';
 import { useRouter } from 'next/router';
-import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
+import { PATHS, SEMA_CORPORATE_ORGANIZATION_ID } from '../../utils/constants';
 import usePermission from '../../hooks/usePermission';
 
 const withSemaAdmin = (WrappedComponent) => {
@@ -10,7 +10,7 @@ const withSemaAdmin = (WrappedComponent) => {
       const Router = useRouter();
       const { checkAccess } = usePermission();
 
-      if (!checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers')) {
+      if (!checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canEditUsers')) {
         Router.push(PATHS.DASHBOARD);
         return null;
       }

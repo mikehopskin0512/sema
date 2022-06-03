@@ -33,12 +33,12 @@ export default (app, passport) => {
   route.get('/', async (req, res) => {
     const {
       user = null,
-      team = null,
+      organization = null,
       q = '',
       allCollections = false,
     } = req.query;
     try {
-      const topResult = await searchComments(user, team, q, allCollections);
+      const topResult = await searchComments(user, organization, q, allCollections);
       return res.status(201).send({ searchResults: topResult });
     } catch (error) {
       logger.error(error);

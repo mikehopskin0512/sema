@@ -9,12 +9,12 @@
   @media only screen and (min-width: 780px) {
     width: calc(100%/2);
     max-width: 540px;
-    overflow: visible; 
+    overflow: visible;
   }
   @media only screen and (min-width: 1216px) {
     width: calc(100%/3);
     max-width: calc(100%/3);
-    overflow: visible; 
+    overflow: visible;
   }
   .card-bottom-section {
     min-height: 64px;
@@ -45,7 +45,7 @@
   p {
     overflow: hidden;
     text-overflow: ellipsis;
-  } 
+  }
 }
 
 .card-bar {
@@ -54,7 +54,7 @@
   height: 7px;
 }
 
-.team-icon-container {
+.organization-icon-container {
   width: 28px;
   height: 28px;
 }

@@ -528,6 +528,7 @@ button.sema-reaction-selection {
     margin-top: 10px;
     border: none;
     box-shadow: none;
+    background-color: var(--color-sema-bg);
   }
 }
 
@@ -726,8 +727,13 @@ button.sema-reaction-selection {
   width: 100%;
   height: 1px;
   box-sizing: border-box;
-  border: 0.5px dashed var(--color-tags-container);
-  margin-bottom: 16px;
+  border-top: 0.5px dashed var(--color-tags-container);
+  background-color: var(--color-sema-bg);
+  padding-bottom: 16px;
+}
+
+.tags-wrapper {
+  background-color: var(--color-sema-bg);
 }
 
 .note-icon {
