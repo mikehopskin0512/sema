@@ -4,13 +4,12 @@ import { createOAuthAppAuth } from '@octokit/auth';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
-
 import logger from '../../shared/logger';
-import errors from '../../shared/errors';
+
 import { github, orgDomain, version } from '../../config';
-import { getProfile, getUserEmails, getRepositoryList } from './utils';
+import { getProfile, getUserEmails, getRepositoryList, getRepositoriesForAuthenticatedUser, getGithubOrgsForAuthenticatedUser } from './utils';
 import {
-  create, findByUsernameOrIdentity, updateIdentity,
+   findByUsernameOrIdentity, updateIdentity,
 } from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createIdentityToken } from '../../auth/authService';
 import {checkIfInvitedByToken, redeemInvite} from '../../invitations/invitationService';
@@ -101,17 +100,17 @@ export default (app) => {
         // Auth Sema
         await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));
 
-        // Join the user to the selected team
+        // Join the user to the selected organization
         if (inviteToken) {
           const invitation = await checkIfInvitedByToken(inviteToken);
-          await createUserRole({ team: invitation.team, user: user._id, role: invitation.role});
+          await createUserRole({ organization: invitation.organization, user: user._id, role: invitation.role});
           await redeemInvite(inviteToken, user._id, invitation._id);
 
-          if (!isWaitlist && invitation.team) {
-            return res.redirect(`${orgDomain}/dashboard?inviteTeamId=${invitation.team}`);
+          if (!isWaitlist && invitation.organization) {
+            return res.redirect(`${orgDomain}/dashboard?inviteOrganizationId=${invitation.organization}`);
           }
         }
-        
+
         if (!isWaitlist) {
           // If user is on waitlist, bypass and redirect to register page (below)
           // No need to send jwt. It will pick up the refresh token cookie on frontend
@@ -131,6 +130,32 @@ export default (app) => {
       console.log('Error ', error);
     }
     return res.redirect(`${orgDomain}/dashboard`);
+  });
+  
+  route.get('/organizations/:token', async (req, res) => {
+    try {
+      const { token } = req.params;
+      const { perPage, page } = req.query;
+      const orgs = await getGithubOrgsForAuthenticatedUser(token, perPage, page);
+      
+      res.status(200).json(orgs);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+  
+  route.get('/repositories/:token', async (req, res) => {
+    try {
+      const { token } = req.params;
+      const { perPage, page } = req.query;
+      const repositories = await getRepositoriesForAuthenticatedUser(token, perPage, page);
+  
+      res.status(200).json(repositories);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
   });
 
   // Swagger route

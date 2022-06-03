@@ -181,9 +181,10 @@ export default (app, passport) => {
   });
 
   route.get('/summary', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { user, teamId = '', individual = false } = req.query;
+    const { user, organizationId = '', individual = false } = req.query;
     try {
-      const summary = await getSmartCommentsTagsReactions({ user, teamId, individual });
+      const fields = { _id: 1, reaction: 1, tags: 1, githubMetadata: 1, createdAt: 1, userId: 1 }
+      const summary = await getSmartCommentsTagsReactions({ user, organizationId, individual, fields });
       return res.status(201).send({
         ...summary,
         smartComments: summary.smartComments.map((comment) => comment._id),
@@ -196,12 +197,12 @@ export default (app, passport) => {
 
   route.get('/overview', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const {
-      requester: author, reviewer, externalIds, startDate, endDate, teamId,
+      requester: author, reviewer, externalIds, startDate, endDate, organizationId,
     } = req.query;
     try {
       const repoIds = externalIds && externalIds.split('-');
       const overview = await getSmartCommentsTagsReactions({
-        author, reviewer, repoIds, startDate, endDate, teamId,
+        author, reviewer, repoIds, startDate, endDate, organizationId,
       });
       return res.status(201).send({
         overview: {

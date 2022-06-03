@@ -60,9 +60,9 @@ export const create = async (user, inviteToken) => {
     });
     const savedUser = await newUser.save();
 
-    if (!!invitation && invitation.team) {
+    if (!!invitation && invitation.organization) {
       await UserRole.create({
-        team: invitation.team,
+        organization: invitation.organization,
         user: savedUser._id,
         role: invitation.role,
       });
@@ -201,7 +201,7 @@ export const findById = async (id) => {
     if (!user) return null;
 
     let roles = await UserRole.find({ user: id })
-      .populate('team')
+      .populate('organization')
       .populate('role');
 
     if (roles) {
@@ -606,7 +606,7 @@ export async function getRepoUsersMetrics(repoExternalId) {
   return doc;
 }
 
-export async function getTeamUsersMetrics(teamId) {
+export async function getOrganizationUsersMetrics(organizationId) {
   const [doc] = await User.aggregate([
     {
       $match: {
@@ -628,19 +628,19 @@ export async function getTeamUsersMetrics(teamId) {
     },
     {
       $match: {
-        'userRole.team': new ObjectId(teamId),
+        'userRole.organization': new ObjectId(organizationId),
       },
     },
     {
       $lookup: {
-        from: 'teams',
-        localField: 'userRole.team',
+        from: 'organizations',
+        localField: 'userRole.organization',
         foreignField: '_id',
-        as: 'team',
+        as: 'organization',
       },
     },
     {
-      $unwind: '$team',
+      $unwind: '$organization',
     },
     {
       $group: {

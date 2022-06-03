@@ -7,9 +7,9 @@ const userRoleSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   },
-  team: {
+  organization: {
     type: Schema.Types.ObjectId,
-    ref: 'Team',
+    ref: 'Organization',
   },
   role: {
     type: Schema.Types.ObjectId,

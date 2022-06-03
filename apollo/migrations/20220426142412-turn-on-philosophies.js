@@ -25,12 +25,12 @@ module.exports = {
       });
     }));
 
-    const teams = await db.collection('teams').find({}).toArray();
+    const organizations = await db.collection('organizations').find({}).toArray();
 
-    await Promise.all(teams.map(async (team) => {
-      const collections = team.collections.filter((collection) => !collection.collectionData.equals(philosophiesCollectionId));
+    await Promise.all(organizations.map(async (organization) => {
+      const collections = organization.collections.filter((collection) => !collection.collectionData.equals(philosophiesCollectionId));
 
-      await db.collection('teams').updateOne({ _id: team._id }, {
+      await db.collection('organizations').updateOne({ _id: organization._id }, {
         $set: {
           collections: [...collections, {
             collectionData: new ObjectId(philosophiesCollectionId),

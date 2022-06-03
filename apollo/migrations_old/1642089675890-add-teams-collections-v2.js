@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
-const teamsCollections = require('../data/teamsCollections.json');
+const organizationsCollections = require('../data/organizationsCollections.json');
 
 const { mongooseUri } = require('../src/config');
 
@@ -14,15 +14,15 @@ module.exports.up = async (next) => {
   try {
     await mongoose.connect(mongooseUri, options);
 
-    const teams = await mongoose.connection.collection('teams').find({ collections: { $exists: false } }).toArray();
+    const organizations = await mongoose.connection.collection('organizations').find({ collections: { $exists: false } }).toArray();
     const collections = [];
-    await Promise.all(teams.map(async (team) => {
+    await Promise.all(organizations.map(async (organization) => {
       const collection = await mongoose.connection.collection('collections').insertOne({
-        name: `${team.name}'s Snippets`,
-        description: team.description,
+        name: `${organization.name}'s Snippets`,
+        description: organization.description,
         tags: [],
         comments: [],
-        author: team.name,
+        author: organization.name,
         source: {
           name: '',
           url: '',
@@ -30,10 +30,10 @@ module.exports.up = async (next) => {
         isActive: true
       });
       collections.push(collection.insertedId);
-      await mongoose.connection.collection('teams')
-        .findOneAndUpdate({ _id: new ObjectId(team._id) }, { $set: { collections: [{ isActive: true, collectionData: collection.insertedId}] } });
+      await mongoose.connection.collection('organizations')
+        .findOneAndUpdate({ _id: new ObjectId(organization._id) }, { $set: { collections: [{ isActive: true, collectionData: collection.insertedId}] } });
     }));
-    fs.writeFileSync(`${process.cwd()}/data/teamsCollections.json`, JSON.stringify(collections));
+    fs.writeFileSync(`${process.cwd()}/data/organizationsCollections.json`, JSON.stringify(collections));
 
     await mongoose.connection.close();
   } catch (e) {
@@ -46,13 +46,13 @@ module.exports.down = async (next) => {
     await mongoose.connect(mongooseUri, options);
 
     await mongoose.connection
-      .collection('teams')
+      .collection('organizations')
       .updateMany(
         { collections: { $exists: true } },
         { $unset: { collections: [] } },
       );
 
-    const collectionIds = teamsCollections.map((id) => new ObjectId(id));
+    const collectionIds = organizationsCollections.map((id) => new ObjectId(id));
     await mongoose.connection.collection('collections')
       .deleteMany({ _id: { $in: collectionIds } });
 

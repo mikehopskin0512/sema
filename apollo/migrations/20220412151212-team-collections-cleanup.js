@@ -4,30 +4,30 @@ const { Types: { ObjectId } } = mongoose;
 
 module.exports = {
   async up(db) {
-    const eddieCollection = await db.collection('collections').findOne({ type: 'team', name: 'EddieHub\'s Snippets' });
+    const eddieCollection = await db.collection('collections').findOne({ type: 'organization', name: 'EddieHub\'s Snippets' });
     const eddieCollectionId = eddieCollection ? eddieCollection._id : null;
-    const eddieTeam = await db.collection('teams').findOne({ name: 'EddieHub' });
-    const eddieTeamId = eddieTeam ? eddieTeam._id : null;
+    const eddieOrganization = await db.collection('organizations').findOne({ name: 'EddieHub' });
+    const eddieOrganizationId = eddieOrganization ? eddieOrganization._id : null;
 
-    await db.collection('collections').deleteMany({ $and: [{ type: 'team' }, { _id: { $ne: eddieCollectionId } }] });
-    const teams = await db.collection('teams').find({}).toArray();
+    await db.collection('collections').deleteMany({ $and: [{ type: 'organization' }, { _id: { $ne: eddieCollectionId } }] });
+    const organizations = await db.collection('organizations').find({}).toArray();
 
-    await Promise.all(teams.map(async (team) => {
+    await Promise.all(organizations.map(async (organization) => {
       let collectionId = null;
-      if (team._id.equals(eddieTeamId)) {
-        await db.collection('collections').updateOne({ _id: eddieCollectionId }, { $set: { teamId: eddieTeamId } });
+      if (organization._id.equals(eddieOrganizationId)) {
+        await db.collection('collections').updateOne({ _id: eddieCollectionId }, { $set: { organizationId: eddieOrganizationId } });
         collectionId = eddieCollectionId;
       } else {
         const newCollection = await db.collection('collections').insertOne({
-          name: `${team.name}'s Snippets`,
+          name: `${organization.name}'s Snippets`,
           comments: [],
           isActive: true,
           description: '',
-          author: team.name,
-          type: 'team',
+          author: organization.name,
+          type: 'organization',
           tags: [],
-          teamId: new ObjectId(team._id),
-          createdAt: team.createdAt || new Date(),
+          organizationId: new ObjectId(organization._id),
+          createdAt: organization.createdAt || new Date(),
           updatedAt: new Date(),
           __v: 0,
         });
@@ -39,7 +39,7 @@ module.exports = {
         isActive: true,
         _id: new ObjectId(),
       }]
-      await db.collection('teams').updateOne({ _id: team._id}, {$set: { collections } });
+      await db.collection('organizations').updateOne({ _id: team._id}, {$set: { collections } });
     }));
   },
 

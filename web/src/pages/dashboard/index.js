@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import _, { debounce, isEmpty } from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
+import _, { debounce } from 'lodash';
 import * as analytics from '../../utils/analytics';
 import { repositoriesOperations } from '../../state/features/repositories';
 import { collectionsOperations } from '../../state/features/collections';
 import { authOperations } from '../../state/features/auth';
-import { teamsOperations } from '../../state/features/teams';
+import { organizationsOperations } from '../../state/features/organizations[new]';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import withLayout from '../../components/layout';
 import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
@@ -20,16 +20,30 @@ import { ON_INPUT_DEBOUNCE_INTERVAL_MS, PATHS, PROFILE_VIEW_MODE } from '../../u
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
-const { updateUser, updateUserHasExtension } = authOperations;
-const { inviteTeamUser, fetchTeamsOfUser } = teamsOperations;
-const { setSelectedTeam, setProfileViewMode } = authOperations;
+
+const {
+  updateUser,
+  updateUserHasExtension,
+} = authOperations;
+const {
+  inviteOrganizationUser,
+  fetchOrganizationsOfUser,
+} = organizationsOperations;
+const {
+  setSelectedOrganization,
+  setProfileViewMode,
+  trackUserLogin,
+} = authOperations;
 
 const Dashboard = () => {
   const router = useRouter();
-  const { step, page = parseInt(step) } = router.query;
+  const {
+    step,
+    page = parseInt(step),
+  } = router.query;
 
   // TODO: should be disabled until new invitations logic
-  // const [teamIdInvitation, setTeamIdInvitation] = useLocalStorage('sema-team-invite', '');
+  // const [organizationIdInvitation, setOrganizationIdInvitation] = useLocalStorage('sema-organization-invite', '');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchStarted, setSearchStarted] = useState(false);
   const [onboardingProgress, setOnboardingProgress] = useLocalStorage('sema-onboarding', {});
@@ -41,17 +55,31 @@ const Dashboard = () => {
   const [comment, setComment] = useState({});
   const [redirectUser, setRedirectUser] = useLocalStorage('redirect_user', false);
   const dispatch = useDispatch();
-  const { auth, repositories, rolesState, teamsState } = useSelector((state) => ({
+  const {
+    auth,
+    repositories,
+    rolesState,
+    organizationsState,
+  } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
     rolesState: state.rolesState,
-    teamsState: state.teamsState
+    organizationsState: state.organizationsState
   }));
-  const { token, user, selectedTeam } = auth;
-  const { identities, isOnboarded = null, hasExtension = null, username } = user;
+  const {
+    token,
+    user,
+    selectedOrganization,
+  } = auth;
+  const {
+    identities,
+    isOnboarded = null,
+    hasExtension = null,
+    username,
+  } = user;
   const { roles } = rolesState;
-  const { teams } = teamsState;
-  const { inviteTeamId } = router.query;
+  const { organizations: organizations } = organizationsState;
+  const { inviteOrganizationId } = router.query;
   const userRepos = identities?.length ? identities[0].repositories : [];
   // Now we should show the UI in cases when we receive an empty arrays
   const isLoaded = !userRepos || (userRepos && repositories.data.repositories);
@@ -67,14 +95,20 @@ const Dashboard = () => {
   const nextOnboardingPage = (currentPage) => {
     const newPage = currentPage + 1;
     setOnboardingPage(newPage);
-    setOnboardingProgress({ ...onboardingProgress, page: newPage });
+    setOnboardingProgress({
+      ...onboardingProgress,
+      page: newPage,
+    });
     logOnboardingAcitvity(newPage);
   };
 
   const previousOnboardingPage = (currentPage) => {
     const newPage = currentPage - 1;
     setOnboardingPage(newPage);
-    setOnboardingProgress({ ...onboardingProgress, page: newPage });
+    setOnboardingProgress({
+      ...onboardingProgress,
+      page: newPage,
+    });
     logOnboardingAcitvity(newPage);
   };
 
@@ -85,7 +119,10 @@ const Dashboard = () => {
   };
 
   const handleCommentFields = (e) => {
-    setComment({ ...comment, [e.target.name]: e.target.value });
+    setComment({
+      ...comment,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const onboardUser = async () => {
@@ -93,27 +130,28 @@ const Dashboard = () => {
     setOnboardingProgress({});
     dispatch(updateUser(updatedUser, token));
     // TODO: should be disabled until new invitations logic
-    // if (teamIdInvitation) {
-    //   inviteToTeam();
+    // if (organizationIdInvitation) {
+    //   inviteToOrganization();
     // }
   };
 
   // TODO: should be disabled until new invitations logic
-  // const inviteToTeam = async () => {
+  // const inviteToOrganization = async () => {
   //   const memberRole = roles.find((role) => role.name === 'Member')
   //   if (!isEmpty(memberRole)) {
-  //     const teamId = teamIdInvitation;
-  //     await dispatch(inviteTeamUser(teamId, token));
-  //     await dispatch(fetchTeamsOfUser(token));
-  //     setTeamIdInvitation('');
-  //     router.push(`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}`);
+  //     const organizationId = organizationIdInvitation;
+  //     await dispatch(inviteOrganizationUser(organizationId, token));
+  //     await dispatch(fetchOrganizationsOfUser(token));
+  //     setOrganizationIdInvitation('');
+  //     router.push(`${PATHS.ORGANIZATIONS._}/${organizationId}${PATHS.SETTINGS}`);
   //   }
   // }
 
   if (redirectUser) {
+    trackUserLogin();
     setRedirectUser(false);
-    if (selectedTeam) {
-      router.push(`${PATHS.TEAMS._}/${selectedTeam._id}${PATHS.DASHBOARD}`);
+    if (selectedOrganization) {
+      router.push(`${PATHS.ORGANIZATIONS._}/${selectedOrganization._id}${PATHS.DASHBOARD}`);
     } else {
       router.push(PATHS.DASHBOARD);
     }
@@ -127,15 +165,15 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (inviteTeamId) {
-      const invitedTeam = teams?.find(item => item.team?._id == inviteTeamId);
-      if (invitedTeam) {
-        dispatch(setSelectedTeam(invitedTeam));
-        dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
-        router.push(`${PATHS.TEAMS._}/${inviteTeamId}${PATHS.DASHBOARD}`);
+    if (inviteOrganizationId) {
+      const invitedOrganization = organizations?.find(item => item.organization?._id == inviteOrganizationId);
+      if (invitedOrganization) {
+        dispatch(setSelectedOrganization(invitedOrganization));
+        dispatch(setProfileViewMode(PROFILE_VIEW_MODE.ORGANIZATION_VIEW));
+        router.push(`${PATHS.ORGANIZATIONS._}/${inviteOrganizationId}${PATHS.DASHBOARD}`);
       }
     }
-  }, [inviteTeamId, user.roles, teams]);
+  }, [inviteOrganizationId, user.roles, organizations]);
 
   useAuthEffect(() => {
     if (userRepos.length) {
@@ -175,8 +213,7 @@ const Dashboard = () => {
         }, token));
       }
     }
-  }, [searchQuery])
-
+  }, [searchQuery]);
 
   const getCollectionsByAuthor = async (author) => {
     const defaultCollections = await dispatch(findCollectionsByAuthor(author, token));
@@ -193,7 +230,10 @@ const Dashboard = () => {
     if (page && typeof page === 'number') {
       if (!isOnboarded) {
         setOnboardingPage(page);
-        setOnboardingProgress({ ...onboardingProgress, page });
+        setOnboardingProgress({
+          ...onboardingProgress,
+          page,
+        });
         toggleOnboardingModalActive(true);
       }
     }
@@ -204,27 +244,16 @@ const Dashboard = () => {
     }
   }, [isOnboarded]);
 
-  const LoaderScreen = () => (
-    <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
-      <Loader />
-    </div>
-  );
-
-  if (auth.isFetching || repositories.isFetching) {
-    return <LoaderScreen />;
-  }
+  const isSkeletonHidden = isLoaded && !auth.isFetching && !repositories.isFetching;
 
   return (
-    !inviteTeamId &&
+    !inviteOrganizationId &&
     <>
-      {!isLoaded ? (
-        <LoaderScreen />
-      ) : (
-        <div>
-          <Helmet {...DashboardHelmet} />
-          <ReposView searchQuery={searchQuery} onSearchChange={onSearchChange()} withSearch />
-        </div>
-      )}
+      <div>
+        <Helmet {...DashboardHelmet} />
+        <ReposView searchQuery={searchQuery} onSearchChange={onSearchChange()} withSearch isLoaded={isSkeletonHidden} />
+      </div>
+
       {/* TODO: we have to put almost all the props to modal  */}
       <OnboardingModal
         isModalActive={isOnboardingModalActive}

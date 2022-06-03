@@ -147,22 +147,22 @@ const getUserSnippets = async (userId, searchResults = [], allCollections) => {
   return sortPersonalSnippets(snippets);
 };
 
-const getTeamSnippets = async(userId, teamId, searchResults = []) => {
-  const teamActiveSnippetsQuery = [
+const getOrganizationSnippets = async(userId, organizationId, searchResults = []) => {
+  const organizationActiveSnippetsQuery = [
     {
-      $match: { user: new ObjectId(userId), team: new ObjectId(teamId) }
+      $match: { user: new ObjectId(userId), organization: new ObjectId(organizationId) }
     }, {
       $lookup: {
-        from: 'teams',
-        localField: 'team',
+        from: 'organizations',
+        localField: 'organization',
         foreignField : '_id',
-        as: 'team'
+        as: 'organization'
       }
     }, {
       $project: {
         collections: {
           $filter: {
-            input: { $first: '$team.collections' },
+            input: { $first: '$organization.collections' },
             as: 'collection',
             cond: { $eq: ['$$collection.isActive', true] }
           }
@@ -203,7 +203,7 @@ const getTeamSnippets = async(userId, teamId, searchResults = []) => {
     }
   ];
 
-  const snippetsData = await UserRole.aggregate(teamActiveSnippetsQuery);
+  const snippetsData = await UserRole.aggregate(organizationActiveSnippetsQuery);
   if (!snippetsData || snippetsData.length === 0) return [];
   const [{ snippets }] = snippetsData;
   return snippets;
@@ -249,14 +249,14 @@ const searchIndex = async (searchQuery) => {
   }
 };
 
-export const searchComments = async (user, team = null, searchQuery, allCollections) => {
+export const searchComments = async (user, organization = null, searchQuery, allCollections) => {
   const searchResults = await searchIndex(searchQuery);
   const userId = user?.toString();
 
   // The number of suggested comments to list
   searchResults.slice(0, SNIPPETS_TO_DISPLAY);
 
-  const snippets = team ? await getTeamSnippets(userId, team, searchResults) : await getUserSnippets(userId, searchResults, allCollections);
+  const snippets = organization ? await getOrganizationSnippets(userId, organization, searchResults) : await getUserSnippets(userId, searchResults, allCollections);
 
   const returnResults = await Promise.all(snippets.map(async ({
       _id: id,

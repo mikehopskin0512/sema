@@ -16,7 +16,7 @@ import Reaction from '../reaction/reactionModel';
 import User from '../../users/userModel';
 
 import { fullName, metricsStartDate } from '../../shared/utils';
-import { getTeamRepos } from '../../teams/teamService';
+import { getOrganizationRepos } from '../../organizations/organizationService';
 
 const {
   Types: { ObjectId },
@@ -82,6 +82,7 @@ export const filterSmartComments = async ({
   endDate,
   user,
   individual,
+  fields = {}
 }) => {
   try {
     let filter = {};
@@ -118,8 +119,7 @@ export const filterSmartComments = async ({
     if (!isEmpty(dateFilter.createdAt)) {
       filter = Object.assign(filter, dateFilter);
     }
-
-    const query = SmartComment.find(filter);
+    const query = SmartComment.find(filter, fields);
     const smartComments = await query
       .lean()
       .populate('userId')
@@ -755,7 +755,7 @@ const groupMetricsPipeline = [
   },
 ];
 
-export async function getTeamSmartCommentsMetrics() {
+export async function getOrganizationSmartCommentsMetrics() {
   const [doc] = await SmartComment.aggregate([
     {
       $match: {
@@ -792,7 +792,7 @@ export async function getTeamSmartCommentsMetrics() {
     },
     {
       $lookup: {
-        from: 'teams',
+        from: 'organizations',
         let: {
           repoId: '$repo._id',
         },
@@ -817,12 +817,12 @@ export async function getTeamSmartCommentsMetrics() {
             },
           },
         ],
-        as: 'teams',
+        as: 'organizations',
       },
     },
     {
       $match: {
-        'teams.0': {
+        'organizations.0': {
           $exists: true,
         },
       },
@@ -898,8 +898,9 @@ export const getSmartCommentsTagsReactions = async ({
   startDate,
   endDate,
   user,
-  teamId,
+  organizationId,
   individual,
+  fields = {}
 }) => {
   try {
     const filter = {
@@ -911,11 +912,12 @@ export const getSmartCommentsTagsReactions = async ({
       user,
       individual:
         typeof individual === 'string' ? JSON.parse(individual) : individual,
+      fields,
     };
 
-    if (teamId) {
-      const teamRepos = await getTeamRepos(teamId);
-      filter.repoIds = teamRepos.map((repo) => repo.externalId);
+    if (organizationId) {
+      const organizationRepos = await getOrganizationRepos(organizationId);
+      filter.repoIds = organizationRepos.map((repo) => repo.externalId);
     }
 
     const smartComments = await filterSmartComments(filter);

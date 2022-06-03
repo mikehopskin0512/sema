@@ -20,7 +20,7 @@ const invitationSchema = new mongoose.Schema({
   companyName: String,
   cohort: String,
   notes: String,
-  team: { type: mongoose.Schema.Types.ObjectId, ref: 'Team', required: false },
+  organization: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization', required: false },
   role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role', required: false },
 }, { timestamps: true });
 

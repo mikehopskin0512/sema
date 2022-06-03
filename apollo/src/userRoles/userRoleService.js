@@ -4,9 +4,9 @@ import UserRole from './userRoleModel';
 
 export const createUserRole = async (data) => {
   try {
-    const existingUserRole = await findUserRole(data.user, data.team);
+    const existingUserRole = await findUserRole(data.user, data.organization);
     if (existingUserRole) {
-      throw "User has existing roles for this team.";
+      throw "User has existing roles for this organization.";
     }
     const userRole = new UserRole(data);
     await userRole.save();
@@ -40,14 +40,14 @@ export const deleteUserRole = async (userRoleId) => {
   }
 };
 
-export const findUserRole = async (userId, teamId) => {
+export const findUserRole = async (userId, organizationId) => {
   try {
     const condition = {};
     if (userId) {
       condition.user = userId
     }
-    if (teamId) {
-      condition.team = teamId
+    if (organizationId) {
+      condition.organization = organizationId
     }
     const role = await UserRole.findOne(condition)
     return role;

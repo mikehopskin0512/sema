@@ -45,7 +45,7 @@ pipeline {
             steps {
                 script {
                     withAWS(role:'jenkins-role-to-assume') {
-                        def result = invokeLambda(functionName: 'staging-backups-auto-restore-lambda',
+                        def result = invokeLambda(functionName: 'release-backups-auto-restore-lambda',
                             returnValueAsString: true,
                             payload: [ 'connection_string':"${env.STAGING_MONGOOSE_URI}", 'database_name':"${env.STAGING_MONGODB_NAME}", 'db_webserver_password':"${env.BACKUP_SERVER_PASS}", 'db_webserver_user':"${env.BACKUP_SERVER_USER}"])
 

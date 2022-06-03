@@ -68,7 +68,7 @@ paths:
               properties:
                 collection:
                   $ref: '#/components/schemas/Collection'
-                teamId:
+                organizationId:
                   type: string
       responses:
         201:
@@ -112,7 +112,7 @@ paths:
               properties:
                 collection:
                   $ref: '#/components/schemas/Collection'
-                team:
+                organization:
                   type: string
       responses:
         200:
@@ -125,12 +125,12 @@ paths:
           description: bad input parameter
   /v1/comments/collections/all:
     get:
-      summary: get collections by user id and team id
+      summary: get collections by user id and organization id
       operationId: getUserCollectionsById
       parameters:
         - in: query
-          name: teamId
-          description: team id
+          name: organizationId
+          description: organization id
           required: true
       responses:
         200:

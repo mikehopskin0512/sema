@@ -7,19 +7,19 @@ import Link from 'next/link';
 import Avatar from 'react-avatar';
 import styles from './header.module.scss';
 import HeaderMenu from './HeaderMenu';
-import TeamMenuItem from './TeamMenuItem';
+import OrganizationMenuItem from './OrganizationMenuItem';
 import useOutsideClick from '../../utils/useOutsideClick';
 import SupportForm from '../supportForm';
 import SignOutModal from '../signOutModal';
 import usePermission from '../../hooks/usePermission';
-import { teamsOperations } from '../../state/features/teams';
+import { organizationsOperations } from '../../state/features/organizations[new]';
 import { portfoliosOperations } from '../../state/features/portfolios';
 import Logo from '../Logo';
 import { PATHS } from '../../utils/constants';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import UserHeaderNav from './UserHeaderNav';
 
-const { fetchTeamsOfUser } = teamsOperations;
+const { fetchOrganizationsOfUser } = organizationsOperations;
 const { fetchPortfoliosOfUser } = portfoliosOperations;
 
 const Header = () => {
@@ -37,7 +37,7 @@ const Header = () => {
   // Get auth state
   const auth = useSelector((state) => state.authState);
 
-  const { user, token, selectedTeam } = auth;
+  const { user, token, selectedOrganization } = auth;
   const {
     isVerified = false,
     organizations = [],
@@ -58,8 +58,8 @@ const Header = () => {
   const closeSupportForm = () => setSupportForm(false);
 
   const handleClick = () => {
-    if (selectedTeam) {
-      return router.push(`${PATHS.TEAMS._}/${selectedTeam?.team?._id}${PATHS.DASHBOARD}`);
+    if (selectedOrganization) {
+      return router.push(`${PATHS.ORGANIZATIONS._}/${selectedOrganization?.organization?._id}${PATHS.DASHBOARD}`);
     }
     return router.push(`${PATHS.DASHBOARD}`);
   }
@@ -71,7 +71,7 @@ const Header = () => {
   ));
 
   useAuthEffect(() => {
-    dispatch(fetchTeamsOfUser(token));
+    dispatch(fetchOrganizationsOfUser(token));
     dispatch(fetchPortfoliosOfUser(user._id, token));
   }, [dispatch]);
 
@@ -158,7 +158,7 @@ const Header = () => {
                   isSemaAdmin={isSemaAdmin}
                   type='desktop'
                   inviteCount={inviteCount}
-                  selectedTeam={selectedTeam}
+                  selectedOrganization={selectedOrganization}
                 />
               </div>
               {/* Hamburger menu (mobile & tablet) */}
@@ -168,17 +168,17 @@ const Header = () => {
                   isSemaAdmin={isSemaAdmin}
                   type='mobile'
                   inviteCount={inviteCount}
-                  selectedTeam
+                  selectedOrganization
                 />
                 <hr className="navbar-divider" />
-                <Link href={PATHS.TEAMS._}>
+                <Link href={PATHS.ORGANIZATIONS._}>
                   <a
                     aria-hidden="true"
                     type="button"
                     className="navbar-item has-text-weight-semibold is-uppercase"
                     onClick={toggleUserMenu}
                   >
-                    <span>Create a Team</span>
+                    <span>Create a Organization</span>
                     <span className="is-line-height-1 is-size-8 has-text-weight-semibold has-text-blue-600 ml-3">(NEW)</span>
                   </a>
                 </Link>
@@ -199,11 +199,11 @@ const Header = () => {
                 </Link>
                 <hr className="navbar-divider" />
                 {roles.map((role, item) => (
-                  <TeamMenuItem role={role} toggleUserMenu={toggleUserMenu} key={`team-${item}`} />
+                  <OrganizationMenuItem role={role} toggleUserMenu={toggleUserMenu} key={`organization-${item}`} />
                 ))}
                 <div className="has-background-white p-15">
                   <Link href='/'>
-                    <div className={clsx("is-flex is-flex-wrap-wrap is-align-items-center py-5", styles.team)} onClick={toggleUserMenu}>
+                    <div className={clsx("is-flex is-flex-wrap-wrap is-align-items-center py-5", styles.organization)} onClick={toggleUserMenu}>
                       <Avatar
                         name={`${firstName} ${lastName}` || "User"}
                         src={avatarUrl}

@@ -322,7 +322,7 @@ paths:
           name: user
           required: true
         - in: query
-          name: teamId
+          name: organizationId
           required: true
         - in: query
           name: individual

@@ -7,7 +7,7 @@ import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon } from '../../Icons';
+import { AlertFilledIcon, CameraIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, PdfIcon, ShareIcon } from '../../Icons';
 import TitleField from '../TitleField';
 import { fullName, getPlatformLink, isValidImageType } from '../../../utils';
 import { ALERT_TYPES, DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
@@ -20,7 +20,6 @@ import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
 import { alertOperations } from '../../../state/features/alerts';
-import ErrorPage from '../errorPage';
 import AddModal from '../addModal';
 import PortfolioGuideBanner from '../../../components/banners/portfolioGuide';
 import Loader from '../../../components/Loader';
@@ -189,6 +188,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
   const onCopy = () => {
     navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(userData.handle, portfolio._id)}`);
     changeIsCopied(true);
+    setTimeout(() => changeIsCopied(false), 5000);
   };
 
   useEffect(() => {
@@ -311,94 +311,94 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
         close={() => toggleErrorAvatarModal(false)}
         onChange={onChangeAvatar}
       /> }
-      <div className={clsx('mb-10', pdfView ? styles.pdfTitle : styles.title)}>
-        <div className={clsx("container py-20", styles['portfolio-toolbar'])}>
-          <div className="is-relative is-flex mx-10 is-justify-content-space-between is-align-items-center">
-            <TitleField
-              portfolio={portfolio}
-              isEditable={isOwner && !pdfView}
-            />
-            <div className="is-relative is-flex is-align-items-center">
-              {!pdfView && isOwner && isIndividualView && <>
-                <div className="is-flex is-align-items-center ml-20 pr-40">
-                  <div className="field sema-toggle switch-input m-0 is-flex is-align-items-center" onClick={onClickChild} aria-hidden>
-                    <div className={clsx(styles['textContainer'])}>
+        {isOwner && <div className={clsx('mb-10', pdfView ? styles.pdfTitle : styles.title)}>
+          <div className={clsx("container py-20", styles['portfolio-toolbar'])}>
+            <div className="is-relative is-flex mx-10 is-justify-content-space-between is-align-items-center">
+              <TitleField
+                portfolio={portfolio}
+                isEditable={isOwner && !pdfView}
+              />
+              <div className="is-relative is-flex is-align-items-center">
+                {!pdfView && isOwner && isIndividualView && <>
+                  <div className="is-flex is-align-items-center ml-20 pr-40">
+                    <div className="field sema-toggle switch-input m-0 is-flex is-align-items-center" onClick={onClickChild} aria-hidden>
+                      <div className={clsx('border-radius-4px', styles['textContainer'])}>
                       {isPublicPortfolio ?
-                        (isCopied && hover && 'Copied! This portfolio is viewable with this link.') :
-                        (hover && 'Change status to “Public” in order to copy sharable link.')}
+                        (isCopied && hover && <div className='px-5 py-4'>Copied! This portfolio is viewable with this link.</div>) :
+                        (hover && <div className='px-5 py-4'>Change status to “Public” in order to copy sharable link.</div>)}
+                      </div>
+                      <span className="mr-10 is-size-5">Public</span>
+                      <input
+                        id={`activeSwitch-${portfolio._id}`}
+                        type="checkbox"
+                        onChange={onChangeToggle}
+                        name={`activeSwitch-${portfolio._id}`}
+                        className="switch is-rounded"
+                        checked={isPublicPortfolio}
+                      />
+                      <label htmlFor={`activeSwitch-${portfolio._id}`} />
                     </div>
-                    <span className="mr-10 is-size-5">Public</span>
-                    <input
-                      id={`activeSwitch-${portfolio._id}`}
-                      type="checkbox"
-                      onChange={onChangeToggle}
-                      name={`activeSwitch-${portfolio._id}`}
-                      className="switch is-rounded"
-                      checked={isPublicPortfolio}
+                    <div
+                      className="is-flex ml-20 is-clickable"
+                      onClick={isPublicPortfolio ? onCopy : () => { }}
+                      onMouseEnter={() => setHover(true)}
+                      onMouseLeave={() => setHover(false)}
+                    >
+                      <ShareIcon color={isPublicPortfolio ? black950 : gray600} />
+                    </div>
+                    <div className="is-size-4 mx-20" style={{ color: gray600 }}>|</div>
+                    <button
+                      onClick={() => toggleAddModal(true)}
+                      type="button"
+                      className="button is-transparent m-0"
+                    >
+                      + Add Snapshot
+                    </button>
+                    {portfolios.length === 1 &&
+                      (
+                        <button
+                          onClick={goToAddPortfolio}
+                          type="button"
+                          className="button is-transparent m-0 ml-15"
+                        >
+                          Create another Portfolio
+                        </button>
+                      )
+                    }
+                    <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
+                      <p>Save as PDF</p>
+                      <PdfIcon />
+                    </button>
+                  </div>
+                  <div className={styles['dropdownContainer']}>
+                    <DropDownMenu
+                      isRight
+                      options={[
+                        {
+                          // TODO: add Duplicate - ETCR-1030
+                          label: 'Duplicate Portfolio',
+                          onClick: () => console.log('TODO: will be implement later'),
+                        },
+                        {
+                          label: 'Delete',
+                          onClick: () => toggleDeleteModal(true),
+                          isHidden: portfolios.length === 1
+                        },
+                      ]}
+                      trigger={
+                        <div className="is-clickable is-flex">
+                          <OptionsIcon />
+                        </div>
+                      }
                     />
-                    <label htmlFor={`activeSwitch-${portfolio._id}`} />
                   </div>
-                  <div
-                    className="is-flex"
-                    onClick={isPublicPortfolio ? onCopy : () => { }}
-                    onMouseEnter={() => setHover(true)}
-                    onMouseLeave={() => setHover(false)}
-                  >
-                    <ShareIcon color={isPublicPortfolio ? black950 : gray600} />
-                  </div>
-                  <div className="is-size-4 mx-20" style={{ color: gray600 }}>|</div>
-                  <button
-                    onClick={() => toggleAddModal(true)}
-                    type="button"
-                    className="button is-transparent m-0"
-                  >
-                    + Add Snapshot
-                  </button>
-                  {portfolios.length === 1 &&
-                    (
-                      <button
-                        onClick={goToAddPortfolio}
-                        type="button"
-                        className="button is-transparent m-0 ml-15"
-                      >
-                        Create another Portfolio
-                      </button>
-                    )
-                  }
-                  <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
-                    <p>Save as PDF</p>
-                    <PdfIcon />
-                  </button>   
-                </div>
-              <div className={styles['dropdownContainer']}>
-                <DropDownMenu
-                  isRight
-                  options={[
-                    {
-                      // TODO: add Duplicate - ETCR-1030
-                      label: 'Duplicate Portfolio',
-                      onClick: () => console.log('TODO: will be implement later'),
-                    },
-                    {
-                      label: 'Delete',
-                      onClick: () => toggleDeleteModal(true),
-                      isHidden: portfolios.length === 1
-                    },
-                  ]}
-                  trigger={
-                    <div className="is-clickable is-flex">
-                      <OptionsIcon />
-                    </div>
-                  }
-                />
+                </>}
               </div>
-              </>}
             </div>
           </div>
-        </div>
-      </div>
+        </div>}
       <div className="hero-body pt-20 pb-300 mx-25">
-        <div className="portfolio-content mb-30 container">
+        <div className="portfolio-content mb-25 container">
           <PortfolioGuideBanner isActive={snapshots.length === 0} />
           <div className={clsx(styles['user-summary'])}>
             <div className={clsx(styles['user-image'], 'is-clickable')} onClick={() => toggleAddAvatarModal(true)}>
@@ -421,7 +421,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
             </div>
             <div className={clsx(styles['user-overview'], 'has-background-white-0 pl-230 pr-35')}>
               <div className="is-relative">
-                  <div className="content is-relative p-10 pr-80 pt-20">
+                  <div className="content is-relative p-10 pr-80 pt-20 mb-0">
                     <MarkdownEditor readOnly={true} value={portfolio.overview} />
                 </div>
                 {

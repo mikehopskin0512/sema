@@ -14,18 +14,18 @@ import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { getUserRepositories, fetchReposByIds } = repositoriesOperations;
 
-const RepoPageLayout = ({ children, dates, isTeamRepo, ...sidebarProps }) => {
+const RepoPageLayout = ({ children, dates, isOrganizationRepo, ...sidebarProps }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { auth, repositories, teams } = useSelector((state) => ({
+  const { auth, repositories, organizations } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
-    teams: state.teamsState,
+    organizations: state.organizationsState,
   }));
   const { data: { overview = {} } } = repositories;
   const { name = '', smartcomments = [], users = [] } = overview;
   const { query: { repoId = '' }, pathname = '' } = router;
-  const { token, selectedTeam } = auth;
+  const { token, selectedOrganization } = auth;
   const [selectedRepo, setSelectedRepo] = useState({});
   const [repoOptions, setRepoOptions] = useState([]);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -48,19 +48,19 @@ const RepoPageLayout = ({ children, dates, isTeamRepo, ...sidebarProps }) => {
   }, [overview]);
 
   useAuthEffect(() => {
-    if (!isTeamRepo) {
+    if (!isOrganizationRepo) {
       const { repositories: userRepos } = auth.user.identities[0] || {};
       if (userRepos?.length && !repositories?.data?.repositories?.length) {
         dispatch(getUserRepositories(userRepos, token));
       }
     } else {
-      const { repos } = selectedTeam.team;
+      const { repos } = selectedOrganization.organization;
       if (repos?.length) {
         const idsParamString = repos.join('-');
         dispatch(fetchReposByIds(idsParamString, token));
       }
     }
-  }, [isTeamRepo]);
+  }, [isOrganizationRepo]);
 
   useEffect(() => {
     if (smartcomments) {
@@ -77,19 +77,19 @@ const RepoPageLayout = ({ children, dates, isTeamRepo, ...sidebarProps }) => {
   };
 
   useEffect(() => {
-    formatOptions(isEmpty(selectedTeam) ? repositories.data?.repositories : teams?.repos);
+    formatOptions(isEmpty(selectedOrganization) ? repositories.data?.repositories : organizations?.repos);
   }, []);
 
   useEffect(() => {
-    const selected = find(isEmpty(selectedTeam) ? repositories.data?.repositories : teams?.repos, { externalId: repoId });
-    formatOptions(isEmpty(selectedTeam) ? repositories.data?.repositories : teams?.repos);
+    const selected = find(isEmpty(selectedOrganization) ? repositories.data?.repositories : organizations?.repos, { externalId: repoId });
+    formatOptions(isEmpty(selectedOrganization) ? repositories.data?.repositories : organizations?.repos);
     if (selected) {
       setSelectedRepo({
         label: selected.name,
         value: selected.externalId,
       });
     }
-  }, [repositories, teams]);
+  }, [repositories, organizations]);
 
   const onChangeSelect = (obj) => {
     setSelectedRepo(obj);

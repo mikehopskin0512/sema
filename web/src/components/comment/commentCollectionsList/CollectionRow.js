@@ -5,35 +5,35 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { collectionsOperations } from '../../../state/features/collections';
-import { teamsOperations } from '../../../state/features/teams';
-import { PATHS, DEFAULT_COLLECTION_NAME, SEMA_CORPORATE_TEAM_ID, COLLECTION_TYPES } from '../../../utils/constants';
+import { organizationsOperations } from '../../../state/features/organizations[new]';
+import { PATHS, SEMA_CORPORATE_ORGANIZATION_ID, COLLECTION_TYPES } from '../../../utils/constants';
 import { PlusIcon } from '../../Icons';
 import ActionMenu from '../actionMenu';
 import usePermission from '../../../hooks/usePermission';
 import { isEmpty } from 'lodash';
-import { isSemaDefaultCollection, isTeamDefaultCollection } from "../../../utils";
+import { isSemaDefaultCollection, isOrganizationDefaultCollection } from "../../../utils";
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 import styles from "./commentCollectionsList.module.scss";
 
 const { updateCollectionIsActiveAndFetchCollections } = collectionsOperations;
-const { updateTeamCollectionIsActiveAndFetchCollections } = teamsOperations;
+const { updateOrganizationCollectionIsActiveAndFetchCollections } = organizationsOperations;
 
 const CollectionRow = ({ data }) => {
   const titleRef = useRef();
   const dispatch = useDispatch();
   const router = useRouter();
-  const { token, selectedTeam } = useSelector((state) => state.authState);
+  const { token, selectedOrganization } = useSelector((state) => state.authState);
   const { collectionData, isActive } = data ?? {};
   const { _id, name, description, source, author, commentsCount, isActive: isNotArchived, type } = collectionData;
-  const { checkAccess, checkTeamPermission } = usePermission();
+  const { checkAccess, checkOrganizationPermission } = usePermission();
 
-  const isTeamSnippet = selectedTeam?.team?.name?.toLowerCase() === author?.toLowerCase() || false
+  const isOrganizationSnippet = selectedOrganization?.organization?.name?.toLowerCase() === author?.toLowerCase() || false
 
   const onChangeToggle = (e) => {
     e.stopPropagation();
     // TODO: would be great to add error handling here in case of network error
-    if (!isEmpty(selectedTeam)) {
-      dispatch(updateTeamCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
+    if (!isEmpty(selectedOrganization)) {
+      dispatch(updateOrganizationCollectionIsActiveAndFetchCollections(_id, selectedOrganization.organization?._id, token));
     } else {
       dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));
     }
@@ -48,10 +48,10 @@ const CollectionRow = ({ data }) => {
     router.push(`${PATHS.SNIPPETS.ADD}?cid=${_id}`)
   };
 
-  const canEdit = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditCollections');
-  const canEditSnippets = checkTeamPermission('canEditSnippets') || isSemaDefaultCollection(name) || isTeamDefaultCollection(selectedTeam, { name })
-  const isHighlightNeeded = type === COLLECTION_TYPES.PERSONAL || type === COLLECTION_TYPES.TEAM;
-  
+  const canEdit = checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canEditCollections');
+  const canEditSnippets = checkOrganizationPermission('canEditSnippets') || isSemaDefaultCollection(name) || isOrganizationDefaultCollection(selectedOrganization, { name })
+  const isHighlightNeeded = type === COLLECTION_TYPES.PERSONAL || type === COLLECTION_TYPES.ORGANIZATION;
+
   return (
     <Link href={`?cid=${_id}`}>
       <tr className="has-background-white my-10 is-clickable">
@@ -95,7 +95,7 @@ const CollectionRow = ({ data }) => {
         </td>
         <td className="py-15 has-background-white px-10 is-hidden-mobile">
           <div className="is-flex is-flex-direction-column is-justify-content-center">
-            <p className="is-size-7">
+            <p className={clsx("is-size-7", styles.description)}>
               {description}
             </p>
           </div>
