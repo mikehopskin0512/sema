@@ -54,7 +54,10 @@ const initialize = async (ctx) => {
       redirect(ctx, PATHS.LOGIN);
     }
     if (!isVerified) {
-      ctx.res.setHeader('Set-Cookie', [`${refreshCookie}=deleted; Max-Age=0`]);
+      if (!ctx.res.headersSent)
+        ctx.res.setHeader('Set-Cookie', [
+          `${refreshCookie}=deleted; Max-Age=0`,
+        ]);
       redirect(ctx, PATHS.LOGIN);
     }
   }
