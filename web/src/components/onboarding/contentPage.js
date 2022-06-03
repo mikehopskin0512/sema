@@ -19,14 +19,14 @@ const SNIPPETS_PAGE = 1;
 const SUMMARIES_PAGE = 2;
 const TAGS_PAGE = 3;
 const EXTENSION_PAGE = 4;
-const CREATE_TEAM_PAGE = 5;
+const CREATE_ORGANIZATION_PAGE = 5;
 
 const TOTAL_PAGES = 5;
 
 const ContentPage = ({
   page, nextPage, previousPage, isPluginInstalled, closeModal,
 }) => {
-  const [teamName, setTeamName] = useState('');
+  const [organizationName, setOrganizationName] = useState('');
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState([]);
   const [img, setImg] = useState('');
@@ -40,11 +40,11 @@ const ContentPage = ({
   const handleOnClick = () => {
     trackOnboardingCompleted();
     closeModal();
-    if(isCreateTeamPage) {
-      Router.push(`/teams/add?name=${teamName}`);
+    if(isCreateOrganizationPage) {
+      Router.push(`/organizations/add?name=${organizationName}`);
     }
   };
-  const isCreateTeamPage = page === CREATE_TEAM_PAGE;
+  const isCreateOrganizationPage = page === CREATE_ORGANIZATION_PAGE;
   const isLastPage = page === TOTAL_PAGES;
 
   return (
@@ -75,14 +75,14 @@ const ContentPage = ({
             <p className={clsx('mb-20 is-size-3 has-text-weight-semibold has-text-black-900')}>{title}</p>
             {subtitle && subtitle.map(subtitleLine => (<p className='has-text-black-900'>{subtitleLine}</p>))}
             {page === EXTENSION_PAGE && <ExtensionButton isInstalled={isPluginInstalled} />}
-            {isCreateTeamPage &&  <InputField
+            {isCreateOrganizationPage &&  <InputField
               className="mt-20 is-full-width"
-              value={teamName}
-              onChange={setTeamName}
-              title="Team name"
-              placeholder="Your team name here"
+              value={organizationName}
+              onChange={setOrganizationName}
+              title="Organization name"
+              placeholder="Your organization name here"
             />}
-            {isCreateTeamPage && <button
+            {isCreateOrganizationPage && <button
               type="button"
               className={clsx('mt-20 is-align-self-flex-end button is-outlined is-primary has-text-weight-semibold has-border-4', styles['skip-btn'])}
               onClick={closeModal}
@@ -101,13 +101,13 @@ const ContentPage = ({
             <ul className={styles.ul}>
               {range(TOTAL_PAGES).map((index) => <li key={index} className={clsx((page === (index + 1)) && styles.active)} />)}
             </ul>
-            {isCreateTeamPage ? (
+            {isCreateOrganizationPage ? (
               <button
                 type="button"
                 className={clsx('button is-primary has-text-weight-semibold', styles.nextBtn)}
                 onClick={handleOnClick}
               >
-               Create Team
+               Create Organization
               </button>
 
             ) : (

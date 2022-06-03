@@ -12,7 +12,7 @@ import Helmet, { LabelsManagementHelmet } from '../../components/utils/Helmet';
 import usePermission from '../../hooks/usePermission';
 import { tagsOperations } from '../../state/features/tags';
 import { alertOperations } from '../../state/features/alerts';
-import { SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
+import { SEMA_CORPORATE_ORGANIZATION_ID } from '../../utils/constants';
 
 const { clearAlert } = alertOperations;
 const { fetchTagList } = tagsOperations;
@@ -37,13 +37,13 @@ const LabelsManagement = () => {
   const { roles } = user ?? { roles: [] };
   const { tags = [], isFetching } = tagsState;
 
-  const roleTeam = roles.find((role) => {
-    const { team } = role;
-    // While teams selection is not implemented
-    return team?._id === SEMA_CORPORATE_TEAM_ID;
+  const roleOrganization = roles.find((role) => {
+    const { organization } = role;
+    // While organizations selection is not implemented
+    return organization?._id === SEMA_CORPORATE_ORGANIZATION_ID;
   });
 
-  const isAuthorized = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canViewAdmin') || false, []);
+  const isAuthorized = useMemo(() => checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canViewAdmin') || false, []);
 
   useEffect(() => {
     if (showAlert === true) {
@@ -84,15 +84,15 @@ const LabelsManagement = () => {
       <Helmet {...LabelsManagementHelmet} />
       <div className="is-flex is-align-items-center mb-30">
         <Avatar
-          name={roleTeam?.team?.name || "Team"}
-          src={roleTeam?.team?.avatarUrl}
+          name={roleOrganization?.organization?.name || "Organization"}
+          src={roleOrganization?.organization?.avatarUrl}
           size="30"
           round
           textSizeRatio={2.5}
           className="mr-15"
           maxInitials={2}
         />
-        <p className="is-size-4 has-text-weight-semibold has-text-black-950">{roleTeam?.team?.name}</p>
+        <p className="is-size-4 has-text-weight-semibold has-text-black-950">{roleOrganization?.organization?.name}</p>
       </div>
       <div className="tabs">
         <ul>

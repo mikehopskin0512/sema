@@ -32,14 +32,14 @@ module.exports = {
         .collection('users')
         .find({})
         .toArray();
-      const teams = await db
-        .collection('teams')
+      const organizations = await db
+        .collection('organizations')
         .find({})
         .toArray();
       const communityCollectionsIds = new Set(communityCollections.map((collection) => collection._id.toString()));
 
       await updateCollections('users', users, communityCollectionsIds);
-      await updateCollections('teams', teams, communityCollectionsIds);
+      await updateCollections('organizations', organizations, communityCollectionsIds);
     } catch (e) {
       console.log('error', e);
     }

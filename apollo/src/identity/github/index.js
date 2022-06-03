@@ -100,17 +100,17 @@ export default (app) => {
         // Auth Sema
         await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));
 
-        // Join the user to the selected team
+        // Join the user to the selected organization
         if (inviteToken) {
           const invitation = await checkIfInvitedByToken(inviteToken);
-          await createUserRole({ team: invitation.team, user: user._id, role: invitation.role});
+          await createUserRole({ organization: invitation.organization, user: user._id, role: invitation.role});
           await redeemInvite(inviteToken, user._id, invitation._id);
 
-          if (!isWaitlist && invitation.team) {
-            return res.redirect(`${orgDomain}/dashboard?inviteTeamId=${invitation.team}`);
+          if (!isWaitlist && invitation.organization) {
+            return res.redirect(`${orgDomain}/dashboard?inviteOrganizationId=${invitation.organization}`);
           }
         }
-        
+
         if (!isWaitlist) {
           // If user is on waitlist, bypass and redirect to register page (below)
           // No need to send jwt. It will pick up the refresh token cookie on frontend
