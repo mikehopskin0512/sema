@@ -16,6 +16,8 @@ elif [ "${ENV}" = "qa1" ]; then
   cp .env.qa1 .env
 elif [ "${ENV}" = "prod" ]; then
   cp .env.prod .env
+elif [ "${ENV}" = "release" ]; then
+  cp .env.release .env
 elif [ "${ENV}" = "staging" ]; then
   cp .env.staging .env
 fi
