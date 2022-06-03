@@ -6,7 +6,6 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
-  // console.log("reducer -> action", action.type, action)
   switch (action.type) {
   case types.REQUEST_FETCH_USER:
     return {

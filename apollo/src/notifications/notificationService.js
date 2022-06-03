@@ -33,7 +33,6 @@ const addUserActivity = async (
   verb,
   activityVerb = ''
 ) => {
-  // TODO don't create every time client.feed
   const userFeed = client.feed('notification', recepientId.toString());
   const activity_data = {
     actor: client.user(userId.toString()).ref(),
