@@ -129,15 +129,16 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
     const menuItems = useMemo(() => {
       const isTeamSnippet = selectedTeam?.team?.name?.toLowerCase() === author?.toLowerCase() || false;
       const isDefaultUserCollection = isIndividualUser() && collectionData.author.toLowerCase() === user.username.toLowerCase() && isSemaDefaultCollection(name);
-
-      // TODO: add Sema Library Editor role when it will be implemented
-      if (isSemaAdmin()) return [MENU_ITEMS_TYPES.EDIT, MENU_ITEMS_TYPES.ARCHIVE];
-
-      if (isTeamAdminOrLibraryEditor() && !isSemaAdmin() && isTeamSnippet) return [MENU_ITEMS_TYPES.EDIT];
-
-      if (isDefaultUserCollection) return [MENU_ITEMS_TYPES.EDIT]
-
-      return [];
+      const canEdit = (isTeamAdminOrLibraryEditor() && isTeamSnippet) || isDefaultUserCollection || isSemaAdmin();
+      const canArchive = isSemaAdmin();
+      const items = [];
+      if (canEdit) {
+        items.push(MENU_ITEMS_TYPES.EDIT);
+      }
+      if (canArchive) {
+        items.push(MENU_ITEMS_TYPES.ARCHIVE);
+      }
+      return items;
     }, [selectedTeam, collectionData, user]);
 
 
