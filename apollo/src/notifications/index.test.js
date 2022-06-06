@@ -24,13 +24,13 @@ describe('GET /notification-token', () => {
   });
 
   it('User should get a token for notifications', async () => {
-    const { status, data } = await apollo.get('/v1/notification-token', {
+    const { status, data } = await apollo.get('/v1/notifications/token', {
       headers: {
         authorization: `Bearer ${token}`
       }
     });
 
     expect(status).toBe(200);
-    expect(data.notificationsToken).toBe('ada');
+    expect(data.notificationsToken).toBe(user._id.toString());
   });
 });
