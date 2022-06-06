@@ -8,23 +8,18 @@ const client = connect(
   getstream.appId
 );
 
-const getUserNotificationToken = userId => {
+export const createNotificationToken = userId => {
   return client.createUserToken(userId.toString());
 };
 
-const getOrCreateNotificationUser = async (userId, user) => {
+export const createUser = async user => {
+  const userId = _.get(user, '_id');
   return client.user(userId.toString()).getOrCreate({
     profileImage: user.avatarUrl,
     name: `${user.firstName} ${user.lastName}`,
     username: user.username,
     email: _.get(user, 'identities[0].emails[0]')
   });
-};
-
-export const getOrCreateUserAndToken = async user => {
-  const userId = user._id;
-  await getOrCreateNotificationUser(userId, user);
-  return getUserNotificationToken(userId);
 };
 
 const addUserActivity = async (
@@ -34,7 +29,7 @@ const addUserActivity = async (
   activityVerb = ''
 ) => {
   const userFeed = client.feed('notification', recepientId.toString());
-  const activity_data = {
+  const activityData = {
     actor: client.user(userId.toString()).ref(),
     verb,
     object: {
@@ -42,8 +37,7 @@ const addUserActivity = async (
     }
   };
 
-  const rsp = await userFeed.addActivity(activity_data);
-  return rsp;
+  return userFeed.addActivity(activityData);
 };
 
 // ‘First_name_Last_name’ has joined Sema.
@@ -53,7 +47,8 @@ export const addAcceptedInviteActivity = async (
   recepientId,
   recepient
 ) => {
-  await getOrCreateNotificationUser(userId, user);
-  await getOrCreateNotificationUser(recepientId, recepient);
+  const userPromise1 = getOrCreateNotificationUser(userId, user);
+  const userPromise2 = getOrCreateNotificationUser(recepientId, recepient);
+  await Promise.all([userPromise1, userPromise2]);
   return addUserActivity(userId, recepientId, NOTIFICATION_TYPE.JOINED_SEMA);
 };

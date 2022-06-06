@@ -85,10 +85,10 @@ export default (app, passport) => {
         await redeemInvite(token, userId);
 
         // send notification to sender - no need to await that action
-        (async (newUser, senderId) => {
+        (async () => {
           const senderUser = await findById(sender);
-          return addAcceptedInviteActivity(newUser._id, newUser, senderId, senderUser);
-        }) (newUser, sender);
+          return addAcceptedInviteActivity(newUser._id, newUser, sender, senderUser);
+        }) ();
       }
 
       // Check if user has been previously invited

@@ -6,24 +6,38 @@ import path from 'path';
 import { version } from '../config';
 import logger from '../shared/logger';
 import checkEnv from '../middlewares/checkEnv';
-import { getOrCreateUserAndToken } from '../notifications/notificationService'
+import {
+  createNotificationToken,
+  createUser
+} from '../notifications/notificationService';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
-  app.use(`/${version}/`, route);
+  app.use(`/${version}/notifications`, route);
 
-  route.get('/notification-token', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    try {
-        const notificationsToken = await getOrCreateUserAndToken(req.user);
-      return res.status(200).send({notificationsToken});
-    } catch (error) {
-      logger.error(error);
-      return res.status(error.statusCode).send(error);
+  route.get(
+    '/token',
+    passport.authenticate(['bearer'], { session: false }),
+    async (req, res) => {
+      try {
+        await createUser(req.user);
+        const notificationsToken = await createNotificationToken(req.user._id);
+
+        return res.status(200).send({ notificationsToken });
+      } catch (error) {
+        logger.error(error);
+        return res.status(error.statusCode).send(error);
+      }
     }
-  });
+  );
 
   // Swagger route
-  app.use(`/${version}/notifications-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
+  app.use(
+    `/${version}/notifications-docs`,
+    checkEnv(),
+    swaggerUi.serveFiles(swaggerDocument, {}),
+    swaggerUi.setup(swaggerDocument)
+  );
 };
