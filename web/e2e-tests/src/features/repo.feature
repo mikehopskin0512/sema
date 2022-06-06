@@ -22,6 +22,7 @@ Feature: Repo
       When I click on the element "reposTab"
       Then I expect that element "reposContainer" becomes displayed
       And  I expect that element "reposCards" becomes displayed
+      And  I pause for 1000ms
       When I click on the element "1stReposCard"
       Then I expect that element "activityLogTabBtn" becomes displayed
       And  I expect that element "codeStatsTabBtn" becomes displayed
@@ -54,6 +55,7 @@ Feature: Repo
         When I click on the element "reposTab"
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
+        And  I pause for 1000ms
         When I click on the element "1stReposCard"
         Then I expect that element "dateRangeFilter" becomes displayed
         When I click on the element "dateRangeFilter"
@@ -90,6 +92,7 @@ Feature: Repo
         When I click on the element "reposTab"
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
+        And  I pause for 1000ms
         When I click on the element "1stReposCard"
         Then I expect that element "codeStatsTabBtn" becomes displayed
 
@@ -121,6 +124,7 @@ Feature: Repo
         When I click on the element "reposTab"
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
+        And  I pause for 1000ms
         When I click on the element "1stReposCard"
         Then I expect that element "codeStatsTabBtn" becomes displayed
 
@@ -157,6 +161,7 @@ Feature: Repo
         When I click on the element "reposTab"
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
+        And  I pause for 1000ms
         When I click on the element "1stReposCard"
         Then I expect that element "reposDropDownList" becomes displayed
         When I click on the element "reposDropDownList"
