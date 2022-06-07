@@ -89,7 +89,8 @@ const PersonalInsights = () => {
 
   const getUserSummary = async username => {
     const params = {
-      user: username
+      user: username,
+      individual: true,
     };
     dispatch(fetchSmartCommentSummary(params, token));
   };
