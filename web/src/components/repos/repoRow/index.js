@@ -14,9 +14,9 @@ import DeleteRepoModal from '../repoCard/deleteRepoModal';
 const RepoRow = (props) => {
   const titleRef = useRef(null);
   const {
-    externalId = '', name = '', body = '', repoStats, users = [], language = '', _id: repoId, removeRepo, isTeamView = false,
+    externalId = '', name = '', body = '', repoStats, users = [], language = '', _id: repoId, removeRepo, isOrganizationView = false,
   } = props;
-  const { isTeamAdmin } = usePermission();
+  const { isOrganizationAdmin } = usePermission();
   const [isDeleteRepoModalOpen, toggleDeleteModal] = useState(false);
 
   const onRemoveRepo = async (e) => {
@@ -26,14 +26,14 @@ const RepoRow = (props) => {
   };
 
   const ActionColumn = () => {
-    if (isTeamAdmin()) {
+    if (isOrganizationAdmin()) {
       return (
         <td className={clsx('py-15 has-background-white px-10')}>
           <DropDownMenu
             isRight
             options={[
               {
-                label: 'Remove from Team',
+                label: 'Remove from Organization',
                 onClick: () => toggleDeleteModal(true),
               },
             ]}
@@ -84,12 +84,12 @@ const RepoRow = (props) => {
             </p>
           </td>
           <td className={clsx('py-15 has-background-white px-10')}>
-            <RepoUsers users={isTeamView ? repoStats.userIds : users} />
+            <RepoUsers users={isOrganizationView ? repoStats.userIds : users} />
           </td>
           {ActionColumn()}
         </tr>
       </Link>
-      {isTeamAdmin() && (
+      {isOrganizationAdmin() && (
         <DeleteRepoModal
           isOpen={isDeleteRepoModalOpen}
           onCancel={() => toggleDeleteModal(false)}

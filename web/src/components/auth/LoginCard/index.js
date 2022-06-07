@@ -3,10 +3,7 @@ import clsx from 'clsx';
 import { GithubIcon } from '../../Icons';
 import styles from './LoginCard.module.scss';
 import * as analytics from '../../../utils/analytics';
-import { authOperations } from '../../../state/features/auth';
 import useLocalStorage from '../../../hooks/useLocalStorage';
-
-const { trackUserLogin } = authOperations;
 
 const LoginCard = () => {
   const [redirectUser, setRedirectUser] = useLocalStorage('redirect_user', false);
@@ -18,7 +15,6 @@ const LoginCard = () => {
   const githubLogin = () => {
     window.location.href = '/api/identities/github';
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_LOGIN, { url: '/login' });
-    trackUserLogin();
     setRedirectUser(true);
   };
 

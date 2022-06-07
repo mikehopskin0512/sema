@@ -54,3 +54,33 @@ export const getRepositoryList = async (token) => {
   const { data } = await octokit.request('GET /user/repos');
   return data;
 };
+
+export const getGithubOrgsForAuthenticatedUser = async (token, perPage = 100, page = 1) => {
+  const octokit = new Octokit({ auth: `token ${token}` });
+  const { data } = await octokit.orgs.listForAuthenticatedUser({ per_page: perPage, page });
+  
+  const orgList = data && data.length ? data.map((orgItem) => ({
+    id: orgItem.id,
+    name: orgItem.login,
+    description: orgItem.description,
+    avatarUrl: orgItem.avatar_url
+  })) : [];
+  
+  return orgList;
+}
+
+export const getRepositoriesForAuthenticatedUser = async (token, perPage = 100, page = 1) => {
+  const octokit = new Octokit({ auth: `token ${token}` });
+  const { data } = await octokit.repos.listForAuthenticatedUser({ per_page: perPage, page });
+  
+  const repositories = data && data.length ? data.map((repoData) => ({
+    repoId: repoData.id,
+    repoName: repoData.name,
+    description: repoData.description,
+    organizationId: repoData.owner?.id,
+    organizationName: repoData.owner?.login,
+    isPrivate: repoData.private
+  })) : [];
+  
+  return repositories;
+}

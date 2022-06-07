@@ -15,7 +15,7 @@ const UserMenuItem = ({ user, onSwitchPersonalAccount, isSelected}) => {
     return (
         <div className={`p-15 ${isSelected ? 'has-background-white' : ''}`}>
           <div onClick={onSwitchPersonalAccount}>
-            <div className={clsx(`is-flex is-flex-wrap-wrap is-align-items-center py-5 ${isSelected ? 'is-justify-content-center is-flex-direction-column' : ''}`, styles.team)}>
+            <div className={clsx(`is-flex is-flex-wrap-wrap is-align-items-center py-5 ${isSelected ? 'is-justify-content-center is-flex-direction-column' : ''}`, styles.organization)}>
               <Avatar
                 name={fullName}
                 src={userAvatar || null}

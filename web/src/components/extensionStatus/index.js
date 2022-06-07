@@ -18,11 +18,11 @@ const ExtensionStatus = () => {
 
   const isHidden = () => {
     const enabledPaths = [
-      PATHS.OVERVIEW, PATHS.REPO, 
-      PATHS.DASHBOARD, PATHS.SNIPPETS._, 
-      PATHS.SUPPORT, PATHS.PROFILE, 
-      PATHS.GUIDES, PATHS.INVITATIONS, 
-      PATHS.PERSONAL_INSIGHTS, PATHS.TEAM_INSIGHTS];
+      PATHS.OVERVIEW, PATHS.REPO,
+      PATHS.DASHBOARD, PATHS.SNIPPETS._,
+      PATHS.SUPPORT, PATHS.PROFILE,
+      PATHS.GUIDES, PATHS.INVITATIONS,
+      PATHS.PERSONAL_INSIGHTS, PATHS.ORGANIZATION_INSIGHTS];
     let hidden = true;
     enabledPaths.forEach((item) => {
       if (route.includes(item)) {

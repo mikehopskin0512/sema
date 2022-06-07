@@ -17,14 +17,14 @@ const templates = {
   accountCreated: 'd-e04500d489e24b2e8b8a38cfafab87ab',
   feedbackSupportAdmin: 'd-28ac6f741ee2423489e633725ded543b',
   feedbackSupportUser: 'd-785a1306aaa446f29518af0ff76a4644',
-  inviteNewUserToTeam: 'd-ef3a58b2008c446883b97ef25b171b79',
-  inviteExistingUserToTeam: 'd-553144b867684cbc99cb68316686c25f'
+  inviteNewUserToOrganization: 'd-ef3a58b2008c446883b97ef25b171b79',
+  inviteExistingUserToOrganization: 'd-553144b867684cbc99cb68316686c25f'
 };
 
 export const sendEmail = async (messageData) => {
   const {
     templateName, sender = defaultSender, recipient,
-    firstName = '', fullName = '', orgName = '', url = '', email = '', title = '', type = '', message = '', teamName = ''
+    firstName = '', fullName = '', orgName = '', url = '', email = '', title = '', type = '', message = '', organizationName = ''
   } = messageData;
 
   const msg = {
@@ -41,7 +41,7 @@ export const sendEmail = async (messageData) => {
       title,
       type,
       message,
-      teamName
+      organizationName
     },
   };
 

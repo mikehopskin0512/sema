@@ -19,7 +19,7 @@ const collectionSchema = new Schema({
     $type: String,
     enum: Object.values(COLLECTION_TYPE),
   },
-  teamId: { $type: Schema.Types.ObjectId, ref: 'Team' },
+  organizationId: { $type: Schema.Types.ObjectId, ref: 'Organization' },
   comments: [{ $type: Schema.Types.ObjectId, ref: 'SuggestedComment' }],
   author: { $type: String },
   isActive: { $type: Boolean, default: true },

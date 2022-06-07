@@ -6,7 +6,7 @@ import * as analytics from '../../utils/analytics';
 import { repositoriesOperations } from '../../state/features/repositories';
 import { collectionsOperations } from '../../state/features/collections';
 import { authOperations } from '../../state/features/auth';
-import { teamsOperations } from '../../state/features/teams';
+import { organizationsOperations } from '../../state/features/organizations[new]';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import withLayout from '../../components/layout';
 import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
@@ -20,17 +20,19 @@ import { ON_INPUT_DEBOUNCE_INTERVAL_MS, PATHS, PROFILE_VIEW_MODE } from '../../u
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
+
 const {
   updateUser,
   updateUserHasExtension,
 } = authOperations;
 const {
-  inviteTeamUser,
-  fetchTeamsOfUser,
-} = teamsOperations;
+  inviteOrganizationUser,
+  fetchOrganizationsOfUser,
+} = organizationsOperations;
 const {
-  setSelectedTeam,
+  setSelectedOrganization,
   setProfileViewMode,
+  trackUserLogin,
 } = authOperations;
 
 const Dashboard = () => {
@@ -41,7 +43,7 @@ const Dashboard = () => {
   } = router.query;
 
   // TODO: should be disabled until new invitations logic
-  // const [teamIdInvitation, setTeamIdInvitation] = useLocalStorage('sema-team-invite', '');
+  // const [organizationIdInvitation, setOrganizationIdInvitation] = useLocalStorage('sema-organization-invite', '');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchStarted, setSearchStarted] = useState(false);
   const [onboardingProgress, setOnboardingProgress] = useLocalStorage('sema-onboarding', {});
@@ -57,17 +59,17 @@ const Dashboard = () => {
     auth,
     repositories,
     rolesState,
-    teamsState,
+    organizationsState,
   } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
     rolesState: state.rolesState,
-    teamsState: state.teamsState,
+    organizationsState: state.organizationsState
   }));
   const {
     token,
     user,
-    selectedTeam,
+    selectedOrganization,
   } = auth;
   const {
     identities,
@@ -76,8 +78,8 @@ const Dashboard = () => {
     username,
   } = user;
   const { roles } = rolesState;
-  const { teams } = teamsState;
-  const { inviteTeamId } = router.query;
+  const { organizations: organizations } = organizationsState;
+  const { inviteOrganizationId } = router.query;
   const userRepos = identities?.length ? identities[0].repositories : [];
   // Now we should show the UI in cases when we receive an empty arrays
   const isLoaded = !userRepos || (userRepos && repositories.data.repositories);
@@ -128,27 +130,28 @@ const Dashboard = () => {
     setOnboardingProgress({});
     dispatch(updateUser(updatedUser, token));
     // TODO: should be disabled until new invitations logic
-    // if (teamIdInvitation) {
-    //   inviteToTeam();
+    // if (organizationIdInvitation) {
+    //   inviteToOrganization();
     // }
   };
 
   // TODO: should be disabled until new invitations logic
-  // const inviteToTeam = async () => {
+  // const inviteToOrganization = async () => {
   //   const memberRole = roles.find((role) => role.name === 'Member')
   //   if (!isEmpty(memberRole)) {
-  //     const teamId = teamIdInvitation;
-  //     await dispatch(inviteTeamUser(teamId, token));
-  //     await dispatch(fetchTeamsOfUser(token));
-  //     setTeamIdInvitation('');
-  //     router.push(`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}`);
+  //     const organizationId = organizationIdInvitation;
+  //     await dispatch(inviteOrganizationUser(organizationId, token));
+  //     await dispatch(fetchOrganizationsOfUser(token));
+  //     setOrganizationIdInvitation('');
+  //     router.push(`${PATHS.ORGANIZATIONS._}/${organizationId}${PATHS.SETTINGS}`);
   //   }
   // }
 
   if (redirectUser) {
+    trackUserLogin();
     setRedirectUser(false);
-    if (selectedTeam) {
-      router.push(`${PATHS.TEAMS._}/${selectedTeam._id}${PATHS.DASHBOARD}`);
+    if (selectedOrganization) {
+      router.push(`${PATHS.ORGANIZATIONS._}/${selectedOrganization._id}${PATHS.DASHBOARD}`);
     } else {
       router.push(PATHS.DASHBOARD);
     }
@@ -162,15 +165,15 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (inviteTeamId) {
-      const invitedTeam = teams?.find(item => item.team?._id == inviteTeamId);
-      if (invitedTeam) {
-        dispatch(setSelectedTeam(invitedTeam));
-        dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
-        router.push(`${PATHS.TEAMS._}/${inviteTeamId}${PATHS.DASHBOARD}`);
+    if (inviteOrganizationId) {
+      const invitedOrganization = organizations?.find(item => item.organization?._id == inviteOrganizationId);
+      if (invitedOrganization) {
+        dispatch(setSelectedOrganization(invitedOrganization));
+        dispatch(setProfileViewMode(PROFILE_VIEW_MODE.ORGANIZATION_VIEW));
+        router.push(`${PATHS.ORGANIZATIONS._}/${inviteOrganizationId}${PATHS.DASHBOARD}`);
       }
     }
-  }, [inviteTeamId, user.roles, teams]);
+  }, [inviteOrganizationId, user.roles, organizations]);
 
   useAuthEffect(() => {
     if (userRepos.length) {
@@ -244,7 +247,7 @@ const Dashboard = () => {
   const isSkeletonHidden = isLoaded && !auth.isFetching && !repositories.isFetching;
 
   return (
-    !inviteTeamId &&
+    !inviteOrganizationId &&
     <>
       <div>
         <Helmet {...DashboardHelmet} />
