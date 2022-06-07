@@ -11,10 +11,10 @@ const collectionsSelector = ({ value, onChange }) => {
   } = useSelector((state) => state);
 
   const teamsCollections = teams
-    .filter((team) => team.role.canCreateSnippets)
-    .map(({ team }) => ({
+    .filter((team) => team?.role?.canCreateSnippets)
+    .map(({ team = {}}) => ({
       ...team,
-      collections: team.collections.filter((collection) => collection.isActive && collection?.collectionData?.type !== 'community'),
+      collections: team?.collections?.filter((collection) => collection?.isActive && collection?.collectionData?.type !== 'community'),
     })).reduce((acc, item) => {
       acc.push(item?.collections ?? []);
       return acc;
