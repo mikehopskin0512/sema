@@ -1,3 +1,5 @@
+@import "../../../../styles/_colors.module.scss";
+
 .overflow-unset {
   overflow: unset !important;
 }
@@ -6,9 +8,49 @@
   width: 300px;
 }
 
+.description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .collection-highlight {
   height: 100%;
   width: 7px;
   top: 0;
   left: 0;
+}
+
+.card-wrapper {
+  @media only screen and (max-width: 779px) {
+    max-width: 100% !important;
+    width: 100% !important;
+    flex: 1;
+    min-height: auto !important;
+    height: auto;
+  }
+  @media only screen and (min-width: 780px) {
+    width: calc(100%/2);
+    max-width: 540px;
+    overflow: visible;
+  }
+  @media only screen and (min-width: 1216px) {
+    width: calc(100%/3);
+    max-width: calc(100%/3);
+    overflow: visible;
+  }
+  .card-bottom-section {
+    min-height: 64px;
+  }
+}
+
+.snippet-card-wrapper {
+  background-color: rgba($skeleton-back, 0.3);
+}
+
+.snippet-title-skeleton {
+  margin-bottom: -30px;
+  margin-left: 6px;
 }

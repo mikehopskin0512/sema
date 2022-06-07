@@ -18,7 +18,7 @@ export default function Metrics({ metrics, totalMetrics, isLastThirtyDays }) {
         {isLastThirtyDays && <span className="is-uppercase font-size-10 has-text-gray-700 has-text-weight-semibold">
           last 30 days
         </span>}
-        {/* TODO: If metrics page for teams is added, we would activate this button */}
+        {/* TODO: If metrics page for organizations is added, we would activate this button */}
         {/* <button className="button is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push('')}>View All</button> */}
       </div>
       <div className={`mt-20 pb-10 columns m-0 ${styles["metrics-container"]}`}>

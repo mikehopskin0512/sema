@@ -1,3 +1,5 @@
+@import "styles/colors.module";
+
 .containers {
   height: 500px;
   width: calc(100% / 2);
@@ -46,4 +48,9 @@
       opacity: 1;
     }
   }
+}
+
+.loading-container {
+  background-color: rgba($skeleton-back, 0.3) !important;
+  box-shadow: none !important;
 }

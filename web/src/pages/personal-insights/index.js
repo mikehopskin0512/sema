@@ -50,7 +50,7 @@ const PersonalInsights = () => {
   }));
   const { token, user } = auth;
   const githubUser = user.identities?.[0];
-
+  const { isFetching } = comments;
   const [totalSmartComments, setTotalSmartComments] = useState(0);
   const [topTags, setTopTags] = useState([]);
   const [topReactions, setTopReactions] = useState([]);
@@ -89,7 +89,8 @@ const PersonalInsights = () => {
 
   const getUserSummary = async username => {
     const params = {
-      user: username
+      user: username,
+      individual: true,
     };
     dispatch(fetchSmartCommentSummary(params, token));
   };
@@ -445,17 +446,8 @@ const PersonalInsights = () => {
           <ReactionChart
             className="ml-neg10"
             reactions={reactionChartData}
-            yAxisType="total"
-            groupBy={dateData.groupBy}
-            onClick={() => setOpenReactionsModal(true)}
-          />
-          <TagsChart
-            className="mr-neg10"
-            tags={tagsChartData}
-            groupBy={dateData.groupBy}
-            onClick={() => setOpenTagsModal(true)}
-            dateOption={filter.dateOption}
-          />
+            yAxisType="total" groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)} isLoading={isFetching} />
+          <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)} dateOption={filter.dateOption} isLoading={isFetching} />
         </div>
         {openReactionsModal && (
           <SnapshotModal
@@ -491,7 +483,7 @@ const PersonalInsights = () => {
             )}
           </div>
         </div>
-        <ActivityItemList comments={filteredComments} />
+        <ActivityItemList comments={filteredComments} isLoading={isFetching} />
       </div>
     </>
   );

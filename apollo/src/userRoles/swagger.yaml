@@ -21,7 +21,7 @@ components:
       properties:
         user:
           type: string
-        team:
+        organization:
           type: string
         role:
           type: string

@@ -124,8 +124,8 @@ paths:
           description: user id
           required: true
         - in: query
-          name: team
-          description: team id
+          name: organization
+          description: organization id
           required: true
         - in: query
           name: q

@@ -12,7 +12,7 @@ import Table from '../../labels-management/LabelsTable';
 import {
   DEFAULT_COLLECTION_NAME,
   PATHS,
-  SEMA_CORPORATE_TEAM_ID,
+  SEMA_CORPORATE_ORGANIZATION_ID,
   SEMA_COLLECTIONS_VIEW_MODE,
   NUM_PER_PAGE,
   PROFILE_VIEW_MODE,
@@ -25,8 +25,10 @@ import { ListIcon, GridIcon } from '../../../components/Icons';
 import Pagination from '../../../components/pagination';
 import { commentsOperations } from '../../../state/features/comments';
 import styles from './commentCollectionsList.module.scss';
-import { find, isEmpty, uniqBy } from 'lodash';
-import { fetchTeamCollections } from "../../../state/features/teams/actions";
+import { isEmpty, range, uniqBy } from 'lodash';
+import { fetchOrganizationCollections } from "../../../state/features/organizations[new]/actions";
+import RepoSkeleton from '../../../components/skeletons/repoSkeleton';
+import SnippetsHeaderSkeleton from '../../../components/skeletons/snippetsHeaderSkeleton';
 
 const { clearAlert } = alertOperations;
 const { fetchAllUserCollections } = collectionsOperations;
@@ -35,11 +37,11 @@ const { getCollectionById } = commentsOperations;
 const CommentCollectionsList = () => {
   const dispatch = useDispatch();
   const { checkAccess, isSemaAdmin } = usePermission();
-  const { auth, collectionsState, alerts, teamsState } = useSelector((state) => ({
+  const { auth, collectionsState, alerts, organizationsNewState } = useSelector((state) => ({
     auth: state.authState,
     collectionsState: state.collectionsState,
     alerts: state.alertsState,
-    teamsState: state.teamsState
+    organizationsNewState: state.organizationsNewState
   }));
   const [view, setView] = useState('grid');
   const [filter, setFilter] = useState({
@@ -51,15 +53,15 @@ const CommentCollectionsList = () => {
     query: '',
   });
   const { showAlert, alertType, alertLabel } = alerts;
-  const { token, profileViewMode, selectedTeam } = auth;
-  const { teamCollections } = teamsState;
+  const { token, profileViewMode, selectedOrganization } = auth;
+  const { organizationCollections } = organizationsNewState;
 
   const { data = [], isFetching } = collectionsState;
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(NUM_PER_PAGE);
 
-  const canCreate = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canCreateCollections');
+  const canCreate = checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canCreateCollections');
 
   const setDefaultCollectionAsActive = () => {
     const collection = data.find((collection) => collection?.collectionData?.name?.toLowerCase() === DEFAULT_COLLECTION_NAME);
@@ -69,7 +71,7 @@ const CommentCollectionsList = () => {
   };
 
   const sortedCollections = useMemo(() => {
-    let collections = profileViewMode === PROFILE_VIEW_MODE.TEAM_VIEW ? [...teamCollections] : [...data];
+    let collections = profileViewMode === PROFILE_VIEW_MODE.ORGANIZATION_VIEW ? [...organizationCollections] : [...data];
     if (!isSemaAdmin()) {
       collections = collections.filter((collection) => collection?.collectionData?.isActive);
     }
@@ -101,7 +103,7 @@ const CommentCollectionsList = () => {
         if (filter.query) {
           filterBool = filterBool && queryBool;
         }
-        if (!isEmpty(selectedTeam)) {
+        if (!isEmpty(selectedOrganization)) {
           filterBool = filterBool && (item?.collectionData?.name?.toLowerCase() !== DEFAULT_COLLECTION_NAME)
         }
         return filterBool;
@@ -110,12 +112,12 @@ const CommentCollectionsList = () => {
     }).sort((_a, _b) => {
       const a = _a.collectionData?.name.toLowerCase();
       const b = _b.collectionData?.name.toLowerCase();
-      if (a === DEFAULT_COLLECTION_NAME || _a.collectionData.type === COLLECTION_TYPE.TEAM) return -1;
-      if (b === DEFAULT_COLLECTION_NAME || _b.collectionData.type === COLLECTION_TYPE.TEAM) return 1;
+      if (a === DEFAULT_COLLECTION_NAME || _a.collectionData.type === COLLECTION_TYPE.ORGANIZATION) return -1;
+      if (b === DEFAULT_COLLECTION_NAME || _b.collectionData.type === COLLECTION_TYPE.ORGANIZATION) return 1;
       return a >= b ? 1 : -1;
     });
     return uniqBy(collections, 'collectionData._id');
-  }, [data, teamCollections, filter, selectedTeam]);
+  }, [data, organizationCollections, filter, selectedOrganization]);
 
   const paginatedInactiveCollections = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * pageSize;
@@ -123,15 +125,15 @@ const CommentCollectionsList = () => {
     // PUT OTHER FILTERS HERE
     const filteredCollections = sortedCollections.filter((collection) => !collection.isActive).slice(firstPageIndex, lastPageIndex);
     return filteredCollections;
-  }, [currentPage, pageSize, isFetching, filter, sortedCollections, data, teamCollections]);
+  }, [currentPage, pageSize, isFetching, filter, sortedCollections, data, organizationCollections]);
 
   const activeCollections = sortedCollections.filter((collection) => collection.isActive);
 
   const inactiveCollections = sortedCollections.filter((collection) => !collection.isActive);
 
   useEffect(() => {
-    if (profileViewMode === PROFILE_VIEW_MODE.TEAM_VIEW && selectedTeam?.team?._id) {
-      dispatch(fetchTeamCollections(selectedTeam?.team?._id, token));
+    if (profileViewMode === PROFILE_VIEW_MODE.ORGANIZATION_VIEW && selectedOrganization?.organization?._id) {
+      dispatch(fetchOrganizationCollections(selectedOrganization?.organization?._id, token));
     } else {
       dispatch(fetchAllUserCollections(token));
     }
@@ -141,13 +143,13 @@ const CommentCollectionsList = () => {
     if (viewMode) {
       setView(viewMode);
     }
-  }, [selectedTeam]);
+  }, [selectedOrganization]);
 
   useEffect(() => {
-    if (isEmpty(selectedTeam) && data) {
+    if (isEmpty(selectedOrganization) && data) {
       setDefaultCollectionAsActive();
     }
-  }, [data, teamCollections]);
+  }, [data, organizationCollections]);
 
   useEffect(() => {
     if (showAlert === true) {
@@ -160,17 +162,9 @@ const CommentCollectionsList = () => {
     localStorage.setItem(SEMA_COLLECTIONS_VIEW_MODE, value);
   }
 
-  const isLoaderNeeded = isEmpty(selectedTeam) ? 
-    isFetching : 
-    !teamCollections.length && teamsState.isFetching;
-
-  if (isLoaderNeeded) {
-    return (
-      <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '60vh' }}>
-        <Loader />
-      </div>
-    )
-  }
+  const isLoaderNeeded = isEmpty(selectedOrganization) ?
+    isFetching :
+    !organizationCollections.length && organizationsNewState.isFetching;
 
   return (
     <div>
@@ -190,7 +184,7 @@ const CommentCollectionsList = () => {
                 >
                   <PlusIcon size="small" />
                   <span className="ml-8">
-                    Add a Snippet Collection
+                    New Snippet
                   </span>
                 </button>
               </a>
@@ -212,11 +206,28 @@ const CommentCollectionsList = () => {
             collections={sortedCollections}
           />
         </div>
-        <p className="has-text-weight-semibold has-text-black-950 is-size-4 p-10">Active Collections ({activeCollections.length})</p>
-        <p className="is-size-6 has-text-black-950 mb-15 px-10">
-          Snippets from these collections will be suggested as you create code reviews
-        </p>
-        {view === 'grid' ? (
+        {isLoaderNeeded ? <div className={styles['snippet-title-skeleton']}><SnippetsHeaderSkeleton /></div> : (
+          <>
+            <p className="has-text-weight-semibold has-text-black-950 is-size-4 p-10">Active Collections ({activeCollections.length})</p>
+            <p className="is-size-6 has-text-black-950 mb-15 px-10">
+              Snippets from these collections will be suggested as you create code reviews
+            </p>
+          </>
+        )}
+        {isLoaderNeeded && (
+          <>
+            <div className="is-flex is-justify-content-flex-start is-flex-wrap-wrap">
+              {range(9).map(_ => (
+                <div className={clsx('p-10 is-flex is-clickable', styles['card-wrapper'])} aria-hidden="true">
+                  <div className={styles['snippet-card-wrapper']}>
+                    <RepoSkeleton />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+        {view === 'grid' && !isLoaderNeeded ? (
           <CardList collections={activeCollections || []} />
         ) : (
           <Table
@@ -229,7 +240,7 @@ const CommentCollectionsList = () => {
           />
         )}
         <p className="has-text-weight-semibold has-text-black-950 is-size-4 mt-60 p-10">Other Collections ({inactiveCollections.length})</p>
-        {view === 'grid' ? (
+        {view === 'grid' && !isLoaderNeeded ? (
           <>
             <CardList type="others" collections={paginatedInactiveCollections.slice(0, pageSize * currentPage) || []} />
           </>

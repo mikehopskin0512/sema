@@ -26,7 +26,7 @@ import usePermission from '../hooks/usePermission';
 import useApiError from '../hooks/useApiError';
 import NotFound from './404';
 import { permissionsMap } from '../data/permissions';
-import { PROFILE_VIEW_MODE, SEMA_CORPORATE_TEAM_ID } from '../utils/constants';
+import { PROFILE_VIEW_MODE, SEMA_CORPORATE_ORGANIZATION_ID } from '../utils/constants';
 import { authOperations } from '../state/features/auth';
 import ErrorScreen from '../components/errorScreen';
 
@@ -36,7 +36,7 @@ library.add(faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,
   faSearch, faCog, faUserFriends, faDownload, faPaperPlane, faFileContract, faFileSignature
 );
 
-const { setProfileViewMode, setSelectedTeam } = authOperations;
+const { setProfileViewMode, setSelectedOrganization } = authOperations;
 
 function Layout({ Component, pageProps }) {
   const apiError = useApiError();
@@ -47,7 +47,7 @@ function Layout({ Component, pageProps }) {
   const { authState: { user = null, token } } = useSelector(state => state);
   const checkPermission = () => {
     if (permissionsMap[router.pathname]) {
-      const unauthorizedAccess = permissionsMap[router.pathname].find((permission) => !checkAccess(SEMA_CORPORATE_TEAM_ID, permission));
+      const unauthorizedAccess = permissionsMap[router.pathname].find((permission) => !checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, permission));
       return !unauthorizedAccess;
     }
     return true;
@@ -55,20 +55,20 @@ function Layout({ Component, pageProps }) {
 
   useEffect(() => {
     setDataLoaded(false);
-    const accountData = localStorage.getItem('sema_selected_team');
-    let selectedTeam = accountData ? JSON.parse(accountData) : null;
+    const accountData = localStorage.getItem('sema_selected_organization');
+    let selectedOrganization = accountData ? JSON.parse(accountData) : null;
 
-    if (!!selectedTeam?.team?._id && user._id === selectedTeam?.user) {
-      // team view mode
-      dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
+    if (!!selectedOrganization?.organization?._id && user._id === selectedOrganization?.user) {
+      // organization view mode
+      dispatch(setProfileViewMode(PROFILE_VIEW_MODE.ORGANIZATION_VIEW));
     } else {
       // individual view mode
-      selectedTeam = null;
-      localStorage.removeItem('sema_selected_team')
+      selectedOrganization = null;
+      localStorage.removeItem('sema_selected_organization')
       dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
     }
     setDataLoaded(true);
-    dispatch(setSelectedTeam(selectedTeam || {}));
+    dispatch(setSelectedOrganization(selectedOrganization || {}));
   }, []);
 
   if (apiError) return <ErrorScreen imagePath="/img/500.svg" title="We are sorry..." subtitle="Something went wrong." />;

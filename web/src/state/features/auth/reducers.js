@@ -8,7 +8,7 @@ const initialState = {
   token: null,
   user: {},
   userVoiceToken: null,
-  selectedTeam: {},
+  selectedOrganization: {},
   profileViewMode: PROFILE_VIEW_MODE.INDIVIDUAL_VIEW,
 };
 
@@ -190,10 +190,10 @@ const reducer = (state = initialState, action) => {
       user: {},
       error: action.errors,
     };
-  case types.SET_SELECTED_TEAM:
+  case types.SET_SELECTED_ORGANIZATION:
     return {
       ...state,
-      selectedTeam: action.selectedTeam,
+      selectedOrganization: action.selectedOrganization,
     };
   case types.SET_PROFILE_VIEW_MODE:
     return {

@@ -8,7 +8,7 @@ import { PATHS } from '../../../utils/constants';
 import { isEmpty } from 'lodash';
 import { useFlags } from '../../launchDarkly';
 
-const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, selectedTeam }) => {
+const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, selectedOrganization }) => {
   const { pathname } = useRouter();
   const { auth } = useSelector((state) => ({
     auth: state.authState,
@@ -20,17 +20,17 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
   const renderDesktopNav = () => {
     return (
       <>
-        {personalDashboard && isEmpty(selectedTeam) && <Link href={PATHS.PERSONAL}>
+        {personalDashboard && isEmpty(selectedOrganization) && <Link href={PATHS.PERSONAL}>
           <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname === PATHS.PERSONAL && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
             Dashboard
           </a>
         </Link>}
         {
-          !isEmpty(selectedTeam) ? (
-            <Link href={`${PATHS.TEAMS._}/${selectedTeam.team._id}${PATHS.DASHBOARD}`}>
+          !isEmpty(selectedOrganization) ? (
+            <Link href={`${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`}>
               <a
                 aria-hidden="true"
-                className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAMS._}/[teamId]${PATHS.DASHBOARD}` && 'has-text-weight-semibold'}`}
+                className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.DASHBOARD}` && 'has-text-weight-semibold'}`}
               >
                 Dashboard
               </a>
@@ -44,22 +44,22 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
           )
         }
         {
-          !isEmpty(selectedTeam) ? (
+          !isEmpty(selectedOrganization) ? (
           <>
-            <Link href={`${PATHS.TEAMS._}/${selectedTeam.team._id}${PATHS.REPOS}`}>
+            <Link href={`${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.REPOS}`}>
             <a
               aria-hidden="true"
-              className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAMS._}/[teamId]${PATHS.REPOS}` && 'has-text-weight-semibold'}`}
+              className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.REPOS}` && 'has-text-weight-semibold'}`}
             >
               Repos
             </a>
             </Link>
-            <Link href={`${PATHS.TEAMS._}/${selectedTeam.team._id}${PATHS.TEAM_INSIGHTS}`}>
+            <Link href={`${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.ORGANIZATION_INSIGHTS}`}>
               <a
                 aria-hidden="true"
-                className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAMS._}/[teamId]${PATHS.TEAM_INSIGHTS}` && 'has-text-weight-semibold'}`}
+                className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.ORGANIZATION_INSIGHTS}` && 'has-text-weight-semibold'}`}
               >
-              Team Insights
+              Organization Insights
               </a>
             </Link>
           </>
@@ -113,8 +113,8 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
     return (
       <>
         {
-          !isEmpty(selectedTeam) ? (
-            <Link href={`${PATHS.TEAMS._}/${selectedTeam.team._id}${PATHS.DASHBOARD}`}>
+          !isEmpty(selectedOrganization) ? (
+            <Link href={`${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`}>
               <a
                 aria-hidden="true"
                 className="navbar-item has-text-weight-semibold is-uppercase"
@@ -136,8 +136,8 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
           </a>
         </Link>
         {
-          !isEmpty(selectedTeam) && (
-            <Link href={`${PATHS.TEAMS._}/${selectedTeam.team._id}${PATHS.REPOS}`}>
+          !isEmpty(selectedOrganization) && (
+            <Link href={`${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.REPOS}`}>
               <a
                 aria-hidden="true"
                 className="navbar-item has-text-weight-semibold is-uppercase"

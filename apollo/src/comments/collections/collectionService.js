@@ -6,14 +6,14 @@ import {
   findUserCollectionsByUserId,
   patch as updateUser,
 } from '../../users/userService';
-import { getTeamById as findTeamById, updateTeam } from '../../teams/teamService';
+import { getOrganizationById as findOrganizationById, updateOrganization } from '../../organizations/organizationService';
 import Collection from './collectionModel';
 import { COLLECTION_TYPE } from './constants';
 import User from "../../users/userModel";
 
 const { Types: { ObjectId } } = mongoose;
 
-export const create = async (collection, userId, teamId) => {
+export const create = async (collection, userId, organizationId) => {
   try {
     const newCollection = new Collection({
       ...collection,
@@ -22,7 +22,7 @@ export const create = async (collection, userId, teamId) => {
         ...tag,
         tag: ObjectId.isValid(tag.tag) ? ObjectId(tag.tag) : null
       })) : [],
-      teamId,
+      organizationId,
       createdBy: ObjectId(userId),
     });
     const createdCollection = await newCollection.save();
@@ -40,7 +40,7 @@ export const create = async (collection, userId, teamId) => {
   }
 };
 
-export const createMany = async (collections, type, userId, teamId) => {
+export const createMany = async (collections, type, userId, organizationId) => {
   try {
     const cols = collections.map((collection) => ({
       ...collection,
@@ -53,7 +53,7 @@ export const createMany = async (collections, type, userId, teamId) => {
         return tags;
       }),
       type,
-      teamId,
+      organizationId,
       createdBy: userId && ObjectId(userId)
     }));
     const newCollections = await Collection.insertMany(cols, { ordered: false });
@@ -112,17 +112,17 @@ const addPublicCollectionsToList = (collections, communityCollectionDataList) =>
   }));
   const basicCollections = collections || [];
   const basicCollectionIdSet = new Set(basicCollections.filter(collection =>  collection.collectionData).map(collection =>  collection.collectionData._id.toString()));
-  const communityCollectionsToAdd  = communityCollections.filter(collection => !basicCollectionIdSet.has(collection.collectionData._id.toString()));  
+  const communityCollectionsToAdd  = communityCollections.filter(collection => !basicCollectionIdSet.has(collection.collectionData._id.toString()));
   return [...basicCollections , ...communityCollectionsToAdd]
 
 }
 
-export const getUserCollectionsById = async (id, teamId = null) => {
+export const getUserCollectionsById = async (id, organizationId = null) => {
   try {
-    const parent = teamId ? await findTeamById(teamId) : await findUserCollectionsByUserId(id);
+    const parent = organizationId ? await findOrganizationById(organizationId) : await findUserCollectionsByUserId(id);
     const communityCollectionDataList = await findByType(COLLECTION_TYPE.COMMUNITY);
     if (parent) {
-      const collectionFullList = addPublicCollectionsToList(parent.collections, communityCollectionDataList); 
+      const collectionFullList = addPublicCollectionsToList(parent.collections, communityCollectionDataList);
       const collections = collectionFullList.filter((collection) => collection.collectionData).map((collection) => {
         const { collectionData : { comments, tags, source = null } } = collection;
         let languages = [];
@@ -261,24 +261,24 @@ export const toggleActiveCollection = async (userId, collectionId, collectionTyp
   }
 }
 
-export const toggleTeamsActiveCollection = async (teamId, collectionId, collectionType) => {
+export const toggleOrganizationsActiveCollection = async (organizationId, collectionId, collectionType) => {
   try {
-    const team = await findTeamById(teamId);
-    if (team) {
-      const { collections } = team;
+    const organization = await findOrganizationById(organizationId);
+    if (organization) {
+      const { collections } = organization;
       const newCollections = toggleCollectionActiveStatus(collections, collectionId, collectionType);
-      await updateTeam({...team, collections: newCollections});
-      const newTeam = await findTeamById(teamId);
+      await updateOrganization({...organization, collections: newCollections});
+      const newOrganization = await findOrganizationById(organizationId);
       return {
         status: 200,
-        message: "Team has been updated!",
-        team: newTeam,
+        message: "Organization has been updated!",
+        organization: newOrganization,
       };
     }
     return {
       status: 400,
-      message: "Team not found.",
-      team: null,
+      message: "Organization not found.",
+      organization: null,
     };
   } catch (err) {
     logger.error(err);
@@ -337,17 +337,17 @@ export const createUserCollection = async (username, userId) => {
   }
 };
 
-export const createTeamCollection = async (team) => {
+export const createOrganizationCollection = async (organization) => {
   try {
     const collection = {
-      name: `${team.name}'s Snippets`,
+      name: `${organization.name}'s Snippets`,
       description: '',
-      author: team.name,
+      author: organization.name,
       isActive: true,
-      type: COLLECTION_TYPE.TEAM,
+      type: COLLECTION_TYPE.ORGANIZATION,
       comments: [],
     };
-    return await create(collection, team.createdBy, team._id);
+    return await create(collection, organization.createdBy, organization._id);
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);

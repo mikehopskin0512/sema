@@ -4,7 +4,7 @@ import { CloseIcon } from '../../../Icons';
 
 const deleteRepoModal = ({ isOpen, onCancel, onConfirm }) => {
   const modalRef = useRef(null);
-  const { team } = useSelector((state) => state.authState.selectedTeam);
+  const { organization } = useSelector((state) => state.authState?.selectedOrganization);
 
   return (
     <div
@@ -17,13 +17,13 @@ const deleteRepoModal = ({ isOpen, onCancel, onConfirm }) => {
         <div className="p-50 has-background-white is-flex is-flex-direction-column">
           <div className="is-flex has-text-black has-text-weight-bold is-size-3 mb-16">
             Do you want to remove repo
-            from {team?.name}?
+            from {organization?.name}?
             <div className="ml-24 has-text-black-900-dark" onClick={onCancel}>
               <CloseIcon />
             </div>
           </div>
           <p className="mb-24">
-            <span className="is-size-6 pr-32"> By deleting this repo you will remove access for your team member</span>
+            <span className="is-size-6 pr-32"> By deleting this repo you will remove access for your organization member</span>
           </p>
           <div className="ml-auto">
             <button

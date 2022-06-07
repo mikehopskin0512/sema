@@ -10,19 +10,20 @@ const NUM_PER_PAGE = 9;
 
 const REPO_TYPES = {
   USER: 'user',
-  TEAM: 'team'
+  ORGANIZATION: 'organization'
 }
 
 const ReposView = ({
   type = 'user',
   onSearchChange,
   searchQuery,
-  withSearch
+  withSearch,
+  isLoaded
 }) => {
-  const { githubUser, repositories, teams } = useSelector((state) => ({
+  const { githubUser, repositories, organizations } = useSelector((state) => ({
     githubUser: state.authState.user.identities?.[0],
     repositories: state.repositoriesState.data.repositories,
-    teams: state.teamsState
+    organizations: state.organizationsNewState
   }));
   const [repos, setRepos] = useState({
     favorites: [],
@@ -31,7 +32,7 @@ const ReposView = ({
   const [page, setPage] = useState(1);
   const isMoreReposAvailable = repos.other.length > NUM_PER_PAGE && NUM_PER_PAGE * page < repos.other.length;
   const isEmptyRepo = (type === REPO_TYPES.USER && (!repositories.length && !repositories.isFetching)) ||
-    (type === REPO_TYPES.TEAM && (!teams.isFetching && !teams.repos.length))
+    (type === REPO_TYPES.ORGANIZATION && (!organizations.isFetching && !organizations.organizations.length))
 
   useEffect(() => {
     if (githubUser && type === 'user') {
@@ -46,25 +47,26 @@ const ReposView = ({
   }, [repositories]);
 
   useEffect(() => {
-    if (teams && type === 'team') {
-      const repos = teams.repos;
+    if (organizations && type === 'organization') {
+      const repos = organizations.repos;
       setRepos({
         favorites: [],
         other: repos
       });
     }
-  }, [teams]);
+  }, [organizations]);
 
   return ( !repositories.isFetching &&
     <>
       <div className={clsx('my-40', styles['repos-container'])}>
         {/* <RepoList type="FAVORITES" repos={repos.favorites} /> */}
         <RepoList
-          type={type === 'team' ? 'REPOS' : 'MY_REPOS'}
+          type={type === 'organization' ? 'REPOS' : 'MY_REPOS'}
           repos={repos.other.slice(0, NUM_PER_PAGE * page)}
           search={searchQuery}
           onSearchChange={onSearchChange}
           withSearch={withSearch}
+          isLoaded={isLoaded}
         />
         {isEmptyRepo && <EmptyRepo />}
       </div>

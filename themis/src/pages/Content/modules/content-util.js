@@ -490,7 +490,7 @@ export async function writeSemaToGithub(activeElement) {
   }
 
   comment = {
-    githubMetadata: { ...githubMetadata, ...inLineMetada, file_extension: fileExtention },
+    githubMetadata: { ...githubMetadata, ...inLineMetada, file_extension: fileExtention, organization: extractOrganizationNameFromUrl() },
     userId,
     comment: textboxValue,
     location,
@@ -888,3 +888,13 @@ export const onDeleteComment = (event) => {
   }
   deleteSmartComment(id);
 };
+
+export const extractOrganizationNameFromUrl = () => {
+  const currentPathname = window.location.pathname;
+  if (currentPathname) {
+    const [provider, org, ...rest] = currentPathname.split('/');
+    // The second element will always target the organization name or username
+    return org;
+  }
+  return null;
+}
