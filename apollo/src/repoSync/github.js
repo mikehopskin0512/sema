@@ -127,18 +127,20 @@ async function createNewSmartComment({
   });
 
   const sanitizedText = removeSemaSignature(text);
-  return await SmartComment.findOrCreate({
-    comment: sanitizedText,
-    userId: user,
-    githubMetadata,
-    reaction: reaction?._id,
-    tags: tags.map((t) => t._id),
-    source: {
-      origin: 'sync',
-      provider: 'github',
-      id: `${type}:${id}`,
+  return await SmartComment.findOrCreate(
+    {
+      'source.provider': 'github',
+      'source.id': `${type}:${id}`,
     },
-  });
+    {
+      'comment': sanitizedText,
+      'userId': user,
+      githubMetadata,
+      'reaction': reaction?._id,
+      'tags': tags.map((t) => t._id),
+      'source.origin': 'sync',
+    }
+  );
 }
 
 async function getTags(text) {

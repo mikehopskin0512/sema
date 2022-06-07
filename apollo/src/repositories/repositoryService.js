@@ -35,17 +35,18 @@ export const create = async ({
   updated_at: repositoryUpdatedAt,
 }) => {
   try {
-    const repository = await Repositories.findOrCreate({
-      externalId,
-      name,
-      description,
-      type,
-      installationId,
-      language,
-      cloneUrl,
-      repositoryCreatedAt,
-      repositoryUpdatedAt,
-    });
+    const repository = await Repositories.findOrCreate(
+      { type, externalId },
+      {
+        name,
+        description,
+        installationId,
+        language,
+        cloneUrl,
+        repositoryCreatedAt,
+        repositoryUpdatedAt,
+      }
+    );
     await handleRepoSync({ repository, user: addedBy });
     return repository;
   } catch (err) {
