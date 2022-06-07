@@ -1,12 +1,6 @@
-import { connect } from 'getstream';
 import _ from 'lodash';
 import { NOTIFICATION_TYPE } from '../constants';
-import { getstream } from '../config';
-const client = connect(
-  getstream.apiKey,
-  getstream.apiKeySecret,
-  getstream.appId
-);
+import client from './notificationClient';
 
 export const createNotificationToken = userId => {
   return client.createUserToken(userId.toString());

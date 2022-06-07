@@ -7,7 +7,7 @@ import { NotificationCustom } from './NotificationCustom';
 
 const { fetchNotificationsToken } = notificationsOperations;
 
-const NotificationFeed = ({ APP_KEY, APP_ID }) => {
+const NotificationFeed = () => {
   const dispatch = useDispatch();
   const auth = useSelector(state => state.authState);
   const { user = {}, token } = auth;
@@ -16,19 +16,22 @@ const NotificationFeed = ({ APP_KEY, APP_ID }) => {
     dispatch(fetchNotificationsToken(token));
   }, [user, dispatch]);
   return (
-    <div>
+    <>
       {notificationsToken && (
-        <StreamApp apiKey={APP_KEY} appId={APP_ID} token={notificationsToken}>
+        <StreamApp
+          apiKey={process.env.NEXT_PUBLIC_GETSTREAM_APP_KEY}
+          appId={process.env.NEXT_PUBLIC_GETSTREAM_APP_ID}
+          token={notificationsToken}
+        >
           <NotificationDropdown
             feedGroup="notification"
-            // userId={props.userId}
             notify={true}
             right
             Group={NotificationCustom}
           />
         </StreamApp>
       )}
-    </div>
+    </>
   );
 };
 

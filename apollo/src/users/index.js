@@ -88,7 +88,7 @@ export default (app, passport) => {
         (async () => {
           const senderUser = await findById(sender);
           return addAcceptedInviteActivity(newUser._id, newUser, sender, senderUser);
-        }) ();
+        }) ().catch(logger.error);
       }
 
       // Check if user has been previously invited

@@ -21,6 +21,7 @@ export function AvatarGroupCustom({
           <Tooltip text={user.data?.name} direction="top-left">
             <Avatar
               // onClick={handleUserClick?.(user)}
+              // TODO - handle onClickUser - just uncomment and copy useOnClickUser from react-activity-feed
               image={user.data?.profileImage}
               size={avatarSize}
               circle

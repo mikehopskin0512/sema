@@ -22,6 +22,9 @@ export const fetchNotificationsToken = token => async dispatch => {
     dispatch(fetchNotificationsTokenRequest());
     const payload = await getNotificationsToken(token);
     if (!payload) {
+      dispatch(
+        fetchNotificationsTokenError('Api noificaion token error')
+      );
       return false;
     }
     const {
