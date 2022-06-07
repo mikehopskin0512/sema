@@ -184,7 +184,7 @@ const CommentCollectionsList = () => {
                 >
                   <PlusIcon size="small" />
                   <span className="ml-8">
-                    Add a Snippet Collection
+                    New Snippet
                   </span>
                 </button>
               </a>

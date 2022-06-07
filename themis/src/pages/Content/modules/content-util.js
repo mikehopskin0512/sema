@@ -490,7 +490,7 @@ export async function writeSemaToGithub(activeElement) {
   }
 
   comment = {
-    githubMetadata: { ...githubMetadata, ...inLineMetada, file_extension: fileExtention },
+    githubMetadata: { ...githubMetadata, ...inLineMetada, file_extension: fileExtention, organization: extractOrganizationNameFromUrl() },
     userId,
     comment: textboxValue,
     location,
@@ -670,7 +670,6 @@ export async function onSuggestion() {
     )[0];
 
     const semabarId = $(semabarContainer).attr('id');
-
     const payload = await suggest(activeElement.value);
 
     const state = store.getState();
@@ -679,16 +678,14 @@ export async function onSuggestion() {
 
     const { isReactionDirty, isTagModalDirty } = state.semabars[semabarId];
 
-    if (suggestedReaction) {
-      if (!isReactionDirty) {
-        store.dispatch(
-          updateSelectedEmoji({
-            id: semabarId,
-            selectedReaction: suggestedReaction,
-            isReactionDirty: false,
-          }),
-        );
-      }
+    if (suggestedReaction && !isReactionDirty) {
+      store.dispatch(
+        updateSelectedEmoji({
+          id: semabarId,
+          selectedReaction: suggestedReaction,
+          isReactionDirty: false,
+        }),
+      );
     }
 
     // allow to change state even when empty to remove existing tags if no suggestion
@@ -888,3 +885,13 @@ export const onDeleteComment = (event) => {
   }
   deleteSmartComment(id);
 };
+
+export const extractOrganizationNameFromUrl = () => {
+  const currentPathname = window.location.pathname;
+  if (currentPathname) {
+    const [provider, org, ...rest] = currentPathname.split('/');
+    // The second element will always target the organization name or username
+    return org;
+  }
+  return null;
+}
