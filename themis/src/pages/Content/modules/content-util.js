@@ -216,7 +216,7 @@ export const saveSmartComment = async (comment) => {
   });
 };
 
-export const fetchTeams = async () => {
+export const fetchOrganizations = async () => {
   const res = await fetch(ORGANIZATIONS_URL);
   return res.json();
 };

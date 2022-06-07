@@ -6,15 +6,15 @@ import { DEFAULT_COLLECTION_NAME } from '../../constants';
 
 const collectionsSelector = ({ value, onChange }) => {
   const {
-    teams,
+    organizations,
     user: { collections: userCollections },
   } = useSelector((state) => state);
 
-  const teamsCollections = teams
-    .filter((team) => team?.role?.canCreateSnippets)
-    .map(({ team = {}}) => ({
-      ...team,
-      collections: team?.collections?.filter((collection) => collection?.isActive && collection?.collectionData?.type !== 'community'),
+  const organizationsCollections = organizations
+    .filter((organization) => organization?.role?.canCreateSnippets)
+    .map(({ organization = {}}) => ({
+      ...organization,
+      collections: organization?.collections?.filter((collection) => collection?.isActive && collection?.collectionData?.type !== 'community'),
     })).reduce((acc, item) => {
       acc.push(item?.collections ?? []);
       return acc;
@@ -29,15 +29,15 @@ const collectionsSelector = ({ value, onChange }) => {
       };
     }
 
-    if (teamsCollections.length) {
+    if (organizationsCollections.length) {
       variants.teamCollections = {
-        fieldName: 'Team Snippets',
-        options: teamsCollections ?? [],
+        fieldName: 'Organization Snippets',
+        options: organizationsCollections ?? [],
       };
     }
 
     return variants;
-  }, [teamsCollections, userCollections]);
+  }, [organizationsCollections, userCollections]);
 
   const selectOptionsMapper = (obj) => {
     return {
