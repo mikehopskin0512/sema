@@ -148,30 +148,6 @@ userSchema.pre('findOneAndUpdate', async function findOneAndUpdate(next) {
   }
 });
 
-userSchema.methods.generateHash = (password) => {
-  // Might not need this due to above
-  // return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-
-  bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
-    if (err) {
-      logger.error(err);
-      return err;
-    }
-
-    bcrypt.hash(password, salt, (err, hash) => {
-      if (err) {
-        logger.error(err);
-        return err;
-      }
-
-      // Store hash in your password DB.
-      return hash;
-    });
-
-    return false;
-  });
-};
-
 // check if password is valid
 userSchema.methods.validatePassword = async function validatePassword(data) {
   return bcrypt.compare(data, this.password);
