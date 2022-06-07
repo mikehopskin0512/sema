@@ -30,24 +30,22 @@ export default async (
 
     let webElementsConditionArr = await $$(parsedConditionSelector);
     while(webElementsConditionArr.length>1) {
-        console.log("webElementsConditionArr   length -------------------------------    " + webElementsConditionArr.length);
-        console.log("condition -------------------------------    "+$(parsedConditionSelector).isDisplayed());
+        console.log("There is " + webElementsConditionArr.length + " portfolios on the page.");
 
         await browser.pause(2000);
         await $(parsedSubActionSelector)['click']();
         await browser.pause(1000);
-        console.log("parsedMainActionSelector -------------------------------    "+$(parsedMainActionSelector).isDisplayed());
+        await $(parsedMainActionSelector).waitForDisplayed({
+            timeout: 5000,
+        });
+        await $(parsedMainActionSelector)['click']();
 
-        if (await $(parsedMainActionSelector).isDisplayed()) {
-            await $(parsedMainActionSelector)['click']();
-            console.log("parsedConfirmationSelector -------------------------------    "+$(parsedMainActionSelector).isDisplayed());
-
-            await $(parsedConfirmationSelector).waitForDisplayed({
-                timeout: 5000,
-            });
+        await $(parsedConfirmationSelector).waitForDisplayed({
+            timeout: 5000,
+        });
             await $(parsedConfirmationSelector)['click']();
-            await browser.pause(1000);
-            webElementsConditionArr = await $$(parsedConditionSelector);
-        }
+            await browser.pause(3000);
+
+        webElementsConditionArr = await $$(parsedConditionSelector);
     }
 };
