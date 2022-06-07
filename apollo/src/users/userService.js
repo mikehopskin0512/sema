@@ -689,7 +689,7 @@ export async function getOrganizationUsersMetrics(organizationId) {
 
 export const findByHandle = async (handle) => {
   try {
-    const query = User.findOne({ handle: handle.toLowerCase() });
+    const query = User.findOne({ handle });
     const user = await query.lean().exec();
 
     return user;

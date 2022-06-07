@@ -35,7 +35,7 @@ const EmptyRepo = () => {
             <>
               <span>Make some code reviews on GitHub with the Sema Plugin installed</span>
               <br/>
-              <span>and your Repos will appear here.</span>
+              <span>and your Repos will appear here automatically.</span>
             </>
             : 'Add repos to your organization in order to start collaborating together.'
           }
