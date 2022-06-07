@@ -55,7 +55,7 @@ const ProfileSwitcher = () => {
             <b>Available teams</b>
           </span>
           {/* @ts-ignore */}
-          {teams.map(({ team }) => (
+          {teams?.map(({ team }) => (
             <div
               key={team._id}
               onClick={() => onChangeProfile(team)}

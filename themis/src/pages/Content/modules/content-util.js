@@ -670,7 +670,6 @@ export async function onSuggestion() {
     )[0];
 
     const semabarId = $(semabarContainer).attr('id');
-
     const payload = await suggest(activeElement.value);
 
     const state = store.getState();
@@ -679,16 +678,14 @@ export async function onSuggestion() {
 
     const { isReactionDirty, isTagModalDirty } = state.semabars[semabarId];
 
-    if (suggestedReaction) {
-      if (!isReactionDirty) {
-        store.dispatch(
-          updateSelectedEmoji({
-            id: semabarId,
-            selectedReaction: suggestedReaction,
-            isReactionDirty: false,
-          }),
-        );
-      }
+    if (suggestedReaction && !isReactionDirty) {
+      store.dispatch(
+        updateSelectedEmoji({
+          id: semabarId,
+          selectedReaction: suggestedReaction,
+          isReactionDirty: false,
+        }),
+      );
     }
 
     // allow to change state even when empty to remove existing tags if no suggestion
