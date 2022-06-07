@@ -8,6 +8,14 @@
   width: 300px;
 }
 
+.description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .collection-highlight {
   height: 100%;
   width: 7px;

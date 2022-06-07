@@ -75,7 +75,7 @@ const CollectionRow = ({ data }) => {
         <td className="py-15 has-background-white px-10 is-hidden-mobile">
           <div className="is-flex is-align-items-center is-justify-content-space-between">
             <OverflowTooltip ref={titleRef} text={name}>
-              <p ref={titleRef} className={clsx("is-size-7 has-text-weight-semibold has-overflow-ellipsis", styles.title)}>
+              <p ref={titleRef} className={clsx("is-size-7 has-text-weight-semibold has-overflow-ellipsis pr-15", styles.title)}>
                 {name}
               </p>
             </OverflowTooltip>
@@ -88,14 +88,14 @@ const CollectionRow = ({ data }) => {
                 <div className="is-flex is-align-items-center mr-10">
                   <PlusIcon size="small" />
                 </div>
-                Add a snippet
+                New Snippet
               </div>
             )}
           </div>
         </td>
         <td className="py-15 has-background-white px-10 is-hidden-mobile">
           <div className="is-flex is-flex-direction-column is-justify-content-center">
-            <p className="is-size-7">
+            <p className={clsx("is-size-7", styles.description)}>
               {description}
             </p>
           </div>
