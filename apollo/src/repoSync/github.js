@@ -174,6 +174,9 @@ async function findDuplicate(githubComment, otherComments) {
     Math.abs(
       comment.githubMetadata.created_at - new Date(githubComment.created_at)
     );
+  const githubCommentPR = getPullRequestNumberFromURL(
+    githubComment.html_url || githubComment.pull_request_url
+  );
 
   const candidates = otherComments
     .filter((comment) => {
@@ -183,7 +186,12 @@ async function findDuplicate(githubComment, otherComments) {
       const isSameUser =
         comment.githubMetadata.user.login === githubComment.user.login;
       const isSimilarTime = timeDifference(comment) < 60000;
-      return isSameUser && isSimilarTime;
+      const isSamePR =
+        // Older comments created in Sema don't have a pull_number.
+        'pull_number' in comment.githubMetadata
+          ? githubCommentPR === comment.githubMetadata.pull_number
+          : true;
+      return isSameUser && isSamePR && isSimilarTime;
     })
     // Try to find the comment that is closer in time to the one
     // coming from the API.
@@ -193,7 +201,7 @@ async function findDuplicate(githubComment, otherComments) {
     if (looksLikeSemaComment(githubComment.body)) {
       logger.warn(
         'This looks like a Sema comment, yet could not match it to a smart comment in our database',
-        githubComment
+        githubComment.url
       );
     }
     return null;
@@ -276,4 +284,17 @@ async function findOrCreateGitHubUser({ id, username, userCache }) {
     ],
     avatarUrl: githubUser.avatar_url,
   });
+}
+
+function getPullRequestNumberFromURL(stringUrl) {
+  const url = new URL(stringUrl);
+  const isAPI = url.hostname === 'api.github.com';
+  if (isAPI) {
+    const [, , , , pulls, number] = url.pathname.split('/');
+    assert(pulls === 'pulls', 'Expected a URL for a pull request');
+    return number;
+  }
+  const [, , , pull, number] = url.pathname.split('/');
+  assert(pull === 'pull', 'Expected a URL for a pull request');
+  return number;
 }
