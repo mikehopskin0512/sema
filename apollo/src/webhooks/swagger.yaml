@@ -1,0 +1,40 @@
+openapi: 3.0.0
+info:
+  title: Webhooks's API
+  description: Webhooks's repository
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+  - url: https://api-staging.semasoftware.com
+    description: staging
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:
+  /v1/webhooks/github:
+    post:
+      summary: github event hook
+      requestBody:
+        content: application/json
+      parameters:
+        - in: header
+          name: X-Hub-Signature-256
+          description: host
+          required: true
+        - in: header
+          name: X-GitHub-Event
+          description: host
+          required: true
+      responses:
+        200:
+          description: success
+        500:
+          description: invalid signature

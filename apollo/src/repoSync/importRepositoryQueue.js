@@ -1,10 +1,8 @@
-import { createAppAuth } from '@octokit/auth-app';
-import { Octokit } from '@octokit/rest';
 import logger from '../shared/logger';
 import { queues } from '../queues';
-import { github } from '../config';
 import Repository from '../repositories/repositoryModel';
 import createGitHubImporter from './github';
+import { getOctokit, getOwnerAndRepo } from './repoSyncService';
 
 const queue = queues.self(module);
 
@@ -69,7 +67,7 @@ async function importComments({
 }) {
   const pages = resumablePaginate({ octokit, endpoint, type, repository });
   for await (const data of pages) {
-    await Promise.all(data.map(importComment));
+    await Promise.all(data.map((comment) => importComment(comment, null)));
   }
 }
 
@@ -108,59 +106,11 @@ async function importReviewsFromPullRequest({
     pull_number: pullRequest.number,
   });
 
-  await Promise.all(reviews.filter((r) => r.body.trim()).map(importComment));
-}
-
-async function getOctokit(repository) {
-  const installationId =
-    repository.installationId ||
-    (await findInstallationIdForRepository(repository)) ||
-    (await findSomeInstallationId());
-
-  return new Octokit({
-    authStrategy: createAppAuth,
-    auth: {
-      appId: github.appId,
-      privateKey: github.privateKey,
-      installationId,
-    },
-  });
-}
-
-const appOctokit = new Octokit({
-  authStrategy: createAppAuth,
-  auth: {
-    appId: github.appId,
-    privateKey: github.privateKey,
-  },
-});
-
-async function findInstallationIdForRepository(repository) {
-  try {
-    const { owner, repo } = getOwnerAndRepo(repository);
-    const { data: installation } = await appOctokit.apps.getRepoInstallation({
-      owner,
-      repo,
-    });
-    return installation.id;
-  } catch (error) {
-    if (error.status === 404) return null;
-    throw error;
-  }
-}
-
-// Use any installation ID, hopefully importing a public repository.
-async function findSomeInstallationId() {
-  const { data: installations } = await appOctokit.apps.listInstallations();
-  return installations[0]?.id;
-}
-
-function getOwnerAndRepo(repository) {
-  const [, , , owner, repo] = repository.cloneUrl.split('/');
-  return {
-    owner,
-    repo: repo.replace(/\.git$/, ''),
-  };
+  await Promise.all(
+    reviews
+      .filter((r) => r.body.trim())
+      .map((comment) => importComment(comment, null))
+  );
 }
 
 async function setSyncStarted(repository) {

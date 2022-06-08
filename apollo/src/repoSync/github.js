@@ -34,7 +34,7 @@ export default function createGitHubImporter(octokit) {
     }).lean();
   }
 
-  return async function importComment(githubComment) {
+  return async function importComment(githubComment, githubPullRequest) {
     const type = getType(githubComment);
     // Ignore issue comments that belong to GitHub issues
     // and not pull requests.
@@ -42,7 +42,12 @@ export default function createGitHubImporter(octokit) {
       type === 'issueComment' &&
       githubComment.html_url.split('/')[5] === 'issues';
     if (shouldIgnore) return null;
-
+    if (githubPullRequest) {
+      return await createNewSmartComment({
+        githubComment,
+        pullRequest: githubPullRequest,
+      });
+    }
     const pullRequestURL =
       githubComment.pull_request_url ||
       githubComment.issue_url.replace('/issues/', '/pulls/');
