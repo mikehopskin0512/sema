@@ -35,13 +35,22 @@ process.on('SIGINT', () => {
 });
 
 mongoose.plugin((schema) => {
+  // Find or create a record. Assumes a unique index on the key.
+  //
+  // Usage:
+  //
+  //   Repository.findOrCreate({ 'github.id': id }, { name: 'Phoenix' })
+  //
   // eslint-disable-next-line no-param-reassign
-  schema.statics.findOrCreate = async function findOrCreate(attrs) {
+  schema.statics.findOrCreate = async function findOrCreate(key, attrs) {
     try {
-      return await this.create(attrs);
+      return await this.create({ ...attrs, ...key });
     } catch (error) {
-      const isDuplicate = error.code === 11000 && error.keyPattern;
-      if (isDuplicate) {
+      const isDuplicateOnThisKey =
+        error.code === 11000 &&
+        Object.keys(error.keyPattern).sort().join(',') ===
+          Object.keys(key).sort().join(',');
+      if (isDuplicateOnThisKey) {
         const doc = await this.findOne(error.keyValue);
         doc.set(attrs);
         return await doc.save();

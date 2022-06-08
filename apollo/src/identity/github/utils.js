@@ -12,7 +12,8 @@ export const getProfile = async (token) => {
 
 export const getUserEmails = async (token) => {
   const octokit = new Octokit({ auth: `token ${token}` });
-  const { data: userEmails } = await octokit.users.listEmailsForAuthenticated();
+  const { data: userEmails } =
+    await octokit.users.listEmailsForAuthenticatedUser();
   return userEmails;
 };
 

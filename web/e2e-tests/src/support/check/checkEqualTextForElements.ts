@@ -26,6 +26,7 @@ export default async (
      * @type {String}
      */
     let parsedExpectedText = GlobalVars.globalName;
+
     /**
      * Whether to check if the content equals the given text or not
      * @type {Boolean}

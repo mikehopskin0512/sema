@@ -2,6 +2,7 @@ FROM node:16-alpine3.14 AS build
 
 WORKDIR /usr/adonis
 COPY  ./adonis /usr/adonis
+RUN npm i -g npm@8.5.5
 RUN npm ci
 RUN npm run build
 

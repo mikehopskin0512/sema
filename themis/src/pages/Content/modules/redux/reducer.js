@@ -26,7 +26,7 @@ import {
   ADD_NOTIFICATION,
   REMOVE_NOTIFICATION,
   UPDATE_PROFILE,
-  UPDATE_TEAMS,
+  UPDATE_ORGANIZATIONS,
   FETCH_CURRENT_USER,
   FETCH_CURRENT_USER_SUCCESS,
   FETCH_CURRENT_USER_ERROR,
@@ -56,10 +56,10 @@ function rootReducer(state = initialState, action) {
   const { payload = {} } = action;
 
   switch (action.type) {
-    case UPDATE_TEAMS: {
+    case UPDATE_ORGANIZATIONS: {
       return {
         ...state,
-        teams: payload,
+        organizations: payload,
       };
     }
     case UPDATE_PROFILE: {

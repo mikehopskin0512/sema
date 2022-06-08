@@ -15,7 +15,7 @@ environment {
       )
       choice(
           name: 'database',
-          choices: ['phoenix_qa', 'phoenix_qa1', 'phoenix_staging'],
+          choices: ['phoenix_qa', 'phoenix_qa1', 'phoenix_staging','phoenix_release'],
           description: 'Pick something')
    }
 

@@ -12,7 +12,7 @@ import { DEFAULT_PROFILE_NAME, STORAGE_ITEMS } from '../../constants';
 const ProfileSwitcher = () => {
   const dispatch = useDispatch();
   // @ts-ignore
-  const { selectedProfile, teams } = useSelector((state) => state);
+  const { selectedProfile, organizations } = useSelector((state) => state);
   const [isOpen, setOpen] = useState(false);
   const menu = useRef(null);
   const isPersonalProfile = !selectedProfile._id;
@@ -52,16 +52,16 @@ const ProfileSwitcher = () => {
       >
         <div>
           <span className="sema-is-uppercase">
-            <b>Available teams</b>
+            <b>Available organizations</b>
           </span>
           {/* @ts-ignore */}
-          {teams.map(({ team }) => (
+          {organizations?.map(({ organization }) => (
             <div
-              key={team._id}
-              onClick={() => onChangeProfile(team)}
+              key={organization._id}
+              onClick={() => onChangeProfile(organization)}
               className={styles['list-option']}
             >
-              {team.name}
+              {organization.name}
             </div>
           ))}
         </div>

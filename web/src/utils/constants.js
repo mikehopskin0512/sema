@@ -154,6 +154,8 @@ export const SEMA_FAQ_SLUGS = {
     'articles/6116505-is-there-an-executive-dashboard-of-all-developers',
   LEARN_MORE_ABOUT_SNIPPETS:
     'articles/6147206-what-are-snippets',
+  LEARN_MORE_ABOUT_SNAPSHOTS:
+    'collections/3428417-developer-portfolio-and-snapshots',
   LEARN_MORE: 'is-there-a-manager-dashboard-of-all-developers',
   SUMMARIES: 'what-do-summaries-mean',
   ORGANIZATION_INSIGHTS: 'team-insights-who-can-see-what',

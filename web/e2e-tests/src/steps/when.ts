@@ -23,6 +23,7 @@ import switchTab from '../support/action/switchTab';
 import changeTheUserRoleForTheTeam from "../support/action/changeTheUserRoleForTheTeam";
 import setParticularInputFieldWithTimestamp from "../support/action/setParticularInputFieldWithTimestamp";
 import setGlobalArrayByIndexToInputField from "../support/action/setGlobalArrayByIndexToInputField";
+import removeElementsWhileExist from '../support/action/removeElementsWhileExist';
 
 /**
  * Abstracting some steps by functionality. 
@@ -142,11 +143,16 @@ When(
 )
 
 When(
-    /^I switch to opened tab$/,
+    /^I switch to opened tab "([^"]*)?"$/,
     switchTab
 )
 
 When(
     /^I change the role for "([^"]*)?" to "([^"]*)?"$/,
     changeTheUserRoleForTheTeam
+)
+
+When(
+    /^I remove all elements "([^"]*)?" with button "([^"]*)?" under "([^"]*)?" with confirmation "([^"]*)?"$/,
+    removeElementsWhileExist
 )

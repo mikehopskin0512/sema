@@ -108,11 +108,9 @@ export default (app) => {
       const user = await findByUsernameOrIdentity(email, identity);
       if (user) {
         const { isWaitlist = true } = user;
+        const { isActive = true } = user;
         identity.repositories = user.identities[0].repositories || [];
-        // Update user with identity
         await updateIdentity(user, identity);
-
-        // await updateUserRepositoryList(user, repositories, identity);
 
         const tokenData = await getTokenData(user);
 
@@ -140,12 +138,10 @@ export default (app) => {
           }
         }
 
-        if (!isWaitlist) {
+        if (!isWaitlist && isActive) {
           // If user is on waitlist, bypass and redirect to register page (below)
           // No need to send jwt. It will pick up the refresh token cookie on frontend
-          // return res.redirect(`${orgDomain}/reports`);
           return res.redirect(`${orgDomain}/dashboard`);
-          // return res.status(201).send({ jwtToken: await createAuthToken(user) });
         }
       }
       const identityToken = await createIdentityToken(identity);
