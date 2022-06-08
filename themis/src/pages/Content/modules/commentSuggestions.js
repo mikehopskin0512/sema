@@ -20,7 +20,6 @@ function checkTerm(commentText, matchTerm, reactionBallot) {
 }
 
 function checkTerms(commentText, matchTerms, reactionBallot) {
-  // eslint-disable-next-line no-restricted-syntax
   for (const matchTerm of matchTerms) {
     checkTerm(commentText, matchTerm, reactionBallot);
   }
@@ -35,12 +34,9 @@ async function suggestReaction(originalCommentText) {
       body: JSON.stringify({ comments: commentText })
     });
 
-    if (!data) return EMOJIS[0];
-
     const data = await response.json();
     const suggestion = data.hard_labels[0][0];
 
-    // TODO: temporary fix
     return EMOJIS.find(i => i.key === suggestion) ?? EMOJIS[0];
   } catch {
     return []
