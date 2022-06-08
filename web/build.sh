@@ -41,3 +41,5 @@ echo "Tagging image..."
 docker tag $NAME:$VERSION $IMAGE
 echo "Pushing image..."
 docker push $IMAGE
+echo "Delete image..."
+docker rmi $IMAGE
