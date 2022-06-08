@@ -40,7 +40,7 @@ const githubMetadataSchema = new Schema({
     enum: ['pullRequestComment', 'issueComment', 'pullRequestReview'],
   },
   commentId: String,
-  organization: { type: String, default: null }
+  organization: { type: String, default: null },
 });
 
 const smartCommentSchema = new Schema(
