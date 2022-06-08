@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { blue500 } from '../../../../styles/_colors.module.scss';
 import { CameraIcon, SaveIcon } from '../../Icons';
-import { SEMA_FAQ_SLUGS, SEMA_FAQ_URL } from '../../../utils/constants';
+import { SEMA_FAQ_SLUGS, SEMA_INTERCOM_FAQ_URL } from '../../../utils/constants';
 import SnapshotButton from '../snapshotButton';
 
 const DEFAULT_TEXT = 'Save this as a snapshot on your Portfolio.';
@@ -19,7 +19,7 @@ const SnapshotBar = ({ hasActionButton = false, onClick, text = DEFAULT_TEXT }) 
         {text}&nbsp;
       </span>
       <a
-        href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.SNAPSHOTS}`}
+        href={`${SEMA_INTERCOM_FAQ_URL}/${SEMA_FAQ_SLUGS.LEARN_MORE_ABOUT_SNAPSHOTS}`}
         target="_blank"
         rel="noreferrer"
         className="is-size-7 is-underlined has-text-primary">
