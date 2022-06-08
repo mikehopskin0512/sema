@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import logger from '../shared/logger';
 import {
   createUserCollection,
   getDefaultCollections,
