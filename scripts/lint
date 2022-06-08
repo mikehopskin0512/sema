@@ -71,7 +71,9 @@ run_checks() {
   prettier_check $@ || failed=1
   npx eslint $@     || failed=1
 
-  [[ $failed == 1 ]] && exit 1
+  if [[ $failed == 1 ]]; then
+    exit 1
+  fi
 }
 
 
