@@ -66,6 +66,8 @@ lint_directory() {
 run_checks() {
   local failed
 
+  failed=0
+
   prettier_check $@ || failed=1
   npx eslint $@     || failed=1
 
