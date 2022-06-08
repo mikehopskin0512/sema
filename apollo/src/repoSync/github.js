@@ -86,8 +86,21 @@ async function updateExistingSmartComment({
     existingComment.set('userId', user);
   }
 
-  await existingComment.save();
-  return existingComment;
+  try {
+    await existingComment.save();
+    return existingComment;
+  } catch (error) {
+    const isDuplicate = error.code === 11000 && error.keyPattern['source.id'];
+    if (isDuplicate) {
+      const otherComment = await SmartComment.findOne(error.keyValue);
+      logger.warn(
+        `GitHub comment seems to have been already imported as smart comment ${otherComment?._id} ${githubComment.url}`
+      );
+      return otherComment;
+    }
+
+    throw error;
+  }
 }
 
 async function createNewSmartComment({
