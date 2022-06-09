@@ -93,6 +93,10 @@ module "apollo" {
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
 
+  external_iam_policies = [
+    data.aws_iam_policy_document.this.json
+  ]
+
   min_capacity = 2
   max_capacity = 3
 }
@@ -123,6 +127,10 @@ module "apollo_worker" {
       name  = "AWS_SECRETS_HASH"
       value = local.apollo_ecs_secret_data_hash
     }
+  ]
+
+  external_iam_policies = [
+    data.aws_iam_policy_document.this.json
   ]
 
   min_capacity = 1

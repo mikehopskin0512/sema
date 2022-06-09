@@ -99,6 +99,10 @@ module "apollo" {
   min_capacity = 1
   max_capacity = 3
 
+  external_iam_policies = [
+    data.aws_iam_policy_document.this.json
+  ]
+
 }
 
 module "apollo_worker" {
@@ -131,6 +135,10 @@ module "apollo_worker" {
 
   min_capacity = 1
   max_capacity = 1
+
+  external_iam_policies = [
+    data.aws_iam_policy_document.this.json
+  ]
 
 }
 
