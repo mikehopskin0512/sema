@@ -47,8 +47,7 @@ import {
 import store from './redux/store';
 import phrases from './highlightPhrases';
 
-// FIXME: no need for the function to accept 'document'
-export const getGithubMetadata = (document) => {
+export const getGithubMetadata = () => {
   const url = window.location.href || '';
   const decoupleUrl = url.split('/');
   // eslint-disable-next-line camelcase
@@ -57,8 +56,8 @@ export const getGithubMetadata = (document) => {
   const [, , , , repo, , pull_number] = decoupleUrl;
   const head = document.querySelector('span[class*="head-ref"] a')?.textContent;
   const base = document.querySelector('span[class*="base-ref"] a')?.textContent;
-  const id = document.querySelector('meta[name="octolytics-dimension-user_id"]')
-    ?.content;
+  const id = document.querySelector('meta[name="octolytics-actor-id"]')
+    ?.content?.split(',')?.[0];
   const login = document.querySelector('meta[name="octolytics-actor-login"]')
     ?.content;
   const requester = document.querySelector('a[class*="author"]')?.textContent;
@@ -82,7 +81,6 @@ export const getGithubMetadata = (document) => {
     commentId: null,
     requesterAvatarUrl,
   };
-
   return githubMetadata;
 };
 
@@ -670,7 +668,6 @@ export async function onSuggestion() {
     )[0];
 
     const semabarId = $(semabarContainer).attr('id');
-
     const payload = await suggest(activeElement.value);
 
     const state = store.getState();
@@ -679,16 +676,14 @@ export async function onSuggestion() {
 
     const { isReactionDirty, isTagModalDirty } = state.semabars[semabarId];
 
-    if (suggestedReaction) {
-      if (!isReactionDirty) {
-        store.dispatch(
-          updateSelectedEmoji({
-            id: semabarId,
-            selectedReaction: suggestedReaction,
-            isReactionDirty: false,
-          }),
-        );
-      }
+    if (suggestedReaction && !isReactionDirty) {
+      store.dispatch(
+        updateSelectedEmoji({
+          id: semabarId,
+          selectedReaction: suggestedReaction,
+          isReactionDirty: false,
+        }),
+      );
     }
 
     // allow to change state even when empty to remove existing tags if no suggestion

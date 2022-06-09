@@ -55,7 +55,7 @@ const ProfileSwitcher = () => {
             <b>Available organizations</b>
           </span>
           {/* @ts-ignore */}
-          {organizations.map(({ organization }) => (
+          {organizations?.map(({ organization }) => (
             <div
               key={organization._id}
               onClick={() => onChangeProfile(organization)}

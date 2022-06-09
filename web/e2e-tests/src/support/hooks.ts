@@ -98,7 +98,7 @@ export const hooks = {
 
     await browser.maximizeWindow();
 
-    await browser.url("https://app-staging.semasoftware.com/login");
+    await browser.url("https://app-release.semasoftware.com/login");
     await $("span=Sign in with GitHub").click();
 
     await $("#login_field").setValue("qateam+automationadmin@semasoftware.com");

@@ -6,6 +6,8 @@ import {GlobalVars} from "../GlobalVars";
 // @ts-ignore
 /**
  * Check if the given elements text is the same as the given text
+ * @param  {String}   index   The index of an element on the page
+ * @param  {String}   obsolete   The ordinal indicator of the index (unused)
  * @param  {String}   elementType       Element type (element or button)
  * @param  {String}   selector          Element selector
  * @param  {String}   falseCase         Whether to check if the content equals the
@@ -13,6 +15,8 @@ import {GlobalVars} from "../GlobalVars";
  * @param  {String}   additionalText    Additional text for check with saved one
  */
 export default async (
+    index: string,
+    obsolete: never,
     elementType: 'element' | 'button',
     selector: Selector,
     falseCase: boolean,
@@ -25,9 +29,12 @@ export default async (
      */
     let command: 'getText' | 'getValue' = 'getValue';
     const parsedSelector = webElements[selector];
+    const optionIndex = parseInt(index, 10)-1;
+    const element = await $$(parsedSelector)[optionIndex];
     if (
-        elementType === 'button'
-        || (await $(parsedSelector).getAttribute('value')) === null
+    elementType === 'button'
+        // @ts-ignore
+        || (await element.getAttribute('value')) === null
     ) {
         command = 'getText';
     }
@@ -57,8 +64,8 @@ export default async (
         parsedExpectedText = '';
         boolFalseCase = true;
     }
-
-    const text = await $(parsedSelector)[command]();
+    // @ts-ignore
+    const text = await element[command]();
 
     if (boolFalseCase) {
         expect(parsedExpectedText).not.toBe(text);
