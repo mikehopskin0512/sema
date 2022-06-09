@@ -22,6 +22,7 @@ import support from './support';
 import tags from './comments/tags';
 import userRoles from './userRoles';
 import users from './users';
+import webhooks from './webhooks';
 
 export default function attachRoutes(app, passport) {
   analysis(app, passport);
@@ -48,4 +49,5 @@ export default function attachRoutes(app, passport) {
   support(app, passport);
   roles(app, passport);
   userRoles(app, passport);
+  webhooks(app);
 }
