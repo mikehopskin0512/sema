@@ -218,7 +218,7 @@ async function findDuplicate(githubComment, otherComments) {
     if (looksLikeSemaComment(githubComment.body)) {
       logger.warn(
         'This looks like a Sema comment, yet could not match it to a smart comment in our database',
-        githubComment.url
+        githubComment.html_url
       );
     }
     return null;
