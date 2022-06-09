@@ -491,7 +491,7 @@ export const updateUserRepositoryList = async (user, repos, identity) => {
 
 export const addRepositoryToIdentity = async (user, repository) => {
   try {
-    const identityRepo = user.identities?.[0].repositories || [];
+    const identityRepo = user.identities?.[0]?.repositories ?? [];
     if (_.findIndex(identityRepo, { id: repository.id }) !== -1) {
       return true;
     }
