@@ -12,7 +12,7 @@ module.exports = {
           {
             $addFields: {
               banners: {
-                organizationCreate: true
+                teamCreate: true
               }
             }
           }
