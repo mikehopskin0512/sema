@@ -21,10 +21,15 @@ export default async function importRepository({ id }) {
     return;
   }
 
+  const octokit = await getOctokit(repository);
+  if (!octokit) {
+    await setSyncUnauthorized(repository);
+    return;
+  }
+
   await setSyncStarted(repository);
 
   try {
-    const octokit = await getOctokit(repository);
     const importComment = createGitHubImporter(octokit);
 
     await Promise.all([
@@ -116,7 +121,11 @@ async function getOctokit(repository) {
     (await findInstallationIdForRepository(repository)) ||
     (await findSomeInstallationId());
 
-  return new Octokit({
+  if (!installationId) {
+    return null;
+  }
+
+  const octokit = new Octokit({
     authStrategy: createAppAuth,
     auth: {
       appId: github.appId,
@@ -124,6 +133,19 @@ async function getOctokit(repository) {
       installationId,
     },
   });
+
+  // Probe access to the repository
+  try {
+    await octokit.request('/repositories/{id}', { id: repository.externalId });
+  } catch (error) {
+    if (error.status === 404) {
+      // No access.
+      return null;
+    }
+    throw error;
+  }
+
+  return octokit;
 }
 
 const appOctokit = new Octokit({
@@ -187,6 +209,15 @@ async function setSyncErrored(repository, error) {
     'sync.status': 'errored',
     'sync.erroredAt': new Date(),
     'sync.error': error.message || error.toString().split('\n')[0],
+  });
+  await repository.save();
+}
+
+async function setSyncUnauthorized(repository) {
+  repository.set({
+    'sync.status': 'unauthorized',
+    'sync.erroredAt': new Date(),
+    'sync.error': null,
   });
   await repository.save();
 }

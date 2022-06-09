@@ -59,7 +59,14 @@ const repositoriesSchema = new mongoose.Schema(
     sync: {
       status: {
         type: String,
-        enum: [null, 'queued', 'started', 'completed', 'errored'],
+        enum: [
+          null,
+          'queued',
+          'started',
+          'completed',
+          'errored',
+          'unauthorized',
+        ],
         default: null,
       },
       addedBy: {

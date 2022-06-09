@@ -2313,7 +2313,12 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/installation')
-          .reply(404);
+          .reply(404)
+          .get('/repositories/237888452')
+          .reply(200, {
+            id: '237888452',
+            name: 'phoenix',
+          });
 
         defaultInstallationNock = nock('https://api.github.com')
           .persist()
@@ -2387,62 +2392,170 @@ describe('Import Repository Queue', () => {
         expect(defaultInstallationNock.isDone()).toBe(true);
       });
     });
+  });
 
-    describe('a GitHub comment by a deleted user', () => {
-      beforeAll(async () => {
-        resetNocks();
-        await Repository.deleteMany();
-        await SmartComment.deleteMany();
+  describe('a GitHub comment by a deleted user', () => {
+    beforeAll(async () => {
+      resetNocks();
+      await Repository.deleteMany();
+      await SmartComment.deleteMany();
+    });
+
+    beforeAll(async () => {
+      repository = await createRepository({
+        name: 'phoenix',
+        type: 'github',
+        id: '237888452',
+        cloneUrl: 'https://github.com/Semalab/phoenix',
       });
+      await startSync({ repository, user });
+      nockPhoenixInstallation();
+    });
 
-      beforeAll(async () => {
-        repository = await createRepository({
-          name: 'phoenix',
-          type: 'github',
-          id: '237888452',
-          cloneUrl: 'https://github.com/Semalab/phoenix',
-        });
-        await startSync({ repository, user });
-        nockPhoenixInstallation();
-      });
-
-      beforeAll(() => {
-        nock('https://api.github.com')
-          .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
-          .reply(
-            200,
-            [
-              {
-                ...getFirstPageOfPullRequestComments()[0],
-                user: null,
-              },
-            ],
+    beforeAll(() => {
+      nock('https://api.github.com')
+        .get('/repos/Semalab/phoenix/pulls/comments')
+        .query({ sort: 'created', direction: 'desc', page: 1 })
+        .reply(
+          200,
+          [
             {
-              Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=1&sort=created&direction=desc>; rel="last"',
-            }
-          )
-          .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
-          .reply(200, [])
-          .get('/repos/Semalab/phoenix/pulls')
-          .query({ sort: 'created', direction: 'desc', page: 1, state: 'all' })
-          .reply(200, []);
-      });
+              ...getFirstPageOfPullRequestComments()[0],
+              user: null,
+            },
+          ],
+          {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=1&sort=created&direction=desc>; rel="last"',
+          }
+        )
+        .get('/repos/Semalab/phoenix/issues/comments')
+        .query({ sort: 'created', direction: 'desc', page: 1 })
+        .reply(200, [])
+        .get('/repos/Semalab/phoenix/pulls')
+        .query({ sort: 'created', direction: 'desc', page: 1, state: 'all' })
+        .reply(200, []);
+    });
 
+    beforeAll(() => {
+      nock('https://api.github.com')
+        .get('/repos/Semalab/phoenix/pulls/3')
+        .reply(200, getPullRequestDetailPR3());
+    });
+
+    beforeAll(async () => {
+      await handler({ id: repository.id });
+    });
+
+    it('should not import the comment', async () => {
+      const count = await SmartComment.countDocuments();
+      expect(count).toBe(0);
+    });
+  });
+
+  describe('app not installed anywhere', () => {
+    beforeAll(async () => {
+      resetNocks();
+      await Repository.deleteMany();
+      await SmartComment.deleteMany();
+    });
+
+    beforeAll(async () => {
+      repository = await createRepository({
+        name: 'phoenix',
+        type: 'github',
+        id: '237888452',
+        cloneUrl: 'https://github.com/Semalab/phoenix',
+      });
+      await startSync({ repository, user });
+    });
+
+    describe('processing queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
-          .get('/repos/Semalab/phoenix/pulls/3')
-          .reply(200, getPullRequestDetailPR3());
+          .get('/repos/Semalab/phoenix/installation')
+          .reply(404)
+          .get('/app/installations')
+          .reply(200, []);
       });
 
       beforeAll(async () => {
         await handler({ id: repository.id });
       });
 
-      it('should not import the comment', async () => {
-        const count = await SmartComment.countDocuments();
-        expect(count).toBe(0);
+      describe('repository', () => {
+        beforeAll(async () => {
+          repository = await Repository.findById(repository._id);
+        });
+
+        it('should have sync status unauthorized', () => {
+          expect(repository.sync.status).toBe('unauthorized');
+        });
+      });
+    });
+  });
+
+  describe('private repository, app not installed', () => {
+    beforeAll(async () => {
+      resetNocks();
+      await Repository.deleteMany();
+      await SmartComment.deleteMany();
+    });
+
+    beforeAll(async () => {
+      repository = await createRepository({
+        name: 'phoenix',
+        type: 'github',
+        id: '237888452',
+        cloneUrl: 'https://github.com/Semalab/phoenix',
+      });
+      await startSync({ repository, user });
+    });
+
+    describe('processing queue', () => {
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .persist()
+          .get('/repos/Semalab/phoenix/installation')
+          .reply(404)
+          .get('/app/installations')
+          .reply(200, [{ id: 35676598 }])
+          .post('/app/installations/35676598/access_tokens', () => true)
+          .reply(201, {
+            token: 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
+            expires_at: addDays(new Date(), 1).toISOString(),
+            permissions: {
+              members: 'read',
+              organization_administration: 'read',
+              organization_projects: 'read',
+              actions: 'read',
+              administration: 'read',
+              contents: 'read',
+              discussions: 'write',
+              issues: 'write',
+              metadata: 'read',
+              pull_requests: 'write',
+              repository_hooks: 'write',
+              repository_projects: 'read',
+              vulnerability_alerts: 'read',
+            },
+            repository_selection: 'selected',
+          })
+          .get('/repositories/237888452')
+          .reply(404);
+      });
+
+      beforeAll(async () => {
+        await handler({ id: repository.id });
+      });
+
+      describe('repository', () => {
+        beforeAll(async () => {
+          repository = await Repository.findById(repository._id);
+        });
+
+        it('should have sync status unauthorized', () => {
+          expect(repository.sync.status).toBe('unauthorized');
+        });
       });
     });
   });
@@ -3494,6 +3607,11 @@ function getPullRequestReviewsForPR4() {
 function nockPhoenixInstallation() {
   nock('https://api.github.com')
     .persist()
+    .get('/repositories/237888452')
+    .reply(200, {
+      id: '237888452',
+      name: 'phoenix',
+    })
     .get('/repos/Semalab/phoenix/installation')
     .reply(200, {
       id: '25676597',
