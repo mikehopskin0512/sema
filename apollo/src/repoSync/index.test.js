@@ -71,7 +71,6 @@ describe('POST /repo-sync', () => {
         {
           type: 'github',
           externalId: '123456',
-          installationId: '9876543',
         },
         {
           headers: {
@@ -92,7 +91,6 @@ describe('POST /repo-sync', () => {
       expect(data._id).toBe(repository._id.toString());
       expect(repository.type).toBe('github');
       expect(repository.externalId).toBe('123456');
-      expect(repository.installationId).toBe('9876543');
       expect(repository.sync.status).toBe('queued');
       expect(repository.sync.queuedAt).toBeCloseToDate(new Date());
       expect(repository.sync.addedBy).toEqualID(user);
@@ -110,7 +108,6 @@ describe('POST /repo-sync', () => {
           {
             type: 'github',
             externalId: '123456',
-            installationId: '9876543',
           },
           {
             headers: {
@@ -139,7 +136,6 @@ describe('POST /repo-sync', () => {
     describe('existing repository without sync set up', () => {
       beforeAll(async () => {
         repository.sync = {};
-        repository.installationId = null;
         await repository.save();
         importRepositoryJobs.splice(0);
       });
@@ -150,7 +146,6 @@ describe('POST /repo-sync', () => {
           {
             type: 'github',
             externalId: '123456',
-            installationId: '9876543',
           },
           {
             headers: {
@@ -171,7 +166,6 @@ describe('POST /repo-sync', () => {
         expect(data._id).toBe(repository._id.toString());
         expect(repository.type).toBe('github');
         expect(repository.externalId).toBe('123456');
-        expect(repository.installationId).toBe('9876543');
         expect(repository.sync.status).toBe('queued');
         expect(repository.sync.queuedAt).toBeCloseToDate(new Date());
         expect(repository.sync.addedBy).toEqualID(user);

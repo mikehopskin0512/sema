@@ -56,10 +56,6 @@ const repositoriesSchema = new mongoose.Schema(
       required: true,
       enum: ['github', 'bitbucket', 'direct'],
     },
-    // The GitHub installation ID for repo sync
-    installationId: {
-      type: String,
-    },
     sync: {
       status: {
         type: String,

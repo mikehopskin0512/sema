@@ -113,7 +113,6 @@ async function importReviewsFromPullRequest({
 
 async function getOctokit(repository) {
   const installationId =
-    repository.installationId ||
     (await findInstallationIdForRepository(repository)) ||
     (await findSomeInstallationId());
 

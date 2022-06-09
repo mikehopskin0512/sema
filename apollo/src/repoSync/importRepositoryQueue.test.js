@@ -8,7 +8,10 @@ import {
   findByExternalId as findSmartCommentsByExternalId,
   create as createSmartComment,
 } from '../comments/smartComments/smartCommentService';
-import { create as createRepository } from '../repositories/repositoryService';
+import {
+  create as createRepository,
+  startSync,
+} from '../repositories/repositoryService';
 import Repository from '../repositories/repositoryModel';
 import SmartComment from '../comments/smartComments/smartCommentModel';
 import User from '../users/userModel';
@@ -44,6 +47,7 @@ describe('Import Repository Queue', () => {
 
     beforeAll(async () => {
       resetNocks();
+      nockPhoenixInstallation();
       await Repository.deleteMany();
       await SmartComment.deleteMany();
     });
@@ -53,10 +57,9 @@ describe('Import Repository Queue', () => {
         name: 'phoenix',
         type: 'github',
         id: '237888452',
-        installationId: '25676597',
-        addedBy: user,
         cloneUrl: 'https://github.com/Semalab/phoenix',
       });
+      await startSync({ repository, user });
     });
 
     it('should have sync status "queued"', () => {
@@ -395,6 +398,7 @@ describe('Import Repository Queue', () => {
     describe('processing queue again', () => {
       beforeAll(() => {
         resetNocks();
+        nockPhoenixInstallation();
       });
 
       beforeAll(() => {
@@ -461,6 +465,7 @@ describe('Import Repository Queue', () => {
 
       beforeAll(() => {
         resetNocks();
+        nockPhoenixInstallation();
       });
 
       beforeAll(async () => {
@@ -539,6 +544,7 @@ describe('Import Repository Queue', () => {
       describe('running job again', () => {
         beforeAll(() => {
           resetNocks();
+          nockPhoenixInstallation();
         });
 
         beforeAll(() => {
@@ -612,6 +618,7 @@ describe('Import Repository Queue', () => {
 
       beforeAll(() => {
         resetNocks();
+        nockPhoenixInstallation();
       });
 
       beforeAll(async () => {
@@ -798,6 +805,7 @@ describe('Import Repository Queue', () => {
 
       beforeAll(() => {
         resetNocks();
+        nockPhoenixInstallation();
       });
 
       beforeAll(async () => {
@@ -1000,6 +1008,7 @@ describe('Import Repository Queue', () => {
 
       beforeAll(() => {
         resetNocks();
+        nockPhoenixInstallation();
       });
 
       beforeAll(async () => {
@@ -1097,6 +1106,7 @@ describe('Import Repository Queue', () => {
     describe('importing a comment created using the Chrome extension', () => {
       beforeAll(async () => {
         resetNocks();
+        nockPhoenixInstallation();
         await SmartComment.deleteMany();
         repository.sync = {};
         await repository.save();
@@ -1179,6 +1189,7 @@ describe('Import Repository Queue', () => {
     describe('existing comment within a minute of the GitHub comment', () => {
       beforeAll(async () => {
         resetNocks();
+        nockPhoenixInstallation();
         await Repository.deleteMany();
         await SmartComment.deleteMany();
       });
@@ -1249,10 +1260,10 @@ describe('Import Repository Queue', () => {
           name: 'phoenix',
           type: 'github',
           id: '237888452',
-          installationId: '25676597',
-          addedBy: user,
           cloneUrl: 'https://github.com/Semalab/phoenix',
         });
+        await startSync({ repository, user });
+        nockPhoenixInstallation();
       });
 
       beforeAll(() => {
@@ -1300,6 +1311,7 @@ describe('Import Repository Queue', () => {
     describe('GitHub comment is much older than the existing comment', () => {
       beforeAll(async () => {
         resetNocks();
+        nockPhoenixInstallation();
         await Repository.deleteMany();
         await SmartComment.deleteMany();
       });
@@ -1344,10 +1356,10 @@ describe('Import Repository Queue', () => {
           name: 'phoenix',
           type: 'github',
           id: '237888452',
-          installationId: '25676597',
-          addedBy: user,
           cloneUrl: 'https://github.com/Semalab/phoenix',
         });
+        await startSync({ repository, user });
+        nockPhoenixInstallation();
       });
 
       beforeAll(() => {
@@ -1392,6 +1404,7 @@ describe('Import Repository Queue', () => {
 
       beforeAll(async () => {
         resetNocks();
+        nockPhoenixInstallation();
         await Repository.deleteMany();
         await SmartComment.deleteMany();
       });
@@ -1467,10 +1480,10 @@ describe('Import Repository Queue', () => {
           name: 'phoenix',
           type: 'github',
           id: '237888452',
-          installationId: '25676597',
-          addedBy: user,
           cloneUrl: 'https://github.com/Semalab/phoenix',
         });
+        await startSync({ repository, user });
+        nockPhoenixInstallation();
       });
 
       beforeAll(() => {
@@ -1558,6 +1571,7 @@ describe('Import Repository Queue', () => {
 
       beforeAll(async () => {
         resetNocks();
+        nockPhoenixInstallation();
         await Repository.deleteMany();
         await SmartComment.deleteMany();
       });
@@ -1635,10 +1649,10 @@ describe('Import Repository Queue', () => {
           name: 'phoenix',
           type: 'github',
           id: '237888452',
-          installationId: '25676597',
-          addedBy: user,
           cloneUrl: 'https://github.com/Semalab/phoenix',
         });
+        await startSync({ repository, user });
+        nockPhoenixInstallation();
       });
 
       beforeAll(() => {
@@ -1681,6 +1695,7 @@ describe('Import Repository Queue', () => {
 
       beforeAll(async () => {
         resetNocks();
+        nockPhoenixInstallation();
         await Repository.deleteMany();
         await SmartComment.deleteMany();
       });
@@ -1750,10 +1765,10 @@ describe('Import Repository Queue', () => {
           name: 'phoenix',
           type: 'github',
           id: '237888452',
-          installationId: '25676597',
-          addedBy: user,
           cloneUrl: 'https://github.com/Semalab/phoenix',
         });
+        await startSync({ repository, user });
+        nockPhoenixInstallation();
       });
 
       beforeAll(() => {
@@ -1797,6 +1812,7 @@ describe('Import Repository Queue', () => {
 
     beforeAll(async () => {
       resetNocks();
+      nockPhoenixInstallation();
       await SmartComment.deleteMany();
       await User.deleteMany();
     });
@@ -1830,10 +1846,10 @@ describe('Import Repository Queue', () => {
           name: 'phoenix',
           type: 'github',
           id: '237888452',
-          installationId: '25676597',
-          addedBy: user,
           cloneUrl: 'https://github.com/Semalab/phoenix',
         });
+        await startSync({ repository, user });
+        nockPhoenixInstallation();
       });
 
       beforeAll(() => {
@@ -1916,10 +1932,10 @@ describe('Import Repository Queue', () => {
           name: 'phoenix',
           type: 'github',
           id: '237888452',
-          installationId: '25676597',
-          addedBy: user,
           cloneUrl: 'https://github.com/Semalab/phoenix',
         });
+        await startSync({ repository, user });
+        nockPhoenixInstallation();
       });
 
       beforeAll(() => {
@@ -1977,15 +1993,16 @@ describe('Import Repository Queue', () => {
         name: 'phoenix',
         type: 'github',
         id: '237888452',
-        installationId: '25676597',
-        addedBy: user,
         cloneUrl: 'https://github.com/Semalab/phoenix',
       });
+      await startSync({ repository, user });
+      nockPhoenixInstallation();
     });
 
     describe('comment is new', () => {
       beforeAll(async () => {
         resetNocks();
+        nockPhoenixInstallation();
         await SmartComment.deleteMany();
         repository.sync = {};
         await repository.save();
@@ -2068,6 +2085,7 @@ describe('Import Repository Queue', () => {
     describe('when comment exists in the database', () => {
       beforeAll(async () => {
         resetNocks();
+        nockPhoenixInstallation();
         await SmartComment.deleteMany();
         await User.deleteMany();
         repository.sync = {};
@@ -2189,6 +2207,7 @@ describe('Import Repository Queue', () => {
 
     beforeAll(async () => {
       resetNocks();
+      nockPhoenixInstallation();
       await SmartComment.deleteMany();
       repository.sync = {};
       await repository.save();
@@ -2283,9 +2302,9 @@ describe('Import Repository Queue', () => {
         name: 'phoenix',
         type: 'github',
         id: '237888452',
-        addedBy: user,
         cloneUrl: 'https://github.com/Semalab/phoenix',
       });
+      await startSync({ repository, user });
     });
 
     describe('processing queue', () => {
@@ -2381,10 +2400,10 @@ describe('Import Repository Queue', () => {
           name: 'phoenix',
           type: 'github',
           id: '237888452',
-          installationId: '25676597',
-          addedBy: user,
           cloneUrl: 'https://github.com/Semalab/phoenix',
         });
+        await startSync({ repository, user });
+        nockPhoenixInstallation();
       });
 
       beforeAll(() => {
@@ -3470,4 +3489,13 @@ function getPullRequestReviewsForPR4() {
       commit_id: 'ed9af2830a41266bbacc8f3bc18cd38ccb6f5257',
     },
   ];
+}
+
+function nockPhoenixInstallation() {
+  nock('https://api.github.com')
+    .persist()
+    .get('/repos/Semalab/phoenix/installation')
+    .reply(200, {
+      id: '25676597',
+    });
 }
