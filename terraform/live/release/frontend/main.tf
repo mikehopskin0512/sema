@@ -93,6 +93,10 @@ module "apollo" {
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
 
+  external_iam_policies = [
+    data.aws_iam_policy_document.this.json
+  ]
+
   min_capacity = 2
   max_capacity = 3
 }
@@ -125,6 +129,10 @@ module "apollo_worker" {
     }
   ]
 
+  external_iam_policies = [
+    data.aws_iam_policy_document.this.json
+  ]
+
   min_capacity = 1
   max_capacity = 1
 
@@ -137,6 +145,6 @@ module "auto_restore_backup_lambda" {
   name_prefix = "${var.name_prefix}-backups-auto-restore"
   vpc_id      = data.aws_vpc.this.id
   subnet_ids  = data.aws_subnet_ids.private.ids
-  timeout     = 600
+  timeout     = 900
   memory_size = 512
 }
