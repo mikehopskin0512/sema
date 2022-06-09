@@ -491,15 +491,17 @@ export const updateUserRepositoryList = async (user, repos, identity) => {
 
 export const addRepositoryToIdentity = async (user, repository) => {
   try {
-    const identityRepo = user.identities?.[0]?.repositories ?? [];
+    const identity = user.identities?.[0];
+    if (!identity) return false;
+    const identityRepo = identity.repositories || [];
     if (_.findIndex(identityRepo, { id: repository.id }) !== -1) {
       return true;
     }
-    let identity = user.identities?.[0];
-    identity = Object.assign(identity, {
+    const newIdentity = {
+      ...identity,
       repositories: [...identityRepo, repository],
-    });
-    await updateIdentity(user, identity);
+    };
+    await updateIdentity(user, newIdentity);
     return true;
   } catch (err) {
     const error = new errors.BadRequest(err);
