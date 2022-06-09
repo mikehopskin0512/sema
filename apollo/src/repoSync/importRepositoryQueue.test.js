@@ -2184,6 +2184,91 @@ describe('Import Repository Queue', () => {
     });
   });
 
+  describe('importing a comment that quotes a Sema comment', () => {
+    let comments;
+
+    beforeAll(async () => {
+      resetNocks();
+      await SmartComment.deleteMany();
+      repository.sync = {};
+      await repository.save();
+    });
+
+    beforeAll(() => {
+      const firstComment = getFirstPageOfPullRequestComments()[0];
+      nock('https://api.github.com')
+        .get('/repos/Semalab/phoenix/pulls/comments')
+        .query({ sort: 'created', direction: 'desc', page: 1 })
+        .reply(200, [
+          {
+            ...firstComment,
+            body:
+              '> we decided to not delete invitations\r\n' +
+              '> \r\n' +
+              '> __ [![sema-logo](https://camo.githubusercontent.com/422032771e9118594bb8e03bc95f4ff1e27acaed89ead04103768eeab458c260/68747470733a2f2f6170702e73656d61736f6674776172652e636f6d2f696d672f73656d612d747261792d6c6f676f2e737667)](https://semasoftware.com/gh)  🛠️ This code needs a fix\r\n' +
+              '\r\n' +
+              "I actually copied somewhere from existing code but if we don't delete the invitations, the invitations will still be active.\r\n",
+          },
+        ]);
+    });
+
+    beforeAll(() => {
+      nock('https://api.github.com')
+        .get('/repos/Semalab/phoenix/issues/comments')
+        .query(() => true)
+        .reply(200, []);
+    });
+
+    beforeAll(() => {
+      nock('https://api.github.com')
+        .get('/repos/Semalab/phoenix/pulls')
+        .query(() => true)
+        .reply(200, []);
+    });
+
+    beforeAll(() => {
+      nock('https://api.github.com')
+        .get('/repos/Semalab/phoenix/pulls/3')
+        .reply(200, getPullRequestDetailPR3());
+    });
+
+    beforeAll(async () => {
+      await handler({ id: repository.id });
+    });
+
+    beforeAll(async () => {
+      comments = await findSmartCommentsByExternalId(repository.externalId);
+    });
+
+    describe('imported comment', () => {
+      let comment;
+
+      beforeAll(() => {
+        comment = comments.find(
+          (c) => c.githubMetadata.type === 'pullRequestComment'
+        );
+      });
+
+      it('should not remove the Sema signature', () => {
+        expect(comment.comment).toBe(
+          '> we decided to not delete invitations\r\n' +
+            '> \r\n' +
+            '> __ [![sema-logo](https://camo.githubusercontent.com/422032771e9118594bb8e03bc95f4ff1e27acaed89ead04103768eeab458c260/68747470733a2f2f6170702e73656d61736f6674776172652e636f6d2f696d672f73656d612d747261792d6c6f676f2e737667)](https://semasoftware.com/gh)  🛠️ This code needs a fix\r\n' +
+            '\r\n' +
+            "I actually copied somewhere from existing code but if we don't delete the invitations, the invitations will still be active.\r\n"
+        );
+      });
+
+      it('should not have tags', () => {
+        expect(comment.tags.length).toBe(0);
+      });
+
+      it('should have no reaction', () => {
+        expect(comment.reaction).toEqualID('607f0d1ed7f45b000ec2ed70');
+      });
+    });
+  });
+
   describe('public repository', () => {
     let comments;
 

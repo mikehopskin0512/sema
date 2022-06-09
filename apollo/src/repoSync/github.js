@@ -131,8 +131,8 @@ async function createNewSmartComment({
   };
 
   const [tags, reaction] = await Promise.all([
-    getTags(text),
-    getReaction(text),
+    getTags(dropQuotedText(text)),
+    getReaction(dropQuotedText(text)),
   ]);
 
   const user = await findOrCreateGitHubUser({
@@ -234,12 +234,16 @@ async function findDuplicate(githubComment, otherComments) {
 }
 
 function removeSemaSignature(text) {
-  const [body] = splitSemaComment(text);
-  return body;
+  if (looksLikeSemaComment(text)) {
+    const [body] = splitSemaComment(text);
+    return body;
+  }
+
+  return text;
 }
 
 function splitSemaComment(text) {
-  const [rawBody, rawSignature] = text.split(
+  const [rawBody, rawSignature] = dropQuotedText(text).split(
     /__\r?\n\[!\[sema-logo\].*?&nbsp;/im
   );
 
@@ -256,17 +260,29 @@ function splitSemaComment(text) {
 }
 
 function looksLikeSemaComment(text) {
-  return text.includes('[![sema-logo]');
+  return dropQuotedText(text).includes('[![sema-logo]');
+}
+
+function dropQuotedText(text) {
+  return text
+    .split('\n')
+    .filter((line) => !line.startsWith('> '))
+    .join('\n');
 }
 
 function extractTagsFromSemaComment(text) {
-  const [, signature] = splitSemaComment(text);
-  return (
-    signature
-      .match(/Tags:(.*)$/im)?.[1]
-      .split(',')
-      .map((s) => s.trim()) ?? []
-  );
+  try {
+    const [, signature] = splitSemaComment(text);
+    return (
+      signature
+        .match(/Tags:(.*)$/im)?.[1]
+        .split(',')
+        .map((s) => s.trim()) ?? []
+    );
+  } catch (error) {
+    console.log({ text, error });
+    throw error;
+  }
 }
 
 async function extractReactionFromSemaComment(text) {
