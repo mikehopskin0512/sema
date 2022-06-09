@@ -32,7 +32,7 @@ import SelectField from '../../../components/inputs/selectField';
 import { fetchPortfoliosOfUser } from '../../../state/features/portfolios/actions';
 
 const { updateSnapshot } = portfoliosOperations;
-const { requestUpdateSnapshotSuccess } = snapshotsOperations;
+const { createSnapshot } = snapshotsOperations;
 const { triggerAlert, clearAlert } = alertOperations;
 
 const createSnapSchema = yup.object()
@@ -120,18 +120,11 @@ const SnapshotModal = ({
 
     try {
       if (type === SNAPSHOT_MODAL_TYPES.EDIT) {
-        const payload = await dispatch(updateSnapshot(snapshotData._id, { ...snapshotData, ...snapshotDataForSave }, token));
-        if (payload.status === 200) {
-          dispatch(requestUpdateSnapshotSuccess(payload.data));
-          notify('Snapshot was successfully edited.', { type: 'success' });
-          onClose(payload.data);
-        }
+        dispatch(updateSnapshot(snapshotData._id, { ...snapshotData, ...snapshotDataForSave }, token, true, () => notify('Snapshot was successfully edited.', { type: 'success' })));
+        onClose();
       } else {
         if (isPortfolioToSet) {
-          await postSnapshots({
-            ...snapshotDataForSave,
-            portfolioId: selectedPortfolio,
-          }, token);
+          dispatch(createSnapshot(snapshotDataForSave, selectedPortfolio, token));
           dispatch(fetchPortfoliosOfUser(user._id, token));
           notify('Snapshot was added to your portfolio.', {
             description: (
@@ -144,9 +137,7 @@ const SnapshotModal = ({
             duration: 3000,
           });
         } else {
-          await postSnapshots({
-            ...snapshotDataForSave,
-          }, token);
+          dispatch(createSnapshot(snapshotDataForSave, null, token));
           notify('Snapshot was saved to the Snapshot Library.', { duration: 3000 });
         }
 
@@ -154,6 +145,7 @@ const SnapshotModal = ({
         onClose();
       }
     } catch (e) {
+      console.log(e)
       dispatch(triggerAlert('Unable to create snapshot!', 'error'));
       dispatch(clearAlert());
     }
