@@ -2283,6 +2283,64 @@ describe('Import Repository Queue', () => {
         expect(defaultInstallationNock.isDone()).toBe(true);
       });
     });
+
+    describe('a GitHub comment by a deleted user', () => {
+      beforeAll(async () => {
+        resetNocks();
+        await Repository.deleteMany();
+        await SmartComment.deleteMany();
+      });
+
+      beforeAll(async () => {
+        repository = await createRepository({
+          name: 'phoenix',
+          type: 'github',
+          id: '237888452',
+          installationId: '25676597',
+          addedBy: user,
+          cloneUrl: 'https://github.com/Semalab/phoenix',
+        });
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(
+            200,
+            [
+              {
+                ...getFirstPageOfPullRequestComments()[0],
+                user: null,
+              },
+            ],
+            {
+              Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=1&sort=created&direction=desc>; rel="last"',
+            }
+          )
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, [])
+          .get('/repos/Semalab/phoenix/pulls')
+          .query({ sort: 'created', direction: 'desc', page: 1, state: 'all' })
+          .reply(200, []);
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/3')
+          .reply(200, getPullRequestDetailPR3());
+      });
+
+      beforeAll(async () => {
+        await handler({ id: repository.id });
+      });
+
+      it('should not import the comment', async () => {
+        const count = await SmartComment.countDocuments();
+        expect(count).toBe(0);
+      });
+    });
   });
 });
 
