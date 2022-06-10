@@ -24,7 +24,7 @@ import {
   COLLECTIONS_URL,
   TAGS_URL,
   USERS_URL,
-  TEAMS_URL,
+  ORGANIZATIONS_URL,
   SEGMENT_EVENTS,
 } from '../constants';
 
@@ -214,8 +214,8 @@ export const saveSmartComment = async (comment) => {
   });
 };
 
-export const fetchTeams = async () => {
-  const res = await fetch(TEAMS_URL);
+export const fetchOrganizations = async () => {
+  const res = await fetch(ORGANIZATIONS_URL);
   return res.json();
 };
 

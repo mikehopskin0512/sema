@@ -1,138 +1,138 @@
-@team_management @regression
-Feature: Team management
+@organization_management @regression
+Feature: Organization management
 
 #    @PTA80 @smoke  ##https://semalab.atlassian.net/browse/WEST-1319
-#    Scenario: Sema member can create new team
+#    Scenario: Sema member can create new organization
 #        Then I expect that element "userLogo" becomes displayed
 #        When I click on the element "userLogo"
-#        Then I expect that element "createTeamBtn" becomes displayed
-#        When I click on the element "createTeamBtn"
+#        Then I expect that element "createOrganizationBtn" becomes displayed
+#        When I click on the element "createOrganizationBtn"
 #
-#        Then I expect that element "createTeamNameInput" becomes displayed
-#        And  I expect that element "createTeamURLInput" becomes displayed
-#        And  I expect that element "createTeamURLCheckBtn" becomes displayed
-#        And  I expect that element "createTeamDescriptionInput" becomes displayed
-#        And  I expect that element "createTeamCancelBtn" becomes displayed
-#        And  I expect that element "createTeamCreateBtn" becomes displayed
+#        Then I expect that element "createOrganizationNameInput" becomes displayed
+#        And  I expect that element "createOrganizationURLInput" becomes displayed
+#        And  I expect that element "createOrganizationURLCheckBtn" becomes displayed
+#        And  I expect that element "createOrganizationDescriptionInput" becomes displayed
+#        And  I expect that element "createOrganizationCancelBtn" becomes displayed
+#        And  I expect that element "createOrganizationCreateBtn" becomes displayed
 #
-#        When I set "Test team" with timestamp to the inputfield "createTeamNameInput"
-#        And  I set "testTeam" to the inputfield "createTeamURLInput"
-#        And  I set "test description" to the inputfield "createTeamDescriptionInput"
-#        And  I click on the element "createTeamCancelBtn"
+#        When I set "Test Organization" with timestamp to the inputfield "createOrganizationNameInput"
+#        And  I set "testOrganization" to the inputfield "createOrganizationURLInput"
+#        And  I set "test description" to the inputfield "createOrganizationDescriptionInput"
+#        And  I click on the element "createOrganizationCancelBtn"
 #
-#        Then I expect that element "createTeamNameInput" becomes not displayed
+#        Then I expect that element "createOrganizationNameInput" becomes not displayed
 #        And  I expect that element "userLogo" becomes displayed
 #        When I click on the element "userLogo"
-#        Then I expect that element "createTeamBtn" becomes displayed
-#        When I click on the element "createTeamBtn"
+#        Then I expect that element "createOrganizationBtn" becomes displayed
+#        When I click on the element "createOrganizationBtn"
 #
-#        Then I expect that element "createTeamNameInput" not matches the text "Test team"
-#        And  I expect that element "createTeamURLInput" not matches the text "testTeam"
-#        And  I expect that element "createTeamDescriptionInput" not matches the text "test description"
+#        Then I expect that element "createOrganizationNameInput" not matches the text "Test Organization"
+#        And  I expect that element "createOrganizationURLInput" not matches the text "testOrganization"
+#        And  I expect that element "createOrganizationDescriptionInput" not matches the text "test description"
 #
-#        When I set "Test team" with timestamp to the inputfield "createTeamNameInput"
-#        And  I set "test description" to the inputfield "createTeamDescriptionInput"
-#        And  I set "testTeam" with timestamp to the inputfield "createTeamURLInput"
-#        And  I click on the element "createTeamCreateBtn"
+#        When I set "Test Organization" with timestamp to the inputfield "createOrganizationNameInput"
+#        And  I set "test description" to the inputfield "createOrganizationDescriptionInput"
+#        And  I set "testOrganization" with timestamp to the inputfield "createOrganizationURLInput"
+#        And  I click on the element "createOrganizationCreateBtn"
 #
-#        Then I expect that element "createTeamCreateBtn" becomes not displayed
-#        And  I expect that the team url is correct
-#        And  I expect that element "teamMetricsBoard" becomes displayed
-#        And  I expect that element "teamMembersList" becomes displayed
+#        Then I expect that element "createOrganizationCreateBtn" becomes not displayed
+#        And  I expect that the organization url is correct
+#        And  I expect that element "organizationMetricsBoard" becomes displayed
+#        And  I expect that element "organizationMembersList" becomes displayed
 
     @PTA77  @smoke
-    Scenario: Dashboard elements are displayed for Sema Corporate Team account
+    Scenario: Dashboard elements are displayed for Sema Corporate Organization account
         Then I expect that element "userLogo" becomes displayed
         When I click on the element "userLogo"
-        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-        When I click on the element "semaCorporateTeamLogo"
+        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+        When I click on the element "semaCorporateOrganizationLogo"
 
-        Then I expect that element "teamMetricsBoard" becomes displayed
-        And  I expect that element "teamSemaCodeReviews" becomes displayed
-        And  I expect that element "teamSemaComments" becomes displayed
-        And  I expect that element "teamSemaCommenters" becomes displayed
-        And  I expect that element "teamSemaUsers" becomes displayed
-        And  I expect that element "teamMembersList" becomes displayed
-        And  I expect that element "viewAllTeamMembersBtn" becomes displayed
+        Then I expect that element "organizationMetricsBoard" becomes displayed
+        And  I expect that element "organizationSemaCodeReviews" becomes displayed
+        And  I expect that element "organizationSemaComments" becomes displayed
+        And  I expect that element "organizationSemaCommenters" becomes displayed
+        And  I expect that element "organizationSemaUsers" becomes displayed
+        And  I expect that element "organizationMembersList" becomes displayed
+        And  I expect that element "viewAllOrganizationMembersBtn" becomes displayed
         And  I expect that element "dashboardInviteNewMembersBtn" becomes displayed
-        And  I expect that element "teamRecentReposBoard" becomes displayed
-        And  I expect that element "teamRecentReposCards" becomes displayed
-        And  I expect that element "teamViewAllReposBtn" becomes displayed
-        And  I expect that element "updateYourTeamSnippetsBtn" becomes displayed
+        And  I expect that element "organizationRecentReposBoard" becomes displayed
+        And  I expect that element "organizationRecentReposCards" becomes displayed
+        And  I expect that element "organizationViewAllReposBtn" becomes displayed
+        And  I expect that element "updateYourOrganizationSnippetsBtn" becomes displayed
 
     @PTA81
-    Scenario: Invite new members to the team from the Dashboard
+    Scenario: Invite new members to the Organization from the Dashboard
         Then I expect that element "userLogo" becomes displayed
         When I click on the element "userLogo"
-        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-        When I click on the element "semaCorporateTeamLogo"
+        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+        When I click on the element "semaCorporateOrganizationLogo"
         Then I expect that element "dashboardInviteNewMembersBtn" becomes displayed
         When I click on the element "dashboardInviteNewMembersBtn"
-        Then I expect that element "inviteNewTeamMemberInput" becomes displayed
-        And  I expect that element "roleNewTeamMemberInput" becomes displayed
+        Then I expect that element "inviteNewOrganizationMemberInput" becomes displayed
+        And  I expect that element "roleNewOrganizationMemberInput" becomes displayed
 #        And  I expect that element "copyInvitationLinkBtn" becomes displayed
-        And  I expect that element "cancelInvitationNewTeamMemberBtn" becomes displayed
-        And  I expect that element "inviteNewTeamMemberBtn" becomes displayed
+        And  I expect that element "cancelInvitationNewOrganizationMemberBtn" becomes displayed
+        And  I expect that element "inviteNewOrganizationMemberBtn" becomes displayed
 
-        When I click on the element "inviteNewTeamMemberInput"
-        And  I set "qateam+autotest1@semasoftware.com" to the inputfield "inviteNewTeamMemberInput"
-        And  I click on the element "roleNewTeamMemberElement"
-        And  I set "Member" to the inputfield "roleNewTeamMemberInput"
+        When I click on the element "inviteNewOrganizationMemberInput"
+        And  I set "qateam+autotest1@semasoftware.com" to the inputfield "inviteNewOrganizationMemberInput"
+        And  I click on the element "roleNewOrganizationMemberElement"
+        And  I set "Member" to the inputfield "roleNewOrganizationMemberInput"
         And  I press "Enter"
-        And  I click on the element "cancelInvitationNewTeamMemberBtn"
+        And  I click on the element "cancelInvitationNewOrganizationMemberBtn"
 
-        Then I expect that element "inviteNewTeamMemberInput" becomes not displayed
+        Then I expect that element "inviteNewOrganizationMemberInput" becomes not displayed
         And  I expect that element "dashboardInviteNewMembersBtn" becomes displayed
 
         When I click on the element "dashboardInviteNewMembersBtn"
-        And  I set "qateam+autotest1@semasoftware.com" to the inputfield "inviteNewTeamMemberInput"
-        And  I click on the element "roleNewTeamMemberElement"
-        And  I set "Member" to the inputfield "roleNewTeamMemberInput"
+        And  I set "qateam+autotest1@semasoftware.com" to the inputfield "inviteNewOrganizationMemberInput"
+        And  I click on the element "roleNewOrganizationMemberElement"
+        And  I set "Member" to the inputfield "roleNewOrganizationMemberInput"
         And  I press "Enter"
-        And  I click on the element "inviteNewTeamMemberBtn"
+        And  I click on the element "inviteNewOrganizationMemberBtn"
 
         Then I expect that element "invitationsSentNotificationText" becomes displayed
         And  I expect that element "invitationsSentNotificationCloseBtn" becomes displayed
         
         When I click on the element "invitationsSentNotificationCloseBtn"
-        Then I expect that element "teamManagementTab" becomes displayed
+        Then I expect that element "organizationManagementTab" becomes displayed
 
     @PTA81_2
-    Scenario: Invite new members to the team from the Team Management
+    Scenario: Invite new members to the organization from the Organization Management
         Then I expect that element "userLogo" becomes displayed
         When I click on the element "userLogo"
-        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-        When I click on the element "semaCorporateTeamLogo"
-        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
+        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+        When I click on the element "semaCorporateOrganizationLogo"
+        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
         
-        When I click on the element "viewAllTeamMembersBtn"
-        Then I expect that element "teamManagementInviteNewMemberBtn" becomes displayed
-        When I click on the element "teamManagementInviteNewMemberBtn"
-        Then I expect that element "inviteNewTeamMemberInput" becomes displayed
-        And  I set "qateam+autotest1@semasoftware.com" to the inputfield "inviteNewTeamMemberInput"
-        And  I click on the element "roleNewTeamMemberElement"
-        And  I set "Member" to the inputfield "roleNewTeamMemberInput"
+        When I click on the element "viewAllOrganizationMembersBtn"
+        Then I expect that element "organizationManagementInviteNewMemberBtn" becomes displayed
+        When I click on the element "organizationManagementInviteNewMemberBtn"
+        Then I expect that element "inviteNewOrganizationMemberInput" becomes displayed
+        And  I set "qateam+autotest1@semasoftware.com" to the inputfield "inviteNewOrganizationMemberInput"
+        And  I click on the element "roleNewOrganizationMemberElement"
+        And  I set "Member" to the inputfield "roleNewOrganizationMemberInput"
         And  I press "Enter"
-        And  I click on the element "inviteNewTeamMemberBtn"
+        And  I click on the element "inviteNewOrganizationMemberBtn"
 
         Then I expect that element "invitationsSentNotificationText" becomes displayed
         And  I expect that element "invitationsSentNotificationCloseBtn" becomes displayed
 
         When I click on the element "invitationsSentNotificationCloseBtn"
-        Then I expect that element "teamManagementTab" becomes displayed
-        And  I expect that element "teamMembersTable" becomes displayed
+        Then I expect that element "organizationManagementTab" becomes displayed
+        And  I expect that element "organizationMembersTable" becomes displayed
 
     @PTA82  @smoke
-    Scenario: Team member role can be changed in the Team Management tab
+    Scenario: Organization member role can be changed in the Organization Management tab
         Then I expect that element "userLogo" becomes displayed
         When I click on the element "userLogo"
-        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-        When I click on the element "semaCorporateTeamLogo"
-        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
-        When I click on the element "viewAllTeamMembersBtn"
-        Then I expect that element "teamMembersTableEmail" becomes displayed
-        And  I expect that element "teamMembersTableRole" becomes displayed
-        And  I expect that element "teamMembersTableActionBtn" becomes displayed
+        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+        When I click on the element "semaCorporateOrganizationLogo"
+        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
+        When I click on the element "viewAllOrganizationMembersBtn"
+        Then I expect that element "organizationMembersTableEmail" becomes displayed
+        And  I expect that element "organizationMembersTableRole" becomes displayed
+        And  I expect that element "organizationMembersTableActionBtn" becomes displayed
 
         When I change the role for "sema.test.code.author@gmail.com" to "Member"
         Then I expect that element "changeRoleConfirmBtn" becomes displayed
@@ -161,15 +161,15 @@ Feature: Team management
         Then I expect that the role for user "sema.test.code.author@gmail.com" is updated to "Library Editor"
 
     @PTA82_2
-    Scenario: Team member role can be changed to to each of roles in the Team Management tab
+    Scenario: Organization member role can be changed to to each of roles in the Organization Management tab
         Then I expect that element "userLogo" becomes displayed
         When I click on the element "userLogo"
-        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-        When I click on the element "semaCorporateTeamLogo"
-        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
+        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+        When I click on the element "semaCorporateOrganizationLogo"
+        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
 
-        When I click on the element "viewAllTeamMembersBtn"
-        And  I expect that element "teamMembersTableRole" becomes displayed
+        When I click on the element "viewAllOrganizationMembersBtn"
+        And  I expect that element "organizationMembersTableRole" becomes displayed
 
         When I change the role for "sema.test.code.author@gmail.com" to "Member"
         Then I expect that element "changeRoleConfirmationUserName" matches the text "Sema Test Code Author"
@@ -190,72 +190,73 @@ Feature: Team management
         Then I expect that the role for user "sema.test.code.author@gmail.com" is updated to "Library Editor"
 
 #    @PTA84     https://semalab.atlassian.net/browse/WEST-1362
-#    Scenario: Team profile data can be updated
+#    Scenario: Organization profile data can be updated
 #        Then I expect that element "userLogo" becomes displayed
 #        When I click on the element "userLogo"
-#        Then I expect that element "semaCorporateTeamGearBtn" becomes displayed
-#        When I click on the element "semaCorporateTeamGearBtn"
-#        Then I expect that element "editTeamProfileBtn" becomes displayed
-#        When I click on the element "editTeamProfileBtn"
-#        Then I expect that element "editTeamNameInput" becomes displayed
-#        And  I expect that element "editTeamURLInput" becomes displayed
-#        And  I expect that element "editTeamURLCheckBtn" becomes displayed
-#        And  I expect that element "editTeamDescriptionInput" becomes displayed
-#        And  I expect that element "editTeamCancelBtn" becomes displayed
-#        And  I expect that element "editTeamSaveBtn" becomes displayed
+#        Then I expect that element "semaCorporateOrganizationGearBtn" becomes displayed
+#        When I click on the element "semaCorporateOrganizationGearBtn"
+#        Then I expect that element "editOrganizationProfileBtn" becomes displayed
+#        When I click on the element "editOrganizationProfileBtn"
+#        Then I expect that element "editOrganizationNameInput" becomes displayed
+#        And  I expect that element "editOrganizationURLInput" becomes displayed
+#        And  I expect that element "editOrganizationURLCheckBtn" becomes displayed
+#        And  I expect that element "editOrganizationDescriptionInput" becomes displayed
+#        And  I expect that element "editOrganizationCancelBtn" becomes displayed
+#        And  I expect that element "editOrganizationSaveBtn" becomes displayed
 #        And  I expect that element "uploadProfilePictureBtn" becomes displayed
 #
-#        When I clear the inputfield "editTeamNameInput"
-#        And  I clear the inputfield "editTeamURLInput"
-#        And  I clear the inputfield "editTeamDescriptionInput"
+#        When I clear the inputfield "editOrganizationNameInput"
+#        And  I clear the inputfield "editOrganizationURLInput"
+#        And  I clear the inputfield "editOrganizationDescriptionInput"
 #
-#        And  I set "edited team name" to the inputfield "editTeamNameInput"
-#        And  I set "edited team description" to the inputfield "editTeamDescriptionInput"
-#        And  I set "edited team url" to the inputfield "editTeamURLInput"
-#        And  I click on the element "editTeamSaveBtn"
-#        Then I expect that element "teamMembersTable" becomes displayed
-#        And  I expect that element "changeTeamProfileNotification" becomes displayed
-#        And  I expect that element "teamName" becomes displayed
-#        And  I expect that element "teamDescription" becomes displayed
-#        And  I expect that element "teamName" matches the text "edited team name"
-#        And  I expect that element "teamDescription" matches the text "edited team description"
+#        And  I set "edited team name" to the inputfield "editOrganizationNameInput"
+#        And  I set "edited team description" to the inputfield "editOrganizationDescriptionInput"
+#        And  I set "edited team url" to the inputfield "editOrganizationURLInput"
+#        And  I click on the element "editOrganizationSaveBtn"
+#        Then I expect that element "organizationMembersTable" becomes displayed
+#        And  I expect that element "changeOrganizationProfileNotification" becomes displayed
+#        And  I expect that element "organizationName" becomes displayed
+#        And  I expect that element "organizationDescription" becomes displayed
+#        And  I expect that element "organizationName" matches the text "edited team name"
+#        And  I expect that element "organizationDescription" matches the text "edited team description"
 ##        And  I expect that the url is "<string>"
 #
-#        When  I click on the element "editTeamSaveBtn"
-#        And  I set "Sema Corporate Team" to the inputfield "editTeamNameInput"
-#        And  I set "The awesome team for Sema and all its crew." to the inputfield "editTeamDescriptionInput"
-#        And  I click on the element "editTeamSaveBtn"
-#        Then I expect that element "teamMembersTable" becomes displayed
-#        And  I expect that element "teamName" becomes displayed
-#        And  I expect that element "teamName" matches the text "Sema Corporate Team"
+#        When  I click on the element "editorganizationSaveBtn"
+#        And  I set "Sema Corporate Team" to the inputfield "editorganizationNameInput"
+#        And  I set "The awesome team for Sema and all its crew." to the inputfield "editorganizationDescriptionInput"
+#        And  I click on the element "editorganizationSaveBtn"
+#        Then I expect that element "organizationMembersTable" becomes displayed
+#        And  I expect that element "organizationName" becomes displayed
+#        And  I expect that element "organizationName" matches the text "Sema Corporate Team"
 
     @PTA84_2
-    Scenario: Team management can be opened with gear button
+    Scenario: Organization management can be opened with gear button
         Then I expect that element "userLogo" becomes displayed
         When I click on the element "userLogo"
-        Then I expect that element "semaCorporateTeamGearBtn" becomes displayed
-        When I click on the element "semaCorporateTeamGearBtn"
-        And  I expect that element "teamMembersTableEmail" becomes displayed
-        And  I expect that element "teamMembersTableRole" becomes displayed
-        And  I expect that element "teamMembersTableActionBtn" becomes displayed
-        And  I expect that element "teamLabelsManagementTab" becomes displayed
-        And  I expect that element "teamManagementInviteNewMemberBtn" becomes displayed
-        And  I expect that element "editTeamProfileBtn" becomes displayed
+        Then I expect that element "semaCorporateOrganizationGearBtn" becomes displayed
+        When I click on the element "semaCorporateOrganizationGearBtn"
+        And  I expect that element "organizationMembersTable" becomes displayed
+        And  I expect that element "organizationMembersTableEmail" becomes displayed
+        And  I expect that element "organizationMembersTableRole" becomes displayed
+        And  I expect that element "organizationMembersTableActionBtn" becomes displayed
+        And  I expect that element "organizationLabelsManagementTab" becomes displayed
+        And  I expect that element "organizationManagementInviteNewMemberBtn" becomes displayed
+        And  I expect that element "editOrganizationProfileBtn" becomes displayed
 
 #    @PTA84_3    https://semalab.atlassian.net/browse/WEST-1362
-#    Scenario: Error message validation for editing team profile data
+#    Scenario: Error message validation for editing Organization profile data
 #        Then I expect that element "userLogo" becomes displayed
 #        When I click on the element "userLogo"
-#        Then I expect that element "semaCorporateTeamGearBtn" becomes displayed
-#        When I click on the element "semaCorporateTeamGearBtn"
-#        Then I expect that element "editTeamProfileBtn" becomes displayed
-#        When I click on the element "editTeamProfileBtn"
-#        Then I expect that element "editTeamNameInput" becomes displayed
-#        When I clear the inputfield "editTeamNameInput"
-#        And  I clear the inputfield "editTeamURLInput"
-#        And  I clear the inputfield "editTeamDescriptionInput"
-#        And  I click on the element "editTeamSaveBtn"
-#        Then I expect that element "editTeamNameInputError" becomes displayed
-#        And  I expect that element "editTeamDescriptionInputError" becomes displayed
-#        And  I expect that element "editTeamNameInputError" matches the text "Team name is required"
-#        And  I expect that element "editTeamDescriptionInputError" matches the text "Team description is required"
+#        Then I expect that element "semaCorporateOrganizationGearBtn" becomes displayed
+#        When I click on the element "semaCorporateOrganizationGearBtn"
+#        Then I expect that element "editOrganizationProfileBtn" becomes displayed
+#        When I click on the element "editOrganizationProfileBtn"
+#        Then I expect that element "editOrganizationNameInput" becomes displayed
+#        When I clear the inputfield "editOrganizationNameInput"
+#        And  I clear the inputfield "editOrganizationURLInput"
+#        And  I clear the inputfield "editOrganizationDescriptionInput"
+#        And  I click on the element "editOrganizationSaveBtn"
+#        Then I expect that element "editOrganizationNameInputError" becomes displayed
+#        And  I expect that element "editOrganizationDescriptionInputError" becomes displayed
+#        And  I expect that element "editOrganizationNameInputError" matches the text "Team name is required"
+#        And  I expect that element "editOrganizationDescriptionInputError" matches the text "Team description is required"

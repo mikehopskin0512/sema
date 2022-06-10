@@ -28,7 +28,7 @@ import {
   REMOVE_NOTIFICATION,
   ADD_NOTIFICATION,
   UPDATE_PROFILE,
-  UPDATE_TEAMS,
+  UPDATE_ORGANIZATIONS,
   FETCH_CURRENT_USER,
   FETCH_CURRENT_USER_SUCCESS,
   FETCH_CURRENT_USER_ERROR,
@@ -50,8 +50,8 @@ export const updateProfile = (payload) => ({
   payload,
 });
 
-export const updateTeams = (payload) => ({
-  type: UPDATE_TEAMS,
+export const updateOrganizations = (payload) => ({
+  type: UPDATE_ORGANIZATIONS,
   payload,
 });
 
