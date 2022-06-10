@@ -187,7 +187,7 @@ const OrganizationManagement = ({ activeOrganization }) => {
   };
 
   const onInviteLinkCopy = async (e) => {
-    const invitationToken = invitations.find((invite) => invite.teamId === teamId)?.token;
+    const invitationToken = invitations.find((invite) => invite.organizationId === organizationId)?.token;
     if (!invitationToken) {
       notify('Invitation link was not copied.', {
         type: ALERT_TYPES.ERROR,
@@ -221,23 +221,23 @@ const OrganizationManagement = ({ activeOrganization }) => {
         <div className='is-size-4 has-text-weight-semibold has-text-black-950'>Organization Management</div>
         <div className="is-flex">
           {/* TODO: uncomment when it will be needed  */}
-          {/* {(isTeamAdmin || isSemaAdmin) && ( */}
-          {/*   <button */}
-          {/*     className={clsx('button is-primary is-outlined mr-8', styles['invite-button'])} */}
-          {/*     onClick={onInviteLinkCopy} */}
-          {/*   > */}
-          {/*     <CopyButtonIcon size='small' /> */}
-          {/*     <span className='ml-10'>Copy Invitation Link</span> */}
-          {/*   </button> */}
-          {/* )} */}
-          {/* <button */}
-          {/*   className='button is-primary border-radius-4px' */}
-          {/*   type='button' */}
-          {/*   onClick={goToInvitePage} */}
-          {/* > */}
-          {/*   <PlusIcon size='small' /> */}
-          {/*   <span className='ml-10'>Invite New Members</span> */}
-          {/* </button> */}
+          {(isOrganizationAdmin || isSemaAdmin) && (
+             <button 
+               className={clsx('button is-primary is-outlined mr-8', styles['invite-button'])} 
+               onClick={onInviteLinkCopy}
+             > 
+               <CopyButtonIcon size='small' /> 
+               <span className='ml-10'>Copy Invitation Link</span> 
+             </button>
+           )} 
+          <button 
+             className='button is-primary border-radius-4px' 
+             type='button' 
+             onClick={goToInvitePage} 
+           > 
+             <PlusIcon size='small' /> 
+             <span className='ml-10'>Invite New Members</span> 
+           </button> 
         </div>
       </div>
       <div className='hero-body py-0 px-0'>

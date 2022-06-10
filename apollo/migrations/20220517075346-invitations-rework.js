@@ -15,7 +15,7 @@ module.exports = {
           _id,
           senderId: senderId ?? sender,
           isMagicLink: isMagicLink ?? false,
-          teamId: teamId ?? team,
+          organizationId: teamId ?? team,
           token,
           tokenExpires,
           redemptions,
