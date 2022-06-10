@@ -145,7 +145,7 @@ const SnapshotModal = ({
         onClose();
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
       dispatch(triggerAlert('Unable to create snapshot!', 'error'));
       dispatch(clearAlert());
     }

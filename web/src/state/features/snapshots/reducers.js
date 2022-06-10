@@ -98,7 +98,6 @@ const reducer = (state = initialState, action) => {
         isFetching: true,
       };
     case types.REQUEST_CREATE_SNAPSHOT_SUCCESS:
-      console.log(action.snapshot, [...state.data.snapshots])
       return {
         ...state,
         isFetching: false,
