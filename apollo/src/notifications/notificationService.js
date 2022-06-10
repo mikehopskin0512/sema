@@ -41,8 +41,8 @@ export const addAcceptedInviteActivity = async (
   recepientId,
   recepient
 ) => {
-  const userPromise1 = getOrCreateNotificationUser(userId, user);
-  const userPromise2 = getOrCreateNotificationUser(recepientId, recepient);
+  const userPromise1 = createUser(user);
+  const userPromise2 = createUser(recepient);
   await Promise.all([userPromise1, userPromise2]);
   return addUserActivity(userId, recepientId, NOTIFICATION_TYPE.JOINED_SEMA);
 };
