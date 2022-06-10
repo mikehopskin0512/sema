@@ -27,9 +27,9 @@ const invitationSchema = new mongoose.Schema({
         default: Date.now,
       },
     }],
-  teamId: {
+  organizationId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Team',
+    ref: 'Organization',
     required: false,
   },
   roleId: {
