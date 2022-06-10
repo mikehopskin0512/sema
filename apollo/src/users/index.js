@@ -69,6 +69,12 @@ export default (app, passport) => {
         throw new errors.BadRequest('User create error');
       }
       const { _id: userId, username } = newUser;
+
+      let inviteNotificationSent = false;
+      const sendInviteNotification = async (user, recepientId) => {
+        const recepient = await findById(recepientId);
+        return addAcceptedInviteActivity(user._id, user, recepientId, recepient);
+      }
       // If invitation, call joinOrg function
       if (Object.prototype.hasOwnProperty.call(invitation, '_id')) {
         const { orgId, orgName, sender, token } = invitation;
@@ -84,18 +90,20 @@ export default (app, passport) => {
         // Redeem invite
         await redeemInvite(token, userId);
 
+        inviteNotificationSent = true;
         // send notification to sender - no need to await that action
-        (async () => {
-          const senderUser = await findById(sender);
-          return addAcceptedInviteActivity(newUser._id, newUser, sender, senderUser);
-        }) ().catch(logger.error);
+        sendInviteNotification(newUser, sender).catch(logger.error);
       }
 
       // Check if user has been previously invited
       const [hasInvite] = await checkIfInvited(username);
       if (hasInvite) {
-        const { _id: invitationId } = hasInvite;
+        const { _id: invitationId, sender } = hasInvite;
         redeemInvite(null, userId, invitationId);
+        if(!inviteNotificationSent) {
+          // send notification to sender - no need to await that action
+          sendInviteNotification(newUser, sender).catch(logger.error);
+        }
       }
 
       // Add user to Mailchimp and subscribe it to Sema - Newsletters
