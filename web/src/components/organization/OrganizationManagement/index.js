@@ -216,9 +216,9 @@ const OrganizationManagement = ({ activeOrganization }) => {
 
   return (
     <div className='hero mx-10'>
-      <Helmet {...TeamManagementHelmet} />
+      <Helmet {...OrganizationManagementHelmet} />
       <div className='is-flex is-justify-content-space-between is-align-items-center mt-10 mb-30'>
-        <div className='is-size-4 has-text-weight-semibold has-text-black-950'>Team Management</div>
+        <div className='is-size-4 has-text-weight-semibold has-text-black-950'>Organization Management</div>
         <div className="is-flex">
           {/* TODO: uncomment when it will be needed  */}
           {/* {(isTeamAdmin || isSemaAdmin) && ( */}
