@@ -23,7 +23,7 @@ const EditCommentCollectionForm = ({ errors, cid = null, control }) => {
     }),
   );
   const { token } = authState;
-  const { checkTeam } = usePermission();
+  const { checkOrganization } = usePermission();
 
   useAuthEffect(() => {
     dispatch(fetchTagList(token));

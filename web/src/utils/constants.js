@@ -123,7 +123,7 @@ export const CIRCULAR_PACKING_COLORS = {
 export const COLLECTION_TYPE = {
   COMMUNITY: 'community',
   PERSONAL: 'personal',
-  TEAM: 'team'
+  ORGANIZATION: 'organization'
 };
 
 export const DAYS_IN_WEEK = 7;
@@ -136,9 +136,9 @@ export const GITHUB_URL = 'https://github.com';
 
 export const DEFAULT_COLLECTION_NAME = 'my snippets';
 
-export const SEMA_CORPORATE_TEAM_NAME = 'Sema Corporate Team';
+export const SEMA_CORPORATE_ORGANIZATION_NAME = 'Sema Corporate Organization';
 
-export const SEMA_CORPORATE_TEAM_ID = '614f2fe7811ae802fc08e36e';
+export const SEMA_CORPORATE_ORGANIZATION_ID = '614f2fe7811ae802fc08e36e';
 
 export const SEMA_FAQ_URL = 'https://semasoftware.com/content/faqs';
 export const SEMA_INTERCOM_FAQ_URL = 'https://intercom.help/sema-software/en';
@@ -148,15 +148,17 @@ export const SEMA_APP_URL = 'https://app.semasoftware.com';
 export const SEMA_INTERCOM_URL = 'https://intercom.help/sema-software/en/';
 
 export const SEMA_FAQ_SLUGS = {
-  LEARN_MORE_ABOUT_TEAM_INSIGHTS:
+  LEARN_MORE_ABOUT_ORGANIZATION_INSIGHTS:
     'articles/6116499-team-insights-who-can-see-what',
   LEARN_MORE_ABOUT_PERSONAL_INSIGHTS:
     'articles/6116505-is-there-an-executive-dashboard-of-all-developers',
   LEARN_MORE_ABOUT_SNIPPETS:
     'articles/6147206-what-are-snippets',
+  LEARN_MORE_ABOUT_SNAPSHOTS:
+    'collections/3428417-developer-portfolio-and-snapshots',
   LEARN_MORE: 'is-there-a-manager-dashboard-of-all-developers',
   SUMMARIES: 'what-do-summaries-mean',
-  TEAM_INSIGHTS: 'team-insights-who-can-see-what',
+  ORGANIZATION_INSIGHTS: 'team-insights-who-can-see-what',
   MARKDOWN: 'whats-markdown-and-how-do-i-use-it',
   SNIPPETS: 'what-are-snippets',
   SNAPSHOTS: 'what-are-snapshots'
@@ -192,22 +194,22 @@ export const PATHS = {
   SUPPORT: '/support',
   GUIDES: '/guides',
   LOGIN: '/login',
-  TEAMS: {
-    _: '/teams',
-    EDIT: id => `/teams/${id}/edit`,
-    ADD: '/teams/add',
-    INVITE: id => `/teams/${id}/invite`,
-    SETTINGS: id => `/teams/${id}/settings`,
-    LABELS: id => `/teams/${id}/settings?tab=labels`,
-    MANAGEMENT: id => `/teams/${id}/settings?tab=management`
+  ORGANIZATIONS: {
+    _: '/organizations',
+    EDIT: id => `/organizations/${id}/edit`,
+    ADD: '/organizations/add',
+    INVITE: id => `/organizations/${id}/invite`,
+    SETTINGS: id => `/organizations/${id}/settings`,
+    LABELS: id => `/organizations/${id}/settings?tab=labels`,
+    MANAGEMENT: id => `/organizations/${id}/settings?tab=management`
   },
   ONBOARDING: '/onboarding',
   REGISTER: '/register',
   PASSWORD_RESET: '/password-reset',
   REPORTS: '/reports',
   SETTINGS: '/settings',
-  TEAM_CREATE: '/teams/add',
-  TEAM_INVITE: '/teams/invite',
+  ORGANIZATION_CREATE: '/organizations/add',
+  ORGANIZATION_INVITE: '/organizations/invite',
   SEMA_ADMIN: '/sema-admin',
   PORTFOLIO: {
     _: '/portfolios',
@@ -216,7 +218,7 @@ export const PATHS = {
     SNAPSHOTS: '/portfolios?tab=snapshots'
   },
   IDENTITIES: '/api/identities/github',
-  TEAM_INSIGHTS: '/team-insights'
+  ORGANIZATION_INSIGHTS: '/organization-insights'
 };
 
 export const SUPPORT_VIDEO_LANGUAGES = [
@@ -227,16 +229,16 @@ export const SUPPORT_VIDEO_LANGUAGES = [
   }
 ];
 
-export const TEAM_MENU_HEADERS = [
+export const ORGANIZATION_MENU_HEADERS = [
   {
-    name: 'Team Management',
-    path: `${PATHS.TEAMS._}/[teamId]/edit`
+    name: 'Organization Management',
+    path: `${PATHS.ORGANIZATIONS._}/[organizationId]/edit`
   }
 ];
 
 export const PROFILE_VIEW_MODE = {
   INDIVIDUAL_VIEW: 'individual_view',
-  TEAM_VIEW: 'team_view'
+  ORGANIZATION_VIEW: 'organization_view'
 };
 
 export const SEMA_COLLECTIONS_VIEW_MODE = 'sema_collections_view_mode';
@@ -286,7 +288,7 @@ export const KEY_CODES = {
 
 export const COLLECTION_TYPES = {
   PERSONAL: 'personal',
-  TEAM: 'team',
+  ORGANIZATION: 'organization',
   COMMUNITY: 'community'
 };
 
@@ -302,7 +304,7 @@ export const KNOWLEDGE_BASE = [
       'https://intercom.help/sema-software/en/articles/6147206-what-are-snippets'
   },
   {
-    description: 'How do I set up a team?',
+    description: 'How do I set up a organization?',
     link:
       'https://intercom.help/sema-software/en/articles/6147266-how-do-i-set-up-a-team'
   },

@@ -6,7 +6,7 @@ module.exports = {
   async up(db, client) {
     try {
       const users = await db.collection('users').find({}).toArray();
-  
+
       await Promise.all(users.map(async (user) => {
         await db.collection('users').findOneAndUpdate({ _id: new ObjectId(user._id) }, [
           {
@@ -26,9 +26,9 @@ module.exports = {
   async down(db, client) {
     try {
       const users = await db.collection('users').find({}).toArray();
-  
+
       await Promise.all(users.map(async (user) => {
-        await db.collection('users').findOneAndUpdate({ _id: new ObjectId(user._id) }, 
+        await db.collection('users').findOneAndUpdate({ _id: new ObjectId(user._id) },
           {
             $unset: {
               banners: "",

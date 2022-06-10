@@ -26,7 +26,7 @@ export const create = async (invitation) => {
 export const redeemInvite = async (userId, token) => {
   try {
     await Invitation.findOneAndUpdate(
-      { token: token },
+      { token },
       { $push: { redemptions: { userId } }}
     ).lean().exec();
   } catch (err) {

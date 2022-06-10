@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Metrics from '../metrics';
 import RepoCard from '../repos/repoCard';
-import TeamCreatePanel from './teamCreatePanel';
+import OrganizationCreatePanel from './organizationCreatePanel';
 import { PATHS } from '../../utils/constants';
 import styles from "./personalDashboard.module.scss";
 import clsx from 'clsx';
@@ -32,7 +32,7 @@ const PersonalDashboard = ({ metrics, repos }) => {
       </div>
       {repos?.other?.length > 0 && <div className="is-flex is-flex-wrap-wrap is-align-content-stretch">
         {repos.other.slice(0, MAX_REPOS).map((child, i) => (
-          <RepoCard {...child} isTeamView key={`card-${i}`} column={3} />
+          <RepoCard {...child} isOrgaizationView key={`card-${i}`} column={3} />
         ))}
       </div>}
       {!repos?.other?.length > 0 && <div class="column">
@@ -42,7 +42,7 @@ const PersonalDashboard = ({ metrics, repos }) => {
         </div>
       </div>}
       <div class="column">
-        <TeamCreatePanel />
+        <OrganizationCreatePanel />
       </div>
     </>
   )

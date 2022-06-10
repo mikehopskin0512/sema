@@ -2,7 +2,7 @@ import { GLOBAL_SEMA_SEARCH_ID, SEMA_REMINDER_SESSION_STORAGE_KEY } from '../../
 
 const initialState = {
   notifications: [],
-  teams: [],
+  organizations: [],
   selectedProfile: { name: 'Personal' },
   isReminderClosed: !!sessionStorage.getItem(SEMA_REMINDER_SESSION_STORAGE_KEY),
   githubMetadata: {

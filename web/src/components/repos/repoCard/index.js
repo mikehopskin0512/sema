@@ -20,9 +20,9 @@ const statLabels = {
 const RepoCard = (props) => {
   const titleRef = useRef(null);
   const {
-    name, externalId, _id: repoId, repoStats, users = [], column = 3, isTeamView = false, onRemoveRepo
+    name, externalId, _id: repoId, repoStats, users = [], column = 3, isOrganizationView = false, onRemoveRepo
   } = props;
-  const { isTeamAdmin } = usePermission();
+  const { isOrganizationAdmin } = usePermission();
 
   const renderStats = (label, value) => (
     <div className={clsx(
@@ -53,7 +53,7 @@ const RepoCard = (props) => {
                 <p ref={titleRef} className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
               </OverflowTooltip>
             </div>
-            <RepoUsers users={isTeamView ? repoStats.userIds : users} />
+            <RepoUsers users={isOrganizationView ? repoStats.userIds : users} />
           </div>
         </div>
         <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
@@ -65,10 +65,10 @@ const RepoCard = (props) => {
             ))}
           </div>
         </div>
-        {isTeamAdmin() && (
+        {isOrganizationAdmin() && (
           <div className="has-background-gray-300 is-flex py-8 pr-12">
             <DropDownMenu
-              options={[{ label: 'Remove from Team', onClick: () => setDeleteRepoModalOpen(true) }]}
+              options={[{ label: 'Remove from Organization', onClick: () => setDeleteRepoModalOpen(true) }]}
               trigger={(
                 <div className="is-clickable is-flex">
                   <OptionsIcon />
@@ -78,7 +78,7 @@ const RepoCard = (props) => {
           </div>
         )}
       </div>
-      {isTeamAdmin() && (
+      {isOrganizationAdmin() && (
         <DeleteRepoModal
           isOpen={isDeleteRepoModalOpen}
           onCancel={() => setDeleteRepoModalOpen(false)}

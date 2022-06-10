@@ -20,6 +20,7 @@ import checkSelectedDropDownOption from '../support/check/checkSelectedDropDownO
 import checkTeamURLPath from "../support/check/checkTeamURLPath";
 import checkRoleForUser from "../support/check/checkRoleForUser";
 import checkEqualTextToSavedVariable from "../support/check/checkEqualTextToSavedVariable";
+import checkEqualTextToSavedVariableByIndex from "../support/check/checkEqualTextToSavedVariableByIndex";
 import checkSearchedResults from "../support/check/checkSearchedResults";
 Then(
     /^I expect that the url is( not)* "([^"]*)?"$/,
@@ -79,8 +80,13 @@ Then(
 );
 
 Then(
-    /^I expect that (button|element) "([^"]*)?"( not)* matches the saved variable$/,
+    /^I expect that (button|element) "([^"]*)?"( not)* matches the saved variable( with text "([^"]*)?")*$/,
     checkEqualTextToSavedVariable
+);
+
+Then(
+    /^I expect that "(\d+)(st|nd|rd|th)" (button|element) "([^"]*)?"( not)* matches the saved variable( with text "([^"]*)?")*$/,
+    checkEqualTextToSavedVariableByIndex
 );
 
 Then(
@@ -128,7 +134,7 @@ Then(
     checkEqualTextForElements
 )
 Then(
-    /^I expect that new item "([^"]*)?" is( not)* added to (snippets|collections|portfolios)$/,
+    /^I expect that new item "([^"]*)?" is( not)* added to (snippets|collections|portfolio)$/,
     checkEqualTextForElements
 )
 

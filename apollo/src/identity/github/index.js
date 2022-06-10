@@ -100,7 +100,7 @@ export default (app) => {
         // Auth Sema
         await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));
 
-        // Join the user to the selected team
+        // Join the user to the selected organization
         if (inviteToken) {
           const invitation = await findByToken(inviteToken);
           const error = checkIsInvitationValid(invitation);

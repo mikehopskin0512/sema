@@ -64,38 +64,38 @@ export const LabelsManagementHelmet = {
   description: null,
 };
 
-export const TeamCreateHelmet = {
-  title: 'Create a Team',
+export const OrganizationCreateHelmet = {
+  title: 'Create a Organization',
   description: null,
 };
 
-export const TeamManagementHelmet = {
-  title: 'Team Management',
+export const OrganizationManagementHelmet = {
+  title: 'Organization Management',
   description: null,
 };
 
-export const TeamDashboardHelmet = {
-  title: 'Team Dashboard',
+export const OrganizationDashboardHelmet = {
+  title: 'Organization Dashboard',
   description: null,
 };
 
-export const TeamReposHelmet = {
-  title: 'Team Repository',
+export const OrganizationReposHelmet = {
+  title: 'Organization Repository',
   description: null,
 };
 
-export const TeamInsightsHelmet = {
-  title: 'Team Insights',
+export const OrganizationInsightsHelmet = {
+  title: 'Organization Insights',
   description: null,
 };
 
-export const TeamInviteHelmet = {
-  title: 'Invite Team',
+export const OrganizationInviteHelmet = {
+  title: 'Invite Organization',
   description: null,
 };
 
-export const TeamUpdateHelmet = {
-  title: 'Update Team',
+export const OrganizationUpdateHelmet = {
+  title: 'Update Organization',
   description: null,
 };
 
