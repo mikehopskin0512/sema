@@ -604,18 +604,13 @@ const OrganizationInsights = () => {
           />
         )}
         <div className='is-flex is-align-items-center mb-20'>
-          <p className='has-text-black-950 has-text-weight-semibold is-size-4 px-15'>
-            Comments {commentView}
-          </p>
-        </div>
-        {!isFetching && (
-          <div className='is-flex is-align-items-center mb-20'>
-            <p className='has-text-black-950 has-text-weight-semibold is-size-4 px-15'>Comments {commentView}</p>
+          <p className='has-text-black-950 has-text-weight-semibold is-size-4 px-15'>Comments {commentView}</p>
+          {!isFetching && (
             <div>
               <SnapshotButton onClick={() => setOpenCommentsModal(true)} />
             </div>
-          </div>
-        )}
+          )}
+        </div>
         <ActivityItemList comments={filteredComments} isLoading={isFetching} />
         </div>
       </div>
