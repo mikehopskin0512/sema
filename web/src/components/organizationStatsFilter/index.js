@@ -69,7 +69,8 @@ const OrganizationStatsFilter = ({
                 start={startDate}
                 end={endDate}
                 onChange={onDateChange}
-                onChangeFilter={onChangeFilter}
+                onChangeFilter={onChangeFilter}a
+                additionalStyle={styles['filter-border']}
               />
             </div>
             {commentView === 'received' && individualFilter && (
@@ -190,7 +191,7 @@ const OrganizationStatsFilter = ({
               />
             </div>
           </div>
-          <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end">
+          <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end pr-25">
             <SearchIcon
               color={gray500}
               size="medium"
