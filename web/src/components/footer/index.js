@@ -15,7 +15,7 @@ const Footer = () => {
   const auth = useSelector((state) => state.authState);
   const { userVoiceToken, isAuthenticated } = auth;
   const [dashboardLink] = useState('https://app.semasoftware.com');
-  const [termsAndConditionsLink] = useState('https://semasoftware.com/terms-and-conditions');
+  const [termsAndConditionsLink] = useState('https://www.semasoftware.com/legal/terms-conditions');
   const [userVoiceLink] = useState('https://sema.uservoice.com/forums/934797-sema ');
   const [socialLinks] = useState({
     linkedIn: 'https://www.linkedin.com/company/11298026',
