@@ -129,7 +129,11 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
     const menuItems = useMemo(() => {
       const isOrganizationSnippet = selectedOrganization?.organization?.name?.toLowerCase() === author?.toLowerCase() || false;
       const isDefaultUserCollection = isIndividualUser() && collectionData.author.toLowerCase() === user.username.toLowerCase() && isSemaDefaultCollection(name);
-      const canEdit = (isOrganizationAdminOrLibraryEditor() && isOrganizationSnippet) || isDefaultUserCollection || isSemaAdmin();
+      const canEdit =
+        (isOrganizationAdminOrLibraryEditor() && isOrganizationSnippet) ||
+        (isOrganizationAdmin() && isOrganizationSnippet) ||
+        isDefaultUserCollection ||
+        isSemaAdmin();
       const canArchive = isSemaAdmin();
       const items = [];
       if (canEdit) {
