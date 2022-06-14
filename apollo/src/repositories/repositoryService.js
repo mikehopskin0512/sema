@@ -138,22 +138,6 @@ export const sendNotification = async (msg) => {
   return result;
 };
 
-export const createOrUpdate = async (repository) => {
-  if (!repository.externalId) return false;
-  try {
-    await Repositories.update(
-      { externalId: repository.externalId },
-      repository,
-      { upsert: true, setDefaultsOnInsert: true }
-    );
-    return true;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
-};
-
 export const findByExternalId = async (externalId) => {
   // externalId is github id
   try {

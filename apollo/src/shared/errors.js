@@ -10,8 +10,9 @@ util.inherits(HTTPError, Error);
 function buildError(obj, message, code) {
   HTTPError.call(obj);
   obj.statusCode = code;
-  obj.message = message;
+  obj.message = message.message || message;
   obj.name = HTTPStatus[obj.statusCode];
+  if (message.stack) obj.stack = message.stack;
 }
 
 function BadRequest(message) {

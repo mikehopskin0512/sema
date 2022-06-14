@@ -49,6 +49,7 @@ const repositoriesSchema = new mongoose.Schema(
     orgId: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization' },
     sourceId: { type: mongoose.Schema.Types.ObjectId, ref: 'Source' },
     name: String,
+    fullName: String,
     description: String,
     externalId: { type: String, required: true },
     type: {
@@ -86,6 +87,38 @@ const repositoriesSchema = new mongoose.Schema(
 
 repositoriesSchema.set('autoIndex', autoIndex);
 repositoriesSchema.index({ orgId: 1, externalId: 1 });
+
+repositoriesSchema.pre('validate', function setFullNameAndCloneUrl() {
+  if (!this.cloneUrl) return;
+
+  const { cloneUrl, type, fullName } = parseCloneUrl(this.cloneUrl);
+  this.type ||= type;
+  this.cloneUrl = cloneUrl;
+  this.fullName = fullName;
+});
+
+const parseCloneUrl = (string) => {
+  const url = string.includes('@')
+    ? new URL(`http://${string.replace(':', '/')}`)
+    : new URL(string);
+
+  const type = url.hostname === 'github.com' ? 'github' : null;
+
+  if (!type) throw new Error('Unknown URL type');
+
+  const parts = url.pathname.split('/');
+  const owner = parts[1];
+  const repo = parts[2].replace('.git', '');
+  const fullName = `${owner}/${repo}`;
+  const cloneUrl = `https://github.com/${owner}/${repo}`;
+  return {
+    cloneUrl,
+    type,
+    owner,
+    repo,
+    fullName,
+  };
+};
 
 // { type, externalId } should be unique.
 repositoriesSchema.index(

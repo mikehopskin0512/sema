@@ -82,7 +82,7 @@ export const filterSmartComments = async ({
   endDate,
   user,
   individual,
-  fields = {}
+  fields = {},
 }) => {
   try {
     let filter = {};
@@ -829,7 +829,7 @@ export async function getOrganizationSmartCommentsMetrics(organizationId) {
     },
     {
       $match: {
-        'organizations._id': new ObjectId(organizationId),
+        'organizations._id': new ObjectId(organizationId),
       },
     },
     ...groupMetricsPipeline,
@@ -867,20 +867,6 @@ export const getSmartCommentsByExternalId = async (externalId) => {
   }
 };
 
-export const getPullRequestsByExternalId = async (externalId) => {
-  try {
-    const pullRequests = await SmartComment.distinct(
-      'githubMetadata.pull_number',
-      { 'githubMetadata.repo_id': externalId }
-    ).lean();
-    return pullRequests;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
-};
-
 export const getSmartCommentersByExternalId = async (externalId) => {
   try {
     const smartComments = SmartComment.find({
@@ -905,7 +891,7 @@ export const getSmartCommentsTagsReactions = async ({
   user,
   organizationId,
   individual,
-  fields = {}
+  fields = {},
 }) => {
   try {
     const filter = {
