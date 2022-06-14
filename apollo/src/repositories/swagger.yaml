@@ -317,4 +317,4 @@ paths:
                     type: string
           description: search results matching criteria
         400:
-          description: bad input parameter
+          description: bad input parameter  /v1/repositories/smart-comments/search:

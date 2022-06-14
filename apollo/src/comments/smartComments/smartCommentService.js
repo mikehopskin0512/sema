@@ -5,6 +5,9 @@ import {
   isAfter,
   format,
   formatDistanceToNowStrict,
+  toDate,
+  endOfDay,
+  sub,
 } from 'date-fns';
 import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
@@ -618,6 +621,54 @@ export const findByExternalId = async (repoId, populate, createdAt) => {
       });
       query.populate({ select: ['label'], path: 'tags' });
     }
+    const comments = await query.sort({ createdAt: -1 }).lean();
+    return comments;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
+export const searchSmartComments = async (
+  repoId,
+  dateRange,
+  fromUserList,
+  toUserList,
+  summaries,
+  tags,
+  pullRequests
+) => {
+  try {
+    let findQuery = {
+      'githubMetadata.repo_id': repoId
+    };
+
+    if (dateRange) {
+      findQuery = {
+        ...findQuery,
+        createdAt: {
+          $gte: toDate(new Date(dateRange.startDate)),
+          $lte: toDate(endOfDay(new Date(dateRange.endDate))),
+        }
+      };
+    }
+
+    if(tags && tags.length) {
+      findQuery = {
+        ...findQuery,
+        tags: { $in: tags }
+      };
+    }
+    const query = SmartComment.find(findQuery);
+
+    query.populate({
+      select: ['firstName', 'lastName', 'avatarUrl'],
+      path: 'userId'
+    });
+    query.populate({ select: ['label'], path: 'tags' });
+
+    console.log('Starrt!!!!\n\n')
     const comments = await query.sort({ createdAt: -1 }).lean();
     return comments;
   } catch (err) {

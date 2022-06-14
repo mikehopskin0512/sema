@@ -8,6 +8,10 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 import {
+  searchSmartComments,
+} from '../comments/smartComments/smartCommentService';
+
+import {
   createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId, aggregateReactions, aggregateTags, aggregateRepositories, getRepositories,
 } from './repositoryService';
 import checkEnv from "../middlewares/checkEnv";
@@ -134,6 +138,24 @@ export default (app, passport) => {
     }
   });
 
+  route.post('/smart-comments/search', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    let { repoId, startDate, endDate, fromUserList, toUserList, summaries, tags, pullRequests } = req.body;
+
+    let dateRange = undefined;
+    if (startDate && endDate) {
+      dateRange = { startDate, endDate };
+    }
+
+    try {
+      const smartComments = await searchSmartComments(repoId, dateRange, fromUserList, toUserList, summaries, tags, pullRequests);
+      return res.status(201).send({
+        smartComments,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
   route.get('/overview', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { externalId, startDate, endDate } = req.query;
     try {
