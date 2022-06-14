@@ -21,7 +21,7 @@ const NivoBarChart = ({ yAxisType, emptyChart, barChartData, getDataColor, rende
       data={barChartData}
       keys={EMOJIS.map((item) => item._id)}
       indexBy="date"
-      margin={{ top: 50, right: 50, bottom: 120, left: 60 }}
+      margin={{ top: 50, right: 30, bottom: 120, left: 30 }}
       padding={0.3}
       valueScale={{ type: 'linear' }}
       indexScale={{ type: 'band', round: true }}
@@ -65,20 +65,22 @@ const NivoBarChart = ({ yAxisType, emptyChart, barChartData, getDataColor, rende
       axisTop={null}
       axisRight={null}
       axisBottom={{
-        tickSize: 5,
+        tickSize: 0,
         tickPadding: 5,
         tickRotation: 0,
       }}
       tooltip={renderTooltip}
       maxValue={maxValue}
       axisLeft={{
-        tickSize: 5,
+        tickSize: 0,
         tickPadding: 5,
         tickRotation: 0,
-        legend: yAxisType === 'percentage' ? '%' : 'Total Summaries',
-        legendPosition: 'middle',
+        legend: '',
+        legendPosition: 'start',
         legendOffset: -40,
+        format: e => Math.floor(e) === e && e
       }}
+      enablePoints={false}
       labelSkipWidth={12}
       valueFormat={{ format: ' >-%', enabled: true }}
       labelSkipHeight={12}
@@ -96,12 +98,13 @@ const NivoBarChart = ({ yAxisType, emptyChart, barChartData, getDataColor, rende
           justify: false,
           translateX: 0,
           translateY: 90,
-          itemsSpacing: 5,
+          itemsSpacing: 7,
           itemWidth: 100,
           itemHeight: 20,
           itemDirection: 'left-to-right',
           itemOpacity: 0.85,
-          symbolSize: 15,
+          symbolSize: 8,
+          symbolShape: 'circle',
           effects: [
             {
               on: 'hover',
@@ -110,9 +113,11 @@ const NivoBarChart = ({ yAxisType, emptyChart, barChartData, getDataColor, rende
               },
             },
           ],
+          translateY: 60
         },
       ]}
-      layers={["grid", "axes", "bars", TotalLabels, "markers", "legends"]}
+ 
+      layers={['grid', 'markers', 'axes', 'bars', 'points', 'slices', 'mesh', TotalLabels, 'legends']}
     />
   );
 };

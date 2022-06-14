@@ -1,16 +1,16 @@
-@team_labels_management  @regression
-Feature: Team Labels Management
+@organization_labels_management  @regression
+Feature: Organization Labels Management
 
     @PTA88  @smoke
     Scenario: Label Management elements are displayed correctly
         Then I expect that element "userLogo" becomes displayed
         When I click on the element "userLogo"
-        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-        When I click on the element "semaCorporateTeamLogo"
-        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
-        When I click on the element "viewAllTeamMembersBtn"
-        Then I expect that element "teamLabelsManagementTab" becomes displayed
-        When I click on the element "teamLabelsManagementTab"
+        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+        When I click on the element "semaCorporateOrganizationLogo"
+        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
+        When I click on the element "viewAllOrganizationMembersBtn"
+        Then I expect that element "organizationLabelsManagementTab" becomes displayed
+        When I click on the element "organizationLabelsManagementTab"
         Then I expect that element "searchLabelsInput" becomes displayed
         And  I expect that element "languageFilterCheckBox" becomes displayed
         And  I expect that element "otherLabelsFilterCheckBox" becomes displayed
@@ -18,19 +18,19 @@ Feature: Team Labels Management
         And  I expect that element "labelsTable" becomes displayed
         And  I expect that element "labelsTable1stRow" becomes displayed
         And  I expect that element "threeDots1stRowBtn" becomes displayed
-        And  I expect that element "teamManagementTab" becomes displayed
-        And  I expect that element "editTeamProfileBtn" becomes displayed
+        And  I expect that element "organizationManagementTab" becomes displayed
+        And  I expect that element "editOrganizationProfileBtn" becomes displayed
 
 #    @PTA88_2  @smoke    #https://semalab.atlassian.net/browse/EAST-1344
 #    Scenario: Sema member can create new label for Language category
 #        Then I expect that element "userLogo" becomes displayed
 #        When I click on the element "userLogo"
-#        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-#        When I click on the element "semaCorporateTeamLogo"
-#        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
-#        When I click on the element "viewAllTeamMembersBtn"
-#        Then I expect that element "teamLabelsManagementTab" becomes displayed
-#        When I click on the element "teamLabelsManagementTab"
+#        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+#        When I click on the element "semaCorporateOrganizationLogo"
+#        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
+#        When I click on the element "viewAllOrganizationMembersBtn"
+#        Then I expect that element "OrganizationLabelsManagementTab" becomes displayed
+#        When I click on the element "OrganizationLabelsManagementTab"
 #        Then I expect that element "addLabelsBtn" becomes displayed
 #        When I click on the element "addLabelsBtn"
 #        Then I expect that element "newLabelNameInput" becomes displayed
@@ -57,12 +57,12 @@ Feature: Team Labels Management
 #    Scenario: Sema member can create new label for Other labels category
 #        Then I expect that element "userLogo" becomes displayed
 #        When I click on the element "userLogo"
-#        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-#        When I click on the element "semaCorporateTeamLogo"
-#        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
-#        When I click on the element "viewAllTeamMembersBtn"
-#        Then I expect that element "teamLabelsManagementTab" becomes displayed
-#        When I click on the element "teamLabelsManagementTab"
+#        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+#        When I click on the element "semaCorporateOrganizationLogo"
+#        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
+#        When I click on the element "viewAllOrganizationMembersBtn"
+#        Then I expect that element "organizationLabelsManagementTab" becomes displayed
+#        When I click on the element "organizationLabelsManagementTab"
 #        Then I expect that element "addLabelsBtn" becomes displayed
 #        When I click on the element "addLabelsBtn"
 #        Then I expect that element "newLabelNameInput" becomes displayed
@@ -80,38 +80,38 @@ Feature: Team Labels Management
 #        And  I expect that element "labelsTable1stRowLabelSnippets" matches the text "0"
 #
 #    @PTA88_4   #https://semalab.atlassian.net/browse/EAST-1288
-#    Scenario: Sema member can go back to the team from Add labels page by back arrow and Label Management link
+#    Scenario: Sema member can go back to the organization from Add labels page by back arrow and Label Management link
 #        Then I expect that element "userLogo" becomes displayed
 #        When I click on the element "userLogo"
-#        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-#        When I click on the element "semaCorporateTeamLogo"
-#        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
-#        When I click on the element "viewAllTeamMembersBtn"
-#        Then I expect that element "teamLabelsManagementTab" becomes displayed
-#        When I click on the element "teamLabelsManagementTab"
+#        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+#        When I click on the element "semaCorporateOrganizationLogo"
+#        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
+#        When I click on the element "viewAllOrganizationMembersBtn"
+#        Then I expect that element "organizationLabelsManagementTab" becomes displayed
+#        When I click on the element "organizationLabelsManagementTab"
 #        Then I expect that element "addLabelsBtn" becomes displayed
 #        When I click on the element "addLabelsBtn"
 #        Then I expect that element "newLabelArrowBackBtn" becomes displayed
 #        When I click on the element "newLabelArrowBackBtn"
-#        Then I expect that element "teamManagementTab" becomes displayed
+#        Then I expect that element "organizationManagementTab" becomes displayed
 #        And  I expect that element "addLabelsBtn" becomes displayed
 #
 #        When I click on the element "addLabelsBtn"
 #        Then I expect that element "labelManagementLinkBtn" becomes displayed
 #        When I click on the element "labelManagementLinkBtn"
-#        Then I expect that element "teamManagementTab" becomes displayed
+#        Then I expect that element "organizationManagementTab" becomes displayed
 #        And  I expect that element "addLabelsBtn" becomes displayed
 #
 #    @PTA88_5     #https://semalab.atlassian.net/browse/EAST-1344
 #    Scenario: Sema member can create several label simultaneously
 #        Then I expect that element "userLogo" becomes displayed
 #        When I click on the element "userLogo"
-#        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-#        When I click on the element "semaCorporateTeamLogo"
-#        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
-#        When I click on the element "viewAllTeamMembersBtn"
-#        Then I expect that element "teamLabelsManagementTab" becomes displayed
-#        When I click on the element "teamLabelsManagementTab"
+#        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+#        When I click on the element "semaCorporateOrganizationLogo"
+#        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
+#        When I click on the element "viewAllOrganizationMembersBtn"
+#        Then I expect that element "organizationLabelsManagementTab" becomes displayed
+#        When I click on the element "organizationLabelsManagementTab"
 #        Then I expect that element "addLabelsBtn" becomes displayed
 #        When I click on the element "addLabelsBtn"
 #        Then I expect that element "newLabelNameInput" becomes displayed
@@ -147,12 +147,12 @@ Feature: Team Labels Management
     Scenario: Sema member can see error messages for creating new label
         Then I expect that element "userLogo" becomes displayed
         When I click on the element "userLogo"
-        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-        When I click on the element "semaCorporateTeamLogo"
-        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
-        When I click on the element "viewAllTeamMembersBtn"
-        Then I expect that element "teamLabelsManagementTab" becomes displayed
-        When I click on the element "teamLabelsManagementTab"
+        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+        When I click on the element "semaCorporateOrganizationLogo"
+        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
+        When I click on the element "viewAllOrganizationMembersBtn"
+        Then I expect that element "organizationLabelsManagementTab" becomes displayed
+        When I click on the element "organizationLabelsManagementTab"
         Then I expect that element "addLabelsBtn" becomes displayed
         When I click on the element "addLabelsBtn"
         Then I expect that element "newLabelNameInput" becomes displayed
@@ -173,12 +173,12 @@ Feature: Team Labels Management
     Scenario: Sema member can remove label from the snippet during editing in Label Management table
         Then I expect that element "userLogo" becomes displayed
         When I click on the element "userLogo"
-        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-        When I click on the element "semaCorporateTeamLogo"
-        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
-        When I click on the element "viewAllTeamMembersBtn"
-        Then I expect that element "teamLabelsManagementTab" becomes displayed
-        When I click on the element "teamLabelsManagementTab"
+        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+        When I click on the element "semaCorporateOrganizationLogo"
+        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
+        When I click on the element "viewAllOrganizationMembersBtn"
+        Then I expect that element "organizationLabelsManagementTab" becomes displayed
+        When I click on the element "organizationLabelsManagementTab"
         Then I expect that element "searchLabelsInput" becomes displayed
         When I set "All" to the inputfield "searchLabelsInput"
         And  I pause for 3000ms
@@ -208,12 +208,12 @@ Feature: Team Labels Management
 #    Scenario: Sema member can remove label in Label Management table
 #        Then I expect that element "userLogo" becomes displayed
 #        When I click on the element "userLogo"
-#        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-#        When I click on the element "semaCorporateTeamLogo"
-#        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
-#        When I click on the element "viewAllTeamMembersBtn"
-#        Then I expect that element "teamLabelsManagementTab" becomes displayed
-#        When I click on the element "teamLabelsManagementTab"
+#        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+#        When I click on the element "semaCorporateOrganizationLogo"
+#        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
+#        When I click on the element "viewAllOrganizationMembersBtn"
+#        Then I expect that element "organizationLabelsManagementTab" becomes displayed
+#        When I click on the element "organizationLabelsManagementTab"
 #        Then I expect that element "addLabelsBtn" becomes displayed
 #        When I click on the element "addLabelsBtn"
 #        Then I expect that element "newLabelNameInput" becomes displayed
@@ -245,12 +245,12 @@ Feature: Team Labels Management
     Scenario: Sema member can edit label in use in Label Management table
         Then I expect that element "userLogo" becomes displayed
         When I click on the element "userLogo"
-        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-        When I click on the element "semaCorporateTeamLogo"
-        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
-        When I click on the element "viewAllTeamMembersBtn"
-        Then I expect that element "teamLabelsManagementTab" becomes displayed
-        When I click on the element "teamLabelsManagementTab"
+        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+        When I click on the element "semaCorporateOrganizationLogo"
+        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
+        When I click on the element "viewAllOrganizationMembersBtn"
+        Then I expect that element "organizationLabelsManagementTab" becomes displayed
+        When I click on the element "organizationLabelsManagementTab"
         Then I expect that element "searchLabelsInput" becomes displayed
         When I set "Test Coverage" to the inputfield "searchLabelsInput"
         And  I pause for 3000ms
@@ -299,12 +299,12 @@ Feature: Team Labels Management
 #    Scenario: Sema member can edit new label in Label Management table
 #        Then I expect that element "userLogo" becomes displayed
 #        When I click on the element "userLogo"
-#        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-#        When I click on the element "semaCorporateTeamLogo"
-#        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
-#        When I click on the element "viewAllTeamMembersBtn"
-#        Then I expect that element "teamLabelsManagementTab" becomes displayed
-#        When I click on the element "teamLabelsManagementTab"
+#        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+#        When I click on the element "semaCorporateOrganizationLogo"
+#        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
+#        When I click on the element "viewAllOrganizationMembersBtn"
+#        Then I expect that element "organizationLabelsManagementTab" becomes displayed
+#        When I click on the element "organizationLabelsManagementTab"
 #        Then I expect that element "addLabelsBtn" becomes displayed
 #        When I click on the element "addLabelsBtn"
 #        Then I expect that element "newLabelNameInput" becomes displayed
@@ -338,12 +338,12 @@ Feature: Team Labels Management
     Scenario: Sema member can remove from and add label back to the snippet during editing
         Then I expect that element "userLogo" becomes displayed
         When I click on the element "userLogo"
-        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-        When I click on the element "semaCorporateTeamLogo"
-        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
-        When I click on the element "viewAllTeamMembersBtn"
-        Then I expect that element "teamLabelsManagementTab" becomes displayed
-        When I click on the element "teamLabelsManagementTab"
+        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+        When I click on the element "semaCorporateOrganizationLogo"
+        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
+        When I click on the element "viewAllOrganizationMembersBtn"
+        Then I expect that element "organizationLabelsManagementTab" becomes displayed
+        When I click on the element "organizationLabelsManagementTab"
         Then I expect that element "searchLabelsInput" becomes displayed
         When I set "All" to the inputfield "searchLabelsInput"
         And  I pause for 3000ms
@@ -364,15 +364,15 @@ Feature: Team Labels Management
         Then I expect that element "labelNotificationText" matches the text "Successfully added tag to this snippet!"
 
 #    @PTA89_5    #https://semalab.atlassian.net/browse/EAST-1288
-#    Scenario: Sema member can go back to the team from Edit label page by back arrow and Label Management link
+#    Scenario: Sema member can go back to the organization from Edit label page by back arrow and Label Management link
 #        Then I expect that element "userLogo" becomes displayed
 #        When I click on the element "userLogo"
-#        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-#        When I click on the element "semaCorporateTeamLogo"
-#        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
-#        When I click on the element "viewAllTeamMembersBtn"
-#        Then I expect that element "teamLabelsManagementTab" becomes displayed
-#        When I click on the element "teamLabelsManagementTab"
+#        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+#        When I click on the element "semaCorporateOrganizationLogo"
+#        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
+#        When I click on the element "viewAllOrganizationMembersBtn"
+#        Then I expect that element "organizationLabelsManagementTab" becomes displayed
+#        When I click on the element "organizationLabelsManagementTab"
 #        And  I pause for 2000ms
 #        Then I expect that element "threeDots1stRowBtn" becomes displayed
 #        When I click on the element "threeDots1stRowBtn"
@@ -381,7 +381,7 @@ Feature: Team Labels Management
 #        Then I expect that element "newLabelArrowBackBtn" becomes displayed
 #        When I click on the element "newLabelArrowBackBtn"
 #        And  I pause for 2000ms
-#        Then I expect that element "teamManagementTab" becomes displayed
+#        Then I expect that element "organizationManagementTab" becomes displayed
 #        And  I expect that element "threeDots1stRowBtn" becomes displayed
 #        When I click on the element "threeDots1stRowBtn"
 #        Then I expect that element "editLabelBtn" becomes displayed
@@ -389,5 +389,5 @@ Feature: Team Labels Management
 #
 #        Then I expect that element "labelManagementLinkBtn" becomes displayed
 #        When I click on the element "labelManagementLinkBtn"
-#        Then I expect that element "teamManagementTab" becomes displayed
+#        Then I expect that element "organizationManagementTab" becomes displayed
 #        And  I expect that element "addLabelsBtn" becomes displayed

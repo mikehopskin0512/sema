@@ -252,7 +252,7 @@ const CustomSelect = props => {
 
   return (
     <div
-      className="is-flex is-flex-direction-column is-align-items-stretch is-relative"
+      className={clsx("is-flex is-flex-direction-column is-align-items-stretch is-relative", styles['wrapper'])}
       ref={node}
     >
       <button
