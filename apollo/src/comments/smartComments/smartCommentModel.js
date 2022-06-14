@@ -78,7 +78,9 @@ smartCommentSchema.pre('validate', function setDefaultReaction() {
 
 smartCommentSchema.pre('save', async function setRepository() {
   if (this.repositoryId) return;
-  this.repositoryId = (await findOrCreateRepository(this))._id;
+  const repository = await findOrCreateRepository(this);
+  if (repository) this.repositoryId = repository._id;
+  else logger.error(`Could not find repository for smart comment ${this._id}`);
 });
 
 smartCommentSchema.pre('save', function setGitHubDefaults() {
@@ -107,6 +109,8 @@ smartCommentSchema.pre('save', function setGitHubDefaults() {
 });
 
 smartCommentSchema.post('save', async function addRepositoryToUser() {
+  if (!this.repositoryId) return;
+
   const { userId } = this;
   const user = userId && (await findUserById(userId));
   if (!user) return;
@@ -134,6 +138,8 @@ smartCommentSchema.post('save', async function updateRepoStats() {
 });
 
 smartCommentSchema.post('save', async function updateRepoStats() {
+  if (!this.repositoryId) return;
+
   const repository = await Repository.findById(this.repositoryId);
   const tagsId = this.tags?.map((tag) => tag._id.toString());
 
@@ -156,7 +162,7 @@ async function getSmartCommentCount(repositoryId) {
 }
 
 async function getPullRequestCount(repositoryId) {
-  const [{ count }] = await mongoose
+  const [{ count } = { count: 0 }] = await mongoose
     .model('SmartComment')
     .aggregate([
       { $match: { repositoryId } },
@@ -167,7 +173,7 @@ async function getPullRequestCount(repositoryId) {
 }
 
 async function getCommenterCount(repositoryId) {
-  const [{ count }] = await mongoose
+  const [{ count } = { count: 0 }] = await mongoose
     .model('SmartComment')
     .aggregate([
       { $match: { repositoryId, userId: { $ne: null } } },
