@@ -317,4 +317,66 @@ paths:
                     type: string
           description: search results matching criteria
         400:
-          description: bad input parameter  /v1/repositories/smart-comments/search:
+          description: bad input parameter
+  /v1/repositories/smart-comments/search:
+    post:
+      summary: get repository smart comments
+      operationId: searchRepoSmartComments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                repoId:
+                  type: string
+                  required: trrue
+                startDate:
+                  type: string
+                  required: false
+                  format: date-time
+                  example: "2021-01-30T08:30:00Z"
+                endDate:
+                  type: string
+                  required: false
+                  format: date-time
+                  example: "2023-01-30T08:30:00Z"
+                fromUserList:
+                  type: array
+                  items:
+                    type: string
+                  required: false
+                  default: []
+                toUserList:
+                  type: array
+                  items:
+                    type: string
+                  required: false
+                  default: []
+                summaries:
+                  type: array
+                  items:
+                    type: string
+                  required: false
+                  default: []
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  required: false 
+                  default: []
+                pullRequests:
+                  type: array
+                  items:
+                    type: string
+                  required: false
+                  default: []
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  smartComments:
+                    type: number
+        400:
+          description: bad input parameter
