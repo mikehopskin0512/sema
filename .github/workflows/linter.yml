@@ -45,11 +45,15 @@ jobs:
           node-version: 16.x
           cache: 'npm'
           cache-dependency-path: ${{ matrix.service }}/package-lock.json
+      - name: Downgrade npm
+        run: npm install -g npm@8.5.5
       - name: Install ESLint modules
         working-directory: eslint-config
         run: npm ci
       - name: Install modules
         working-directory: ${{ matrix.service }}
         run: npm ci
+      - name: Install Prettier
+        run: npm install -g prettier
       - name: Lint
         run: ./scripts/lint ${{ matrix.service }} ${{ needs.set_changed_services.outputs.changed_files }}
