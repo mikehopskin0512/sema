@@ -755,7 +755,7 @@ const groupMetricsPipeline = [
   },
 ];
 
-export async function getOrganizationSmartCommentsMetrics() {
+export async function getOrganizationSmartCommentsMetrics(organizationId) {
   const [doc] = await SmartComment.aggregate([
     {
       $match: {
@@ -825,6 +825,11 @@ export async function getOrganizationSmartCommentsMetrics() {
         'organizations.0': {
           $exists: true,
         },
+      },
+    },
+    {
+      $match: {
+        'organizations._id': new ObjectId(organizationId),
       },
     },
     ...groupMetricsPipeline,

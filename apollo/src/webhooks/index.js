@@ -4,11 +4,11 @@ import yaml from 'yamljs';
 import path from 'path';
 import crypto from 'crypto';
 
-import { version } from '../config';
+import errors from '../shared/errors';
 import logger from '../shared/logger';
 import checkEnv from '../middlewares/checkEnv';
 import { queue as githubWebhookQueue } from './githubWebhookQueue';
-import { github } from '../config';
+import { github, version } from '../config';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
@@ -39,8 +39,9 @@ export default (app) => {
         ].includes(req.headers['x-github-event'])
       ) {
         await githubWebhookQueue.queueJob(req.body);
+        return res.status(200).send({});
       }
-      return res.status(200).send({});
+      return res.status(500).send('Error qeueing github event');
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

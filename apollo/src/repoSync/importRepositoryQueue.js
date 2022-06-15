@@ -19,10 +19,15 @@ export default async function importRepository({ id }) {
     return;
   }
 
+  const octokit = await getOctokit(repository);
+  if (!octokit) {
+    await setSyncUnauthorized(repository);
+    return;
+  }
+
   await setSyncStarted(repository);
 
   try {
-    const octokit = await getOctokit(repository);
     const importComment = createGitHubImporter(octokit);
 
     await Promise.all([
@@ -138,6 +143,15 @@ async function setSyncErrored(repository, error) {
     'sync.status': 'errored',
     'sync.erroredAt': new Date(),
     'sync.error': error.message || error.toString().split('\n')[0],
+  });
+  await repository.save();
+}
+
+async function setSyncUnauthorized(repository) {
+  repository.set({
+    'sync.status': 'unauthorized',
+    'sync.erroredAt': new Date(),
+    'sync.error': null,
   });
   await repository.save();
 }

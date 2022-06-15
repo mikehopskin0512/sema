@@ -159,9 +159,10 @@ Feature: Repo
     @PTA47 @smoke
     Scenario: Repo can be selected from dropdown menu
         When I click on the element "reposTab"
+        And  I pause for 2000ms
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
-        And  I pause for 1000ms
+        And  I expect that element "1stReposCard" becomes displayed
         When I click on the element "1stReposCard"
         Then I expect that element "reposDropDownList" becomes displayed
         When I click on the element "reposDropDownList"

@@ -326,6 +326,17 @@ function SyncPage({ refresh }) {
             Error Message: {sync.error || 'N/A'}
           </>
         )}
+        {sync.status === 'unauthorized' && (
+          <div className="my-10">
+            <a
+              type="button"
+              className="button is-primary"
+              href={`https://github.com/apps/${process.env.NEXT_PUBLIC_GITHUB_APP_NAME}/installations/new`}
+            >
+              Install the Sema app
+            </a>
+          </div>
+        )}
       </div>
       <div className="my-10">
         <h3 className="is-size-5">Progress</h3>

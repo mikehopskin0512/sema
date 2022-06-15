@@ -13,6 +13,7 @@ import logger from './shared/logger';
 import errors from './shared/errors';
 
 import attachRoutes from './index';
+import './queues';
 import { port, allowedOrigin, chromeExtensionId } from './config';
 
 const app = express();

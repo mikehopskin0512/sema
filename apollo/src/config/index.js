@@ -33,11 +33,20 @@ module.exports = {
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackUrl: process.env.GITHUB_CALLBACK_URL,
     appId: process.env.GITHUB_APP_ID,
-    privateKey: process.env.GITHUB_PRIVATE_KEY.replace(/\\n/gm, '\n'),
+    privateKey: process.env.GITHUB_PRIVATE_KEY
+      // Some environments have the key separates with spaces
+      .replace(/(.{25,}?) /gm, '$1\n')
+      // Some environments have the key separates by literal '\n'
+      .replace(/\\n/gm, '\n'),
   },
   sendgrid: {
     apiKey: process.env.SENDGRID_API_KEY,
     defaultSender: process.env.SENDGRID_DEFAULT_SENDER,
+  },
+  getstream: {
+    apiKey: process.env.GETSTREAM_API_KEY,
+    apiKeySecret: process.env.GETSTREAM_API_KEY_SECRET,
+    appId: process.env.GETSTREAM_APP_ID,
   },
   pgPublicKey: process.env.PG_PUBLIC_KEY,
   userVoiceKey: process.env.USER_VOICE_SECRET_KEY,

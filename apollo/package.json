@@ -39,6 +39,7 @@
     "express": "~4.16.1",
     "express-async-handler": "^1.1.4",
     "flexsearch": "^0.6.32",
+    "getstream": "^8.0.1",
     "glob": "^8.0.1",
     "google-spreadsheet": "^3.1.15",
     "http-errors": "~1.6.3",

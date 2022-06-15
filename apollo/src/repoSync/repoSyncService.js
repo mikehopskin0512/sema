@@ -2,13 +2,17 @@ import { createAppAuth } from '@octokit/auth-app';
 import { Octokit } from '@octokit/rest';
 import { github } from '../config';
 
+
 export const getOctokit = async (repository) => {
   const installationId =
-    repository.installationId ||
     (await findInstallationIdForRepository(repository)) ||
     (await findSomeInstallationId());
 
-  return new Octokit({
+  if (!installationId) {
+    return null;
+  }
+
+  const octokit = new Octokit({
     authStrategy: createAppAuth,
     auth: {
       appId: github.appId,
@@ -16,7 +20,20 @@ export const getOctokit = async (repository) => {
       installationId,
     },
   });
-};
+
+  // Probe access to the repository
+  try {
+    await octokit.request('/repositories/{id}', { id: repository.externalId });
+  } catch (error) {
+    if (error.status === 404) {
+      // No access.
+      return null;
+    }
+    throw error;
+  }
+
+  return octokit;
+}
 
 const appOctokit = new Octokit({
   authStrategy: createAppAuth,
@@ -52,4 +69,4 @@ export const getOwnerAndRepo = (repository) => {
     owner,
     repo: repo.replace(/\.git$/, ''),
   };
-};
+}

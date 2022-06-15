@@ -38,9 +38,11 @@ export default function createGitHubImporter(octokit) {
     const type = getType(githubComment);
     // Ignore issue comments that belong to GitHub issues
     // and not pull requests.
-    const shouldIgnore =
+    const isIssueCommentFromGitHubIssues =
       type === 'issueComment' &&
       githubComment.html_url.split('/')[5] === 'issues';
+    const userWasDeleted = !githubComment.user;
+    const shouldIgnore = isIssueCommentFromGitHubIssues || userWasDeleted;
     if (shouldIgnore) return null;
     if (githubPullRequest) {
       return await createNewSmartComment({
@@ -134,8 +136,8 @@ async function createNewSmartComment({
   };
 
   const [tags, reaction] = await Promise.all([
-    getTags(text),
-    getReaction(text),
+    getTags(dropQuotedText(text)),
+    getReaction(dropQuotedText(text)),
   ]);
 
   const user = await findOrCreateGitHubUser({
@@ -221,7 +223,7 @@ async function findDuplicate(githubComment, otherComments) {
     if (looksLikeSemaComment(githubComment.body)) {
       logger.warn(
         'This looks like a Sema comment, yet could not match it to a smart comment in our database',
-        githubComment.url
+        githubComment.html_url
       );
     }
     return null;
@@ -237,12 +239,16 @@ async function findDuplicate(githubComment, otherComments) {
 }
 
 function removeSemaSignature(text) {
-  const [body] = splitSemaComment(text);
-  return body;
+  if (looksLikeSemaComment(text)) {
+    const [body] = splitSemaComment(text);
+    return body;
+  }
+
+  return text;
 }
 
 function splitSemaComment(text) {
-  const [rawBody, rawSignature] = text.split(
+  const [rawBody, rawSignature] = dropQuotedText(text).split(
     /__\r?\n\[!\[sema-logo\].*?&nbsp;/im
   );
 
@@ -259,17 +265,29 @@ function splitSemaComment(text) {
 }
 
 function looksLikeSemaComment(text) {
-  return text.includes('[![sema-logo]');
+  return dropQuotedText(text).includes('[![sema-logo]');
+}
+
+function dropQuotedText(text) {
+  return text
+    .split('\n')
+    .filter((line) => !line.startsWith('> '))
+    .join('\n');
 }
 
 function extractTagsFromSemaComment(text) {
-  const [, signature] = splitSemaComment(text);
-  return (
-    signature
-      .match(/Tags:(.*)$/im)?.[1]
-      .split(',')
-      .map((s) => s.trim()) ?? []
-  );
+  try {
+    const [, signature] = splitSemaComment(text);
+    return (
+      signature
+        .match(/Tags:(.*)$/im)?.[1]
+        .split(',')
+        .map((s) => s.trim()) ?? []
+    );
+  } catch (error) {
+    console.log({ text, error });
+    throw error;
+  }
 }
 
 async function extractReactionFromSemaComment(text) {

@@ -1,3 +1,4 @@
+import nock from 'nock';
 import * as userService from '../users/userService';
 import { create as createRepository } from '../repositories/repositoryService';
 import handler from './githubWebhookQueue';
@@ -22,12 +23,12 @@ describe('Github Webhook Queue', () => {
       terms: true,
     });
 
+    nockPhoenixInstallation();
+
     const repository = await createRepository({
       name: 'phoenix',
       type: 'github',
       id: '237888452',
-      installationId: '25676597',
-      addedBy: user,
       cloneUrl: 'https://github.com/Semalab/phoenix',
     });
 
@@ -66,7 +67,7 @@ describe('Github Webhook Queue', () => {
       }
     };
     await handler(payload);
-    let comments = await SmartComment.find({ "githubMetadata.repo_id": repository.externalId });
+    const comments = await SmartComment.find({ "githubMetadata.repo_id": repository.externalId });
     expect(comments.length).toBe(1);
   });
 
@@ -132,7 +133,22 @@ describe('Github Webhook Queue', () => {
     };
     await handler(payload);
     await handler(payload);
-    let comments = await SmartComment.find({ "githubMetadata.repo_id": repository.externalId });
+    const comments = await SmartComment.find({ "githubMetadata.repo_id": repository.externalId });
     expect(comments.length).toBe(1);
   });
 });
+
+function nockPhoenixInstallation() {
+  nock('https://api.github.com')
+    .persist()
+    .get('/repositories/237888452')
+    .reply(200, {
+      id: '237888452',
+      name: 'phoenix',
+    })
+    .get('/repos/Semalab/phoenix/installation')
+    .reply(200, {
+      id: '25676597',
+    });
+}
+

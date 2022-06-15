@@ -28,9 +28,7 @@ export const create = async ({
   language,
   description,
   type,
-  installationId,
   cloneUrl,
-  addedBy,
   created_at: repositoryCreatedAt,
   updated_at: repositoryUpdatedAt,
 }) => {
@@ -40,14 +38,12 @@ export const create = async ({
       {
         name,
         description,
-        installationId,
         language,
         cloneUrl,
         repositoryCreatedAt,
         repositoryUpdatedAt,
       }
     );
-    await handleRepoSync({ repository, user: addedBy });
     return repository;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -55,16 +51,6 @@ export const create = async ({
     throw error;
   }
 };
-
-async function handleRepoSync({ repository, user }) {
-  const shouldStartSync = !!(
-    repository.type === 'github' && repository.installationId
-  );
-  if (shouldStartSync) {
-    await startSync({ repository, user });
-  }
-}
-
 export const startSync = async ({ repository, user }) => {
   // eslint-disable-next-line no-param-reassign
   repository.sync = {

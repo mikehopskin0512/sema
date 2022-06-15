@@ -1,9 +1,9 @@
 import logger from '../shared/logger';
-import mongoService from '../shared/mongo';
 import { queues } from '../queues';
 import { findByExternalId } from '../repositories/repositoryService';
 import createGitHubImporter from '../repoSync/github';
 import { getOctokit } from '../repoSync/repoSyncService';
+
 const queue = queues.self(module);
 
 export default async function githubWebhook(body) {
