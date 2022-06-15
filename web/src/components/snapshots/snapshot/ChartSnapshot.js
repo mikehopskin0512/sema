@@ -114,7 +114,7 @@ const ChartSnapshot = React.forwardRef(({
               </div>
             </div>
             <div className={clsx(styles['chart-container'])}>
-              <div className="is-flex is-flex-wrap-wrap mt-10 p-25 has-background-gray-300 mr-0">
+              <div className="is-flex is-flex-wrap mt-10 p-25 has-background-gray-300 mr-0">
                 {renderComponentSnapshot(componentType)}
               </div>
             </div>
