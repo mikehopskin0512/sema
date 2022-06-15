@@ -18,7 +18,7 @@ DOCKER_FILE=../.docker/"${NAME}"/Dockerfile.prod
 SHA1=$(git rev-parse HEAD)
 VERSION=$BRANCH-$SHA1-$NODE_ENV
 
-rm .env
+rm .env || true
 
 IMAGE=$ECR_URL/$NAME:$VERSION
 
