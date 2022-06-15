@@ -1,12 +1,6 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useMemo
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,14 +9,9 @@ import clsx from 'clsx';
 import Select, { components } from 'react-select';
 import styles from './select.module.scss';
 import { gray700 } from '../../../../styles/_colors.module.scss';
-import {
-  DROPDOWN_SORTING_TYPES,
-  SORTING_TYPES
-} from '../../../utils/constants';
-import {
-  sortWithPriority,
-  getPriorityListFromUser
-} from '../../../utils/sorts';
+import { DROPDOWN_SORTING_TYPES, SORTING_TYPES } from '../../../utils/constants';
+import { getPriorityListFromUser, sortWithPriority } from '../../../utils/sorts';
+import { ReplayArrowIcon } from '@/components/Icons';
 
 const sortDropdown = (options, sortType, user) => {
   switch (sortType) {
@@ -40,7 +29,9 @@ const sortDropdown = (options, sortType, user) => {
         getPriorityListFromUser(user),
         SORTING_TYPES.ALPHABETICAL_SORT
       );
-    case DROPDOWN_SORTING_TYPES.NO_SORT:
+  case DROPDOWN_SORTING_TYPES.SELECTED_FIRST:
+    return options;
+  case DROPDOWN_SORTING_TYPES.NO_SORT:
       return options;
     default:
       return sortWithPriority(options, 'label', [], sortType);
@@ -55,28 +46,13 @@ const Menu = ({ selectAll, deselectAll, isMulti, small, width, ...p }) => {
       className={clsx('mt-neg5', styles.menu)}
       style={{ width }}
     >
-      {isMulti && (
-        <div
-          className={clsx('mx-12 mt-10 is-flex is-flex-wrap-wrap is-size-7')}
-        >
-          <div
-            className="is-clickable has-text-link"
-            onClick={selectAll}
-            aria-hidden
-          >
-            Select all
-          </div>
-          <div className="mx-5">|</div>
-          <div
-            className="is-clickable has-text-link"
-            onClick={deselectAll}
-            aria-hidden
-          >
-            Deselect all
-          </div>
-        </div>
-      )}
       {children}
+      <div className={styles['clear-all-section']}>
+        <div onClick={deselectAll}>
+          <ReplayArrowIcon />
+          <span>Clear All</span>
+        </div>
+      </div>
     </components.Menu>
   );
 };
@@ -183,7 +159,7 @@ const CustomSelect = props => {
     return (
       <components.Option
         {...p}
-        className={isSelected ? 'has-background-white' : ''}
+        className={isSelected ? styles['selected-option'] : ''}
       >
         {showCheckbox ? (
           <label className="checkbox is-flex is-align-items-center py-5">

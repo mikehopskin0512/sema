@@ -25,6 +25,10 @@
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.07) !important;
   border-top-left-radius: 0px !important;
   border-top-right-radius: 0px !important;
+
+  div:nth-child(1) {
+    max-height: 220px;
+  }
 }
 
 .img {
@@ -52,4 +56,35 @@
 .wrapper {
   border: 1px solid $gray-500;
   border-radius: 4px;
+}
+
+.clear-all-section {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  padding-left: 8px;
+  padding-right: 8px;
+
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: -0.02em;
+  color: $blue-700;
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+  }
+
+  svg {
+    height: 13px;
+    width: 13px;
+  }
+}
+
+.selected-option {
+  background: $blue-0 !important;
 }

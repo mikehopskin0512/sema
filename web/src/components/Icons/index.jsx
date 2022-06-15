@@ -93,6 +93,7 @@ import { ReactComponent as InviteSvg } from './img/invite.svg';
 import { ReactComponent as Trophy2Svg } from './img/trophy2.svg';
 import { ReactComponent as FilterBarsSvg } from './img/filter-bars.svg';
 import { ReactComponent as DragTrigger } from './img/drag-trigger.svg';
+import { ReactComponent as ReplayIcon } from './img/replay.svg';
 
 const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
 
@@ -724,5 +725,11 @@ export function FilterBarsIcon(props) {
 export function DragTriggerIcon(props) {
   return <Icon {...props}>
     <DragTrigger />
+  </Icon>
+}
+
+export function ReplayArrowIcon(props) {
+  return <Icon {...props}>
+    <ReplayIcon />
   </Icon>
 }
