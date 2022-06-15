@@ -32,10 +32,22 @@ pipeline {
             }
         }
 
-        stage('Build apollo') {
-            steps {
-                script {
-                    buildApollo(params.ENVIRONMENT, params.BRANCH_NAME)
+        stage('Build') {
+            failFast true
+            parallel {
+                stage('Build Apollo') {
+                    steps {
+                        script {
+                            buildApollo(params.ENVIRONMENT, params.BRANCH_NAME)
+                        }
+                    }
+                }
+                stage('Build Apollo Worker'){
+                    steps{
+                        script{
+                            buildApolloWorker(params.ENVIRONMENT, params.BRANCH_NAME)
+                        }
+                    }
                 }
             }
         }
@@ -78,6 +90,12 @@ pipeline {
 def buildApollo(String environment, String branchName) {
     dir('apollo') {
         sh './build.sh ' + environment + ' ' + branchName
+    }
+}
+
+def buildApolloWorker(String environment, String branchName) {
+    dir('apollo') {
+        sh './worker-build.sh ' + environment + ' ' + branchName
     }
 }
 
