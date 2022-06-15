@@ -370,6 +370,9 @@ paths:
                     type: string
                   required: false
                   default: []
+                searchQuery:
+                  type: string
+                  required: false
       responses:
         200:
           content:

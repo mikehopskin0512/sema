@@ -637,7 +637,8 @@ export const searchSmartComments = async (
   toUserList,
   summaries,
   tags,
-  pullRequests
+  pullRequests,
+  searchQuery
 ) => {
   try {
     let findQuery = {
@@ -686,6 +687,14 @@ export const searchSmartComments = async (
       findQuery = {
         ...findQuery,
         'githubMetadata.requester': { $in: toUserList }
+      };
+    }
+
+    if(searchQuery) {
+      const escapedSearchQuery = _.escapeRegExp(searchQuery)
+      findQuery = {
+        ...findQuery,
+        'comment': { $regex : new RegExp(escapedSearchQuery, 'i') }
       };
     }
 
