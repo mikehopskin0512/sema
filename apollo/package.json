@@ -8,7 +8,7 @@
   "scripts": {
     "start": "nodemon --exec babel-node --inspect=0.0.0.0 src/app.js --max-http-header-size=16384",
     "worker": "nodemon --exec babel-node bin/worker",
-    "build": "npm run clean && babel src --out-dir dist --copy-files",
+    "build": "npm run clean; babel src --out-dir dist --copy-files",
     "serve": "node dist/app.js",
     "clean": "rm -rf ./dist && mkdir dist",
     "importCommentsAndGuides": "nodemon --exec babel-node scripts/importCommentsAndGuides.js",
@@ -36,6 +36,7 @@
     "express": "~4.16.1",
     "express-async-handler": "^1.1.4",
     "flexsearch": "^0.6.32",
+    "getstream": "^8.0.1",
     "glob": "^8.0.1",
     "google-spreadsheet": "^3.1.15",
     "http-errors": "~1.6.3",

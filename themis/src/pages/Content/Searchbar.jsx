@@ -4,14 +4,14 @@ import { debounce } from 'lodash/function';
 import ProfileSwitcher from './components/ProfileSwitcher';
 import SuggestionModal from './components/SuggestionModal';
 import { SEGMENT_EVENTS, SUGGESTION_URL } from './constants';
-import { fetchTeams } from './modules/content-util';
+import { fetchOrganizations } from './modules/content-util';
 import { segmentTrack } from './modules/segment';
 import {
   toggleSearchModal,
   addSuggestedComments,
   updateSearchBarInputValue,
   usedSmartComment,
-  updateTeams,
+  updateOrganizations,
 } from './modules/redux/action';
 
 const SearchBar = ({ id, commentBox, onTextPaste }) => {
@@ -28,8 +28,8 @@ const SearchBar = ({ id, commentBox, onTextPaste }) => {
 
   const getSemaSuggestions = (value, profile) => {
     setIsLoading(true);
-    const teamQuery = profile._id ? `&team=${profile._id}` : '';
-    const URL = `${SUGGESTION_URL}${value}&user=${user?._id}${teamQuery}`;
+    const organizationQuery = profile._id ? `&organization=${profile._id}` : '';
+    const URL = `${SUGGESTION_URL}${value}&user=${user?._id}${organizationQuery}`;
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
@@ -102,8 +102,8 @@ const SearchBar = ({ id, commentBox, onTextPaste }) => {
   }, [selectedProfile]);
   useEffect(() => {
     if (isLoggedIn) {
-      fetchTeams().then((teams) => {
-        dispatch(updateTeams(teams));
+      fetchOrganizations().then((organizations) => {
+        dispatch(updateOrganizations(organizations));
       });
     }
   }, [isLoggedIn]);

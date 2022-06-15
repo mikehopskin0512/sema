@@ -58,7 +58,7 @@ const PublicPortfolio = () => {
   return (
     <div className="has-background-white hero">
       <Helmet {...PortfolioHelmet} />
-      <div className="hero-body pb-300 mx-25" ref={portfolioRef}>
+      <div className="hero-body pb-300 m-0 px-0" ref={portfolioRef}>
         {!isLoading && portfoliosState?.errorData?.portfolio?.isPublic === false
           ? <ErrorPage />
           : portfolio && (

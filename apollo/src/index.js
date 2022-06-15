@@ -7,6 +7,7 @@ import endGuides from './comments/engGuides';
 import github from './identity/github';
 import health from './shared/health';
 import invitations from './invitations';
+import notifications from './notifications';
 import organizations from './organizations';
 import portfolios from './portfolios';
 import repoSync from './repoSync';
@@ -22,6 +23,7 @@ import support from './support';
 import tags from './comments/tags';
 import userRoles from './userRoles';
 import users from './users';
+import webhooks from './webhooks';
 
 export default function attachRoutes(app, passport) {
   analysis(app, passport);
@@ -35,6 +37,7 @@ export default function attachRoutes(app, passport) {
   github(app);
   health(app);
   invitations(app, passport);
+  notifications(app, passport);
   organizations(app, passport);
   portfolios(app, passport);
   reports(app, passport);
@@ -48,4 +51,5 @@ export default function attachRoutes(app, passport) {
   support(app, passport);
   roles(app, passport);
   userRoles(app, passport);
+  webhooks(app);
 }

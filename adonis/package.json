@@ -30,7 +30,7 @@
   "scripts": {
     "start": "react-scripts start",
     "scss": "npx sass ./src/styles/_theme.scss ./dist/styles/bulma-style.css && node prefixHook.js",
-    "js": "NODE_ENV=production babel src/lib --out-dir dist --copy-files",
+    "js": "env NODE_ENV=production babel src/lib --out-dir dist --copy-files",
     "build": "rm -rf dist && npm run js && npm run scss",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

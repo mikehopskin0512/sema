@@ -154,6 +154,8 @@ export const SEMA_FAQ_SLUGS = {
     'articles/6116505-is-there-an-executive-dashboard-of-all-developers',
   LEARN_MORE_ABOUT_SNIPPETS:
     'articles/6147206-what-are-snippets',
+  LEARN_MORE_ABOUT_SNAPSHOTS:
+    'collections/3428417-developer-portfolio-and-snapshots',
   LEARN_MORE: 'is-there-a-manager-dashboard-of-all-developers',
   SUMMARIES: 'what-do-summaries-mean',
   ORGANIZATION_INSIGHTS: 'team-insights-who-can-see-what',
@@ -373,6 +375,10 @@ export const KNOWLEDGE_BASE_SUMMARIES_URL =
 
 export const KNOWLEDGE_BASE_TAGS_URL =
   'https://intercom.help/sema-software/en/articles/6147189-how-do-i-use-tags-in-the-chrome-extension';
+
+export const NOTIFICATION_TYPE = {
+  JOINED_SEMA: 'joined_sema'
+};
 
 export const SORTING_TYPES = {
   ALPHABETICAL_SORT: 'alphabetical',

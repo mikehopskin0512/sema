@@ -17,9 +17,10 @@ import checkEqualTextForElements from "../support/check/checkEqualTextForElement
 import isEnabled from "../support/check/isEnabled";
 import checkAbsoluteURLPath from "../support/check/checkAbsoluteURLPath";
 import checkSelectedDropDownOption from '../support/check/checkSelectedDropDownOption';
-import checkTeamURLPath from "../support/check/checkTeamURLPath";
+import checkOrganizationURLPath from "../support/check/checkOrganizationURLPath";
 import checkRoleForUser from "../support/check/checkRoleForUser";
 import checkEqualTextToSavedVariable from "../support/check/checkEqualTextToSavedVariable";
+import checkEqualTextToSavedVariableByIndex from "../support/check/checkEqualTextToSavedVariableByIndex";
 import checkSearchedResults from "../support/check/checkSearchedResults";
 Then(
     /^I expect that the url is( not)* "([^"]*)?"$/,
@@ -27,8 +28,8 @@ Then(
 );
 
 Then(
-    /^I expect that the team url is( not)* correct$/,
-    checkTeamURLPath
+    /^I expect that the organization url is( not)* correct$/,
+    checkOrganizationURLPath
 );
 
 Then(
@@ -79,8 +80,13 @@ Then(
 );
 
 Then(
-    /^I expect that (button|element) "([^"]*)?"( not)* matches the saved variable$/,
+    /^I expect that (button|element) "([^"]*)?"( not)* matches the saved variable( with text "([^"]*)?")*$/,
     checkEqualTextToSavedVariable
+);
+
+Then(
+    /^I expect that "(\d+)(st|nd|rd|th)" (button|element) "([^"]*)?"( not)* matches the saved variable( with text "([^"]*)?")*$/,
+    checkEqualTextToSavedVariableByIndex
 );
 
 Then(

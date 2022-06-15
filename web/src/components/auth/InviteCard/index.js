@@ -14,7 +14,7 @@ const InviteCard = ({ invitation }) => {
         <strong>{isEmpty(senderName) ? 'Your colleague' : senderName }</strong> would love for you to join them.
       </p>
       <div>
-        <span className="is-size-8 has-text-gray-500">By joining, you are agreeing to Sema’s <a href="https://semasoftware.com/terms-and-conditions/">Terms & Conditions</a></span>
+        <span className="is-size-8 has-text-gray-500">By joining, you are agreeing to Sema’s <a href="https://www.semasoftware.com/legal/terms-conditions">Terms & Conditions</a></span>
       </div>
       <a
         type="button"

@@ -219,7 +219,7 @@ const onLoginChecked = () => {
     if (!isReadyToRender) {
       return;
     }
-    store.dispatch(addGithubMetada(getGithubMetadata(document)));
+    store.dispatch(addGithubMetada(getGithubMetadata()));
     const semaElements = $(activeElement).siblings('div.sema');
     if (
       document.querySelector('.SelectMenu--hasFilter .SelectMenu-modal')

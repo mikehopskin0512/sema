@@ -6,15 +6,17 @@ import {GlobalVars} from "../GlobalVars";
 // @ts-ignore
 /**
  * Check if the given elements text is the same as the given text
- * @param  {String}   elementType   Element type (element or button)
- * @param  {String}   selector      Element selector
- * @param  {String}   falseCase     Whether to check if the content equals the
- *                                  given text or not
+ * @param  {String}   elementType       Element type (element or button)
+ * @param  {String}   selector          Element selector
+ * @param  {String}   falseCase         Whether to check if the content equals the
+ *                                      given text or not
+ * @param  {String}   additionalText    Additional text for check with saved one
  */
 export default async (
     elementType: 'element' | 'button',
     selector: Selector,
-    falseCase: boolean
+    falseCase: boolean,
+    additionalText?: String
 ) => {
 
     /**
@@ -35,6 +37,11 @@ export default async (
      * @type {String}
      */
     let parsedExpectedText = GlobalVars.globalName;
+    console.log(additionalText)
+    if (additionalText)
+    {
+        parsedExpectedText = parsedExpectedText+additionalText;
+    }
     /**
      * Whether to check if the content equals the given text or not
      * @type {Boolean}
