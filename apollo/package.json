@@ -8,7 +8,7 @@
   "scripts": {
     "start": "nodemon --exec babel-node --inspect=0.0.0.0 src/app.js --max-http-header-size=16384",
     "worker": "nodemon --exec babel-node bin/worker",
-    "build": "npm run clean && babel src --out-dir dist --copy-files",
+    "build": "npm run clean; babel src --out-dir dist --copy-files",
     "serve": "node dist/app.js",
     "clean": "rm -rf ./dist && mkdir dist",
     "importCommentsAndGuides": "nodemon --exec babel-node scripts/importCommentsAndGuides.js",
