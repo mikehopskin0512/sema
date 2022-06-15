@@ -274,6 +274,10 @@ describe('Import Repository Queue', () => {
             );
           });
 
+          it('should store the pull request number', () => {
+            expect(githubMetadata.pull_number).toBe('3');
+          });
+
           it('should store the creation timestamp on GitHub', () => {
             expect(comment.source.createdAt).toEqual(
               new Date('2020-03-04T16:51:57Z')

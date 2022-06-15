@@ -120,6 +120,7 @@ async function createNewSmartComment({
     filename: githubComment.path,
     repo: repo.name,
     repo_id: repo.id,
+    pull_number: pullRequest.number,
     url: repo.html_url,
     created_at: githubComment.created_at || githubComment.submitted_at,
     updated_at: githubComment.updated_at || githubComment.submitted_at,
