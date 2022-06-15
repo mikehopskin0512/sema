@@ -32,6 +32,18 @@
   }
 }
 
+.notifications-container {
+  width: 40px;
+  height: 40px;
+  background-color: $gray-200;
+  &:hover {
+    background-color: $gray-300;
+    svg {
+      fill: $blue-700 !important;
+    }
+  }
+}
+
 .avatar-name-wrapper {
   max-width: 250px;
   white-space: nowrap;

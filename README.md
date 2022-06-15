@@ -110,3 +110,8 @@ sudo docker volume prune
 docker-compose build --no-cache
 ```
           
+4. Issue with Mongo container - not that "sudo docker volume prune"  doesn't delete DB  volume, so you may need to delete it manually.
+```sh
+ # remove DB volume
+rm -rf ~/docker/volumes/mongodb 
+```
