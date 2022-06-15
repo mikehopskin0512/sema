@@ -284,10 +284,15 @@ Feature: Organization Labels Management
         Then I expect that element "editLabelBtn" becomes displayed
         When I click on the element "editLabelBtn"
         Then I expect that element "newLabelOtherLabelsCategoryRadioBtn" becomes displayed
+        And  I expect that element "newLabelLanguageCategoryRadioBtn" becomes displayed
+        And  I pause for 2000ms
         When I click on the element "newLabelOtherLabelsCategoryRadioBtn"
+        And  I pause for 2000ms
+        And  I expect that element "newLabelSaveBtn" becomes displayed
         And  I click on the element "newLabelSaveBtn"
         Then I expect that element "labelNotificationText" matches the text "Label updated successfully"
         And  I expect that element "searchLabelsInput" becomes displayed
+        And  I expect that element "labelNotificationText" becomes not displayed
 
         When I set "Test Coverage" to the inputfield "searchLabelsInput"
         And  I pause for 3000ms
