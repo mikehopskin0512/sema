@@ -660,6 +660,35 @@ export const searchSmartComments = async (
         tags: { $in: tags }
       };
     }
+
+    if(summaries && summaries.length) {
+      findQuery = {
+        ...findQuery,
+        reaction: { $in: summaries }
+      };
+    }
+
+    if(pullRequests && pullRequests.length) {
+      findQuery = {
+        ...findQuery,
+        'githubMetadata.pull_number': { $in: pullRequests }
+      };
+    }
+
+    if(fromUserList && fromUserList.length) {
+      findQuery = {
+        ...findQuery,
+        'userId': { $in: fromUserList }
+      };
+    }
+
+    if(toUserList && toUserList.length) {
+      findQuery = {
+        ...findQuery,
+        'githubMetadata.requester': { $in: toUserList }
+      };
+    }
+
     const query = SmartComment.find(findQuery);
 
     query.populate({
