@@ -22,6 +22,7 @@ module.exports = {
     },
   },
   rules: {
+    'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'import/extensions': 'off',
     'import/prefer-default-export': 'off',
     'jsx-a11y/anchor-is-valid': [

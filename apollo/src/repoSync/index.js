@@ -5,7 +5,10 @@ import path from 'path';
 
 import { version } from '../config';
 
-import { create as createRepository } from '../repositories/repositoryService';
+import {
+  create as createRepository,
+  startSync,
+} from '../repositories/repositoryService';
 import checkEnv from '../middlewares/checkEnv';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
@@ -21,9 +24,8 @@ export default (app, passport) => {
       const repository = await createRepository({
         type: req.body.type,
         id: req.body.externalId,
-        installationId: req.body.installationId,
-        addedBy: req.user._id,
       });
+      await startSync({ repository, user: req.user });
 
       res.json({
         _id: repository._id,

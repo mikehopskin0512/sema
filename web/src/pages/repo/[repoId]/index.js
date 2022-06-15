@@ -1,4 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
@@ -12,39 +13,40 @@ import { organizationsOperations } from '../../../state/features/organizations[n
 import { getDateSub } from '../../../utils/parsing';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import FilterBar from '../../../components/repos/repoPageLayout/components/FilterBar';
-import StatsView from '../../../components/repos/repoPageLayout/components/StatsView';
 import Metrics from '../../../components/metrics';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import styles from './styles.module.scss';
+import * as api from '../../../state/utils/api';
 
 const { fetchRepositoryOverview, fetchReposByIds } = repositoriesOperations;
 const { fetchOrganizationRepos } = organizationsOperations;
 
 const tabTitle = {
   activity: 'Activity Log',
-  stats: 'Repo Stats'
+  stats: 'Code Stats',
+  sync: 'Sync',
 };
 
-const RepoPage = () => {
+function RepoPage() {
   const dispatch = useDispatch();
 
-  const { auth, repositories } = useSelector(state => ({
+  const { auth, repositories } = useSelector((state) => ({
     auth: state.authState,
-    repositories: state.repositoriesState
+    repositories: state.repositoriesState,
   }));
-  const { token, selectedOrganization, user } = auth;
+  const { token, selectedOrganization } = auth;
   const {
-    data: { overview }
+    data: { overview },
   } = repositories;
   const totalMetrics = {
     pullRequests: overview.repoStats?.smartCodeReviews ?? 0,
     comments: overview.repoStats?.smartComments ?? 0,
     commenters: overview.repoStats?.smartCommenters ?? 0,
-    users: overview.repoStats?.semaUsers ?? 0
+    users: overview.repoStats?.semaUsers ?? 0,
   };
 
   const {
-    query: { repoId }
+    query: { repoId },
   } = useRouter();
 
   const firstUpdate = useRef(true);
@@ -53,7 +55,7 @@ const RepoPage = () => {
   const [endDate, setEndDate] = useState(null);
   const [dates, setDates] = useState({
     startDate,
-    endDate
+    endDate,
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -64,12 +66,14 @@ const RepoPage = () => {
     tags: [],
     search: '',
     pr: [],
-    dateOption: ''
+    dateOption: '',
   });
   const [filterUserList, setFilterUserList] = useState([]);
   const [filterRequesterList, setFilterRequesterList] = useState([]);
   const [filterPRList, setFilterPRList] = useState([]);
-  const [isOrganizationRepo, setIsOrganizationRepo] = useState(!isEmpty(selectedOrganization));
+  const [isOrganizationRepo, setIsOrganizationRepo] = useState(
+    !isEmpty(selectedOrganization)
+  );
 
   useEffect(() => {
     setIsOrganizationRepo(!isEmpty(selectedOrganization));
@@ -77,7 +81,12 @@ const RepoPage = () => {
 
   useAuthEffect(() => {
     if (!isEmpty(selectedOrganization)) {
-      dispatch(fetchOrganizationRepos({ organizationId: selectedOrganization.organization._id }, token));
+      dispatch(
+        fetchOrganizationRepos(
+          { organizationId: selectedOrganization.organization._id },
+          token
+        )
+      );
     }
   }, []);
 
@@ -91,22 +100,30 @@ const RepoPage = () => {
     }
   }, []);
 
-  useAuthEffect(() => {
+  const refresh = useCallback(async () => {
     setIsLoading(true);
-    if (
-      (dates.startDate && dates.endDate) ||
-      (!dates.startDate && !dates.endDate)
-    ) {
-      dispatch(
-        fetchRepositoryOverview(
-          repoId,
-          token,
-          dates.startDate && dates.endDate
-            ? getDateSub(dates.startDate, dates.endDate)
-            : null
-        )
-      );
+    try {
+      if (
+        (dates.startDate && dates.endDate) ||
+        (!dates.startDate && !dates.endDate)
+      ) {
+        await dispatch(
+          fetchRepositoryOverview(
+            repoId,
+            token,
+            dates.startDate && dates.endDate
+              ? getDateSub(dates.startDate, dates.endDate)
+              : null
+          )
+        );
+      }
+    } finally {
+      setIsLoading(false);
     }
+  }, [repoId, dates, dispatch, token]);
+
+  useAuthEffect(() => {
+    refresh();
   }, [repoId, dates]);
 
   // Prevent from doing multiple calls while user is selecting dates
@@ -122,7 +139,7 @@ const RepoPage = () => {
     if (!startDate && !endDate) {
       setDates({
         startDate: null,
-        endDate: null
+        endDate: null,
       });
     }
   }, [startDate, endDate]);
@@ -132,23 +149,21 @@ const RepoPage = () => {
       return;
     }
     const requesters = overview.smartcomments
-      .filter(item => item.githubMetadata.requester)
-      .map(({ githubMetadata }) => {
-        return {
-          label: githubMetadata.requester,
-          value: githubMetadata.requester,
-          img: githubMetadata.requesterAvatarUrl || DEFAULT_AVATAR
-        };
-      });
+      .filter((item) => item.githubMetadata.requester)
+      .map(({ githubMetadata }) => ({
+        label: githubMetadata.requester,
+        value: githubMetadata.requester,
+        img: githubMetadata.requesterAvatarUrl || DEFAULT_AVATAR,
+      }));
     const users = overview.smartcomments
-      .filter(item => item.userId)
-      .map(item => {
+      .filter((item) => item.userId)
+      .map((item) => {
         const {
           firstName = '',
           lastName = '',
           _id = '',
           avatarUrl = '',
-          username = 'User@email.com'
+          username = 'User@email.com',
         } = item.userId;
         return {
           label:
@@ -156,30 +171,30 @@ const RepoPage = () => {
               ? username.split('@')[0]
               : `${firstName} ${lastName}`,
           value: _id,
-          img: avatarUrl || DEFAULT_AVATAR
+          img: avatarUrl || DEFAULT_AVATAR,
         };
       });
     const prs = overview.smartcomments
-      .filter(item => item.githubMetadata)
-      .map(item => {
+      .filter((item) => item.githubMetadata)
+      .map((item) => {
         const {
           githubMetadata: {
             head,
             title = '',
             pull_number: pullNum = '',
-            updated_at
-          }
+            updated_at: updatedAt,
+          },
         } = item;
         const prName = title || head || 'Pull Request';
         return {
-          updated_at: new Date(updated_at),
+          updated_at: new Date(updatedAt),
           label: `${prName} (#${pullNum || '0'})`,
           value: pullNum,
-          name: prName
+          name: prName,
         };
       });
-    let filteredPRs = [];
-    prs.forEach(item => {
+    const filteredPRs = [];
+    prs.forEach((item) => {
       const index = findIndex(filteredPRs, { value: item.value });
       if (index !== -1) {
         if (isEmpty(filteredPRs[index].prName)) {
@@ -195,15 +210,15 @@ const RepoPage = () => {
     setIsLoading(false);
   }, [overview]);
 
-  const onDateChange = ({ startDate, endDate }) => {
-    setStartDate(startDate);
-    setEndDate(endDate);
+  const onDateChange = ({ startDate: newStartDate, endDate: newEndDate }) => {
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
   };
 
   const onChangeFilter = (type, value) => {
     setFilter({
       ...filter,
-      [type]: value
+      [type]: value,
     });
   };
 
@@ -233,7 +248,7 @@ const RepoPage = () => {
         <div className={clsx(styles.divider, 'my-20 mx-10')} />
 
         <Metrics
-          isLastThirtyDays={true}
+          isLastThirtyDays
           metrics={overview.metrics}
           totalMetrics={totalMetrics}
         />
@@ -251,8 +266,102 @@ const RepoPage = () => {
           />
         </div>
       )}
+      {selectedTab === 'sync' && (
+        <div className={styles.wrapper}>
+          <SyncPage refresh={refresh} />
+        </div>
+      )}
     </RepoPageLayout>
   );
-};
+}
+
+function SyncPage({ refresh }) {
+  const { token } = useSelector((state) => state.authState);
+  const { repositories } = useSelector((state) => ({
+    repositories: state.repositoriesState,
+  }));
+
+  const {
+    data: { overview },
+  } = repositories;
+
+  const { _id } = overview;
+  const sync = overview.sync || {};
+
+  async function onClick() {
+    await api.create(`/api/proxy/repositories/${_id}/sync`, {}, token);
+  }
+
+  useEffect(() => {
+    const id = setInterval(refresh, 5000);
+    return () => {
+      clearInterval(id);
+    };
+  }, [refresh]);
+
+  return (
+    <div className="my-20">
+      <h2 className="has-text-black-950 has-text-weight-semibold is-size-4">
+        Sync
+      </h2>
+      <div className="my-10">
+        Status: {sync.status || 'not requested'}
+        {sync.startedAt && (
+          <>
+            <br />
+            Started: {format(new Date(sync.startedAt), 'MMM dd h:mm a')}
+          </>
+        )}
+        {sync.completedAt && (
+          <>
+            <br />
+            Completed: {format(new Date(sync.completedAt), 'MMM dd h:mm a')}
+          </>
+        )}
+        {sync.erroredAt && (
+          <>
+            <br />
+            Errored: {format(new Date(sync.erroredAt), 'MMM dd h:mm a')}
+            <br />
+            Error Message: {sync.error || 'N/A'}
+          </>
+        )}
+        {sync.status === 'unauthorized' && (
+          <div className="my-10">
+            <a
+              type="button"
+              className="button is-primary"
+              href={`https://github.com/apps/${process.env.NEXT_PUBLIC_GITHUB_APP_NAME}/installations/new`}
+            >
+              Install the Sema app
+            </a>
+          </div>
+        )}
+      </div>
+      <div className="my-10">
+        <h3 className="is-size-5">Progress</h3>
+        Conversation comments (issue comments):{' '}
+        {sync.progress?.issueComment?.currentPage ?? 0}/
+        {sync.progress?.issueComment?.lastPage ?? 0} pages
+        <br />
+        Inline comments (pull request comments):{' '}
+        {sync.progress?.pullRequestComment?.currentPage ?? 0}/
+        {sync.progress?.pullRequestComment?.lastPage ?? 0} pages
+        <br />
+        Review comments (pull request reviews):{' '}
+        {sync.progress?.pullRequestReview?.currentPage ?? 0}/
+        {sync.progress?.pullRequestReview?.lastPage ?? 0} pages
+      </div>
+      <div className="my-20">
+        <div className="my-10">
+          <button className="button is-primary" onClick={onClick}>
+            Start Sync
+          </button>
+        </div>
+        Starting sync after complete will re-sync.
+      </div>
+    </div>
+  );
+}
 
 export default RepoPage;
