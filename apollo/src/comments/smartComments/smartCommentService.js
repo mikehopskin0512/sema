@@ -829,7 +829,7 @@ export async function getOrganizationSmartCommentsMetrics(organizationId) {
     },
     {
       $match: {
-        'organizations._id': new ObjectId(organizationId),
+        'organizations._id': new ObjectId(organizationId),
       },
     },
     ...groupMetricsPipeline,

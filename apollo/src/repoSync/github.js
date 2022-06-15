@@ -281,7 +281,10 @@ function extractTagsFromSemaComment(text) {
         .map((s) => s.trim()) ?? []
     );
   } catch (error) {
-    console.log({ text, error });
+    logger.error(
+      `Error extracting tags from Sema comment: ${error.message || error}`,
+      { text }
+    );
     throw error;
   }
 }
