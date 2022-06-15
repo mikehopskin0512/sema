@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import Ironium from 'ironium';
 import app from '../src/app';
 
-jest.mock('../src/notifications/notificationService')
+jest.mock('../src/notifications/notificationService');
 
 beforeAll(async () => {
   await Promise.all([clearMongoDB(), Ironium.purgeQueues()]);
