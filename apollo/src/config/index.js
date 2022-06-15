@@ -39,6 +39,11 @@ module.exports = {
     apiKey: process.env.SENDGRID_API_KEY,
     defaultSender: process.env.SENDGRID_DEFAULT_SENDER,
   },
+  getstream: {
+    apiKey: process.env.GETSTREAM_API_KEY,
+    apiKeySecret: process.env.GETSTREAM_API_KEY_SECRET,
+    appId: process.env.GETSTREAM_APP_ID,
+  },
   pgPublicKey: process.env.PG_PUBLIC_KEY,
   userVoiceKey: process.env.USER_VOICE_SECRET_KEY,
   intercomToken: process.env.INTERCOM_TOKEN || null,

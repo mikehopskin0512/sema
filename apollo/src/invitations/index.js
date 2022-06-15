@@ -5,6 +5,8 @@ import yaml from 'yamljs';
 import path from 'path';
 import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
+import errors from '../shared/errors';
+import { addAcceptedInviteActivity } from '../notifications/notificationService';
 import {
   create,
   findByToken,
@@ -26,7 +28,7 @@ const route = Router();
 const sendInvitationByEmail = async ({ recipient, token, user, isUserAdmitted }) => {
   const fullName = `${user?.firstName} ${user?.lastName}`;
   const message = isUserAdmitted ? {
-    recipient: recipient,
+    recipient,
     url: `${orgDomain}/`,
     templateName: 'userAdmitted',
   } : {
@@ -57,7 +59,7 @@ export default (app, passport) => {
       user,
     } = req;
     const isAdmin = isSemaAdmin(user);
-    const isMagicLink = invitation.isMagicLink;
+    const { isMagicLink } = invitation;
     const isPersonalInvite = !isMagicLink;
     const canCreateInvitation = user.inviteCount > 0 || isAdmin;
 

@@ -68,6 +68,7 @@ export default (app, passport) => {
         throw new errors.BadRequest('User create error');
       }
       const { _id: userId, username } = newUser;
+
       // If invitation, call joinOrg function
       if (Object.prototype.hasOwnProperty.call(invitation, '_id')) {
         const { orgId, orgName, sender, token } = invitation;
