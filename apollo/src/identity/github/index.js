@@ -12,7 +12,7 @@ import {
    findByUsernameOrIdentity, updateIdentity,
 } from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createIdentityToken } from '../../auth/authService';
-import {checkIfInvitedByToken, redeemInvite} from '../../invitations/invitationService';
+import { checkIsInvitationValid, findByToken, redeemInvite } from '../../invitations/invitationService';
 import { createUserRole } from '../../userRoles/userRoleService';
 import { getTokenData } from '../../shared/utils';
 import checkEnv from '../../middlewares/checkEnv';
@@ -102,12 +102,17 @@ export default (app) => {
 
         // Join the user to the selected organization
         if (inviteToken) {
-          const invitation = await checkIfInvitedByToken(inviteToken);
-          await createUserRole({ organization: invitation.organization, user: user._id, role: invitation.role});
-          await redeemInvite(inviteToken, user._id, invitation._id);
+          const invitation = await findByToken(inviteToken);
+          const error = checkIsInvitationValid(invitation);
+          if (!error) {
+            await Promise.all([
+              createUserRole({ team: invitation.teamId, user: user._id, role: invitation.roleId}),
+              redeemInvite(user._id, inviteToken),
+            ])
 
-          if (!isWaitlist && invitation.organization) {
-            return res.redirect(`${orgDomain}/dashboard?inviteOrganizationId=${invitation.organization}`);
+            if (!isWaitlist && invitation.team) {
+              return res.redirect(`${orgDomain}/dashboard?inviteTeamId=${invitation.team}`);
+            }
           }
         }
 

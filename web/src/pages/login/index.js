@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { isEmpty } from "lodash";
 import Logo from '../../components/Logo';
 import clsx from 'clsx';
-import Toaster from '../../components/toaster';
+import Toaster from '../../components/toaster/index';
 import withLayout from '../../components/layout';
 import Loader from '../../components/Loader';
 import LoginCard from '../../components/auth/LoginCard';
