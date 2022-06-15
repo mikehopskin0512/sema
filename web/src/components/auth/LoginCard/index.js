@@ -29,7 +29,7 @@ const LoginCard = () => {
       <div className="mb-15">
         <span className="is-size-8 has-text-gray-500">
           By joining, you are agreeing to Sema’s &nbsp;
-          <a href="https://semasoftware.com/terms-and-conditions/" className="is-underlined">
+          <a href="https://www.semasoftware.com/legal/terms-conditions" className="is-underlined">
             Terms & Conditions
           </a>
         </span>
