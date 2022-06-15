@@ -4,7 +4,7 @@ import User from './userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { generateToken, metricsStartDate } from '../shared/utils';
-import { checkIfInvitedByToken } from '../invitations/invitationService';
+import { findById as findInviteById } from '../invitations/invitationService';
 import UserRole from '../userRoles/userRoleModel';
 
 const {
@@ -32,7 +32,7 @@ export const create = async (user, inviteToken) => {
   const verificationExpires = now.setHours(now.getHours() + 24);
 
   try {
-    const invitation = await checkIfInvitedByToken(inviteToken);
+    const invitation = await findInviteById(inviteToken);
     if (invitation) {
       isWaitlist = false;
       origin = 'invitation';
