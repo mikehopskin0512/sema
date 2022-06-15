@@ -1236,7 +1236,6 @@ describe('Import Repository Queue', () => {
           userId: user.id,
           location: 'files changed',
           suggestedComments: [],
-          reaction: null,
           tags: [],
           githubMetadata: {
             // Comment ID must be null for this test.

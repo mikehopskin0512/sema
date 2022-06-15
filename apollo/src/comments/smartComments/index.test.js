@@ -37,7 +37,6 @@ describe('GET /comments/smart', () => {
         comment: 'The later comment',
         location: 'conversation',
         suggestedComments: [],
-        reaction: null,
         tags: [],
         githubMetadata: {
           commentId: 'issuecomment-14049223',
@@ -59,7 +58,6 @@ describe('GET /comments/smart', () => {
         comment: 'The earlier comment',
         location: 'conversation',
         suggestedComments: [],
-        reaction: null,
         tags: [],
         githubMetadata: {
           commentId: 'issuecomment-23049209',
