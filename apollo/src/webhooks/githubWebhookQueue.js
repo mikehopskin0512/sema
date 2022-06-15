@@ -19,7 +19,7 @@ export default async function githubWebhook(body) {
 
   const octokit = await getOctokit(repository);
   const importComment = createGitHubImporter(octokit);
-  await importComment(body.comment, body.pull_request);
+  await importComment(body.comment);
 }
 
 export { queue };

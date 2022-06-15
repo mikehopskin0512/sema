@@ -72,7 +72,7 @@ async function importComments({
 }) {
   const pages = resumablePaginate({ octokit, endpoint, type, repository });
   for await (const data of pages) {
-    await Promise.all(data.map((comment) => importComment(comment, null)));
+    await Promise.all(data.map(importComment));
   }
 }
 
@@ -111,11 +111,7 @@ async function importReviewsFromPullRequest({
     pull_number: pullRequest.number,
   });
 
-  await Promise.all(
-    reviews
-      .filter((r) => r.body.trim())
-      .map((comment) => importComment(comment, null))
-  );
+  await Promise.all(reviews.filter((r) => r.body.trim()).map(importComment));
 }
 
 async function setSyncStarted(repository) {
