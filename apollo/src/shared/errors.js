@@ -1,5 +1,5 @@
-import util from 'util';
-import HTTPStatus from 'http-status';
+const util = require('util');
+const HTTPStatus = require('http-status');
 
 function HTTPError(...args) {
   Error.call(this, args);
@@ -9,10 +9,12 @@ util.inherits(HTTPError, Error);
 
 function buildError(obj, message, code) {
   HTTPError.call(obj);
+  /* eslint-disable no-param-reassign */
   obj.statusCode = code;
   obj.message = message.message || message;
   obj.name = HTTPStatus[obj.statusCode];
   if (message.stack) obj.stack = message.stack;
+  /* eslint-enable no-param-reassign */
 }
 
 function BadRequest(message) {
