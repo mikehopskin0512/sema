@@ -17,6 +17,7 @@ const widescreenPages = [
   PATHS.LOGIN,
   `${PATHS.ORGANIZATIONS._}/[organizationId]/${PATHS.DASHBOARD}`,
   `${PATHS.PORTFOLIO._}/[portfolioId]`,
+  `${PATHS.PORTFOLIO.VIEW('[handle]', '[portfolioId]')}`,
   PATHS.PORTFOLIO._,
   `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.SETTINGS}`,
   `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.ORGANIZATION_INSIGHTS}`,
