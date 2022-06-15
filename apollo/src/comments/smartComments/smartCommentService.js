@@ -25,14 +25,14 @@ const { Parser } = Json2CSV;
 
 // Creates smart comments from Chrome Extension.
 export const create = async ({
-  commentId = null,
-  comment = null,
-  userId = null,
-  location = null,
-  suggestedComments = null,
-  reaction = null,
-  tags = null,
-  githubMetadata = null,
+  commentId,
+  comment,
+  userId,
+  location,
+  suggestedComments,
+  reaction,
+  tags,
+  githubMetadata,
 }) => {
   try {
     const smartComment = new SmartComment({

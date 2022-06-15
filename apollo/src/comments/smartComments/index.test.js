@@ -36,7 +36,6 @@ describe('POST /comments/smart', () => {
         userId: user.id,
         location: 'conversation',
         suggestedComments: [],
-        reaction: null,
         tags: [],
         githubMetadata: {
           commentId: 'issuecomment-23049209',
@@ -109,7 +108,6 @@ describe('POST /comments/smart', () => {
         userId: user.id,
         location: 'files changed',
         suggestedComments: [],
-        reaction: null,
         tags: [],
         githubMetadata: {
           commentId: 'r872534677',
@@ -186,7 +184,6 @@ describe('POST /comments/smart', () => {
         userId: user.id,
         location: 'files changed',
         suggestedComments: [],
-        reaction: null,
         tags: [],
         githubMetadata: {
           commentId: 'discussion_r872534677',
@@ -263,7 +260,6 @@ describe('POST /comments/smart', () => {
         userId: user.id,
         location: 'files changed',
         suggestedComments: [],
-        reaction: null,
         tags: [],
         githubMetadata: {
           commentId: 'pullrequestreview-970002308',

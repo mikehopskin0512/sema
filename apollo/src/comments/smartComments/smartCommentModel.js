@@ -49,7 +49,12 @@ const smartCommentSchema = new Schema(
     suggestedComments: [
       { type: Schema.Types.ObjectId, ref: 'SuggestedComment' },
     ],
-    reaction: { type: Schema.Types.ObjectId, ref: 'Reaction', required: true },
+    reaction: {
+      type: Schema.Types.ObjectId,
+      ref: 'Reaction',
+      required: true,
+      default: ObjectId(EMOJIS_ID.NO_REACTION),
+    },
     tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
     githubMetadata: githubMetadataSchema,
     source: {
@@ -71,10 +76,6 @@ const smartCommentSchema = new Schema(
   },
   { collection: 'smartComments', timestamps: true }
 );
-
-smartCommentSchema.pre('validate', function setDefaultReaction() {
-  if (!this.reaction) this.reaction = ObjectId(EMOJIS_ID.NO_REACTION);
-});
 
 smartCommentSchema.pre('save', async function setRepository() {
   if (this.repositoryId) return;
