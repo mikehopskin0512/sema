@@ -25,14 +25,14 @@ const { Parser } = Json2CSV;
 
 // Creates smart comments from Chrome Extension.
 export const create = async ({
-  commentId = null,
-  comment = null,
-  userId = null,
-  location = null,
-  suggestedComments = null,
-  reaction = null,
-  tags = null,
-  githubMetadata = null,
+  commentId,
+  comment,
+  userId,
+  location,
+  suggestedComments,
+  reaction,
+  tags,
+  githubMetadata,
 }) => {
   try {
     const smartComment = new SmartComment({
@@ -860,20 +860,6 @@ export const getSmartCommentsByExternalId = async (externalId) => {
       'githubMetadata.repo_id': externalId,
     }).exec();
     return smartComments;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
-};
-
-export const getPullRequestsByExternalId = async (externalId) => {
-  try {
-    const pullRequests = await SmartComment.distinct(
-      'githubMetadata.pull_number',
-      { 'githubMetadata.repo_id': externalId }
-    ).lean();
-    return pullRequests;
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);

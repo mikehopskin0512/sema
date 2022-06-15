@@ -10,7 +10,7 @@ import seed from './seed';
 nock.disableNetConnect();
 nock.enableNetConnect('localhost');
 
-jest.mock('../src/notifications/notificationService')
+jest.mock('../src/notifications/notificationService');
 
 beforeAll(async () => {
   resetNocks();
