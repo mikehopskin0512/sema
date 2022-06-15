@@ -383,9 +383,8 @@ Feature: Portfolios
     Then I expect that element "reposContainer" becomes displayed
     And  I pause for 3000ms
     And  I expect that element "1stReposCard" becomes displayed
-    And  I pause for 1000ms
     When I click on the element "1stReposCard"
-    And  I pause for 1000ms
+    And  I pause for 2000ms
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "allTimeDateRange" becomes displayed
@@ -420,20 +419,24 @@ Feature: Portfolios
 
     Then I expect that element "portfolioListNames" becomes displayed
     And  I expect that element "addNewPortfolioBtn" becomes displayed
-    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
     And  I pause for 3000ms
     When I save the text of element "portfolioListNames"
+    Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
     And  I click on the element "portfolioListThreeDotsBtns"
+    And  I pause for 2000ms
     Then I expect that element "portfolioListDuplicateBtn" becomes displayed
-    And  I pause for 1000ms
     When I click on the element "portfolioListDuplicateBtn"
-    And  I pause for 3000ms
+    And  I pause for 4000ms
     Then I expect that element "portfolioListNames" does appear exactly "2" times
     And  I expect that "2nd" element "portfolioListNames" matches the saved variable with text "_Copy"
     When I click on the "2nd" element "portfolioListNames"
     Then I expect that element "portfoliosSnapshotsBoard" becomes displayed
-    And  I expect that element "portfoliosSnapshotDescription" becomes displayed
-    And  I expect that element "portfoliosSnapshotDescription" matches the text "activity logs - snapshot description"
+#    And  I expect that element "portfoliosSnapshotDescription" becomes displayed
+#    And  I expect that element "portfoliosSnapshotDescription" matches the text "activity logs - snapshot description"
+#    https://semalab.atlassian.net/browse/EAST-1405
+
+#  NEW TEST FOR DUPLICATING
+#  https://semalab.atlassian.net/browse/EAST-1412
 
   @PTA71 @smoke
   Scenario: Portfolios elements are displayed correctly for portfolio without snapshots
