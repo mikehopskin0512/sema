@@ -15,8 +15,6 @@ import {
 } from '../users/userService';
 import { EMOJIS } from '../comments/suggestedComments/constants';
 
-const defaultReaction = SmartComment.schema.paths.reaction.default();
-
 export default function createGitHubImporter(octokit) {
   const commentsWithoutID = new Cache(10);
   commentsWithoutID.materialize = loadCommentsWithoutID;
@@ -154,7 +152,7 @@ async function createNewSmartComment({
       'comment': sanitizedText,
       'userId': user,
       githubMetadata,
-      'reaction': reaction?._id ?? defaultReaction,
+      'reaction': reaction?._id ?? SmartComment.schema.paths.reaction.default(),
       'tags': tags.map((t) => t._id),
       'source.origin': 'sync',
     }
