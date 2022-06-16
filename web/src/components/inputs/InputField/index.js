@@ -14,9 +14,10 @@ const InputField = ({
   iconRight,
   placeholder = '',
   isMultiLine = false,
+  additionalClass
 }) => {
   return (
-    <div className="is-full-width">
+    <div className={clsx("is-full-width", additionalClass ?? '')}>
       {title && (
         <label className="label mb-4">
           {title}

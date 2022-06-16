@@ -66,9 +66,7 @@ const Control = ({ children, selectProps, ...rest }) => {
   }
   return (
     <div className={clsx('', styles.control)}>
-      <div className="py-20 px-12 has-background-white border-radius-4px">
-        <components.Control {...rest}>{children}</components.Control>
-      </div>
+      <div className="p-0 has-background-white" />
     </div>
   );
 };
@@ -244,89 +242,112 @@ const CustomSelect = props => {
   );
 
   return (
-    <div
-      className={clsx("is-flex is-flex-direction-column is-align-items-stretch is-relative", styles['wrapper'])}
-      ref={node}
-    >
-      <button
-        type="button"
-        onClick={toggleMenu}
-        style={{ width }}
-        className={clsx(
-          'border-radius-4px is-flex is-justify-content-space-between is-align-items-center is-clickable',
-          styles.select,
-          outlined
-            ? styles['select-outlined']
-            : 'has-background-white border-none',
-          outlined ? 'has-background-white' : null,
-          small ? 'py-5 px-10' : 'py-10 px-15'
-        )}
+    <div>
+      <span
+        className={styles['outer-label']}
       >
-        <div className="is-flex is-align-items-center">
+            {label}
+          </span>
+
+      <div
+        className={clsx('is-flex is-flex-direction-column is-align-items-stretch is-relative', styles['wrapper'])}
+        ref={node}
+      >
+        <button
+          type='button'
+          onClick={toggleMenu}
+          style={{ width }}
+          className={clsx(
+            'border-radius-4px is-flex is-justify-content-space-between is-align-items-center is-clickable',
+            styles.select,
+            outlined
+              ? styles['select-outlined']
+              : 'has-background-white border-none',
+            outlined ? 'has-background-white' : null,
+            small ? 'py-5 px-10' : 'py-10 px-15',
+          )}
+        >
+          <div className='is-flex is-align-items-center is-justify-content-space-between is-full-width mr-5'>
           <span
             className={clsx(
               'has-text-weight-semibold mr-10',
               styles.placeholder,
-              small ? 'is-size-7' : 'is-size-'
+              small ? 'is-size-7' : 'is-size-',
             )}
           >
-            {label}
+            {value.length ? (
+              <div className={clsx(styles['select-values'], 'has-horizontal-scroll')}>
+                {value?.map(i => (
+                  <div className={styles['select-value-item']}>
+                    {i.label}
+                  </div>),
+                )}
+              </div>
+            ) : 'Select'}
           </span>
-          {value && value.length > 0 ? (
-            <span
-              className={clsx(
-                'is-size-8 has-text-weight-semibold has-background-primary has-text-white is-flex is-align-items-center is-justify-content-center px-5 is-radius-full',
-                styles.badge
-              )}
-            >
+            {value && value.length > 0 ? (
+              <span
+                className={clsx(
+                  'is-size-8 has-text-weight-semibold has-background-primary has-text-white is-flex is-align-items-center is-justify-content-center px-5 is-radius-full',
+                  styles.badge,
+                )}
+              >
               {value.length}
             </span>
-          ) : (
-            <div className={styles.badge} />
-          )}
-        </div>
-        <span className="icon is-small pb-5">
+            ) : (
+              <div className={styles.badge} />
+            )}
+          </div>
+          <span className='icon is-small pb-5'>
           <FontAwesomeIcon icon={faSortDown} color={gray700} />
         </span>
-      </button>
+        </button>
 
-      {menuIsOpen && (
-        <div
-          className={clsx(
-            'has-background-white is-absolute mt-50 is-full-width',
-            styles['select-container']
-          )}
-        >
-          <div className='px-12 py-15'>
-            <InputField placeholder='Search' iconLeft={<SearchIcon />} value={search} onChange={setSearch}
-                        iconRight={search.length ? <CloseIcon color={blue500} /> : null} />
+        {menuIsOpen && (
+          <div
+            className={clsx(
+              'has-background-white is-absolute mt-50 is-full-width',
+              styles['select-container'],
+            )}
+          >
+            <div className='px-12 py-15'>
+              <InputField
+                placeholder='Search'
+                iconLeft={<SearchIcon />}
+                value={search}
+                onChange={setSearch}
+                iconRight={search.length ? <CloseIcon color={blue500} onRightIconClick/> : null}
+                onRightIconClick={() => setSearch("")}
+                additionalClass={styles['select-input']}
+              />
+            </div>
+            <Select
+              components={{
+                Control,
+                IndicatorSeparator,
+                Placeholder,
+                DropdownIndicator,
+                Option,
+                MultiValue,
+                MultiValueRemove,
+                IndicatorsContainer,
+                Menu: RenderMenu,
+                ValueContainer,
+                // Input,
+              }}
+              menuIsOpen={menuIsOpen}
+              width={width}
+              {...selectPropsPrepared}
+              onChange={data => {
+                selectPropsPrepared.onChange(data);
+                if (selectPropsPrepared.closeMenuOnSelect) {
+                  setMenuIsOpen(false);
+                }
+              }}
+            />
           </div>
-          <Select
-            components={{
-              Control,
-              IndicatorSeparator,
-              Placeholder,
-              DropdownIndicator,
-              Option,
-              MultiValue,
-              MultiValueRemove,
-              IndicatorsContainer,
-              Menu: RenderMenu,
-              ValueContainer
-              // Input,
-            }}
-            menuIsOpen={menuIsOpen}
-            width={width}
-            {...selectPropsPrepared}
-            onChange={data => {
-              selectPropsPrepared.onChange(data);
-              if (selectPropsPrepared.closeMenuOnSelect) {
-                setMenuIsOpen(false);
-              }
-            }}
-          />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
