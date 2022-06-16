@@ -51,15 +51,17 @@ describe('POST /webhooks/github', () => {
 
   describe('Valid Signature', () => {
     it('should not queue job on invalid github Event', async () => {
-      await expect(async () => {
-        await apollo.post('/v1/webhooks/github', testPayload, {
-          headers: {
-            'X-Hub-Signature-256':
-              'sha256=ac85ccfa58ca3b9e44aa5911f673e85f4114a4ee69c6622e2326a502a25327f9',
-            'X-GitHub-Event': 'abc',
-          },
-        });
-      }).rejects.toThrow(/500/);
+      githubWebhookQueue.queueJob = jest.fn();
+      githubWebhookQueue.queueJob.mockReturnValueOnce(1);
+      const { status } = await apollo.post('/v1/webhooks/github', testPayload, {
+        headers: {
+          'X-Hub-Signature-256':
+            'sha256=ac85ccfa58ca3b9e44aa5911f673e85f4114a4ee69c6622e2326a502a25327f9',
+          'X-GitHub-Event': 'abc',
+        },
+      });
+      expect(status).toBe(200);
+      expect(githubWebhookQueue.queueJob).not.toHaveBeenCalled();
     });
 
     it('should queue job on valid github Event', async () => {

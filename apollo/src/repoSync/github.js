@@ -44,7 +44,6 @@ export default function createGitHubImporter(octokit) {
     const userWasDeleted = !githubComment.user;
     const shouldIgnore = isIssueCommentFromGitHubIssues || userWasDeleted;
     if (shouldIgnore) return null;
-
     const pullRequestURL =
       githubComment.pull_request_url ||
       githubComment.issue_url.replace('/issues/', '/pulls/');
