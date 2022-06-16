@@ -2,7 +2,6 @@ import { createAppAuth } from '@octokit/auth-app';
 import { Octokit } from '@octokit/rest';
 import { github } from '../config';
 
-
 export const getOctokit = async (repository) => {
   const installationId =
     (await findInstallationIdForRepository(repository)) ||
@@ -33,7 +32,7 @@ export const getOctokit = async (repository) => {
   }
 
   return octokit;
-}
+};
 
 const appOctokit = new Octokit({
   authStrategy: createAppAuth,
@@ -69,4 +68,4 @@ export const getOwnerAndRepo = (repository) => {
     owner,
     repo: repo.replace(/\.git$/, ''),
   };
-}
+};
