@@ -143,13 +143,18 @@ smartCommentSchema.post('save', async function addRepositoryToUser() {
 });
 
 smartCommentSchema.post('save', async function updateRepoStats() {
+  if (!this.repositoryId) return;
+
   const update = await Bluebird.props({
     'repoStats.smartCodeReviews': getPullRequestCount(this.repositoryId),
     'repoStats.smartComments': getSmartCommentCount(this.repositoryId),
     'repoStats.smartCommenters': getCommenterCount(this.repositoryId),
     'repoStats.semaUsers': getCommenterCount(this.repositoryId),
   });
-  await mongoose.model('Repository').updateOne(update);
+
+  await mongoose
+    .model('Repository')
+    .updateOne({ _id: this.repositoryId._id }, update);
 });
 
 smartCommentSchema.post('save', async function updateRepoStats() {
