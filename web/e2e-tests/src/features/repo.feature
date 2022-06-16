@@ -53,9 +53,10 @@ Feature: Repo
     @PTA52_2
     Scenario: Activity log elements are displayed for repo with selected date range
         When I click on the element "reposTab"
+        And  I pause for 2000ms
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
-        And  I pause for 1000ms
+        And  I expect that element "1stReposCard" becomes displayed
         When I click on the element "1stReposCard"
         Then I expect that element "dateRangeFilter" becomes displayed
         When I click on the element "dateRangeFilter"

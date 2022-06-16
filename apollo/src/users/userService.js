@@ -4,7 +4,7 @@ import User from './userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { generateToken, metricsStartDate } from '../shared/utils';
-import { checkIfInvitedByToken } from '../invitations/invitationService';
+import { findById as findInviteById } from '../invitations/invitationService';
 import UserRole from '../userRoles/userRoleModel';
 
 const {
@@ -32,7 +32,7 @@ export const create = async (user, inviteToken) => {
   const verificationExpires = now.setHours(now.getHours() + 24);
 
   try {
-    const invitation = await checkIfInvitedByToken(inviteToken);
+    const invitation = await findInviteById(inviteToken);
     if (invitation) {
       isWaitlist = false;
       origin = 'invitation';
@@ -491,15 +491,17 @@ export const updateUserRepositoryList = async (user, repos, identity) => {
 
 export const addRepositoryToIdentity = async (user, repository) => {
   try {
-    const identityRepo = user.identities?.[0].repositories || [];
+    const identity = user.identities?.[0];
+    if (!identity) return false;
+    const identityRepo = identity.repositories || [];
     if (_.findIndex(identityRepo, { id: repository.id }) !== -1) {
       return true;
     }
-    let identity = user.identities?.[0];
-    identity = Object.assign(identity, {
+    const newIdentity = {
+      ...identity,
       repositories: [...identityRepo, repository],
-    });
-    await updateIdentity(user, identity);
+    };
+    await updateIdentity(user, newIdentity);
     return true;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -699,3 +701,10 @@ export const findByHandle = async (handle) => {
     return error;
   }
 };
+
+export const createGhostUser = async (attributes) =>
+  await User.create({
+    ...attributes,
+    isActive: false,
+    origin: 'sync',
+  });

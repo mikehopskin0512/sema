@@ -71,7 +71,6 @@ describe('POST /repo-sync', () => {
         {
           type: 'github',
           externalId: '123456',
-          installationId: '9876543',
         },
         {
           headers: {
@@ -92,8 +91,8 @@ describe('POST /repo-sync', () => {
       expect(data._id).toBe(repository._id.toString());
       expect(repository.type).toBe('github');
       expect(repository.externalId).toBe('123456');
-      expect(repository.installationId).toBe('9876543');
-      expect(repository.sync.status).toBe('pending');
+      expect(repository.sync.status).toBe('queued');
+      expect(repository.sync.queuedAt).toBeCloseToDate(new Date());
       expect(repository.sync.addedBy).toEqualID(user);
     });
 
@@ -109,7 +108,6 @@ describe('POST /repo-sync', () => {
           {
             type: 'github',
             externalId: '123456',
-            installationId: '9876543',
           },
           {
             headers: {
@@ -132,6 +130,50 @@ describe('POST /repo-sync', () => {
       it('should queue a job to start the sync', () => {
         expect(importRepositoryJobs.length).toBe(2);
         expect(importRepositoryJobs[1]).toEqual({ id: repository.id });
+      });
+    });
+
+    describe('existing repository without sync set up', () => {
+      beforeAll(async () => {
+        repository.sync = {};
+        await repository.save();
+        importRepositoryJobs.splice(0);
+      });
+
+      beforeAll(async () => {
+        ({ status, data } = await apollo.post(
+          '/v1/repo-sync/',
+          {
+            type: 'github',
+            externalId: '123456',
+          },
+          {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          }
+        ));
+
+        await importRepositoryQueue.runOnce();
+        repository = await Repository.findOne();
+      });
+
+      it('should respond with 200 OK', () => {
+        expect(status).toBe(200);
+      });
+
+      it('should add a repository for sync', async () => {
+        expect(data._id).toBe(repository._id.toString());
+        expect(repository.type).toBe('github');
+        expect(repository.externalId).toBe('123456');
+        expect(repository.sync.status).toBe('queued');
+        expect(repository.sync.queuedAt).toBeCloseToDate(new Date());
+        expect(repository.sync.addedBy).toEqualID(user);
+      });
+
+      it('should queue a job to start the sync', () => {
+        expect(importRepositoryJobs.length).toBe(1);
+        expect(importRepositoryJobs[0]).toEqual({ id: repository.id });
       });
     });
   });

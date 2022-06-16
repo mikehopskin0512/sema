@@ -7,7 +7,7 @@
   font-size: 40px;
   font-weight: bold;
   line-height: 48px;
-  color: $black-950;
+  color: $login-title;
   align-self: flex-start;
   max-width: 500px;
 }
@@ -40,9 +40,10 @@
 }
 
 .login-tile {
-  background-color: $white-50;
-  border-radius: 12px;
   opacity: 0.8;
+  border: 2px solid $login-title;
+  border-radius: 8px;
+  background: transparent;
 }
 
 .head-text {
@@ -59,14 +60,13 @@
 
 .bg {
   position: absolute;
-  opacity: 0.05;
   height: 100%;
   width: 100vw;
   object-fit: cover;
 }
 
 .subtitles {
-  color: $gray-800;
+  color: $white-0;
 }
 
 .fa-container {
@@ -77,10 +77,27 @@
   align-items: center;
   justify-content: center;
   border-radius: 22.5px;
-  background: $white-50;
+  background: $black-950;
+  border: 1px solid $login-title;
+
   img {
-    height: 25px;
-    width: 25px;
+    height: 20px;
+    width: 20px;
     object-fit: contain !important;
+  }
+}
+
+.neon-logo {
+  position: fixed;
+  bottom: 100px;
+  left: 100px;
+
+  @media screen and (max-width: 1407px) {
+    display: none;
+  }
+
+  img {
+    height: 75px;
+    width: 83px;
   }
 }
