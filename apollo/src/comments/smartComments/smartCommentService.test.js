@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import createUser from '../../../test/helpers/userHelper';
+import { create as createRepository } from '../../repositories/repositoryService';
 import { create as createSmartComment } from './smartCommentService';
 import SmartComment from './smartCommentModel';
 import Repository from '../../repositories/repositoryModel';
@@ -16,6 +17,17 @@ describe('Smart Comment Service', () => {
 
   beforeAll(async () => {
     user = await createUser();
+  });
+
+  beforeAll(async () => {
+    // Just adding entropy to ensure that
+    // we update the right repository.
+    await createRepository({
+      name: 'astrobee',
+      type: 'github',
+      id: '447888431',
+      cloneUrl: 'https://github.com/Semalab/astrobee',
+    });
   });
 
   describe('creating a smart comment on a new repository', () => {
@@ -49,7 +61,7 @@ describe('Smart Comment Service', () => {
     });
 
     beforeAll(async () => {
-      repository = await Repository.findOne();
+      repository = await Repository.findOne({ name: 'phoenix' });
       smartComment = await SmartComment.findOne();
       user = await User.findById(user._id);
     });
