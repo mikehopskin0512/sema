@@ -5,7 +5,7 @@ import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
 import logger from '../../shared/logger';
-import { github, orgDomain, version } from '../../config';
+import { github, isWaitListEnabled, orgDomain, version } from '../../config';
 import {
   getProfile,
   getUserEmails,
@@ -108,7 +108,7 @@ export default (app) => {
 
       const user = await findByUsernameOrIdentity(email, identity);
       if (user) {
-        const { isWaitlist = true } = user;
+        const { isWaitlist = isWaitListEnabled } = user;
         const { isActive = true } = user;
         identity.repositories = user.identities[0].repositories || [];
         await updateIdentity(user, identity);
@@ -171,7 +171,7 @@ export default (app) => {
         token,
         perPage,
         page
-      );
+);
 
       return res.status(200).json(orgs);
     } catch (error) {
@@ -188,7 +188,7 @@ export default (app) => {
         token,
         perPage,
         page
-      );
+);
 
       return res.status(200).json(repositories);
     } catch (error) {

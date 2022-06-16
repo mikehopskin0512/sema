@@ -69,6 +69,7 @@ module.exports = {
     tagsApi:
       process.env.JAXON_TAGS_API || 'https://hephaestus-tags.semasoftware.com',
   },
+  isWaitListEnabled: Boolean(parseInt(process.env.WAITLIST_ENABLED))
 };
 
 function getPort() {

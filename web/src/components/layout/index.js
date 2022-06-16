@@ -83,7 +83,7 @@ const withLayout = (Page) => (props) => {
       <div className={clsx(!isWideScreen && 'container', !noContactUs.includes(pathname) && 'pb-250')}>
         <Page {...props} />
       </div>
-      <div className={styles.footer}>
+      <div className={clsx(styles.footer, pathname.includes(PATHS.LOGIN) && styles['footer-fixed'])}>
         <Footer />
       </div>
     </div>

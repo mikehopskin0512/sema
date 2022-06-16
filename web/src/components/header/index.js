@@ -41,7 +41,7 @@ const Header = () => {
   const {
     isVerified = false,
     organizations = [],
-    isWaitlist = true,
+    isWaitlist = Boolean(parseInt(process.env.NEXT_PUBLIC_WAITLIST_ENABLED)),
     inviteCount = 0,
     roles = [],
     avatarUrl,

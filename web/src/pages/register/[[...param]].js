@@ -77,8 +77,8 @@ const RegistrationForm = (props) => {
       trackRedeemedInvite(email);
     } else {
       // New user
-      // If no invite, set to waitlist
-      const isWaitlist = !inviteToken;
+      // No waitlists needed here for now
+      const isWaitlist = Boolean(parseInt(process.env.NEXT_PUBLIC_WAITLIST_ENABLED));
       const newUser = { ...user, ...data, avatarUrl, isWaitlist };
       if (identity) { newUser.identities = [identity]; }
       dispatch(registerAndAuthUser(newUser, invitation));
