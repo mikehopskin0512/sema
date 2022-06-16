@@ -23,7 +23,8 @@ paths:
     post:
       summary: github event hook
       requestBody:
-        content: application/json
+        content:
+          application/json
       parameters:
         - in: header
           name: X-Hub-Signature-256
