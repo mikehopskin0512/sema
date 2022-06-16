@@ -97,6 +97,10 @@ module "apollo" {
 
   min_capacity = 1
   max_capacity = 3
+
+  external_iam_policies = [
+    data.aws_iam_policy_document.this.json
+  ]
 }
 
 module "apollo_worker" {
@@ -113,7 +117,7 @@ module "apollo_worker" {
   task_definition_resources_cpu    = var.ecs_task_definition_resources_cpu
   task_definition_resources_memory = var.ecs_task_definition_resources_memory
   ecr_repo = {
-    arn     = data.terraform_remote_state.repos.outputs.apollo_web_repo_arn
+    arn     = data.terraform_remote_state.repos.outputs.apollo_worker_web_repo_arn
     kms_key = ""
   }
 
@@ -130,6 +134,10 @@ module "apollo_worker" {
   min_capacity = 1
   max_capacity = 1
 
+  external_iam_policies = [
+    data.aws_iam_policy_document.this.json
+  ]
+
 }
 
 module "auto_restore_backup_lambda" {
@@ -138,5 +146,6 @@ module "auto_restore_backup_lambda" {
   name_prefix = "${var.name_prefix}-backups-auto-restore"
   vpc_id      = data.aws_vpc.this.id
   subnet_ids  = data.aws_subnet_ids.private.ids
-  timeout     = 300
+  timeout     = 600
+  memory_size = 512
 }

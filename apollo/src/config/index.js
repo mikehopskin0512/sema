@@ -33,7 +33,11 @@ module.exports = {
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackUrl: process.env.GITHUB_CALLBACK_URL,
     appId: process.env.GITHUB_APP_ID,
-    privateKey: process.env.GITHUB_PRIVATE_KEY.replace(/\\n/gm, '\n'),
+    privateKey: process.env.GITHUB_PRIVATE_KEY
+      // Some environments have the key separates with spaces
+      .replace(/(.{25,}?) /gm, '$1\n')
+      // Some environments have the key separates by literal '\n'
+      .replace(/\\n/gm, '\n'),
   },
   sendgrid: {
     apiKey: process.env.SENDGRID_API_KEY,
@@ -58,6 +62,13 @@ module.exports = {
   semaCorporateOrganizationName: process.env.SEMA_CORPORATE_ORGANIZATION_NAME,
   semaCorporateOrganizationId: process.env.SEMA_CORPORATE_ORGANIZATION_ID,
   environment: process.env.ENV || 'unknown',
+  jaxon: {
+    summariesApi:
+      process.env.JAXON_SUMMARIES_API ||
+      'https://hephaestus-summaries.semasoftware.com',
+    tagsApi:
+      process.env.JAXON_TAGS_API || 'https://hephaestus-tags.semasoftware.com',
+  },
 };
 
 function getPort() {

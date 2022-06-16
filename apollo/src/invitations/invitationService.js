@@ -1,61 +1,42 @@
 import { subDays } from 'date-fns';
 import * as Json2CSV from 'json2csv';
-import Invitation from './invitationModel';
-import User from '../users/userModel';
-import logger from '../shared/logger';
 import errors from '../shared/errors';
-import { fullName, generateToken } from '../shared/utils';
+import logger from '../shared/logger';
+import { generateToken } from '../shared/utils';
+import User from '../users/userModel';
+import Invitation from './invitationModel';
 
 export const create = async (invitation) => {
   try {
-    const {
-      recipient,
-      companyName,
-      cohort,
-      notes,
-      // orgId, orgName,
-      sender,
-      senderName,
-      senderEmail,
-      organization,
-      role,
-    } = invitation;
-
-    // Generate token and expiration data (2 weeks from now)
-    /* Token doesn't expire now. */
     const token = await generateToken();
-    const now = new Date();
-    // const tokenExpires = now.setHours(now.getHours() + (24 * 7 * 2));
-    const tokenExpires = now.setHours(now.getHours() + (9999 * 999));
-
-    const newInvite = new Invitation({
-      recipient,
-      companyName,
-      cohort,
-      notes,
-      // orgId,
-      // orgName,
-      sender,
-      senderName,
-      senderEmail,
+    /* Token doesn't expire by default. */
+    const tokenExpires = invitation.expires || new Date().setFullYear(3000)
+    const invite = await new Invitation({
+      ...invitation,
       token,
       tokenExpires,
-      organization: organization || null,
-      role: role || null,
-    });
-    const savedInvite = await newInvite.save();
-    return savedInvite;
+    }).save();
+    return invite;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
     throw (error);
   }
 };
-
+export const redeemInvite = async (userId, token) => {
+  try {
+    await Invitation.findOneAndUpdate(
+      { token },
+      { $push: { redemptions: { userId } }}
+    ).lean().exec();
+  } catch (err) {
+    logger.error(err);
+    return new errors.NotFound(err);
+  }
+};
 export const findById = async (id) => {
   try {
-    const query = Invitation.findById(id);
-    const invite = await query.lean().exec();
+    const invite = await Invitation.findById(id).lean().exec();
     return invite;
   } catch (err) {
     logger.error(err);
@@ -63,22 +44,9 @@ export const findById = async (id) => {
     return error;
   }
 };
-
-export const checkIfInvited = async (recipient) => {
-  const invitation = await Invitation.find({ recipient });
-  return invitation;
-};
-
-export const checkIfInvitedByToken = async (token) => {
-  const invitation = await Invitation.findOne({ token });
-  return invitation;
-};
-
 export const findByToken = async (token) => {
   try {
-    const query = Invitation.findOne({ token });
-    const invite = await query.lean().exec();
-
+    const invite = await Invitation.findOne({ token }).lean().exec();
     return invite;
   } catch (err) {
     logger.error(err);
@@ -86,39 +54,47 @@ export const findByToken = async (token) => {
     return error;
   }
 };
-
-export const redeemInvite = async (token, userId, invitationId = null) => {
+export const checkIsInvitationValid = (invitation) => {
+  if (!invitation) {
+    return false
+  }
+  const { isMagicLink, redemptions = [], tokenExpires } = invitation;
+  const isExpired = tokenExpires < Date.now();
+  const isLimited = redemptions.length > 0 && !isMagicLink;
+  if (isExpired) {
+    return `This invitation expired on ${tokenExpires}`
+  }
+  if (isLimited) {
+    return 'This invitation has reached it\'s invite limit';
+  }
+}
+export const getInvitationByRecipient = async (recipient) => {
   try {
-    const query = Invitation.findOneAndUpdate({
-      $or: [{ token }, { _id: invitationId }], 'redemptions.user': { $ne: userId },
-    },
-      { $push: { redemptions: { user: userId } }, $set: { isPending: false } });
-    const invite = await query.lean().exec();
-
-    return invite;
+    const query = Invitation.findOne({
+      recipient,
+    });
+    const result = await query.lean().exec();
+    return result;
   } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
   }
 };
-
 export const getInvitationsBySender = async (params) => {
   try {
     const { senderId, search, page, perPage } = params;
-    const query = Invitation.find();
-    if (senderId) {
-      query.where('sender', senderId);
+    if (!senderId) {
+      return [];
     }
-
+    const query = Invitation.find();
+    query.where('senderId', senderId);
     if (search) {
       query.where('recipient', new RegExp(search, 'gi'))
     }
     query.skip((page - 1) * perPage).limit(perPage)
-
-    const invites = await query.lean().exec();
+    const invites = await query.populate({ path: 'senderId', model: 'User' }).populate({ path: 'redemptions.userId', model: 'User' }).lean().exec();
     const recipientUsers = await User.find({ username: { $in: invites.map(invite => invite.recipient) } });
-
     const result = [];
 
     for (const invite of invites) {
@@ -137,35 +113,6 @@ export const getInvitationsBySender = async (params) => {
     throw (error);
   }
 };
-
-export const getInvitationByRecipient = async (recipient) => {
-  try {
-    const query = Invitation.findOne({
-      recipient,
-    });
-    const result = await query.lean().exec();
-    return result;
-  } catch (err) {
-    const error = new errors.BadRequest(err);
-    logger.error(error);
-    throw (error);
-  }
-};
-
-export const deleteInvitation = async (_id) => {
-  try {
-    const query = Invitation.deleteOne({
-      _id,
-    });
-    const result = await query.exec();
-    return result;
-  } catch (err) {
-    const error = new errors.BadRequest(err);
-    logger.error(error);
-    throw (error);
-  }
-};
-
 export const getInviteMetrics = async (type, timeRange) => {
   try {
     const startDate = timeRange === 'all' ? '' : subDays(new Date(), parseInt(timeRange, 10));
@@ -174,7 +121,7 @@ export const getInviteMetrics = async (type, timeRange) => {
       {
         $lookup: {
           from: 'users',
-          localField: 'sender',
+          localField: 'senderId',
           foreignField: '_id',
           as: 'senders',
         },
@@ -207,7 +154,6 @@ export const getInviteMetrics = async (type, timeRange) => {
     throw (error);
   }
 };
-
 export const exportInviteMetrics = async (type, timeRange) => {
   const metricData = await getInviteMetrics(type, timeRange);
   const mappedMetricData = metricData.map(item => ({
@@ -235,21 +181,27 @@ export const exportInviteMetrics = async (type, timeRange) => {
 
   return csv;
 };
-
 export const exportInvitations = async (params) => {
   const invites = await getInvitationsBySender(params);
-  const mappedData = invites.map((item) => ({
-    Sender_Email: item.senderEmail,
-    Sender: item.senderName,
-    Recipient: item.isPending ? item.recipient : fullName(item.user),
-    Status: item.isPending ? 'Pending Invite' : 'Accepted',
-    Invitations_Available: item.numAvailable,
-    Invitation_Redeemed: item.redemptions.length ? item.redemptions[0].createdAt : '-',
-    'Company name': item.companyName,
-    Cohort: item.cohort,
-    Notes: item.notes,
-    Created_At: item.createdAt
-  }));
+  const mappedData = invites.map((item) => {
+    const isMagicLink = item.isMagicLink;
+    const status = !!item.redemptions.length ? 'Accepted' : 'Pending Invite';
+    const invitationsAvailableCount = item.redemptions.length ? 0 : 1;
+    const sender = item.senderId || {};
+    return {
+      Sender_Email: sender.username,
+      Sender: `${sender.firstName} ${sender.lastName}`,
+      Recipient: isMagicLink ? 'Magic link' : item.recipient,
+      Status: isMagicLink ? 'Magic link' : status,
+      Invitations_Available: isMagicLink ? '-' : invitationsAvailableCount,
+      Invitation_Redeemed: item.redemptions.length,
+      // TODO: do we need it?
+      // 'Company name': item.companyName,
+      Cohort: item.cohort,
+      Notes: item.notes,
+      Created_At: item.createdAt
+    }
+  });
 
   const { Parser } = Json2CSV;
   const fields = [
@@ -259,7 +211,8 @@ export const exportInvitations = async (params) => {
     'Status',
     'Invitations_Available',
     'Invitation_Redeemed',
-    'Company name',
+    // TODO: do we need it?
+    // 'Company name',
     'Cohort',
     'Notes',
     'Created_At',
@@ -269,29 +222,4 @@ export const exportInvitations = async (params) => {
   const csv = json2csvParser.parse(mappedData);
 
   return csv;
-};
-
-export const getInvitationCountByUserId = async (userId, type = 'pending') => {
-  try {
-    const query = Invitation.find()
-    switch (type) {
-      case 'pending':
-        query.where('isPending', true);
-        break;
-      case 'accepted':
-        query.where('isPending', false);
-        break;
-      default:
-        break;
-    }
-    if (userId) {
-      query.where('sender', userId);
-    }
-    const count = query.countDocuments().lean().exec();
-    return count;
-  } catch (err) {
-    const error = new errors.BadRequest(err);
-    logger.error(error);
-    throw (error);
-  }
 };

@@ -25,14 +25,14 @@ const { Parser } = Json2CSV;
 
 // Creates smart comments from Chrome Extension.
 export const create = async ({
-  commentId = null,
-  comment = null,
-  userId = null,
-  location = null,
-  suggestedComments = null,
-  reaction = null,
-  tags = null,
-  githubMetadata = null,
+  commentId,
+  comment,
+  userId,
+  location,
+  suggestedComments,
+  reaction,
+  tags,
+  githubMetadata,
 }) => {
   try {
     const smartComment = new SmartComment({
@@ -82,7 +82,7 @@ export const filterSmartComments = async ({
   endDate,
   user,
   individual,
-  fields = {}
+  fields = {},
 }) => {
   try {
     let filter = {};
@@ -124,7 +124,7 @@ export const filterSmartComments = async ({
       .lean()
       .populate('userId')
       .populate('tags')
-      .sort('-createdAt')
+      .sort({ 'source.createdAt': -1 })
       .exec();
 
     return smartComments;
@@ -203,7 +203,7 @@ export const getSowMetrics = async (params) => {
           .fill(0)
           .map(async (item, index) => {
             const comments = await SmartComment.find(query)
-              .sort({ createdAt: -1 })
+              .sort({ 'source.createdAt': -1 })
               .skip(10 * index)
               .limit(10);
             const reactions = comments.filter(
@@ -618,7 +618,7 @@ export const findByExternalId = async (repoId, populate, createdAt) => {
       });
       query.populate({ select: ['label'], path: 'tags' });
     }
-    const comments = await query.sort({ createdAt: -1 }).lean();
+    const comments = await query.sort({ 'source.createdAt': -1 }).lean();
     return comments;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -829,7 +829,7 @@ export async function getOrganizationSmartCommentsMetrics(organizationId) {
     },
     {
       $match: {
-        'organizations._id': new ObjectId(organizationId),
+        'organizations._id': new ObjectId(organizationId),
       },
     },
     ...groupMetricsPipeline,
@@ -867,20 +867,6 @@ export const getSmartCommentsByExternalId = async (externalId) => {
   }
 };
 
-export const getPullRequestsByExternalId = async (externalId) => {
-  try {
-    const pullRequests = await SmartComment.distinct(
-      'githubMetadata.pull_number',
-      { 'githubMetadata.repo_id': externalId }
-    ).lean();
-    return pullRequests;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
-};
-
 export const getSmartCommentersByExternalId = async (externalId) => {
   try {
     const smartComments = SmartComment.find({
@@ -905,7 +891,7 @@ export const getSmartCommentsTagsReactions = async ({
   user,
   organizationId,
   individual,
-  fields = {}
+  fields = {},
 }) => {
   try {
     const filter = {

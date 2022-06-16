@@ -7,6 +7,14 @@ resource "aws_ecr_repository" "apollo" {
   }
 }
 
+resource "aws_ecr_repository" "apollo_worker" {
+  name = "apollo-worker"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
 resource "aws_ecr_repository" "phoenix" {
   name = "phoenix"
 
