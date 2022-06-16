@@ -277,7 +277,7 @@ const CustomSelect = props => {
           >
             {value.length ? (
               <div className={clsx(styles['select-values'], 'has-horizontal-scroll')}>
-                {value?.map(i => (
+                {value?.map((i, idx) => idx >= 2 ? null : (
                   <div className={styles['select-value-item']}>
                     {i.label}
                   </div>),
@@ -292,7 +292,7 @@ const CustomSelect = props => {
                   styles.badge,
                 )}
               >
-              {value.length}
+              {`+${value.length}`}
             </span>
             ) : (
               <div className={styles.badge} />
