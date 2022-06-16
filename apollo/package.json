@@ -8,7 +8,7 @@
   "scripts": {
     "start": "nodemon --exec babel-node --inspect=0.0.0.0 src/app.js --max-http-header-size=16384",
     "worker": "nodemon --exec babel-node bin/worker",
-    "build": "npm run clean && babel src --out-dir dist --copy-files",
+    "build": "npm run clean; babel src --out-dir dist --copy-files",
     "serve": "node dist/app.js",
     "clean": "rm -rf ./dist && mkdir dist",
     "importCommentsAndGuides": "nodemon --exec babel-node scripts/importCommentsAndGuides.js",
@@ -26,6 +26,7 @@
     "axios": "^0.21.1",
     "axios-request-throttle": "^1.0.0",
     "bcryptjs": "^2.4.3",
+    "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "bunyan": "^1.8.12",
     "caching-map": "^1.0.2",

@@ -37,7 +37,7 @@ const DashboardColumn = ({
   drag(ref);
 
   const opacity = useMemo(() => isDragging ? 0 : 1, [isDragging]);
-  const componentsStyles = useMemo(() => isDragging ? { position: 'fixed', top: 0 } : {}, [isDragging]);
+  const componentsStyles = useMemo(() => isDragging ? { position: 'fixed', top: 0 } : { zIndex: 9999 }, [isDragging]);
 
   const {
     componentToRender,

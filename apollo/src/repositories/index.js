@@ -92,7 +92,6 @@ export default (app, passport) => {
           );
         }
 
-        console.log(repositories);
         return res.status(201).send({
           repositories,
         });

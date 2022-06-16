@@ -119,6 +119,7 @@ async function createNewSmartComment({
     filename: githubComment.path,
     repo: repo.name,
     repo_id: repo.id,
+    pull_number: pullRequest.number,
     url: repo.html_url,
     created_at: githubComment.created_at || githubComment.submitted_at,
     updated_at: githubComment.updated_at || githubComment.submitted_at,
@@ -150,7 +151,7 @@ async function createNewSmartComment({
       'comment': sanitizedText,
       'userId': user,
       githubMetadata,
-      'reaction': reaction?._id,
+      'reaction': reaction?._id ?? SmartComment.schema.paths.reaction.default(),
       'tags': tags.map((t) => t._id),
       'source.origin': 'sync',
     }
@@ -279,7 +280,10 @@ function extractTagsFromSemaComment(text) {
         .map((s) => s.trim()) ?? []
     );
   } catch (error) {
-    console.log({ text, error });
+    logger.error(
+      `Error extracting tags from Sema comment: ${error.message || error}`,
+      { text }
+    );
     throw error;
   }
 }

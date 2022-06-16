@@ -58,6 +58,34 @@ mongoose.plugin((schema) => {
       throw error;
     }
   };
+
+  // eslint-disable-next-line no-param-reassign
+  schema.methods.findOrCreateInArray = async function findOrCreateInArray(
+    field,
+    key,
+    fields
+  ) {
+    const element = { ...fields, ...key };
+    const { nModified } = await this.constructor.updateOne(
+      {
+        _id: this._id,
+        [field]: {
+          $not: { $elemMatch: key },
+        },
+      },
+      { $addToSet: { [field]: element } }
+    );
+
+    if (nModified) return;
+
+    await this.constructor.updateOne(
+      {
+        _id: this._id,
+        [field]: { $elemMatch: key },
+      },
+      { $set: { [`${field}.$`]: element } }
+    );
+  };
 });
 
 const mongoService = {

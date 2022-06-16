@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { find, isEmpty } from 'lodash';
+import { capitalize, find, isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import Markdown from 'markdown-to-jsx';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
@@ -25,6 +25,7 @@ function ActivityItem(props) {
       pull_number: pullNumber = '',
       commentId = '',
       requester = 'Github User',
+      repo,
     },
     isSnapshot = false,
   } = props;
@@ -91,8 +92,9 @@ function ActivityItem(props) {
     <div
       className={clsx(
         `has-background-white py-20 ${
-          isSnapshot ? 'px-10 mr-15' : 'px-25'
+          isSnapshot ? 'px-20 mr-15' : 'px-25'
         } border-radius-4px is-flex`,
+        styles['comment-wrapper'],
         className
       )}
     >
@@ -105,7 +107,7 @@ function ActivityItem(props) {
         alt="user_icon"
       />
       <div className="is-flex-grow-1">
-        <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap">
+        <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap is-full-width">
           <div className="is-flex is-flex-wrap-no-wrap is-align-items-center">
             <img
               className={clsx(
@@ -115,41 +117,60 @@ function ActivityItem(props) {
               src={avatarUrl}
               alt="user_icon"
             />
-            <p className="is-size-7 has-text-black-950">
-              {!isEmpty(firstName) ? (
+            <div className={styles['header-info-wrapper']}>
+              <p className="has-text-black-950">
+                {!isEmpty(firstName) ? (
+                  <a
+                    href={`https://github.com/${login}`}
+                    className="has-text-black-950 has-text-weight-semibold"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {firstName} {lastName}
+                  </a>
+                ) : (
+                  <span className="has-text-black-950 has-text-weight-semibold">
+                    {username.split('@')[0] || 'User'}
+                  </span>
+                )}
+                <span className="has-text-gray-700">{' reviewed '}</span>
                 <a
-                  href={`https://github.com/${login}`}
+                  href={getPRUrl()}
                   className="has-text-black-950 has-text-weight-semibold"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  {firstName} {lastName}
+                  {getPRName(pullNumber, title)}
                 </a>
-              ) : (
-                <span className="has-text-black-950 has-text-weight-semibold">
-                  {username.split('@')[0] || 'User'}
-                </span>
-              )}
-              <span className="has-text-gray-700">{' reviewed '}</span>
-              <a
-                href={getPRUrl()}
-                className="has-text-black-950 has-text-weight-semibold"
-                target="_blank"
-                rel="noreferrer"
+                {` by ${requester}`}
+              </p>
+              <p
+                className={clsx(
+                  'is-size-8 is-hidden-desktop has-text-align-right',
+                  styles['date-info-wrapper'],
+                  styles.date
+                )}
               >
-                {getPRName(pullNumber, title)}
-              </a>
-              {` by ${requester}`}
-            </p>
+                {repo && (
+                  <span className="has-text-black-950 has-text-weight-semibold">
+                    {capitalize(repo)} |
+                  </span>
+                )}{' '}
+                {dateCreated}
+              </p>
+            </div>
           </div>
           <p className={clsx('is-size-8 is-hidden-touch', styles.date)}>
+            {repo && (
+              <span className="has-text-black-950 has-text-weight-semibold">
+                {capitalize(repo)} |
+              </span>
+            )}{' '}
             {dateCreated}
           </p>
         </div>
         <div className="mt-8 is-flex is-align-items-center is-flex-wrap-wrap">
-          <div className="is-size-5 is-size-7-mobile is-flex">
-            {renderEmoji()}
-          </div>
+          <div className="is-size-5 is-flex">{renderEmoji()}</div>
           {tags.length > 0 ? (
             <>
               <DotIcon size="tiny" className="mx-24 has-text-black-950" />
@@ -177,14 +198,6 @@ function ActivityItem(props) {
         >
           <Markdown>{comment}</Markdown>
         </div>
-        <p
-          className={clsx(
-            'is-size-8 is-hidden-desktop has-text-align-right',
-            styles.date
-          )}
-        >
-          {dateCreated}
-        </p>
       </div>
     </div>
   );
