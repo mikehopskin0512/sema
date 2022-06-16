@@ -13,6 +13,7 @@
     "clean": "rm -rf ./dist && mkdir dist",
     "importCommentsAndGuides": "nodemon --exec babel-node scripts/importCommentsAndGuides.js",
     "fixSlugs": "nodemon --exec babel-node scripts/fixSlugs.js",
+    "validateUsers": "nodemon --exec babel-node scripts/validateUsers/validateUsers.js",
     "lint": "eslint .",
     "test": "jest --forceExit",
     "migrate": "babel-node node_modules/.bin/migrate-mongo up"
