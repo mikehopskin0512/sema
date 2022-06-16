@@ -46,7 +46,7 @@ const DashboardColumn = ({
   const componentsStyles = useMemo(() => isDragging ? {
     position: 'fixed',
     top: 0,
-  } : { zIndex: componentToRender === COMPONENTS_TYPES.EMPTY ? 10 : 9999 }, [isDragging]);
+  } : {}, [isDragging]);
 
   const ComponentToRender = getDraggableComponent(componentToRender);
 
