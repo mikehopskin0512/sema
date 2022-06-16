@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -21,19 +21,10 @@ import { orange600 } from '../../../../styles/_colors.module.scss';
 const { triggerAlert } = alertOperations;
 const { updateCollectionIsActiveAndFetchCollections, updateCollection, fetchAllUserCollections } = collectionsOperations;
 
-const Tag = ({ tag, _id, type }) => (
-  <div
-    className={
-      clsx(
-        'tag is-uppercase is-rounded is-size-8 has-text-weight-semibold mr-5 is-clipped my-5',
-        type === 'language' ? 'has-text-primary has-background-primary-light' : 'is-light',
-        styles.tag
-      )
-    }
-    key={`${type}-${tag}-${_id}`}>
-    <p>{tag}</p>
-  </div>
-)
+const MENU_ITEMS_TYPES = {
+  EDIT: 'edit',
+  ARCHIVE: 'archive'
+}
 
 const Card = ({ isActive, collectionData, addNewComment, type }) => {
   const titleRef = useRef(null);
@@ -135,15 +126,25 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
     const isOrganizationIconNeeded = collectionData.type === COLLECTION_TYPES.ORGANIZATION;
     const isHighlightNeeded = collectionData.type === COLLECTION_TYPES.PERSONAL || isOrganizationIconNeeded;
 
-    const isMenuShown = () => {
-      const isOrganizationSnippet = selectedOrganization?.organization?.name?.toLowerCase() === author?.toLowerCase() || false
+    const menuItems = useMemo(() => {
+      const isOrganizationSnippet = selectedOrganization?.organization?.name?.toLowerCase() === author?.toLowerCase() || false;
+      const isDefaultUserCollection = isIndividualUser() && collectionData.author.toLowerCase() === user.username.toLowerCase() && isSemaDefaultCollection(name);
+      const canEdit =
+        (isOrganizationAdminOrLibraryEditor() && isOrganizationSnippet) ||
+        (isOrganizationAdmin() && isOrganizationSnippet) ||
+        isDefaultUserCollection ||
+        isSemaAdmin();
+      const canArchive = isSemaAdmin();
+      const items = [];
+      if (canEdit) {
+        items.push(MENU_ITEMS_TYPES.EDIT);
+      }
+      if (canArchive) {
+        items.push(MENU_ITEMS_TYPES.ARCHIVE);
+      }
+      return items;
+    }, [selectedOrganization, collectionData, user]);
 
-      if (isOrganizationAdminOrLibraryEditor() || isSemaAdmin()) return true;
-      if (isOrganizationAdmin() && isOrganizationSnippet) return true
-      if (isIndividualUser()) return collectionData.author.toLowerCase() === user.username.toLowerCase()
-
-      return false;
-    }
 
     return (
       <Link href={`?cid=${_id}`}>
@@ -215,7 +216,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                   )}
                   <div className={clsx("dropdown is-right", showMenu ? "is-active" : null)} onClick={onClickChild}>
                     {
-                      isMenuShown() && (
+                      Boolean(menuItems.length) && (
                         <div className="dropdown-trigger">
                           <button className="button is-ghost has-text-black-900 pl-0" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
                             <OptionsIcon />
@@ -225,17 +226,17 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                     }
                     <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
                       <div className="dropdown-content">
-                        <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className='dropdown-item'>
-                          Edit Collection
-                        </a>
-                        {
-                          !isSemaDefaultCollection(name) && (
+                        {menuItems.includes(MENU_ITEMS_TYPES.EDIT) && (
+                          <a href={`${PATHS.SNIPPETS._}?cid=${_id}`} className='dropdown-item'>
+                            Edit Collection
+                          </a>
+                        )}
+                        {menuItems.includes(MENU_ITEMS_TYPES.ARCHIVE) && (
                             <a className='dropdown-item is-clickable'
                                onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
                               {isNotArchived ? 'Archive' : 'Unarchive'} Collection
                             </a>
-                          )
-                        }
+                          )}
                       </div>
                     </div>
                   </div>

@@ -51,7 +51,7 @@ function usePermission() {
   }
 
   const isIndividualUser = () => {
-    return !isSemaAdmin || !isOrganizationAdmin || !IsOrganizationLibraryEditor
+    return !isSemaAdmin() && !isOrganizationAdminOrLibraryEditor()
   }
 
   const isOrganizationCollection = (id) => {
