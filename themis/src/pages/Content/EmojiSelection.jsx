@@ -50,7 +50,7 @@ const EmojiSelection = ({
               }}
             >
               {isCalculating ? (
-                <div style={{ height: '13px', width: '13px' }}>
+                <div style={{ height: '13px', width: '16px' }}>
                   <Lottie play loop animationData={animationData} />
                 </div>
               ) : (
