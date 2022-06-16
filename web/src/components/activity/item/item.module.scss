@@ -1,5 +1,8 @@
 @import "../../../../styles/_colors.module.scss";
 
+.comment-meta {
+  z-index: 999;
+}
 
 .comment-wrapper {
   .comment-text {
