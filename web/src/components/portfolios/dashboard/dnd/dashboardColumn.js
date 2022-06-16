@@ -1,9 +1,9 @@
-import React, { useMemo, useRef } from "react";
-import { useDrag } from "react-dnd";
-import { COMPONENTS_TYPES, ELEM_TYPES } from "./constants";
-import useResizeObserver from "use-resize-observer";
-import { getDraggableComponent } from "./helpers";
-import { dndBorder, dndBg } from '../../../../../styles/_colors.module.scss';
+import React, { useMemo, useRef } from 'react';
+import { useDrag } from 'react-dnd';
+import { COMPONENTS_TYPES, ELEM_TYPES } from './constants';
+import useResizeObserver from 'use-resize-observer';
+import { getDraggableComponent } from './helpers';
+import { dndBg, dndBorder } from '../../../../../styles/_colors.module.scss';
 
 const style = {};
 const DashboardColumn = ({
@@ -36,13 +36,17 @@ const DashboardColumn = ({
 
   drag(ref);
 
-  const opacity = useMemo(() => isDragging ? 0 : 1, [isDragging]);
-  const componentsStyles = useMemo(() => isDragging ? { position: 'fixed', top: 0 } : { zIndex: 9999 }, [isDragging]);
-
   const {
     componentToRender,
     componentProps,
   } = data;
+
+  const opacity = useMemo(() => isDragging ? 0 : 1, [isDragging]);
+
+  const componentsStyles = useMemo(() => isDragging ? {
+    position: 'fixed',
+    top: 0,
+  } : { zIndex: componentToRender === COMPONENTS_TYPES.EMPTY ? 10 : 9999 }, [isDragging]);
 
   const ComponentToRender = getDraggableComponent(componentToRender);
 
