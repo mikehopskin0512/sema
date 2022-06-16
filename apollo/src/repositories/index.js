@@ -140,22 +140,52 @@ export default (app, passport) => {
 
   route.post('/smart-comments/search', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { repoId, startDate, endDate, fromUserList, toUserList, summaries, tags, pullRequests, searchQuery, pageNumber, pageSize } = req.body;
+  route.post(
+    '/smart-comments/search',
+    passport.authenticate(['bearer'], { session: false }),
+    async (req, res) => {
+      const {
+        repoId,
+        startDate,
+        endDate,
+        fromUserList,
+        toUserList,
+        summaries,
+        tags,
+        pullRequests,
+        searchQuery,
+        pageNumber,
+        pageSize
+      } = req.body;
 
-    let dateRange = undefined;
-    if (startDate && endDate) {
-      dateRange = { startDate, endDate };
-    }
+      let dateRange = undefined;
+      if (startDate && endDate) {
+        dateRange = { startDate, endDate };
+      }
 
-    try {
-      const smartComments = await searchSmartComments(repoId, dateRange, fromUserList, toUserList, summaries, tags, pullRequests, searchQuery, pageNumber, pageSize);
-      return res.status(201).send({
-        smartComments,
-      });
-    } catch (error) {
-      logger.error(error);
-      return res.status(error.statusCode).send(error);
+      try {
+        const smartComments = await searchSmartComments(
+          repoId,
+          dateRange,
+          fromUserList,
+          toUserList,
+          summaries,
+          tags,
+          pullRequests,
+          searchQuery,
+          pageNumber,
+          pageSize
+        );
+        return res.status(201).send({
+          smartComments
+        });
+      } catch (error) {
+        logger.error(error);
+        return res.status(error.statusCode).send(error);
+      }
     }
-  });
+  );
+
   route.get('/overview', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { externalId, startDate, endDate } = req.query;
     try {

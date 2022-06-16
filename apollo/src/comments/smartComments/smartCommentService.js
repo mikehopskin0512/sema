@@ -639,7 +639,7 @@ export const searchSmartComments = async (
   tags,
   pullRequests,
   searchQuery,
-  pageNumber = 1, 
+  pageNumber = 1,
   pageSize = 10
 ) => {
   try {
@@ -652,51 +652,51 @@ export const searchSmartComments = async (
         ...findQuery,
         createdAt: {
           $gte: toDate(new Date(dateRange.startDate)),
-          $lte: toDate(endOfDay(new Date(dateRange.endDate))),
+          $lte: toDate(endOfDay(new Date(dateRange.endDate)))
         }
       };
     }
 
-    if(tags && tags.length) {
+    if (tags && tags.length) {
       findQuery = {
         ...findQuery,
         tags: { $in: tags }
       };
     }
 
-    if(summaries && summaries.length) {
+    if (summaries && summaries.length) {
       findQuery = {
         ...findQuery,
         reaction: { $in: summaries }
       };
     }
 
-    if(pullRequests && pullRequests.length) {
+    if (pullRequests && pullRequests.length) {
       findQuery = {
         ...findQuery,
         'githubMetadata.pull_number': { $in: pullRequests }
       };
     }
 
-    if(fromUserList && fromUserList.length) {
+    if (fromUserList && fromUserList.length) {
       findQuery = {
         ...findQuery,
-        'userId': { $in: fromUserList }
+        userId: { $in: fromUserList }
       };
     }
 
-    if(toUserList && toUserList.length) {
+    if (toUserList && toUserList.length) {
       findQuery = {
         ...findQuery,
         'githubMetadata.requester': { $in: toUserList }
       };
     }
 
-    if(searchQuery) {
-      const escapedSearchQuery = _.escapeRegExp(searchQuery)
+    if (searchQuery) {
+      const escapedSearchQuery = _.escapeRegExp(searchQuery);
       findQuery = {
         ...findQuery,
-        'comment': { $regex : new RegExp(escapedSearchQuery, 'i') }
+        comment: { $regex: new RegExp(escapedSearchQuery, 'i') }
       };
     }
 
@@ -708,9 +708,8 @@ export const searchSmartComments = async (
     });
     query.populate({ select: ['label'], path: 'tags' });
 
-    query.skip((pageNumber-1) * pageSize).limit(pageSize);
-    const comments = await query.sort({ createdAt: -1 }).lean();
-    return comments;
+    query.skip((pageNumber - 1) * pageSize).limit(pageSize);
+    return await query.sort({ createdAt: -1 }).lean();
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
