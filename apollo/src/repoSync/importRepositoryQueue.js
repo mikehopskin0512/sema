@@ -1,10 +1,8 @@
-import { createAppAuth } from '@octokit/auth-app';
-import { Octokit } from '@octokit/rest';
 import logger from '../shared/logger';
 import { queues } from '../queues';
-import { github } from '../config';
 import Repository from '../repositories/repositoryModel';
 import createGitHubImporter from './github';
+import { getOctokit, getOwnerAndRepo } from './repoSyncService';
 
 const queue = queues.self(module);
 
@@ -114,74 +112,6 @@ async function importReviewsFromPullRequest({
   });
 
   await Promise.all(reviews.filter((r) => r.body.trim()).map(importComment));
-}
-
-async function getOctokit(repository) {
-  const installationId =
-    (await findInstallationIdForRepository(repository)) ||
-    (await findSomeInstallationId());
-
-  if (!installationId) {
-    return null;
-  }
-
-  const octokit = new Octokit({
-    authStrategy: createAppAuth,
-    auth: {
-      appId: github.appId,
-      privateKey: github.privateKey,
-      installationId,
-    },
-  });
-
-  // Probe access to the repository
-  try {
-    await octokit.request('/repositories/{id}', { id: repository.externalId });
-  } catch (error) {
-    if (error.status === 404) {
-      // No access.
-      return null;
-    }
-    throw error;
-  }
-
-  return octokit;
-}
-
-const appOctokit = new Octokit({
-  authStrategy: createAppAuth,
-  auth: {
-    appId: github.appId,
-    privateKey: github.privateKey,
-  },
-});
-
-async function findInstallationIdForRepository(repository) {
-  try {
-    const { owner, repo } = getOwnerAndRepo(repository);
-    const { data: installation } = await appOctokit.apps.getRepoInstallation({
-      owner,
-      repo,
-    });
-    return installation.id;
-  } catch (error) {
-    if (error.status === 404) return null;
-    throw error;
-  }
-}
-
-// Use any installation ID, hopefully importing a public repository.
-async function findSomeInstallationId() {
-  const { data: installations } = await appOctokit.apps.listInstallations();
-  return installations[0]?.id;
-}
-
-function getOwnerAndRepo(repository) {
-  const [, , , owner, repo] = repository.cloneUrl.split('/');
-  return {
-    owner,
-    repo: repo.replace(/\.git$/, ''),
-  };
 }
 
 async function setSyncStarted(repository) {
