@@ -14,10 +14,19 @@
 
 .select-container {
   z-index: 10;
+  display: grid;
+
+  div:first-child {
+    order: 2;
+    z-index: 10;
+  }
+
+  div:nth-child(2) {
+    order: 1;
+  }
 }
 
 .control {
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.07);
 }
 
 .menu {

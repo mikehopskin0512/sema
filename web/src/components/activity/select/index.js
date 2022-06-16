@@ -8,10 +8,11 @@ import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import Select, { components } from 'react-select';
 import styles from './select.module.scss';
-import { gray700 } from '../../../../styles/_colors.module.scss';
+import { blue500, gray700 } from '../../../../styles/_colors.module.scss';
 import { DROPDOWN_SORTING_TYPES, SORTING_TYPES } from '../../../utils/constants';
 import { getPriorityListFromUser, sortWithPriority } from '../../../utils/sorts';
-import { ReplayArrowIcon } from '@/components/Icons';
+import { CloseIcon, ReplayArrowIcon, SearchIcon } from '@/components/Icons';
+import InputField from '@/components/inputs/InputField';
 
 const sortDropdown = (options, sortType, user) => {
   switch (sortType) {
@@ -41,19 +42,21 @@ const sortDropdown = (options, sortType, user) => {
 const Menu = ({ selectAll, deselectAll, isMulti, small, width, ...p }) => {
   const { children } = p;
   return (
-    <components.Menu
-      {...p}
-      className={clsx('mt-neg5', styles.menu)}
-      style={{ width }}
-    >
-      {children}
-      <div className={styles['clear-all-section']}>
-        <div onClick={deselectAll}>
-          <ReplayArrowIcon />
-          <span>Clear All</span>
+    <>
+      <components.Menu
+        {...p}
+        className={clsx('mt-neg5 pt-70', styles.menu)}
+        style={{ width }}
+      >
+        {children}
+        <div className={styles['clear-all-section']}>
+          <div onClick={deselectAll}>
+            <ReplayArrowIcon />
+            <span>Clear All</span>
+          </div>
         </div>
-      </div>
-    </components.Menu>
+      </components.Menu>
+    </>
   );
 };
 
@@ -107,15 +110,29 @@ const CustomSelect = props => {
   const { user } = useSelector(state => ({
     user: state.authState.user
   }));
-  const optionsSorted = useMemo(() => sortDropdown(options, sortType, user), [
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
+
+  const [search, setSearch] = useState('');
+
+  const filterMenuItems = () => {
+    const sortedItems = sortDropdown(options, sortType, user)
+      .sort((a, b) => value?.some(i => i?.value === b?.value) - value?.some(i => i?.value === a?.value));
+
+    if (!search.length) return sortedItems;
+    return sortedItems.filter(i => i.label?.toLowerCase()?.includes(search?.toLowerCase()));
+  };
+
+  const optionsSorted = useMemo(() => filterMenuItems(), [
     options,
     sortType,
-    user
+    user,
+    menuIsOpen,
+    search
   ]);
+
   const selectPropsPrepared = { ...selectProps, options: optionsSorted };
 
   const node = useRef();
-  const [menuIsOpen, setMenuIsOpen] = useState(false);
 
   const handleClick = e => {
     if (node.current.contains(e.target)) {
@@ -280,6 +297,10 @@ const CustomSelect = props => {
             styles['select-container']
           )}
         >
+          <div className='px-12 py-15'>
+            <InputField placeholder='Search' iconLeft={<SearchIcon />} value={search} onChange={setSearch}
+                        iconRight={search.length ? <CloseIcon color={blue500} /> : null} />
+          </div>
           <Select
             components={{
               Control,
