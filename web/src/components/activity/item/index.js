@@ -107,7 +107,7 @@ function ActivityItem(props) {
         alt="user_icon"
       />
       <div className="is-flex-grow-1">
-        <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap is-full-width">
+        <div className={clsx('is-flex is-justify-content-space-between is-flex-wrap-wrap is-full-width', styles['comment-meta'])}>
           <div className="is-flex is-flex-wrap-no-wrap is-align-items-center">
             <img
               className={clsx(
