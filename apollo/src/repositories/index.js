@@ -138,8 +138,6 @@ export default (app, passport) => {
     }
   });
 
-  route.post('/smart-comments/search', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { repoId, startDate, endDate, fromUserList, toUserList, summaries, tags, pullRequests, searchQuery, pageNumber, pageSize } = req.body;
   route.post(
     '/smart-comments/search',
     passport.authenticate(['bearer'], { session: false }),
