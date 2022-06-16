@@ -139,7 +139,7 @@ export default (app, passport) => {
   });
 
   route.post('/smart-comments/search', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    let { repoId, startDate, endDate, fromUserList, toUserList, summaries, tags, pullRequests } = req.body;
+    const { repoId, startDate, endDate, fromUserList, toUserList, summaries, tags, pullRequests, searchQuery, pageNumber, pageSize } = req.body;
 
     let dateRange = undefined;
     if (startDate && endDate) {
@@ -147,7 +147,7 @@ export default (app, passport) => {
     }
 
     try {
-      const smartComments = await searchSmartComments(repoId, dateRange, fromUserList, toUserList, summaries, tags, pullRequests);
+      const smartComments = await searchSmartComments(repoId, dateRange, fromUserList, toUserList, summaries, tags, pullRequests, searchQuery, pageNumber, pageSize);
       return res.status(201).send({
         smartComments,
       });

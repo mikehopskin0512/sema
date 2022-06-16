@@ -638,7 +638,9 @@ export const searchSmartComments = async (
   summaries,
   tags,
   pullRequests,
-  searchQuery
+  searchQuery,
+  pageNumber = 1, 
+  pageSize = 10
 ) => {
   try {
     let findQuery = {
@@ -706,7 +708,7 @@ export const searchSmartComments = async (
     });
     query.populate({ select: ['label'], path: 'tags' });
 
-    console.log('Starrt!!!!\n\n')
+    query.skip((pageNumber-1) * pageSize).limit(pageSize);
     const comments = await query.sort({ createdAt: -1 }).lean();
     return comments;
   } catch (err) {

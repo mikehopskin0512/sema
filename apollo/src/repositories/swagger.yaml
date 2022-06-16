@@ -373,6 +373,17 @@ paths:
                 searchQuery:
                   type: string
                   required: false
+                pageNumber:
+                  type: integer
+                  required: false 
+                  minimum: 1
+                  default: 1
+                pageSize:
+                  type: integer
+                  required: false 
+                  minimum: 1
+                  maximum: 100
+                  default: 10
       responses:
         200:
           content:
