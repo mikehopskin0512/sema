@@ -50,7 +50,7 @@ const DATE_RANGES = {
 
 const DateRangeSelector = (props) => {
   const {
-    start, end, onChange, isRight = false, buttonProps = {}, outlined, onChangeFilter
+    start, end, onChange, isRight = false, buttonProps = {}, outlined, onChangeFilter, additionalStyle
   } = props;
   const popupRef = useRef(null);
   const [selectedRange, setSelectedRange] = useState('last30Days');
@@ -130,7 +130,7 @@ const DateRangeSelector = (props) => {
   return (
     <>
       <div className={clsx('dropdown is-flex is-justify-content-stretch is-align-items-stretch', isOpen ? 'is-active' : null, isRight ? 'is-right' : null)}>
-        <div className="dropdown-trigger is-flex-grow-1 is-flex">
+        <div className={clsx("dropdown-trigger is-flex-grow-1 is-flex", additionalStyle ?? '')}>
           <button
             type="button"
             className={clsx(

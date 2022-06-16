@@ -1,4 +1,19 @@
-@import "../../../../styles/_colors.module.scss"; 
+@import "../../../../styles/_colors.module.scss";
+
+
+.comment-wrapper {
+  .comment-text {
+    font-size: 1.25rem;
+  }
+
+  .header-info-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 400px;
+  }
+}
 
 .date {
   color: $gray-700;

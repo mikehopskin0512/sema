@@ -7,8 +7,8 @@ import styles from './layout.module.scss';
 import Header from '../header';
 import Footer from '../footer';
 import ExtensionStatus from '../extensionStatus';
-import { noContactUs, FACEBOOK_VERIFICATION_META, PATHS } from '../../utils/constants';
-import { white0, blue200, blue900 } from '../../../styles/_colors.module.scss';
+import { FACEBOOK_VERIFICATION_META, noContactUs, PATHS } from '../../utils/constants';
+import { blue200, blue900, white0 } from '../../../styles/_colors.module.scss';
 import OrganizationCreateBanner from '../banners/organizationCreate';
 
 const widescreenPages = [
@@ -17,9 +17,15 @@ const widescreenPages = [
   PATHS.LOGIN,
   `${PATHS.ORGANIZATIONS._}/[organizationId]/${PATHS.DASHBOARD}`,
   `${PATHS.PORTFOLIO._}/[portfolioId]`,
+  `${PATHS.PORTFOLIO.VIEW('[handle]', '[portfolioId]')}`,
   PATHS.PORTFOLIO._,
   `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.SETTINGS}`,
+  `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.ORGANIZATION_INSIGHTS}`,
 ];
+
+const backgrounds = {
+  [PATHS.ORGANIZATION_INSIGHTS]: '#F0F2F4'
+};
 
 const noHeaderPages = [PATHS.LOGIN];
 
@@ -30,8 +36,10 @@ const withLayout = (Page) => (props) => {
   const isWideScreen = widescreenPages.includes(pathname);
   const hasNoHeader = noHeaderPages.includes(pathname);
 
+  const isOrganizationInsights = () => pathname.includes(PATHS.ORGANIZATION_INSIGHTS);
+
   return (
-    <div className="Layout">
+    <div className="Layout" style={{ backgroundColor: isOrganizationInsights() ? backgrounds[PATHS.ORGANIZATION_INSIGHTS] : undefined}}>
       {/* Styling for full height width */}
       <style global jsx>{`
         html,
@@ -75,7 +83,7 @@ const withLayout = (Page) => (props) => {
       <div className={clsx(!isWideScreen && 'container', !noContactUs.includes(pathname) && 'pb-250')}>
         <Page {...props} />
       </div>
-      <div className={styles.footer}>
+      <div className={clsx(styles.footer, pathname.includes(PATHS.LOGIN) && styles['footer-fixed'])}>
         <Footer />
       </div>
     </div>

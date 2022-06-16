@@ -71,14 +71,14 @@ const RegistrationForm = (props) => {
     const { username: email = '' } = data;
     if (inviteToken && authToken) {
       // User is redeeming invite, but already exists (likely on waitlist)
-      dispatch(redeemInvite(inviteToken, userId, authToken));
+      dispatch(redeemInvite(inviteToken, authToken));
       dispatch(partialUpdateUser(userId, { isWaitlist: false }, authToken));
       router.push(organizationId ? `${PATHS.DASHBOARD}/?organizationId=${organizationId}` : PATHS.DASHBOARD);
       trackRedeemedInvite(email);
     } else {
       // New user
-      // If no invite, set to waitlist
-      const isWaitlist = !inviteToken;
+      // No waitlists needed here for now
+      const isWaitlist = Boolean(parseInt(process.env.NEXT_PUBLIC_WAITLIST_ENABLED));
       const newUser = { ...user, ...data, avatarUrl, isWaitlist };
       if (identity) { newUser.identities = [identity]; }
       dispatch(registerAndAuthUser(newUser, invitation));

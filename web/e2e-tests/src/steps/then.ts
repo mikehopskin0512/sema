@@ -17,7 +17,7 @@ import checkEqualTextForElements from "../support/check/checkEqualTextForElement
 import isEnabled from "../support/check/isEnabled";
 import checkAbsoluteURLPath from "../support/check/checkAbsoluteURLPath";
 import checkSelectedDropDownOption from '../support/check/checkSelectedDropDownOption';
-import checkTeamURLPath from "../support/check/checkTeamURLPath";
+import checkOrganizationURLPath from "../support/check/checkOrganizationURLPath";
 import checkRoleForUser from "../support/check/checkRoleForUser";
 import checkEqualTextToSavedVariable from "../support/check/checkEqualTextToSavedVariable";
 import checkEqualTextToSavedVariableByIndex from "../support/check/checkEqualTextToSavedVariableByIndex";
@@ -28,8 +28,8 @@ Then(
 );
 
 Then(
-    /^I expect that the team url is( not)* correct$/,
-    checkTeamURLPath
+    /^I expect that the organization url is( not)* correct$/,
+    checkOrganizationURLPath
 );
 
 Then(
