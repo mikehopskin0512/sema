@@ -1,3 +1,4 @@
+import './shared/mongo';
 import express from 'express';
 import bodyParser from 'body-parser';
 import methodOverride from 'method-override';
@@ -12,6 +13,7 @@ import logger from './shared/logger';
 import errors from './shared/errors';
 
 import attachRoutes from './index';
+import './queues';
 import { port, allowedOrigin, chromeExtensionId } from './config';
 
 const app = express();
@@ -41,6 +43,12 @@ app.use(passport.initialize());
 app.disable('x-powered-by');
 
 app.use('/static', express.static('./uploads'));
+
+if (process.env.NODE_ENV === 'development')
+  app.use((req, res, next) => {
+    logger.info(`${req.method} ${req.url}`);
+    next();
+  });
 
 // Attach routes
 attachRoutes(app, passport);

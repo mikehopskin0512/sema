@@ -23,7 +23,7 @@ const EditPortfolio = ({ isModalActive, toggleModalActive, profileOverview, port
 
   return (
     <>
-      <div className={clsx('modal', isModalActive && 'is-active')}>
+      <div className={clsx('modal', isModalActive && 'is-active', styles['modal-wrapper'])}>
         <div className="modal-background" />
         <div className={clsx('modal-card', styles.modal)}>
           <header className="has-background-white pt-40 pl-40 pr-40 is-flex is-justify-content-space-between">

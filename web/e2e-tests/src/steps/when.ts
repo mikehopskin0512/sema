@@ -20,7 +20,7 @@ import setInputFieldWithTimestamp from "../support/action/setInputFieldWithTimes
 import setGlobalParamIntoSearchField from "../support/action/setGlobalParamIntoSearchField";
 import clickElementByIndex from "../support/action/clickElementByIndex";
 import switchTab from '../support/action/switchTab';
-import changeTheUserRoleForTheTeam from "../support/action/changeTheUserRoleForTheTeam";
+import changeTheUserRoleForTheOrganization from "../support/action/changeTheUserRoleForTheOrganization";
 import setParticularInputFieldWithTimestamp from "../support/action/setParticularInputFieldWithTimestamp";
 import setGlobalArrayByIndexToInputField from "../support/action/setGlobalArrayByIndexToInputField";
 import removeElementsWhileExist from '../support/action/removeElementsWhileExist';
@@ -149,7 +149,7 @@ When(
 
 When(
     /^I change the role for "([^"]*)?" to "([^"]*)?"$/,
-    changeTheUserRoleForTheTeam
+    changeTheUserRoleForTheOrganization
 )
 
 When(

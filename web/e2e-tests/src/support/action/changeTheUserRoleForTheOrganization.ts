@@ -13,7 +13,7 @@ import webElements = require('../sema_web_elements.json');
  */
 export default async (userName: string, userRole: string) => {
 
-    const parsedSelectorRole = `//p[normalize-space()='${userName}']/../../..//div[contains(@class,'TeamManagement_status__2JVEe ')]`;
+    const parsedSelectorRole = `//p[normalize-space()='${userName}']/../../..//div[contains(@class,'OrganizationManagement_status__lCcvy')]`;
     let isDisplayed = await $(parsedSelectorRole).isDisplayed();
 
     if (isDisplayed) {
@@ -25,7 +25,7 @@ export default async (userName: string, userRole: string) => {
         await $(parsedSelectorRole)['click']();
     }
 
-    const parsedSelectorRoleInput = `//p[normalize-space()='${userName}']/../../..//div[contains(@class,'TeamManagement_status__2JVEe ')]//input`;
+    const parsedSelectorRoleInput = `//p[normalize-space()='${userName}']/../../..//div[contains(@class,'OrganizationManagement_status__lCcvy')]//input`;
     isDisplayed = await $(parsedSelectorRole).isDisplayed();
     if (isDisplayed) {
         /**

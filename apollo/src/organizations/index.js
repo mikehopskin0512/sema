@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import HTTPStatus from 'http-status';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
@@ -19,10 +20,10 @@ import {
   updateOrganization,
   updateOrganizationAvatar,
   updateOrganizationRepos,
-} from '../organizations/organizationService';
+} from './organizationService';
 import UserRole from '../userRoles/userRoleModel';
 import { findByUsername } from '../users/userService';
-import { create, findBySlug, sendNotification } from './organizationService';
+import { create } from '../invitations/invitationService';
 import checkEnv from '../middlewares/checkEnv';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
@@ -55,14 +56,14 @@ export default (app, passport) => {
   });
 
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { _id } = req.user;
+    const { members, url, hasMagicLink = true } = req.body;
     try {
-      const { _id } = req.user;
-      const { members, url } = req.body;
 
       if (url) {
         const organization = await getOrganizationByUrl(url.toLowerCase());
         if (organization) {
-          return res.status(400).send({
+          return res.status(HTTPStatus.BAD_REQUEST).send({
             message: 'this url is already allocated',
           });
         }
@@ -72,6 +73,14 @@ export default (app, passport) => {
         ...req.body,
         createdBy: _id,
       });
+
+      if (hasMagicLink) {
+        await create({
+          senderId: _id,
+          isMagicLink: true,
+          organizationId: organization._id,
+        })
+      }
 
       if (members?.length) {
         await addOrganizationMembers(organization._id, req.body.members, 'member');
@@ -256,9 +265,9 @@ export default (app, passport) => {
             recipient: email,
             senderName: fullName(req.user),
             senderEmail: req.user.username,
-            sender: req.user._id,
-            organization: organizationId,
-            role,
+            senderId: req.user._id,
+            organizationId,
+            roleId: role,
           });
 
           const {

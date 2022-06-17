@@ -123,11 +123,11 @@ const TagsChart = ({
     <>
       <div className={clsx(`is-flex-grow-1 ${isSnapshot ? 'mb-10 pl-5' : 'mb-20 px-10'} ${className}`, containerStyles)}
            onMouseMove={handleTooltipPosition}>
-        <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow, isLoading && styles['loading-container'])}>
+        <div className={clsx('has-background-white border-radius-8px p-15', styles.shadow, isLoading && styles['loading-container'])}>
           {!isLoading && (
             <>
-              <div className='is-flex'>
-                <p className='has-text-black-950 has-text-weight-semibold'>Tags</p>
+              <div className='is-flex is-full-width'>
+                <p className='has-text-black-950 has-text-weight-semibold is-full-width' >Tags</p>
                 {!emptyChart && !isSnapshot && onClick && <SnapshotButton onClick={onClick} />}
               </div>
               <CircularPacking
