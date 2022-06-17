@@ -90,6 +90,9 @@ $dnd-row-bg: #F8F8F8;
 // SKELETONS
 $skeleton-back: #E2E4E4;
 
+// Login
+$login-title: #41FCD3;
+
 :export {
   // neutral
   black950: $black-950;
@@ -173,4 +176,5 @@ $skeleton-back: #E2E4E4;
   dndBorder: $dnd-row-border;
   dndBg: $dnd-row-bg;
   skeletonBg: $skeleton-back;
+  loginTitle: $login-title
 }

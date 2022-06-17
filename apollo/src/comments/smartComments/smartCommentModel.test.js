@@ -16,7 +16,6 @@ describe('Smart Comment model', () => {
         userId: user.id,
         location: 'files changed',
         suggestedComments: [],
-        reaction: null,
         tags: [],
         githubMetadata: {
           commentId: 'r872534677',

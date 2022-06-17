@@ -5,14 +5,27 @@ import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
 import logger from '../../shared/logger';
-
-import { github, orgDomain, version } from '../../config';
-import { getProfile, getUserEmails, getRepositoryList, getRepositoriesForAuthenticatedUser, getGithubOrgsForAuthenticatedUser } from './utils';
+import { github, isWaitListEnabled, orgDomain, version } from '../../config';
 import {
-   findByUsernameOrIdentity, updateIdentity,
+  getProfile,
+  getUserEmails,
+  getRepositoriesForAuthenticatedUser,
+  getGithubOrgsForAuthenticatedUser,
+} from './utils';
+import {
+  findByUsernameOrIdentity,
+  updateIdentity,
 } from '../../users/userService';
-import { createRefreshToken, setRefreshToken, createIdentityToken } from '../../auth/authService';
-import {checkIfInvitedByToken, redeemInvite} from '../../invitations/invitationService';
+import {
+  createRefreshToken,
+  setRefreshToken,
+  createIdentityToken,
+} from '../../auth/authService';
+import {
+  checkIsInvitationValid,
+  findByToken,
+  redeemInvite,
+} from '../../invitations/invitationService';
 import { createUserRole } from '../../userRoles/userRoleService';
 import { getTokenData } from '../../shared/utils';
 import checkEnv from '../../middlewares/checkEnv';
@@ -51,17 +64,22 @@ export default (app) => {
         return res.status(401).end('Github authentication failed.');
       }
 
-      const repositories = await getRepositoryList(token);
+      if (process.env.NODE_ENV === 'development')
+        logger.info(`GitHub token: ${token}`);
 
       const profile = await getProfile(token);
       if (!profile) {
-        return res.status(401).end('Unable to retrieve Github profile for user.');
+        return res
+          .status(401)
+          .end('Unable to retrieve Github profile for user.');
       }
 
       // Get array of user Emails
       const userEmails = await getUserEmails(token);
-      const { email: githubPrimaryEmail = '' } = userEmails.find((item) => item.primary === true);
-      const emails = userEmails.map(({ email }) => (email));
+      const { email: githubPrimaryEmail = '' } = userEmails.find(
+        (item) => item.primary === true
+      );
+      const emails = userEmails.map(({ email }) => email);
 
       // Create identity object
       const { name: fullName } = profile;
@@ -71,8 +89,10 @@ export default (app) => {
       // So need to use profile.email with fallback to handle null emails
       // and need to check for fullName before using split
       const email = profile.email || '';
-      const firstName = (fullName) ? fullName.split(' ').slice(0, -1).join(' ') : '';
-      const lastName = (fullName) ? fullName.split(' ').slice(-1).join(' ') : '';
+      const firstName = fullName
+        ? fullName.split(' ').slice(0, -1).join(' ')
+        : '';
+      const lastName = fullName ? fullName.split(' ').slice(-1).join(' ') : '';
 
       const identity = {
         provider: 'github',
@@ -88,40 +108,51 @@ export default (app) => {
 
       const user = await findByUsernameOrIdentity(email, identity);
       if (user) {
-        const { isWaitlist = true } = user;
+        const { isWaitlist = isWaitListEnabled } = user;
+        const { isActive = true } = user;
         identity.repositories = user.identities[0].repositories || [];
-        // Update user with identity
         await updateIdentity(user, identity);
-
-        // await updateUserRepositoryList(user, repositories, identity);
 
         const tokenData = await getTokenData(user);
 
         // Auth Sema
-        await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));
+        await setRefreshToken(
+          res,
+          tokenData,
+          await createRefreshToken(tokenData)
+        );
 
         // Join the user to the selected organization
         if (inviteToken) {
-          const invitation = await checkIfInvitedByToken(inviteToken);
-          await createUserRole({ organization: invitation.organization, user: user._id, role: invitation.role});
-          await redeemInvite(inviteToken, user._id, invitation._id);
+          const invitation = await findByToken(inviteToken);
+          const error = checkIsInvitationValid(invitation);
+          if (!error) {
+            await Promise.all([
+              createUserRole({
+                team: invitation.teamId,
+                user: user._id,
+                role: invitation.roleId,
+              }),
+              redeemInvite(user._id, inviteToken),
+            ]);
 
-          if (!isWaitlist && invitation.organization) {
-            return res.redirect(`${orgDomain}/dashboard?inviteOrganizationId=${invitation.organization}`);
+            if (!isWaitlist && invitation.team) {
+              return res.redirect(
+                `${orgDomain}/dashboard?inviteTeamId=${invitation.team}`
+              );
+            }
           }
         }
 
-        if (!isWaitlist) {
+        if (!isWaitlist && isActive) {
           // If user is on waitlist, bypass and redirect to register page (below)
           // No need to send jwt. It will pick up the refresh token cookie on frontend
-          // return res.redirect(`${orgDomain}/reports`);
           return res.redirect(`${orgDomain}/dashboard`);
-          // return res.status(201).send({ jwtToken: await createAuthToken(user) });
         }
       }
       const identityToken = await createIdentityToken(identity);
       // Build redirect based on inviteToken
-      const registerRedirect = (inviteToken)
+      const registerRedirect = inviteToken
         ? `${orgDomain}/register/${inviteToken}?token=${identityToken}`
         : `${orgDomain}/register?token=${identityToken}`;
 
@@ -131,27 +162,35 @@ export default (app) => {
     }
     return res.redirect(`${orgDomain}/dashboard`);
   });
-  
+
   route.get('/organizations/:token', async (req, res) => {
     try {
       const { token } = req.params;
       const { perPage, page } = req.query;
-      const orgs = await getGithubOrgsForAuthenticatedUser(token, perPage, page);
-      
-      res.status(200).json(orgs);
+      const orgs = await getGithubOrgsForAuthenticatedUser(
+        token,
+        perPage,
+        page
+);
+
+      return res.status(200).json(orgs);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
-  
+
   route.get('/repositories/:token', async (req, res) => {
     try {
       const { token } = req.params;
       const { perPage, page } = req.query;
-      const repositories = await getRepositoriesForAuthenticatedUser(token, perPage, page);
-  
-      res.status(200).json(repositories);
+      const repositories = await getRepositoriesForAuthenticatedUser(
+        token,
+        perPage,
+        page
+);
+
+      return res.status(200).json(repositories);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
@@ -159,5 +198,10 @@ export default (app) => {
   });
 
   // Swagger route
-  app.use(`/${version}/identities/github-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
+  app.use(
+    `/${version}/identities/github-docs`,
+    checkEnv(),
+    swaggerUi.serveFiles(swaggerDocument, {}),
+    swaggerUi.setup(swaggerDocument)
+  );
 };

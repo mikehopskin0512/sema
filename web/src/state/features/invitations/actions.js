@@ -1,9 +1,14 @@
 import { format } from 'date-fns';
 import * as types from './types';
 import {
-  getInvite, postInvite, getInvitations,
-  patchRedeemInvite, postResendInvite, deleteInvite,
-  getInvitationsMetric, exportInvitationsMetric, exportInvitations,
+  getInvite,
+  postInvite,
+  getInvitations,
+  patchRedeemInvite,
+  postResendInvite,
+  getInvitationsMetric,
+  exportInvitationsMetric,
+  exportInvitations,
   postAcceptInvite
 } from './api';
 import { alertOperations } from '../alerts';
@@ -56,11 +61,6 @@ const requestGetInvitesBySenderError = (errors) => ({
 
 const requestResendInvite = () => ({
   type: types.REQUEST_RESEND_INVITE,
-});
-
-const requestResendInviteSuccess = (invitation) => ({
-  type: types.REQUEST_RESEND_INVITE_SUCCESS,
-  invitation,
 });
 
 const requestResendInviteError = (errors) => ({
@@ -173,10 +173,10 @@ export const getInvitesBySender = (params, token) => async (dispatch) => {
   }
 };
 
-export const redeemInvite = (invitationToken, userId, token) => async (dispatch) => {
+export const redeemInvite = (invitationToken, token) => async (dispatch) => {
   try {
     dispatch(requestRedeemInvite());
-    const payload = await patchRedeemInvite(invitationToken, { userId }, token);
+    const payload = await patchRedeemInvite(invitationToken, token);
     const { data: { response } } = payload;
     dispatch(requestRedeemInviteSuccess(response));
   } catch (error) {
@@ -186,14 +186,11 @@ export const redeemInvite = (invitationToken, userId, token) => async (dispatch)
   }
 };
 
-export const resendInvite = (recipient, token) => async (dispatch) => {
+export const resendInvite = (invitationId, token) => async (dispatch) => {
   try {
     dispatch(requestResendInvite());
-    const payload = await postResendInvite({ recipient }, token);
-    const { data: { invitation = {} } } = payload;
+    const { data: { recipient } } = await postResendInvite(invitationId, token);
     dispatch(triggerAlert(`Invitation successfully sent to ${recipient}`, 'success'));
-
-    dispatch(requestResendInviteSuccess(invitation));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
@@ -202,10 +199,11 @@ export const resendInvite = (recipient, token) => async (dispatch) => {
   }
 };
 
+// TODO: fix that
 export const revokeInvite = (id, userId, token, recipient) => async (dispatch) => {
   try {
     dispatch(requestDeleteInvite());
-    const payload = await deleteInvite(id, token);
+    const payload = await revokeInvite(id, token);
     const { data: { user }} = payload;
     dispatch(getInvitesBySender({ userId }, token));
     dispatch(triggerAlert(`Invitation sent to ${recipient} is revoked!`, 'success'));
@@ -218,11 +216,12 @@ export const revokeInvite = (id, userId, token, recipient) => async (dispatch) =
   }
 };
 
-export const acceptInvite = (invitationToken, token) => async (dispatch) => {
+export const acceptInvite = (invitationToken, token, successCallback) => async (dispatch) => {
   try {
     dispatch(requestAcceptInvitation());
-    await postAcceptInvite(invitationToken, { }, token);
+    const { teamId }  = await postAcceptInvite(invitationToken, {}, token);
     dispatch(requestAcceptInvitationSuccess());
+    if (typeof successCallback === 'function' && teamId) successCallback(teamId);
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;

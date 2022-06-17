@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { orgDomain, semaCorporateOrganizationId } from '../config';
+import { isWaitListEnabled, orgDomain, semaCorporateOrganizationId } from '../config';
 import { sendEmail } from './emailService';
 import Tag from '../comments/tags/tagModel';
 import UserRole from '../userRoles/userRoleModel';
@@ -32,7 +32,7 @@ export const generateToken = () => new Promise((resolve, reject) => {
 });
 
 export const checkAndSendEmail = async (user) => {
-  const { username, isWaitlist = true, lastLogin } = user;
+  const { username, isWaitlist = isWaitListEnabled, lastLogin } = user;
   const re = /\S+@\S+\.\S+/;
   const isEmail = re.test(username);
   if (isEmail && !lastLogin && !isWaitlist) {

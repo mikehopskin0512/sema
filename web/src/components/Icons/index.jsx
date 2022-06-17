@@ -93,6 +93,7 @@ import { ReactComponent as InviteSvg } from './img/invite.svg';
 import { ReactComponent as Trophy2Svg } from './img/trophy2.svg';
 import { ReactComponent as FilterBarsSvg } from './img/filter-bars.svg';
 import { ReactComponent as DragTrigger } from './img/drag-trigger.svg';
+import { ReactComponent as CopyIcon } from './img/copy.svg';
 import { ReactComponent as ReplayIcon } from './img/replay.svg';
 
 const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
@@ -727,6 +728,12 @@ export function DragTriggerIcon(props) {
     <DragTrigger />
   </Icon>
 }
+
+export const CopyButtonIcon = (props) => (
+  <Icon {...props}>
+    <CopyIcon />
+  </Icon>
+);
 
 export function ReplayArrowIcon(props) {
   return <Icon {...props}>

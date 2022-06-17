@@ -20,7 +20,7 @@ BRANCH=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)
 SHA1=$(git rev-parse HEAD)
 VERSION=$BRANCH-$SHA1-$NODE_ENV
 
-rm .env
+rm -f .env
 
 IMAGE=$ECR_URL/$NAME:$VERSION
 

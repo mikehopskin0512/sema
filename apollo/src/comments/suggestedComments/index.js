@@ -3,7 +3,7 @@ import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
 import mongoose from 'mongoose';
-import axios from 'axios';
+import * as jaxon from '../../shared/apiJaxon';
 import checkEnv from '../../middlewares/checkEnv';
 import { version } from '../../config';
 import logger from '../../shared/logger';
@@ -18,7 +18,11 @@ import {
   exportSuggestedComments,
 } from './suggestedCommentService';
 
-import { pushCollectionComment, getUserCollectionsById, getCollectionMetadata } from '../collections/collectionService';
+import {
+  pushCollectionComment,
+  getUserCollectionsById,
+  getCollectionMetadata,
+} from '../collections/collectionService';
 
 const {
   Types: { ObjectId },
@@ -38,7 +42,12 @@ export default (app, passport) => {
       allCollections = false,
     } = req.query;
     try {
-      const topResult = await searchComments(user, organization, q, allCollections);
+      const topResult = await searchComments(
+        user,
+        organization,
+        q,
+        allCollections
+      );
       return res.status(201).send({ searchResults: topResult });
     } catch (error) {
       logger.error(error);
@@ -198,27 +207,36 @@ export default (app, passport) => {
         logger.error(error);
         return res.status(error.statusCode).send(error);
       }
-    });
-
-  route.post('/summaries', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    try {
-      const { data } = await axios.post( `${process.env.JAXON_SUMMARIES_SERVER_URL}/summaries`, req.body);
-      return res.status(200).json(data);
-    } catch (error) {
-      logger.error(error);
-      return res.status(error.statusCode).send(error);
     }
-  });
+  );
 
-  route.post('/tags', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    try {
-      const { data } = await axios.post( `${process.env.JAXON_TAGS_SERVER_URL}/tags`, req.body);
-      return res.status(200).json(data);
-    } catch (error) {
-      logger.error(error);
-      return res.status(error.statusCode).send(error);
+  route.post(
+    '/summaries',
+    passport.authenticate(['bearer'], { session: false }),
+    async (req, res) => {
+      try {
+        const data = await jaxon.getSummariesRaw(req.body.comments);
+        return res.status(200).json(data);
+      } catch (error) {
+        logger.error(error);
+        return res.status(error.statusCode).send(error);
+      }
     }
-  });
+  );
+
+  route.post(
+    '/tags',
+    passport.authenticate(['bearer'], { session: false }),
+    async (req, res) => {
+      try {
+        const data = await jaxon.getTagsRaw(req.body.comments);
+        return res.status(200).json(data);
+      } catch (error) {
+        logger.error(error);
+        return res.status(error.statusCode).send(error);
+      }
+    }
+  );
 
   // Swagger route
   app.use(

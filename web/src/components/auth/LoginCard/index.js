@@ -20,47 +20,46 @@ const LoginCard = () => {
 
   return (
     <>
-      <h1 className="title has-text-centered has-text-black">Welcome to Sema</h1>
-      <div className="is-divider is-primary mx-90" />
-      <p className="has-text-centered is-size-6 has-text-black mb-50 has-text-weight-medium">
-        Sema is still a work in progress. Join the waitlist<br /> to be
-        amongst the first to try it out.
-      </p>
-      <div className="mb-15">
-        <span className="is-size-8 has-text-gray-500">
-          By joining, you are agreeing to Sema’s &nbsp;
-          <a href="https://semasoftware.com/terms-and-conditions/" className="is-underlined">
-            Terms & Conditions
-          </a>
-        </span>
-      </div>
+      <h1 className={clsx('has-text-centered has-text-white mb-20', styles['title'])}>Welcome to Sema!</h1>
+      <span
+        className='has-text-weight-semibold is-size-16 mb-25 has-text-white is-block'>Sema is ready to help you supercharge your code reviews.</span>
+      <div className='is-divider is-primary mx-90' />
+
       <button
-        type="button"
-        className="button is-black is-primary colored-shadow-small p-25"
+        type='button'
+        className={clsx('button colored-shadow-small p-25', styles['login-button'])}
         onClick={githubLogin}
       >
-        <div className="is-flex mr-16 is-hidden-mobile">
-          <GithubIcon size="large" />
+        <div className='is-flex mr-16 is-hidden-mobile'>
+          <GithubIcon size='large' />
         </div>
-        <span className="has-text-weight-semibold is-size-16 ">Join our Waitlist with GitHub</span>
+        <span className='has-text-weight-semibold is-size-16 '>Join Sema with GitHub</span>
       </button>
-      {/* <button className="button is-black is-fullwidth" href="/api/identities/github">Join the waitlist with GitHub</button> */}
+
       <p className={styles['through-container']}>
-        <span className={styles.line} />
         <span className={styles['text-container']}>
-          <span className={clsx('has-text-weight-semibold is-size-7 has-text-gray-500', styles['through-text'])}>
+          <span className={clsx('has-text-weight-semibold is-size-7', styles['through-text'])}>
             Already have an account?
           </span>
         </span>
       </p>
+
       <button
-        type="button"
-        className="button p-25 is-primary is-outlined colored-shadow-small"
+        type='button'
+        className={clsx('button p-25 colored-shadow-small', 'is-outlined', styles['sign-in-button'])}
         onClick={githubLogin}
       >
-        <GithubIcon size="large" />
-        <span className="ml-16 has-text-weight-semibold is-size-16">Sign in with GitHub</span>
+        <GithubIcon size='large' />
+        <span className='ml-16 has-text-weight-semibold is-size-16'>Sign in with GitHub</span>
       </button>
+      <div className={styles['terms-and-conditions']}>
+        <span className="is-size-8 has-text-gray-500">
+          By joining, you are agreeing to Sema’s &nbsp;
+          <a href="https://www.semasoftware.com/legal/terms-conditions">
+            Terms & Conditions
+          </a>
+        </span>
+      </div>
     </>
   );
 };
