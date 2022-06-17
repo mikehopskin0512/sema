@@ -50,19 +50,35 @@ lint_directory() {
       echo "$files"
       echo
 
-      prettier_check $files
-      npx eslint $files
+      run_checks $files
     fi
   else
     echo
     # No files were given, lint the whole directory
-    prettier_check .
-    npx eslint .
+    run_checks .
   fi
 
   echo "Linting $directory done."
 
   popd > /dev/null
+}
+
+run_checks() {
+  local failed
+
+  failed=0
+
+  if ! prettier_check $@; then
+    failed=1
+  fi
+
+  if ! npx eslint $@; then
+    failed=1
+  fi
+
+  if [[ $failed == 1 ]]; then
+    exit 1
+  fi
 }
 
 

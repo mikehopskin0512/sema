@@ -31,8 +31,7 @@
 .wrapper {
   @media only screen and (min-width: 1024px) and (max-width: 1439px) {
     display: flex;
-    justify-content: space-between;
-    flex-direction: row;
+    flex-wrap: wrap;
   }
 }
 
@@ -43,13 +42,7 @@
 }
 
 .chart-container {
-  @media only screen and (min-width: 1024px) {
-    min-width: 600px;
-  }
 
-  @media only screen and (min-width: 1440px) and (max-width: 1650px){
-    min-width: 520px;
-  }
 }
 
 .comments-snap-content {

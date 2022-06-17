@@ -95,6 +95,10 @@ module "apollo" {
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
 
+  external_iam_policies = [
+    data.aws_iam_policy_document.this.json
+  ]
+
   min_capacity = 6
   max_capacity = 12
 }
@@ -113,7 +117,7 @@ module "apollo_worker" {
   task_definition_resources_cpu    = var.ecs_task_definition_resources_cpu
   task_definition_resources_memory = var.ecs_task_definition_resources_memory
   ecr_repo = {
-    arn     = data.terraform_remote_state.repos.outputs.apollo_web_repo_arn
+    arn     = data.terraform_remote_state.repos.outputs.apollo_worker_web_repo_arn
     kms_key = ""
   }
 
@@ -125,6 +129,10 @@ module "apollo_worker" {
       name  = "AWS_SECRETS_HASH"
       value = local.apollo_ecs_secret_data_hash
     }
+  ]
+
+  external_iam_policies = [
+    data.aws_iam_policy_document.this.json
   ]
 
   min_capacity = 1
