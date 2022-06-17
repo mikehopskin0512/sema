@@ -1,11 +1,6 @@
 @snippets @regression
 Feature: Snippets
 
-
-  #  Background: Wait for page to be displayed
-  #    Given User click on the element "authorizeSemaSoftwareBtn" if visible
-  #    When I wait on element "userLogo" for 10000ms
-
   @C1704 @smoke
   Scenario: Snippets collection can be turned on and turned off
     #    C2787  C1737
@@ -97,6 +92,40 @@ Feature: Snippets
     Then I expect that element "allSnippetsNames" becomes displayed
     And  I expect that new item "allSnippetsNames" is added to snippets
 
+  @C2795  @smoke
+  Scenario: Snippet collection can be edited
+    Then I expect that element "userLogo" becomes displayed
+    When I click on the element "userLogo"
+    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+    When I click on the element "semaCorporateOrganizationLogo"
+    Then I expect that element "snippetsTab" becomes displayed
+    #------------------
+    When I click on the element "snippetsTab"
+    Then I expect that element "threeDotsCollectionBtn" becomes displayed
+    #  C2324
+    When I click on the "1st" element "threeDotsCollectionBtn"
+    Then I expect that element "editCollectionBtn" becomes displayed
+    When I click on the element "editCollectionBtn"
+
+    Then I expect that element "newCollectionTitleInput" becomes displayed
+    When I set "edited" with timestamp to the inputfield "newCollectionTitleInput"
+    When I click on the element "newCollectionLanguagesInput"
+    And  I set "go" to the inputfield "newCollectionLanguagesInput"
+    And  I pause for 3000ms
+    When I press "Enter"
+    Then I expect that element "newCollectionOtherLabelInput" becomes displayed
+    When I click on the element "newCollectionOtherLabelInput"
+    And  I set "prop" to the inputfield "newCollectionOtherLabelInput"
+    And  I pause for 2000ms
+    When I press "Enter"
+    And  I set "test author name" to the inputfield "newCollectionAuthorInput"
+    And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+    And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
+    When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
+    Then I expect that element "saveNewCollectionBtn" becomes displayed
+    When I click on the button "saveNewCollectionBtn"
+    Then I expect that new item "allCollectionsNames" is added to collections
+
   @C1706 @smoke
   Scenario: Search for existing snippet works
     When I open the site "/snippets"
@@ -132,9 +161,9 @@ Feature: Snippets
     Then I expect that element "searchedSnippetsResult" does appear exactly "10" times
     And  I expect that element "viewMoreBtn" becomes displayed
     #    C1710
-    When I select the option with the value "Team" for element "searchSnippetTagInput"
+    When I select the option with the value "Organization" for element "searchSnippetTagInput"
     And  I select the option with the text "Language" for element "searchSnippetLanguageInput"
-    Then I expect that element "searchedSnippetsResult" does appear exactly "5" times
+    Then I expect that element "searchedSnippetsResult" does appear exactly "2" times
     And  I expect that element "viewMoreBtn" is not displayed
     #    C1712
     When I click on the element "clearSearchResultBtn"
@@ -161,8 +190,8 @@ Feature: Snippets
   Scenario: Adding new snippet collection
     Then I expect that element "userLogo" becomes displayed
     When I click on the element "userLogo"
-    Then I expect that element "semaCorporateTeamLogo" becomes displayed
-    When I click on the element "semaCorporateTeamLogo"
+    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+    When I click on the element "semaCorporateOrganizationLogo"
 
     When I click on the element "snippetsTab"
     Then I expect that element "addNewCollectionBtn" becomes displayed
@@ -194,7 +223,8 @@ Feature: Snippets
     And  I set "philosophies" to the inputfield "searchCollectionInput"
     Then I expect that element "philosophiesCollection" becomes displayed
     When I click on the element "philosophiesCollection"
-    Then I expect that element "viewMoreBtn" becomes displayed
+    Then I expect that element "searchedSnippetsResult" becomes displayed
+    And  I expect that element "viewMoreBtn" becomes displayed
     And  I expect that element "searchedSnippetsResult" does appear exactly "10" times
     When I click on the element "viewMoreBtn"
     Then I expect that element "searchedSnippetsResult" does appear exactly "20" times
@@ -203,8 +233,8 @@ Feature: Snippets
   Scenario: The default tags for collection is added to snippet
     Then I expect that element "userLogo" becomes displayed
     When I click on the element "userLogo"
-    Then I expect that element "semaCorporateTeamLogo" becomes displayed
-    When I click on the element "semaCorporateTeamLogo"
+    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+    When I click on the element "semaCorporateOrganizationLogo"
     Then I expect that element "snippetsTab" becomes displayed
 
     When I click on the element "snippetsTab"
@@ -345,8 +375,8 @@ Feature: Snippets
   Scenario: Field validation for creating collection
     Then I expect that element "userLogo" becomes displayed
     When I click on the element "userLogo"
-    Then I expect that element "semaCorporateTeamLogo" becomes displayed
-    When I click on the element "semaCorporateTeamLogo"
+    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+    When I click on the element "semaCorporateOrganizationLogo"
 
     And  I click on the element "snippetsTab"
     Then I expect that element "addNewCollectionBtn" becomes displayed
@@ -389,13 +419,12 @@ Feature: Snippets
     When I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"
     Then I expect that element "snippetCollectionLinkError" becomes not displayed
 
-
 #  @C2786
 #  Scenario: Populate this collection to all users checkbox is marked
 #    Then I expect that element "userLogo" becomes displayed
 #    When I click on the element "userLogo"
-#    Then I expect that element "semaCorporateTeamLogo" becomes displayed
-#    When I click on the element "semaCorporateTeamLogo"
+#    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+#    When I click on the element "semaCorporateOrganizationLogo"
 #
 #    And  I click on the element "snippetsTab"
 #    Then I expect that element "addNewCollectionBtn" becomes displayed
@@ -449,8 +478,8 @@ Feature: Snippets
 #  Scenario: Populate this collection to all users checkbox is not marked
 #    Then I expect that element "userLogo" becomes displayed
 #    When I click on the element "userLogo"
-#    Then I expect that element "semaCorporateTeamLogo" becomes displayed
-#    When I click on the element "semaCorporateTeamLogo"
+#    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+#    When I click on the element "semaCorporateOrganizationLogo"
 #
 #    And  I click on the element "snippetsTab"
 #    Then I expect that element "addNewCollectionBtn" becomes displayed
@@ -503,40 +532,6 @@ Feature: Snippets
 #    When I click on the button "searchIconBtn"
 #    And  I set saved variable to the inputfield "searchCollectionInput"
 #    Then I expect that new item "allCollectionsNames" is not added to collections
-
-  @C2795  @smoke
-  Scenario: Snippet collection can be edited
-    Then I expect that element "userLogo" becomes displayed
-    When I click on the element "userLogo"
-    Then I expect that element "semaCorporateTeamLogo" becomes displayed
-    When I click on the element "semaCorporateTeamLogo"
-    Then I expect that element "snippetsTab" becomes displayed
-    #------------------
-    When I click on the element "snippetsTab"
-    Then I expect that element "threeDotsCollectionBtn" becomes displayed
-    #  C2324
-    When I click on the "1st" element "threeDotsCollectionBtn"
-    Then I expect that element "editCollectionBtn" becomes displayed
-    When I click on the element "editCollectionBtn"
-
-    Then I expect that element "newCollectionTitleInput" becomes displayed
-    When I set "edited" with timestamp to the inputfield "newCollectionTitleInput"
-    When I click on the element "newCollectionLanguagesInput"
-    And  I set "go" to the inputfield "newCollectionLanguagesInput"
-    And  I pause for 3000ms
-    When I press "Enter"
-    Then I expect that element "newCollectionOtherLabelInput" becomes displayed
-    When I click on the element "newCollectionOtherLabelInput"
-    And  I set "prop" to the inputfield "newCollectionOtherLabelInput"
-    And  I pause for 2000ms
-    When I press "Enter"
-    And  I set "test author name" to the inputfield "newCollectionAuthorInput"
-    And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
-    And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
-    When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
-    Then I expect that element "saveNewCollectionBtn" becomes displayed
-    When I click on the button "saveNewCollectionBtn"
-    Then I expect that new item "allCollectionsNames" is added to collections
 
 #  @C2326
 #    waiting for acme creads  todo

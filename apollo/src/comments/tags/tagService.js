@@ -4,6 +4,7 @@ import Tag from './tagModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SuggestedComment from '../suggestedComments/suggestedCommentModel';
+import escapeRegExp from '../../shared/escape';
 
 const {
   Types: { ObjectId },
@@ -198,3 +199,8 @@ async function getSuggestedCommentCountByTagID() {
     new Map()
   );
 }
+
+export const findOneByLabel = async (label, type) => {
+  const regexp = new RegExp(`^${escapeRegExp(label)}$`, 'i');
+  return await Tag.findOne({ label: regexp, type, isActive: true });
+};

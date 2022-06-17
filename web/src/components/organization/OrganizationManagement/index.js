@@ -1,9 +1,10 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import Select from 'react-select';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Avatar from 'react-avatar';
+import { getInvitesBySender } from '../../../state/features/invitations/actions';
 import styles from './OrganizationManagement.module.scss';
 import Helmet, { OrganizationManagementHelmet } from '../../utils/Helmet';
 import Table from '../../table';
@@ -15,16 +16,17 @@ import { rolesOperations } from '../../../state/features/roles';
 import { fullName } from '../../../utils';
 import usePermission from '../../../hooks/usePermission';
 import useAuthEffect from '../../../hooks/useAuthEffect';
-import { ArrowDropdownIcon, PlusIcon, LinkIcon } from '../../Icons';
-import { PATHS } from '../../../utils/constants';
+import { ArrowDropdownIcon, CopyButtonIcon, PlusIcon } from '../../Icons';
+import { ALERT_TYPES, PATHS, SEMA_APP_URL } from '../../../utils/constants';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
+import { notify } from '../../../components/toaster/index';
 
 const { fetchOrganizationMembers } = organizationsOperations;
 const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
 
 const OrganizationManagement = ({ activeOrganization }) => {
   const router = useRouter();
-  const { isOrganizationAdmin } = usePermission();
+  const { isOrganizationAdmin, isSemaAdmin } = usePermission();
   const [isOpen, setIsOpen] = useState(false);
   const [editableMember, setEditableMember] = useState({
     name: '',
@@ -33,13 +35,12 @@ const OrganizationManagement = ({ activeOrganization }) => {
   });
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
-  const [userRole, setUserRole] = useState({});
-  const [copyTooltip, toggleCopyTooltip] = useState(false);
 
-  const { auth, organization, role } = useSelector((state) => ({
+  const { auth, organization, role, invitations } = useSelector((state) => ({
     auth: state.authState,
     organization: state.organizationsNewState,
     role: state.rolesState,
+    invitations: state.invitationsState.data,
   }));
   const { user = {}, token } = auth;
   const { members, membersCount } = organization;
@@ -53,6 +54,7 @@ const OrganizationManagement = ({ activeOrganization }) => {
     if (organizationId) {
       dispatch(fetchOrganizationMembers(organizationId, { page, perPage }, token));
       dispatch(fetchRoles(token));
+      dispatch(getInvitesBySender({senderId: user._id}, token))
     }
   }, [user, dispatch, page, perPage, organizationId]);
 
@@ -161,18 +163,13 @@ const OrganizationManagement = ({ activeOrganization }) => {
     },
   ], [rolesOptions, handleChangeRole, onRemoveMember]);
 
-  const fetchData = useCallback(({ pageIndex, pageSize }) => {
+  const fetchData = useCallback(({
+    pageIndex,
+    pageSize,
+  }) => {
     setPage(pageIndex + 1);
     setPerPage(pageSize);
   }, [setPage, setPerPage]);
-
-  const copyInviteLink = async () => {
-    const { origin } = window.location
-    const organizationId = activeOrganization.organization._id;
-    await navigator.clipboard.writeText(`${origin}${PATHS.ORGANIZATIONS._}/invite/${organizationId}`);
-    toggleCopyTooltip(true);
-    setTimeout(() => toggleCopyTooltip(false), 3000);
-  }
 
   const initialState = useMemo(() => {
     let defaultHidden = []
@@ -189,33 +186,65 @@ const OrganizationManagement = ({ activeOrganization }) => {
     router.push(PATHS.ORGANIZATIONS.INVITE(organizationId));
   };
 
+  const onInviteLinkCopy = async (e) => {
+    const invitationToken = invitations.find((invite) => invite.organizationId === organizationId)?.token;
+    if (!invitationToken) {
+      notify('Invitation link was not copied.', {
+        type: ALERT_TYPES.ERROR,
+        duration: 3000,
+      });
+      e.target?.parentNode?.blur() || e.target?.blur();
+      return;
+    }
+    const magicLink = `${process.env.NEXT_PUBLIC_BASE_URL}${PATHS.LOGIN}?token=${invitationToken}`;
+
+    e.target?.parentNode?.blur() || e.target?.blur();
+
+    try {
+      await navigator.clipboard.writeText(magicLink);
+      notify('Invitation link was copied.', {
+        type: ALERT_TYPES.SUCCESS,
+        duration: 3000,
+      });
+    } catch (err) {
+      notify('Invitation link was not copied.', {
+        type: ALERT_TYPES.ERROR,
+        duration: 3000,
+      });
+    }
+  }
+
   return (
-    <div className="hero mx-10">
+    <div className='hero mx-10'>
       <Helmet {...OrganizationManagementHelmet} />
-      <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 mb-30">
-        <div className="is-size-4 has-text-weight-semibold has-text-black-950">Organization Management</div>
-        {/* // TODO: should be disabled until new invitations logic */}
-        {/* <div className='ml-auto mr-15'> */}
-        {/*   {copyTooltip && <div className='tooltip is-tooltip-active sema-tooltip' data-tooltip='Copied!' />} */}
-        {/*   <button className={clsx('button is-primary is-outlined')} onClick={copyInviteLink}> */}
-        {/*     <LinkIcon size="small" className={clsx('mr-5')} /> */}
-        {/*     Copy Invitation Link */}
-        {/*   </button> */}
-        {/* </div> */}
-        <button
-          className="button is-primary border-radius-4px"
-          type="button"
-          onClick={goToInvitePage}
-        >
-          <PlusIcon size="small" />
-          <span className="ml-10">Invite New Members</span>
-        </button>
+      <div className='is-flex is-justify-content-space-between is-align-items-center mt-10 mb-30'>
+        <div className='is-size-4 has-text-weight-semibold has-text-black-950'>Organization Management</div>
+        <div className="is-flex">
+          {/* TODO: uncomment when it will be needed  */}
+          {(isOrganizationAdmin || isSemaAdmin) && (
+             <button 
+               className={clsx('button is-primary is-outlined mr-8', styles['invite-button'])} 
+               onClick={onInviteLinkCopy}
+             > 
+               <CopyButtonIcon size='small' /> 
+               <span className='ml-10'>Copy Invitation Link</span> 
+             </button>
+           )} 
+          <button 
+             className='button is-primary border-radius-4px' 
+             type='button' 
+             onClick={goToInvitePage} 
+           > 
+             <PlusIcon size='small' /> 
+             <span className='ml-10'>Invite New Members</span> 
+           </button> 
+        </div>
       </div>
-      <div className="hero-body py-0 px-0">
-        <div className="content-container px-0">
+      <div className='hero-body py-0 px-0'>
+        <div className='content-container px-0'>
           <div className={clsx('has-background-gray-300 pb-15', styles['table-wrapper'])}>
             <Table
-              className="overflow-unset"
+              className='overflow-unset'
               data={dataSource}
               columns={columns}
               pagination={{

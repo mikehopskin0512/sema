@@ -6,23 +6,33 @@ import Badge from '../badge/badge';
 import { fullName } from '../../utils';
 import styles from './invitationsGrid.module.scss';
 import { CloseIcon, UndoIcon } from '../Icons';
+import { isInvitationPending } from '../../utils/invitations';
 
-const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, page, perPage, isFetching, fetchData, totalInvites = 0 }) => {
-
+const InvitationsGrid = ({
+  type,
+  invites,
+  resendInvitation,
+  revokeInvitation,
+  page,
+  perPage,
+  isFetching,
+  fetchData,
+  totalInvites = 0,
+}) => {
   const getHeaderClass = (accessor) => {
     switch (accessor) {
-      case 'sender':
-        return 'p-10';
-      case 'recipient':
-        return type === 'admin' ? 'p-10' : 'has-text-gray-700 has-background-white-50 p-15 pt-35';
-      case 'isPending':
-        return type === 'dashboard' ? 'has-text-gray-700 p-15 has-background-white-50 is-uppercase pt-35' : '';
-      case 'sent':
-        return type === 'admin' ? 'p-10' : 'has-text-gray-700 p-15 has-background-white-50 is-uppercase pt-35';
-      case 'actions':
-        return type === 'dashboard' ? `has-text-gray-700 has-background-white-50 is-uppercase px-4 py-15 pt-35` : '';
-      default:
-        return 'p-10';
+    case 'sender':
+      return 'p-10';
+    case 'recipient':
+      return type === 'admin' ? 'p-10' : 'has-text-gray-700 has-background-white-50 p-15 pt-35';
+    case 'isPending':
+      return type === 'dashboard' ? 'has-text-gray-700 p-15 has-background-white-50 is-uppercase pt-35' : '';
+    case 'sent':
+      return type === 'admin' ? 'p-10' : 'has-text-gray-700 p-15 has-background-white-50 is-uppercase pt-35';
+    case 'actions':
+      return type === 'dashboard' ? `has-text-gray-700 has-background-white-50 is-uppercase px-4 py-15 pt-35` : '';
+    default:
+      return 'p-10';
     }
   };
 
@@ -63,16 +73,16 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
         accessor: 'isPending',
         className: getHeaderClass('isPending'),
         Cell: ({ cell: { value } }) => (type === 'admin' ? (
-          <Badge label={value ? 'Pending Invite' : 'Accepted'} color={value ? 'link' : 'success'} />
-        ) : (
-          <div className="py-15">
+            <Badge label={value ? 'Pending Invite' : 'Accepted'} color={value.length ? 'link' : 'success'} />
+          ) : (
+            <div className="py-15">
             <span
               className={`has-text-black-bis tag has-text-weight-medium is-rounded ${value ? 'is-warning is-light' : 'is-success is-light'}`}
             >
-              {value ? 'Pending Invite' : 'Active'}
+              {value ? 'Pending Invite' : 'Accepted'}
             </span>
-          </div>
-        )),
+            </div>
+          ))
       },
       ...type === 'admin' ? [{
         Header: 'Company Name',
@@ -97,7 +107,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
         accessor: 'notes',
         className: getHeaderClass('notes'),
         Cell: ({ cell: { value } }) => (
-          <div className="is-flex is-align-items-center">
+          <div className='is-flex is-align-items-center'>
             {value}
           </div>
         ),
@@ -109,9 +119,9 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
         Cell: ({ cell: { value: el } }) => (
           <div className={`is-flex is-align-items-center ${styles['actions-cell']}`}>
             {
-              el.isPending && (
+              isInvitationPending(el.redemptions, el.recipient) && (
                 <>
-                  <button className="button is-text outline-none pl-4" onClick={() => resendInvitation(el.recipient)}>
+                  <button className="button is-text outline-none pl-4" onClick={() => resendInvitation(el._id)}>
                     <UndoIcon size="small" />
                     <span className="ml-8">
                       Resend Invitation
@@ -134,31 +144,31 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
   );
 
   const dataSource = useMemo(() => {
-    return Array.isArray(invites) ? invites.map(item => ({
-      recipient: item.isPending
-        ? item.recipient
-        : (
+    return Array.isArray(invites) ? invites.map(item => {
+      const userData = item?.redemptions?.[0]?.userId ?? {};
+      return {
+        isPending: item.redemptions.length === 0,
+        recipient: isInvitationPending(item.redemptions)
+          ? item.recipient
+          : (
+            <>
+              {
+                userData && userData.avatarUrl && (
+                  <img src={userData && userData.avatarUrl} alt='avatar' width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }} />
+                )
+              }
+              {fullName(userData)}
+            </>
+          ),
+        sender: (
           <>
-            {
-              item.user && item.user.avatarUrl && (
-                <img src={item.user && item.user.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }} />
-              )
-            }
-            {fullName(item.user)}
+            {item.senderName}
           </>
         ),
-      sender: (
-        <>
-          {item.senderName}
-        </>
-      ),
-      sent: format(new Date(item.createdAt), 'yyyy-MM-dd'),
-      isPending: item.isPending,
-      companyName: item.companyName,
-      cohort: item.cohort,
-      notes: item.notes,
-      actions: item,
-    })) : [];
+        sent: format(new Date(item.createdAt), 'yyyy-MM-dd'),
+        actions: item,
+      };
+    }) : [];
   }, [invites, isFetching]);
 
   return (

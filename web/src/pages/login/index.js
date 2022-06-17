@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { isEmpty } from "lodash";
 import Logo from '../../components/Logo';
 import clsx from 'clsx';
-import Toaster from '../../components/toaster';
+import Toaster from '../../components/toaster/index';
 import withLayout from '../../components/layout';
 import Loader from '../../components/Loader';
 import LoginCard from '../../components/auth/LoginCard';
@@ -38,6 +38,7 @@ const Login = () => {
 
   const { user, isAuthenticated, token } = auth;
   const { showAlert, alertType, alertLabel } = alerts;
+  const isWaitlistFunctionality = Boolean(parseInt(process.env.NEXT_PUBLIC_WAITLIST_ENABLED));
 
   // Check for updated state in selectedTag
   useEffect(() => {
@@ -65,9 +66,10 @@ const Login = () => {
       }
     }
 
-    if (user?.isWaitlist) {
+    if (user?.isWaitlist && isWaitlistFunctionality) {
       return <WaitlistCard />
     }
+
     return <LoginCard isAuthenticated={isAuthenticated} />;
   }
 
@@ -86,17 +88,19 @@ if (!isAuthenticated || user.isWaitlist) {
     <div className={styles.container}>
       <Helmet { ...LoginHelmet } />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-      <img src="/img/lines-bg.png" className={clsx("is-hidden-mobile", styles.bg)} />
+      <img src="/img/login-bg.png" className={styles.bg} />
       <section className="hero">
         <div className="hero-body mb-120">
           <div className="container">
-            <div className="mb-80">
-              <Logo shape="horizontal" width={170} height={60}/>
+            <div className="mb-5 mt-40">
+              <Logo shape="horizontal" width={218} height={73} theme="dark" />
+            </div>
+            <div className={clsx(styles['neon-logo'], 'is-hidden-mobile')}>
+              <img src="/img/logo-neon.png" />
             </div>
             <div className="is-flex is-flex-wrap-wrap is-justify-content-space-around">
               <div className="is-flex-grow-1 is-flex is-flex-direction-column is-align-items-center is-justify-content-center" >
                 <div style={{ maxWidth: 500 }}>
-                  <img src="/img/ide-secondary.svg" width="380" style={{ marginRight: 'auto' }}/>
                   <h1 className={clsx("my-40", styles.title)}>Write more meaningful code reviews.</h1>
                   <div className="feature-list mt-20">
                     <ul>
@@ -142,7 +146,7 @@ if (!isAuthenticated || user.isWaitlist) {
                 {/** Show on Desktop */}
                 <div
                   className={clsx(
-                    'colored-shadow has-text-centered is-hidden-touch px-50 py-80',
+                    'colored-shadow has-text-centered is-hidden-touch px-80 pt-110 pb-15',
                     styles['login-tile'],
                   )}
                 >
