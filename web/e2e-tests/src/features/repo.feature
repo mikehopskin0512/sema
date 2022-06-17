@@ -127,6 +127,9 @@ Feature: Repo
         And  I expect that element "reposCards" becomes displayed
         And  I pause for 1000ms
         When I click on the element "1stReposCard"
+        And  I pause for 2000ms
+        And  I click on the element "1stReposCard" if visible
+        And  I pause for 1000ms
         Then I expect that element "codeStatsTabBtn" becomes displayed
 
         When I click on the element "codeStatsTabBtn"

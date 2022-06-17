@@ -207,7 +207,7 @@
     "authorizeSemaSoftwareBtn"      : "//button[@id='js-oauth-authorize-btn']",
 
     "########## Terms and Conditions ######################" : "",
-    "termsAndConditionSection"      : "//div[@class='section-terms-conditions']",
+    "termsAndConditionSection"      : "//h1[@class='text-color-blue-gradient']",
 
     "########## Release Notes ############################" : "",
     "releaseNoteList"               : "//div[contains(@class,'release-notes_collection-list')]",
@@ -304,7 +304,8 @@
     "organizationLabelsManagementTab"               : "//span[normalize-space()='Labels Management']",
     "organizationName"                              : "//p[@class='has-text-weight-semibold has-text-black-950 is-size-4 mb-5']",
     "organizationDescription"                       : "//div[@class='has-text-gray-600']",
-    "organizationManagementInviteNewMemberBtn"      : "//div[text()='Organization Management']/following-sibling::button/span[normalize-space()='Invite New Members']",
+    "organizationManagementInviteNewMemberBtn"      : "//div[text()='Organization Management']/following-sibling::div/button/span[normalize-space()='Invite New Members']",
+    "organizationManagementCopyInvitationLinkBtn"   : "//div[text()='Organization Management']/following-sibling::div/button/span[normalize-space()='Copy Invitation Link']",
     "editOrganizationProfileBtn"                    : "//button/span[normalize-space()='Edit Organization Profile']",
 
     "organizationMembersTable"                      : "//div[contains(@class,'OrganizationManagement_table-wrapper__W9PvY')]",

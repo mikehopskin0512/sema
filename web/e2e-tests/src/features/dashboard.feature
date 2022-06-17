@@ -10,8 +10,6 @@ Feature: Dashboard options
         Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
         And  I expect that element "semaCorporateOrganizationLogo" does appear exactly "1" times
         And  I expect that element "userLogo" does appear exactly "1" times
-        #      And  I expect that element "semaSmartCodeReviewsLogo" becomes displayed
-        #      And  I expect that element "semaSmartCodeReviewsLogo" does appear exactly "1" times
 
         And  I expect that element "createOrganizationBtn" becomes displayed
         And  I expect that element "createOrganizationBtn" does appear exactly "1" times
@@ -78,7 +76,7 @@ Feature: Dashboard options
     Scenario: Footer action Release Notes leads to info page
         When I open the site "/dashboard"
         Then I expect that element "reposContainer" becomes displayed
-        When I wait on element "footerReleaseNoteBtn" for 10000ms to be displayed
+        When I wait on element "footerReleaseNoteBtn" for 3000ms to be displayed
         And  I scroll to element "footerReleaseNoteBtn"
         And  I click on the button "footerReleaseNoteBtn"
         And  I expect that the url is "/release-notes"
@@ -90,12 +88,11 @@ Feature: Dashboard options
     Scenario: Footer action Terms and Conditions leads to info page
         When I open the site "/dashboard"
         Then I expect that element "reposContainer" becomes displayed
-        When I wait on element "footerTermsAndConditionsBtn" for 10000ms to be displayed
+        When I wait on element "footerTermsAndConditionsBtn" for 3000ms to be displayed
         And  I click on the button "footerTermsAndConditionsBtn"
-        And  I expect that the url is "/terms-and-conditions"
-        #TODO: Andryi please check this step
-        #And  I expect that the title is "Terms and Conditions"
-        #And  I expect that element "termsAndConditionSection" becomes displayed
+        And  I expect that the url is "/legal/terms-conditions"
+        And  I expect that the title is "Terms & Conditions"
+        And  I expect that element "termsAndConditionSection" becomes displayed
 
     @PTA37
     Scenario: Footer action Send Feedback leads to info page
