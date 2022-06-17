@@ -152,8 +152,8 @@ export default (app, passport) => {
         tags,
         pullRequests,
         searchQuery,
-        pageNumber,
-        pageSize
+        pageNumber = 1,
+        pageSize = 10
       } = req.body;
 
       let dateRange = undefined;
@@ -162,7 +162,7 @@ export default (app, passport) => {
       }
 
       try {
-        const smartComments = await searchSmartComments(
+        const { smartComments, total} = await searchSmartComments(
           repoId,
           dateRange,
           fromUserList,
@@ -174,7 +174,17 @@ export default (app, passport) => {
           pageNumber,
           pageSize
         );
+
+        const totalPage = Math.ceil(total/pageSize);
         return res.status(201).send({
+          paginationData: {
+            pageSize,
+            pageNumber,
+            totalPage,
+            total,
+            hasNextPage: pageNumber < totalPage,
+            hasPreviousPage: 1 < pageNumber
+          },
           smartComments
         });
       } catch (error) {

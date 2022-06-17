@@ -639,8 +639,8 @@ export const searchSmartComments = async (
   tags,
   pullRequests,
   searchQuery,
-  pageNumber = 1,
-  pageSize = 10
+  pageNumber,
+  pageSize
 ) => {
   try {
     let findQuery = {
@@ -701,6 +701,7 @@ export const searchSmartComments = async (
     }
 
     const query = SmartComment.find(findQuery);
+    const countQuery = SmartComment.count(findQuery);
 
     query.populate({
       select: ['firstName', 'lastName', 'avatarUrl'],
@@ -709,7 +710,11 @@ export const searchSmartComments = async (
     query.populate({ select: ['label'], path: 'tags' });
 
     query.skip((pageNumber - 1) * pageSize).limit(pageSize);
-    return await query.sort({ createdAt: -1 }).lean();
+    const [smartComments, total] = await Promise.all([query.sort({ createdAt: -1 }).lean(), countQuery]);
+    return {
+      smartComments,
+      total
+    }
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
