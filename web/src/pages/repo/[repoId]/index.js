@@ -8,6 +8,7 @@ import RepoPageLayout from '../../../components/repos/repoPageLayout';
 import StatsPage from '../../../components/stats';
 import Helmet from '../../../components/utils/Helmet';
 import { repositoriesOperations } from '../../../state/features/repositories';
+import { repoSmartCommentsOperations } from '../../../state/features/repo-smart-comments';
 import { organizationsOperations } from '../../../state/features/organizations[new]';
 import { getDateSub } from '../../../utils/parsing';
 import useAuthEffect from '../../../hooks/useAuthEffect';
@@ -18,6 +19,7 @@ import { DEFAULT_AVATAR } from '../../../utils/constants';
 import styles from './styles.module.scss';
 
 const { fetchRepositoryOverview, fetchReposByIds } = repositoriesOperations;
+const { searchRepoSmartComments } = repoSmartCommentsOperations;
 const { fetchOrganizationRepos } = organizationsOperations;
 
 const tabTitle = {
@@ -99,6 +101,15 @@ const RepoPage = () => {
     ) {
       dispatch(
         fetchRepositoryOverview(
+          repoId,
+          token,
+          dates.startDate && dates.endDate
+            ? getDateSub(dates.startDate, dates.endDate)
+            : null
+        )
+      );
+      dispatch(
+        searchRepoSmartComments(
           repoId,
           token,
           dates.startDate && dates.endDate
