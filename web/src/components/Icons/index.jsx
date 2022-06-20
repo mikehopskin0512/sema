@@ -504,7 +504,7 @@ export function OkIcon(props) {
 }
 
 export function OptionsIcon(props) {
-  return <Icon {...props}>
+  return <Icon {...props} >
     <OptionsSvg />
   </Icon>
 }
