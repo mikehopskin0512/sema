@@ -104,7 +104,7 @@ const CustomSelect = props => {
     width = '100%'
   } = props;
 
-  const { value, onChange, options, isMulti } = selectProps;
+  const { value, onChange, options, isMulti, maxDisplayableCount = 1 } = selectProps;
   const { user } = useSelector(state => ({
     user: state.authState.user
   }));
@@ -171,13 +171,14 @@ const CustomSelect = props => {
       isSelected,
       data: { label: optionLabel, img, value, emoji }
     } = p;
+    const labelProps = optionLabel?.length > 22 ? { title: optionLabel } : {}
     return (
       <components.Option
         {...p}
         className={isSelected ? styles['selected-option'] : ''}
       >
         {showCheckbox ? (
-          <label className="checkbox is-flex is-align-items-center py-5">
+          <label className="checkbox is-flex is-align-items-center py-5" {...labelProps} >
             <input type="checkbox" className="mr-8" checked={isSelected} />
             {img && (
               <img className={clsx('mr-8', styles.img)} src={img} alt={value} />
@@ -250,7 +251,7 @@ const CustomSelect = props => {
           </span>
 
       <div
-        className={clsx('is-flex is-flex-direction-column is-align-items-stretch is-relative', styles['wrapper'])}
+        className={clsx('is-flex is-flex-direction-column is-align-items-stretch is-relative', styles['wrapper'], menuIsOpen && styles['wrapper-active'])}
         ref={node}
       >
         <button
@@ -269,6 +270,7 @@ const CustomSelect = props => {
         >
           <div className='is-flex is-align-items-center is-justify-content-space-between is-full-width mr-5'>
           <span
+            style={{ width: maxDisplayableCount > 1 ? '135px' : '70px'}}
             className={clsx(
               'has-text-weight-semibold mr-10',
               styles.placeholder,
@@ -285,14 +287,14 @@ const CustomSelect = props => {
               </div>
             ) : 'Select'}
           </span>
-            {value && value.length > 0 ? (
+            {value && value.length > maxDisplayableCount ? (
               <span
                 className={clsx(
                   'is-size-8 has-text-weight-semibold has-background-primary has-text-white is-flex is-align-items-center is-justify-content-center px-5 is-radius-full',
                   styles.badge,
                 )}
               >
-              {`+${value.length}`}
+              {`+${value.length - maxDisplayableCount}`}
             </span>
             ) : (
               <div className={styles.badge} />
@@ -310,7 +312,7 @@ const CustomSelect = props => {
               styles['select-container'],
             )}
           >
-            <div className='px-12 py-15'>
+            <div className={clsx('px-12 py-15', styles['select-input-wrapper'])}>
               <InputField
                 placeholder='Search'
                 iconLeft={<SearchIcon />}

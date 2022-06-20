@@ -64,7 +64,7 @@ const OrganizationStatsFilter = ({
             className="is-flex is-flex-wrap-wrap is-align-items-stretch is-relative"
             style={{ zIndex: 2 }}
           >
-            <div className={clsx('my-5 mr-10 mt-30 is-flex is-align-content-flex-end', styles['filter-container'])}>
+            <div className={clsx('my-5 mr-10 is-flex is-align-content-flex-end', styles['filter-container'])}>
               <DateRangeSelector
                 start={startDate}
                 end={endDate}
@@ -83,7 +83,8 @@ const OrganizationStatsFilter = ({
                     placeholder: '',
                     isMulti: true,
                     onChange: value => onChangeFilter('from', value),
-                    value: filter.from
+                    value: filter.from,
+                    maxDisplayableCount: 2
                   }}
                   sortType={
                     DROPDOWN_SORTING_TYPES.ALPHABETICAL_USER_PRIORIY_SORT
@@ -103,7 +104,8 @@ const OrganizationStatsFilter = ({
                     placeholder: '',
                     isMulti: true,
                     onChange: value => onChangeFilter('to', value),
-                    value: filter.to
+                    value: filter.to,
+                    maxDisplayableCount: 2
                   }}
                   sortType={
                     DROPDOWN_SORTING_TYPES.ALPHABETICAL_USER_PRIORIY_SORT
@@ -126,7 +128,8 @@ const OrganizationStatsFilter = ({
                   hideSelectedOptions: false,
                   isMulti: true,
                   onChange: value => onChangeFilter('reactions', value),
-                  value: filter.reactions
+                  value: filter.reactions,
+                  maxDisplayableCount: 2
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.NO_SORT}
                 label="Summaries"
@@ -146,7 +149,8 @@ const OrganizationStatsFilter = ({
                   isMulti: true,
                   onChange: value => onChangeFilter('tags', value),
                   value: filter.tags,
-                  hideSelectedOptions: false
+                  hideSelectedOptions: false,
+                  maxDisplayableCount: 2
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.NO_SORT}
                 label="Tags"
@@ -165,7 +169,8 @@ const OrganizationStatsFilter = ({
                   placeholder: '',
                   isMulti: true,
                   onChange: value => onChangeFilter('repo', value),
-                  value: filter.repo
+                  value: filter.repo,
+                  maxDisplayableCount: 2
                 }}
                 label="Repos"
                 showCheckbox
@@ -183,7 +188,8 @@ const OrganizationStatsFilter = ({
                   placeholder: '',
                   isMulti: true,
                   onChange: value => onChangeFilter('pr', value),
-                  value: filter.pr
+                  value: filter.pr,
+                  maxDisplayableCount: 2
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.CHRONOLOGICAL_SORT}
                 label="Pull requests"

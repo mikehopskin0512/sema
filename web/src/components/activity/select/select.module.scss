@@ -2,6 +2,8 @@
 
 .placeholder {
   color: $gray-600;
+  max-width: 70px;
+  text-align: left;
 }
 
 .select {
@@ -64,8 +66,17 @@
 }
 
 .wrapper {
-  border: 1px solid $gray-500;
-  border-radius: 4px;
+  button {
+    border: 1px solid $gray-500 !important;
+    border-radius: 4px !important;
+  }
+}
+
+.wrapper-active {
+  button {
+    background-color: $blue-0 !important;
+    border: 2px solid $blue-700 !important;
+  }
 }
 
 .clear-all-section {
@@ -115,11 +126,16 @@
   }
 }
 
+.select-input-wrapper {
+  background: $white-0;
+  border-bottom: 1px solid $gray-500;
+}
+
 .select-values {
   display: flex;
   align-items: center;
   gap: 8px;
-  width: 145px;
+  width: inherit;
   overflow-y: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;

@@ -71,7 +71,7 @@ const StatsFilter = ({
             className="is-flex is-flex-wrap-wrap is-align-items-stretch is-relative is-full-width"
             style={{ zIndex: 2 }}
           >
-            <div className={clsx('my-5 ml-0 mr-5 is-relative')}>
+            <div className={clsx('my-5 ml-0 mr-10 is-relative')}>
               <DateRangeSelector
                 start={startDate}
                 end={endDate}
@@ -80,7 +80,7 @@ const StatsFilter = ({
                 onChangeFilter={onChangeFilter}
               />
             </div>
-            <div className={clsx('my-5 ml-5 mr-5', styles['filter-container'])}>
+            <div className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}>
               <CustomSelect
                 selectProps={{
                   options: filterUserList,
@@ -95,7 +95,7 @@ const StatsFilter = ({
                 outlined
               />
             </div>
-            <div className={clsx('my-5 mr-5 ml-5', styles['filter-container'])}>
+            <div className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}>
               <CustomSelect
                 selectProps={{
                   options: filterRequesterList,
@@ -110,7 +110,7 @@ const StatsFilter = ({
                 outlined
               />
             </div>
-            <div className={clsx('my-5 mr-5 ml-5', styles['filter-container'])}>
+            <div className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}>
               <CustomSelect
                 selectProps={{
                   options: ReactionList,
@@ -126,7 +126,7 @@ const StatsFilter = ({
                 outlined
               />
             </div>
-            <div className={clsx('my-5 mr-5 ml-5', styles['filter-container'])}>
+            <div className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}>
               <CustomSelect
                 selectProps={{
                   options: TagList,
@@ -142,7 +142,7 @@ const StatsFilter = ({
                 outlined
               />
             </div>
-            <div className={clsx('my-5 mr-5 ml-5', styles['filter-container'])}>
+            <div className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}>
               <CustomSelect
                 selectProps={{
                   options: filterRepoList,
@@ -156,7 +156,7 @@ const StatsFilter = ({
                 outlined
               />
             </div>
-            <div className={clsx('my-5 mr-5 ml-5', styles['filter-container'])}>
+            <div className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}>
               <CustomSelect
                 selectProps={{
                   options: filterPRList,
@@ -171,7 +171,7 @@ const StatsFilter = ({
                 outlined
               />
             </div>
-            <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end">
+            <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end is-align-items-center pt-20">
               <SearchIcon
                 color={gray500}
                 size="medium"
