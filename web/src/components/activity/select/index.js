@@ -279,7 +279,7 @@ const CustomSelect = props => {
           >
             {value.length ? (
               <div className={clsx(styles['select-values'], 'has-horizontal-scroll')}>
-                {value?.map((i, idx) => idx >= 2 ? null : (
+                {value?.map((i, idx) => idx >= maxDisplayableCount ? null : (
                   <div className={styles['select-value-item']}>
                     {i.label}
                   </div>),

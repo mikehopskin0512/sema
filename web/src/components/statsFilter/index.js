@@ -87,7 +87,8 @@ const StatsFilter = ({
                   placeholder: '',
                   isMulti: true,
                   onChange: value => onChangeFilter('from', value),
-                  value: filter.from
+                  value: filter.from,
+                  maxDisplayableCount: 1
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.ALPHABETICAL_USER_PRIORIY_SORT}
                 label="From"
@@ -102,7 +103,8 @@ const StatsFilter = ({
                   placeholder: '',
                   isMulti: true,
                   onChange: value => onChangeFilter('to', value),
-                  value: filter.to
+                  value: filter.to,
+                  maxDisplayableCount: 1
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.ALPHABETICAL_USER_PRIORIY_SORT}
                 label="To"
@@ -118,7 +120,8 @@ const StatsFilter = ({
                   hideSelectedOptions: false,
                   isMulti: true,
                   onChange: value => onChangeFilter('reactions', value),
-                  value: filter.reactions
+                  value: filter.reactions,
+                  maxDisplayableCount: 1
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.NO_SORT}
                 label="Summaries"
@@ -134,7 +137,8 @@ const StatsFilter = ({
                   isMulti: true,
                   onChange: value => onChangeFilter('tags', value),
                   value: filter.tags,
-                  hideSelectedOptions: false
+                  hideSelectedOptions: false,
+                  maxDisplayableCount: 1
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.NO_SORT}
                 label="Tags"
@@ -149,7 +153,8 @@ const StatsFilter = ({
                   placeholder: '',
                   isMulti: true,
                   onChange: value => onChangeFilter('repo', value),
-                  value: filter.repo
+                  value: filter.repo,
+                  maxDisplayableCount: 1
                 }}
                 label="Repos"
                 showCheckbox
@@ -163,7 +168,8 @@ const StatsFilter = ({
                   placeholder: '',
                   isMulti: true,
                   onChange: value => onChangeFilter('pr', value),
-                  value: filter.pr
+                  value: filter.pr,
+                  maxDisplayableCount: 1
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.CHRONOLOGICAL_SORT}
                 label="Pull requests"
