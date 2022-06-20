@@ -12,7 +12,8 @@ export const getProfile = async (token) => {
 
 export const getUserEmails = async (token) => {
   const octokit = new Octokit({ auth: `token ${token}` });
-  const { data: userEmails } = await octokit.users.listEmailsForAuthenticated();
+  const { data: userEmails } =
+    await octokit.users.listEmailsForAuthenticatedUser();
   return userEmails;
 };
 
@@ -36,7 +37,7 @@ export const fetchGithubToken = async (externalSourceId) => {
     const { token } = await auth({ type: 'installation' });
     if (!token) {
       throw new errors.NotFound(
-        `No token found for installationId ${externalSourceId}`,
+        `No token found for installationId ${externalSourceId}`
       );
     }
 
@@ -44,7 +45,7 @@ export const fetchGithubToken = async (externalSourceId) => {
   } catch (err) {
     // Do not return error, instead throw
     throw new errors.BadRequest(
-      `Error fetching token for installationId ${externalSourceId}`,
+      `Error fetching token for installationId ${externalSourceId}`
     );
   }
 };
@@ -55,32 +56,52 @@ export const getRepositoryList = async (token) => {
   return data;
 };
 
-export const getGithubOrgsForAuthenticatedUser = async (token, perPage = 100, page = 1) => {
+export const getGithubOrgsForAuthenticatedUser = async (
+  token,
+  perPage = 100,
+  page = 1
+) => {
   const octokit = new Octokit({ auth: `token ${token}` });
-  const { data } = await octokit.orgs.listForAuthenticatedUser({ per_page: perPage, page });
-  
-  const orgList = data && data.length ? data.map((orgItem) => ({
-    id: orgItem.id,
-    name: orgItem.login,
-    description: orgItem.description,
-    avatarUrl: orgItem.avatar_url
-  })) : [];
-  
-  return orgList;
-}
+  const { data } = await octokit.orgs.listForAuthenticatedUser({
+    per_page: perPage,
+    page,
+  });
 
-export const getRepositoriesForAuthenticatedUser = async (token, perPage = 100, page = 1) => {
+  const orgList =
+    data && data.length
+      ? data.map((orgItem) => ({
+          id: orgItem.id,
+          name: orgItem.login,
+          description: orgItem.description,
+          avatarUrl: orgItem.avatar_url,
+        }))
+      : [];
+
+  return orgList;
+};
+
+export const getRepositoriesForAuthenticatedUser = async (
+  token,
+  perPage = 100,
+  page = 1
+) => {
   const octokit = new Octokit({ auth: `token ${token}` });
-  const { data } = await octokit.repos.listForAuthenticatedUser({ per_page: perPage, page });
-  
-  const repositories = data && data.length ? data.map((repoData) => ({
-    repoId: repoData.id,
-    repoName: repoData.name,
-    description: repoData.description,
-    organizationId: repoData.owner?.id,
-    organizationName: repoData.owner?.login,
-    isPrivate: repoData.private
-  })) : [];
-  
+  const { data } = await octokit.repos.listForAuthenticatedUser({
+    per_page: perPage,
+    page,
+  });
+
+  const repositories =
+    data && data.length
+      ? data.map((repoData) => ({
+          repoId: repoData.id,
+          repoName: repoData.name,
+          description: repoData.description,
+          organizationId: repoData.owner?.id,
+          organizationName: repoData.owner?.login,
+          isPrivate: repoData.private,
+        }))
+      : [];
+
   return repositories;
-}
+};

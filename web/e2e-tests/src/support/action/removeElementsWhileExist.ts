@@ -31,21 +31,22 @@ export default async (
     let webElementsConditionArr = await $$(parsedConditionSelector);
     while(webElementsConditionArr.length>1) {
         console.log("There is " + webElementsConditionArr.length + " portfolios on the page.");
-
-        await browser.pause(2000);
+        await browser.pause(1000);
+        await $(parsedSubActionSelector).waitForDisplayed({
+            timeout: 10000,
+        });
         await $(parsedSubActionSelector)['click']();
         await browser.pause(1000);
         await $(parsedMainActionSelector).waitForDisplayed({
-            timeout: 5000,
+            timeout: 10000,
         });
         await $(parsedMainActionSelector)['click']();
-
+        await browser.pause(1000);
         await $(parsedConfirmationSelector).waitForDisplayed({
-            timeout: 5000,
+            timeout: 10000,
         });
-            await $(parsedConfirmationSelector)['click']();
-            await browser.pause(3000);
-
+        await $(parsedConfirmationSelector)['click']();
+        await browser.pause(5000);
         webElementsConditionArr = await $$(parsedConditionSelector);
     }
 };

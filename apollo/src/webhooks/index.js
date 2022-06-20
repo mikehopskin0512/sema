@@ -1,18 +1,17 @@
 import { Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
-import crypto from 'crypto';
 import yaml from 'yamljs';
 import path from 'path';
+import crypto from 'crypto';
 
-import { version, github } from '../config';
-import logger from '../shared/logger';
 import errors from '../shared/errors';
+import logger from '../shared/logger';
 import checkEnv from '../middlewares/checkEnv';
 import { queue as githubWebhookQueue } from './githubWebhookQueue';
+import { github, version } from '../config';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
-
 const checkSignature = () => (req, res, next) => {
   const payload = JSON.stringify(req.body);
   const signature = `sha256=${crypto
@@ -39,18 +38,10 @@ export default (app) => {
           'issue_comment',
         ].includes(req.headers['x-github-event'])
       ) {
-        const job = await githubWebhookQueue.queueJob({
-          ...req.body.comment,
-          type: req.headers['x-github-event'],
-        });
-        if (!job) {
-          const error = new errors.InternalServer('Error queueing job');
-          return res.status(error.statusCode).send(error);
-        }
-        return res.status(200).send();
+        await githubWebhookQueue.queueJob(req.body);
+        return res.status(200).send({});
       }
-      const error = new errors.InternalServer('Github event unhandled');
-      return res.status(error.statusCode).send(error);
+      return res.status(200).send({});
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

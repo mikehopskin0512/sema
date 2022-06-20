@@ -5,6 +5,18 @@ module.exports = {
   extends: ['sema/base'],
   rules: {
     'no-unused-vars': ['error', { argsIgnorePattern: 'next' }],
+    'prefer-arrow-callback': ['error', { allowUnboundThis: true }],
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: [
+          'webpack.config.js',
+          '.eslintrc.js',
+          '**/*.test.js',
+          'test/**/*.js',
+        ],
+      },
+    ],
   },
   overrides: [
     {

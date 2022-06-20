@@ -24,6 +24,8 @@ import changeTheUserRoleForTheOrganization from "../support/action/changeTheUser
 import setParticularInputFieldWithTimestamp from "../support/action/setParticularInputFieldWithTimestamp";
 import setGlobalArrayByIndexToInputField from "../support/action/setGlobalArrayByIndexToInputField";
 import removeElementsWhileExist from '../support/action/removeElementsWhileExist';
+import clickElementIfDisplayed from "../support/action/clickElementIfDisplayed";
+import refreshThePage from "../support/action/refreshThePage";
 
 /**
  * Abstracting some steps by functionality. 
@@ -47,6 +49,11 @@ When(
 When(
     /^I (click|doubleclick) on the (link|button|element) "([^"]*)?"$/,
     clickElement
+);
+
+When(
+    /^I (click|doubleclick) on the (link|button|element) "([^"]*)?" if visible$/,
+    clickElementIfDisplayed
 );
 
 When(
@@ -155,4 +162,9 @@ When(
 When(
     /^I remove all elements "([^"]*)?" with button "([^"]*)?" under "([^"]*)?" with confirmation "([^"]*)?"$/,
     removeElementsWhileExist
+)
+
+When(
+    /^I refresh the page$/,
+    refreshThePage
 )

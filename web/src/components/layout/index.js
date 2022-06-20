@@ -17,6 +17,7 @@ const widescreenPages = [
   PATHS.LOGIN,
   `${PATHS.ORGANIZATIONS._}/[organizationId]/${PATHS.DASHBOARD}`,
   `${PATHS.PORTFOLIO._}/[portfolioId]`,
+  `${PATHS.PORTFOLIO.VIEW('[handle]', '[portfolioId]')}`,
   PATHS.PORTFOLIO._,
   `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.SETTINGS}`,
   `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.ORGANIZATION_INSIGHTS}`,
@@ -82,7 +83,7 @@ const withLayout = (Page) => (props) => {
       <div className={clsx(!isWideScreen && 'container', !noContactUs.includes(pathname) && 'pb-250')}>
         <Page {...props} />
       </div>
-      <div className={styles.footer}>
+      <div className={clsx(styles.footer, pathname.includes(PATHS.LOGIN) && styles['footer-fixed'])}>
         <Footer />
       </div>
     </div>

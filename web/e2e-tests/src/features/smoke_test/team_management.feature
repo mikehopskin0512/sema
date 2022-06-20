@@ -130,6 +130,10 @@ Feature: Organization management
         When I click on the element "semaCorporateOrganizationLogo"
         Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
         When I click on the element "viewAllOrganizationMembersBtn"
+#    https://semalab.atlassian.net/browse/EAST-1443
+        And  I pause for 3000ms
+        And  I refresh the page
+        And  I pause for 3000ms
         Then I expect that element "organizationMembersTableEmail" becomes displayed
         And  I expect that element "organizationMembersTableRole" becomes displayed
         And  I expect that element "organizationMembersTableActionBtn" becomes displayed
@@ -169,7 +173,11 @@ Feature: Organization management
         Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
 
         When I click on the element "viewAllOrganizationMembersBtn"
-        And  I expect that element "organizationMembersTableRole" becomes displayed
+#    https://semalab.atlassian.net/browse/EAST-1443
+        And  I pause for 3000ms
+        And  I refresh the page
+        And  I pause for 3000ms
+        Then I expect that element "organizationMembersTableRole" becomes displayed
 
         When I change the role for "sema.test.code.author@gmail.com" to "Member"
         Then I expect that element "changeRoleConfirmationUserName" matches the text "Sema Test Code Author"
@@ -241,6 +249,7 @@ Feature: Organization management
         And  I expect that element "organizationMembersTableActionBtn" becomes displayed
         And  I expect that element "organizationLabelsManagementTab" becomes displayed
         And  I expect that element "organizationManagementInviteNewMemberBtn" becomes displayed
+        And  I expect that element "organizationManagementCopyInvitationLinkBtn" becomes displayed
         And  I expect that element "editOrganizationProfileBtn" becomes displayed
 
 #    @PTA84_3    https://semalab.atlassian.net/browse/WEST-1362
