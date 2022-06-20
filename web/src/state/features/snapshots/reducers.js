@@ -78,21 +78,40 @@ const reducer = (state = initialState, action) => {
         },
         error: {},
       };
-
-  case types.REQUEST_ADD_SNAPSHOT_TO_PORTFOLIO:
-    const { portfolioId, snapshotId } = action;
-    return {
-      ...state,
-      data: {
-        ...state.data,
-        snapshots: state.data.snapshots.map(
-          (item) => item._id === snapshotId ? {
-            ...item,
-            portfolios: item.portfolios.includes(portfolioId) ? item.portfolios : [...item.portfolios, portfolioId],
-          } : item,
-        ),
+    case types.REQUEST_ADD_SNAPSHOT_TO_PORTFOLIO:
+      const { portfolioId, snapshotId } = action;
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          snapshots: state.data.snapshots.map(
+            (item) => item._id === snapshotId ? {
+              ...item,
+              portfolios: item.portfolios.includes(portfolioId) ? item.portfolios : [...item.portfolios, portfolioId],
+            } : item,
+          ),
+        }
       }
-    }
+    case types.REQUEST_CREATE_SNAPSHOT:
+      return {
+        ...state,
+        isFetching: true,
+      };
+    case types.REQUEST_CREATE_SNAPSHOT_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        data: {
+          snapshots: [...state.data.snapshots, action.snapshot],
+          snapshot: action.snapshot,
+        },
+      };
+    case types.REQUEST_CREATE_SNAPSHOT_ERROR:
+      return {
+        ...state,
+        isFetching: false,
+        error: action.error,
+      };
 
     default:
       return state;

@@ -24,11 +24,15 @@ import {
   updateByGithubId,
   deleteByGithubId,
 } from './smartCommentService';
-import { get } from '../../repositories/repositoryService';
-import checkEnv from '../../middlewares/checkEnv';
+ import checkEnv from '../../middlewares/checkEnv';
+import axios from 'axios';
+import Organization from '../../organizations/organizationModel'
+import { createOrganization } from '../../organizations/organizationService';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
+
+export const ORGANIZATION_META_URL = 'https://api.github.com/orgs';
 
 export default (app, passport) => {
   app.use(`/${version}/comments/smart`, route);
@@ -37,6 +41,21 @@ export default (app, passport) => {
     const smartComment = req.body;
     try {
       const newSmartComment = await create(smartComment);
+
+      if (smartComment?.githubMetadata?.organization) {
+        const { data: organizationMeta } = await axios.get( `${ORGANIZATION_META_URL}/${smartComment.githubMetadata.organization}`);
+
+        const existingOrganization = await Organization.findOne({ id: organizationMeta.id });
+
+        if (!existingOrganization) {
+          await createOrganization({
+            orgMeta: { ...organizationMeta },
+            id: organizationMeta.id,
+            name: organizationMeta.name,
+          });
+        }
+      }
+
       if (!newSmartComment) {
         throw new errors.BadRequest('Smart Comment create error');
       }

@@ -3,6 +3,7 @@ Feature: Portfolios
 
   @PTA71_2
   Scenario: Portfolios user data can be edited
+    When I open the site "/dashboard"
     Then I expect that element "trophyBtn" becomes displayed
     When I click on the element "trophyBtn"
     Then I expect that element "portfolioLibraryTab" becomes displayed
@@ -10,7 +11,7 @@ Feature: Portfolios
     When I click on the element "addNewPortfolioBtn"
     Then I expect that element "portfolioListNames" becomes displayed
     And  I pause for 2000ms
-    When I click on the "1st" element "portfolioListNames"
+    When I doubleclick on the "1st" element "portfolioListNames"
     And  I expect that element "portfoliosChangePersonalOverviewBtn" becomes displayed
 
     When I click on the element "portfoliosChangePersonalOverviewBtn"
@@ -20,6 +21,7 @@ Feature: Portfolios
     And  I click on the element "portfoliosEditPersonalOverviewSaveBtn"
     Then I expect that element "portfoliosEditPersonalOverviewInput" becomes not displayed
     And  I expect that element "portfoliosPersonalOverviewText" becomes displayed
+    And  I expect that element "portfoliosChangePersonalOverviewBtn" becomes displayed
 
     When I click on the element "portfoliosChangePersonalOverviewBtn"
     Then I expect that element "portfoliosEditPersonalOverviewInput" becomes displayed
@@ -30,6 +32,7 @@ Feature: Portfolios
 
   @PTA71_3
   Scenario: Snapshot can be saved for activity logs
+    When I open the site "/dashboard"
     Then I expect that element "trophyBtn" becomes displayed
     When I click on the element "trophyBtn"
 
@@ -70,11 +73,13 @@ Feature: Portfolios
     When I set "activity logs" with timestamp to the inputfield "saveSnapshotTitleInput"
     And  I click on the element "saveSnapshotDescriptionInput"
     And  I add "activity logs - snapshot description" to the inputfield "saveSnapshotDescriptionInput"
+    And  I pause for 1000ms
     And  I click on the element "saveSnapshotAddToPortfolio"
     And  I pause for 1000ms
     And  I press "ArrowDown"
     And  I press "Enter"
     Then I expect that element "saveSnapshotAddToPortfolio" not matches the text "None"
+    And  I expect that element "saveSnapshotSaveBtn" becomes displayed
     When I click on the element "saveSnapshotSaveBtn"
     Then I expect that element "saveSnapshotModal" becomes not displayed
     And  I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshot was added to your portfolio."
@@ -100,6 +105,7 @@ Feature: Portfolios
 
   @PTA71_5
   Scenario: Snapshot can be saved for code stats tags
+    When I open the site "/dashboard"
     Then I expect that element "trophyBtn" becomes displayed
     When I click on the element "trophyBtn"
 
@@ -142,11 +148,13 @@ Feature: Portfolios
     When I set "codeTags " with timestamp to the inputfield "saveSnapshotTitleInput"
     And  I click on the element "saveSnapshotDescriptionInput"
     And  I add "codeTags - snapshot description" to the inputfield "saveSnapshotDescriptionInput"
+    And  I pause for 1000ms
     And  I click on the element "saveSnapshotAddToPortfolio"
     And  I pause for 1000ms
     And  I press "ArrowDown"
     And  I press "Enter"
     Then I expect that element "saveSnapshotAddToPortfolio" not matches the text "None"
+    And  I expect that element "saveSnapshotSaveBtn" becomes displayed
     When I click on the element "saveSnapshotSaveBtn"
     Then I expect that element "saveSnapshotModal" becomes not displayed
     And  I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshot was added to your portfolio."
@@ -172,6 +180,7 @@ Feature: Portfolios
 
   @PTA71_4
   Scenario: Snapshot can be saved for code stats summaries
+    When I open the site "/dashboard"
     Then I expect that element "trophyBtn" becomes displayed
     When I click on the element "trophyBtn"
 
@@ -185,7 +194,7 @@ Feature: Portfolios
     Then I expect that element "reposContainer" becomes displayed
     And  I pause for 3000ms
     And  I expect that element "1stReposCard" becomes displayed
-    And  I pause for 1000ms
+    And  I pause for 2000ms
     When I click on the element "1stReposCard"
     And  I pause for 1000ms
     Then I expect that element "codeStatsTabBtn" becomes displayed
@@ -214,6 +223,7 @@ Feature: Portfolios
     When I set "codeStats " with timestamp to the inputfield "saveSnapshotTitleInput"
     And  I click on the element "saveSnapshotDescriptionInput"
     And  I add "codeStats - snapshot description" to the inputfield "saveSnapshotDescriptionInput"
+    And  I pause for 1000ms
     And  I click on the element "saveSnapshotAddToPortfolio"
     And  I pause for 1000ms
     And  I press "ArrowDown"
@@ -244,6 +254,7 @@ Feature: Portfolios
 
   @PTA71_6
   Scenario: Snapshot can be edited in portfolios
+    When I open the site "/dashboard"
     Then I expect that element "trophyBtn" becomes displayed
     When I click on the element "trophyBtn"
 
@@ -255,11 +266,12 @@ Feature: Portfolios
 
     When I click on the element "reposTab"
     Then I expect that element "reposContainer" becomes displayed
-    And  I pause for 3000ms
+    And  I pause for 4000ms
     And  I expect that element "1stReposCard" becomes displayed
-    And  I pause for 1000ms
     When I click on the element "1stReposCard"
-    And  I pause for 1000ms
+    And  I pause for 2000ms
+    And  I click on the element "1stReposCard" if visible
+    And  I pause for 2000ms
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "allTimeDateRange" becomes displayed
@@ -274,6 +286,7 @@ Feature: Portfolios
     When I set "activity logs" with timestamp to the inputfield "saveSnapshotTitleInput"
     And  I click on the element "saveSnapshotDescriptionInput"
     And  I add "activity logs - snapshot description" to the inputfield "saveSnapshotDescriptionInput"
+    And  I pause for 1000ms
     And  I click on the element "saveSnapshotAddToPortfolio"
     And  I pause for 1000ms
     And  I press "ArrowDown"
@@ -306,6 +319,7 @@ Feature: Portfolios
 
   @PTA95 @smoke
   Scenario: Portfolio Manager elements are displayed correctly
+    When I open the site "/dashboard"
     Then I expect that element "trophyBtn" becomes displayed
     When I click on the element "trophyBtn"
 
@@ -340,6 +354,7 @@ Feature: Portfolios
 
   @PTA96 @smoke
   Scenario: All portfolio can be removed from the list except one
+    When I open the site "/dashboard"
     Then I expect that element "trophyBtn" becomes displayed
     When I click on the element "trophyBtn"
 
@@ -367,6 +382,7 @@ Feature: Portfolios
 
   @PTA94
   Scenario: Portfolios elements can be duplicated
+    When I open the site "/dashboard"
     Then I expect that element "trophyBtn" becomes displayed
     When I click on the element "trophyBtn"
 
@@ -399,6 +415,7 @@ Feature: Portfolios
     When I set "activity logs" with timestamp to the inputfield "saveSnapshotTitleInput"
     And  I click on the element "saveSnapshotDescriptionInput"
     And  I add "activity logs - snapshot description" to the inputfield "saveSnapshotDescriptionInput"
+    And  I pause for 1000ms
     And  I click on the element "saveSnapshotAddToPortfolio"
     And  I pause for 1000ms
     And  I press "ArrowDown"
@@ -440,6 +457,7 @@ Feature: Portfolios
 
   @PTA71 @smoke
   Scenario: Portfolios elements are displayed correctly for portfolio without snapshots
+    When I open the site "/dashboard"
     Then I expect that element "trophyBtn" becomes displayed
     When I click on the element "trophyBtn"
 
@@ -455,6 +473,7 @@ Feature: Portfolios
     Then I expect that element "portfolioListNames" becomes displayed
     And  I pause for 2000ms
     When I click on the "1st" element "portfolioListNames"
+    And  I pause for 2000ms
     Then I expect that element "portfoliosUserName" becomes displayed
     And  I expect that element "portfoliosUserGitHubLink" becomes displayed
     And  I expect that element "portfoliosChangePersonalOverviewBtn" becomes displayed
@@ -467,6 +486,7 @@ Feature: Portfolios
 
     When I click on the element "portfoliosEditPersonalOverviewCloseBtn"
     Then I expect that element "portfoliosEditPersonalOverviewInput" becomes not displayed
+    And  I expect that element "portfoliosChangePersonalOverviewBtn" becomes displayed
 
     When I click on the element "portfoliosChangePersonalOverviewBtn"
     Then I expect that element "portfoliosEditPersonalOverviewCancelBtn" becomes displayed
