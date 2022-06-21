@@ -141,7 +141,8 @@ export const hooks = {
   /**
    * Function to be executed before a test (in Mocha/Jasmine) starts.
    */
-  // beforeTest: function (test, context) {
+  // beforeTest: async function (test, context) {
+  //
   // },
   /**
    * Runs before a WebdriverIO command is executed.
@@ -175,7 +176,7 @@ export const hooks = {
    * Hook that gets executed after the suite has ended.
    * @param {Object} suite suite details
    */
-  // afterSuite: function (suite) {
+  // afterSuite: async function (suite) {
   // },
   /**
    * Gets executed after all tests are done. You still have access to all global variables from

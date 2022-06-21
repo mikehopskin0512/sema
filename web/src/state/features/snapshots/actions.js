@@ -50,6 +50,21 @@ const deleteSnapshotSuccess = (id) => ({
   id,
 });
 
+const requestCreateSnapshot = () => ({
+  type: types.REQUEST_CREATE_SNAPSHOT,
+});
+
+const requestCreateSnapshotSuccess = (snapshot) => ({
+  type: types.REQUEST_CREATE_SNAPSHOT_SUCCESS,
+  snapshot,
+});
+
+export const requestCreateSnapshotError = (error) => ({
+  type: types.REQUEST_CREATE_SNAPSHOT_ERROR,
+  error
+});
+
+
 export const fetchUserSnapshots = (userId, token) => async (dispatch) => {
   try {
     dispatch(requestFetchUserSnapshots());
@@ -90,22 +105,15 @@ export const updateSnapshot = (id, body, token) => async (dispatch) => {
   }
 };
 
-export const createSnapshot = (snapshot, token) => async (
-  dispatch,
-  getState
-) => {
+export const createSnapshot = (snapshot, portfolioId = null, token) => async(dispatch) => {
   try {
-    const {
-      snapshotsState: {
-        data: { snapshots: previousSnapshots },
-      },
-    } = getState();
-    dispatch(requestFetchUserSnapshots());
+    dispatch(requestCreateSnapshot())
+    if (portfolioId) {
+      snapshot = {...snapshot, portfolioId}
+    }
     const payload = await postSnapshots(snapshot, token);
-    const { data: createdSnapshot } = payload;
-    const newSnapshots = [...previousSnapshots, createdSnapshot];
-    dispatch(requestFetchUserSnapshotsSuccess(newSnapshots));
-    return payload;
+    const { data } = payload;
+    dispatch(requestCreateSnapshotSuccess(data));
   } catch (error) {
     const {
       response: {
@@ -115,35 +123,9 @@ export const createSnapshot = (snapshot, token) => async (
       },
     } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestUpdateSnapshotError(errMessage));
-    return error.response;
+    dispatch(requestCreateSnapshotError(errMessage));
   }
-};
-
-export const duplicateSnapshot = (snapshotToDuplicate, token) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    let newSnapshot = { ...snapshotToDuplicate };
-    delete newSnapshot.portolios;
-    delete newSnapshot._id;
-    newSnapshot.title = `${newSnapshot.title} (copy)`;
-    await dispatch(createSnapshot(newSnapshot, token));
-    notify('Snapshot was successfully duplicated', { type: 'success'});
-  } catch (error) {
-    const {
-      response: {
-        data: { message },
-        status,
-        statusText,
-      },
-    } = error;
-    const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestUpdateSnapshotError(errMessage));
-    notify('Snapshot was not duplicated', { type: 'error'})
-  }
-};
+}
 
 export const deleteUserSnapshot = (snapshotId, token) => async (dispatch) => {
   try {
