@@ -18,6 +18,8 @@ pipeline {
         STAGING_MONGODB_NAME = credentials('STAGING_MONGODB_NAME')
         BACKUP_SERVER_PASS = credentials('BACKUP_SERVER_PASS')
         BACKUP_SERVER_USER = credentials('BACKUP_SERVER_USER')
+        AWS_REGION = 'us-east-1'
+        AWS_DEFAULT_REGION = 'us-east-1'
     }
 
     options {
@@ -32,10 +34,22 @@ pipeline {
             }
         }
 
-        stage('Build apollo') {
-            steps {
-                script {
-                    buildApollo(params.ENVIRONMENT, params.BRANCH_NAME)
+        stage('Build') {
+            failFast true
+            parallel {
+                stage('Build Apollo') {
+                    steps {
+                        script {
+                            buildApollo(params.ENVIRONMENT, params.BRANCH_NAME)
+                        }
+                    }
+                }
+                stage('Build Apollo Worker'){
+                    steps{
+                        script{
+                            buildApolloWorker(params.ENVIRONMENT, params.BRANCH_NAME)
+                        }
+                    }
                 }
             }
         }
@@ -57,11 +71,25 @@ pipeline {
             }
         }
 
-        stage('Deploy apollo') {
-            steps {
-                script {
-                    withAWS(role:'jenkins-role-to-assume') {
-                        deployApollo(params.ENVIRONMENT, params.BRANCH_NAME)
+        stage('Deploy') {
+            failFast true
+            parallel {
+                stage('Deploy Apollo') {
+                    steps {
+                        script {
+                            withAWS(role:'jenkins-role-to-assume') {
+                                deployApollo(params.ENVIRONMENT, params.BRANCH_NAME)
+                            }
+                        }
+                    }
+                }
+                stage('Deploy Apollo Worker'){
+                    steps {
+                        script {
+                            withAWS(role:'jenkins-role-to-assume') {
+                                deployApolloWorker(params.ENVIRONMENT, params.BRANCH_NAME)
+                            }
+                        }
                     }
                 }
             }
@@ -81,8 +109,21 @@ def buildApollo(String environment, String branchName) {
     }
 }
 
+def buildApolloWorker(String environment, String branchName) {
+    dir('apollo') {
+        sh './worker-build.sh ' + environment + ' ' + branchName
+    }
+}
+
 def deployApollo(String environment, String branchName) {
     dir('apollo') {
         sh './deploy.sh ' + environment + ' ' + branchName
     }
 }
+
+def deployApolloWorker(String environment, String branchName) {
+    dir('apollo') {
+        sh './worker-deploy.sh ' + environment + ' ' + branchName
+    }
+}
+

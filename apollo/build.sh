@@ -18,11 +18,9 @@ DOCKER_FILE=../.docker/"${NAME}"/Dockerfile.prod
 SHA1=$(git rev-parse HEAD)
 VERSION=$BRANCH-$SHA1-$NODE_ENV
 
-rm .env
+rm -f .env
 
 IMAGE=$ECR_URL/$NAME:$VERSION
-
-aws configure set default.region "${AWS_REGION}"
 
 # Authenticate against our Docker registry
 aws ecr get-login-password | docker login --username AWS --password-stdin https://091235034633.dkr.ecr.us-east-1.amazonaws.com

@@ -1,29 +1,93 @@
 @import "../../../../styles/_colors.module.scss";
 
+.title {
+  font-weight: 600;
+  font-size: 42px;
+  line-height: 42px;
+}
+
 .text-container {
-    position: absolute;
-      left: 0px;
-      width: 100%;
+  position: relative;
+  left: 5px;
+  width: 100%;
+
+  span {
+    &:before,
+    &:after {
+      background-color: $white-0;
+      content: "";
+      display: inline-block;
+      height: 1px;
+      position: relative;
+      vertical-align: middle;
+      width: 30%;
+      max-width: 122px;
+    }
+
+    &:before {
+      right: 25px;
+      margin-left: -50%;
+    }
+
+    &:after {
+      left: 25px;
+      margin-right: -50%;
+    }
   }
-  
+}
+
 .through-text {
-    background-color: $white-50;
-    padding: 0 20px;
-    color: $gray-600;
+  background-color: transparent;
+  padding: 0 20px;
+  color: $white-0;
+  z-index: 20;
 }
 
 .through-container {
-    color: $gray-700;
-    text-align: center;
-    margin: 30px 0px;
-    position: relative;
+  color: $gray-700;
+  text-align: center;
+  margin: 30px 0px;
+  position: relative;
 }
 
 .line {
-    display: inline-block;
-    width: 100%;
-    height: 1px;
-    background: $gray-500;
-    vertical-align: middle;
+  display: inline-block;
+  width: 100%;
+  height: 1px;
+  background: $gray-500;
+  vertical-align: middle;
+}
+
+.terms-and-conditions {
+  margin-top: 80px;
+  a {
+    color: $login-title;
+    text-decoration: none;
   }
-  
+}
+
+.login-button {
+  background-color: $login-title;
+  color: $black-950;
+  box-shadow: none;
+  border: none;
+
+  &:hover {
+    background-color: rgba($login-title, 0.75);
+    color: rgba($black-950, 0.75);
+  }
+
+  svg path {
+    fill: $black-950;
+  }
+}
+
+.sign-in-button {
+  background-color: transparent;
+  border: 2px solid $login-title;
+  color: $login-title;
+
+  svg path {
+    fill: $login-title;
+  }
+}

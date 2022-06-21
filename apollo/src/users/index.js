@@ -18,8 +18,7 @@ import {
   initiatePasswordReset, validatePasswordReset, resetPassword,
 } from './userService';
 import { setRefreshToken, createRefreshToken, createAuthToken } from '../auth/authService';
-import { addAcceptedInviteActivity } from '../notifications/notificationService';
-import { redeemInvite, checkIfInvited } from '../invitations/invitationService';
+import { redeemInvite, checkIsInvitationValid } from '../invitations/invitationService';
 import { sendEmail } from '../shared/emailService';
 import { getPortfoliosByUser } from '../portfolios/portfolioService';
 import checkEnv from '../middlewares/checkEnv';
@@ -70,11 +69,6 @@ export default (app, passport) => {
       }
       const { _id: userId, username } = newUser;
 
-      let inviteNotificationSent = false;
-      const sendInviteNotification = async (user, recepientId) => {
-        const recepient = await findById(recepientId);
-        return addAcceptedInviteActivity(user._id, user, recepientId, recepient);
-      }
       // If invitation, call joinOrg function
       if (Object.prototype.hasOwnProperty.call(invitation, '_id')) {
         const { orgId, orgName, sender, token } = invitation;
@@ -88,22 +82,11 @@ export default (app, passport) => {
         // newUser = invitedUser;
 
         // Redeem invite
-        await redeemInvite(token, userId);
-
-        inviteNotificationSent = true;
-        // send notification to sender - no need to await that action
-        sendInviteNotification(newUser, sender).catch(logger.error);
+        await redeemInvite(userId, token);
       }
-
-      // Check if user has been previously invited
-      const [hasInvite] = await checkIfInvited(username);
-      if (hasInvite) {
-        const { _id: invitationId, sender } = hasInvite;
-        redeemInvite(null, userId, invitationId);
-        if(!inviteNotificationSent) {
-          // send notification to sender - no need to await that action
-          sendInviteNotification(newUser, sender).catch(logger.error);
-        }
+      const error = checkIsInvitationValid(invitation)
+      if (!error) {
+        await redeemInvite(userId, invitation?.token);
       }
 
       // Add user to Mailchimp and subscribe it to Sema - Newsletters

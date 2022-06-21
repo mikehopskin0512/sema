@@ -1,0 +1,11 @@
+.wrapper {
+  @media (screen and max-width: 480px) {
+    flex-direction: column;
+    align-items: center !important;
+    justify-content: center !important;
+
+    > div {
+      margin-left: unset !important;
+    }
+  }
+}

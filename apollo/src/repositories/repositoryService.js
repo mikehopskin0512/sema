@@ -28,49 +28,39 @@ export const create = async ({
   language,
   description,
   type,
-  installationId,
   cloneUrl,
-  addedBy,
   created_at: repositoryCreatedAt,
   updated_at: repositoryUpdatedAt,
 }) => {
   try {
-    const repository = await Repositories.create({
-      externalId,
-      name,
-      description,
-      type,
-      installationId,
-      'sync.addedBy': addedBy,
-      language,
-      cloneUrl,
-      repositoryCreatedAt,
-      repositoryUpdatedAt,
-    });
-    await handleRepoSync(repository);
+    const repository = await Repositories.findOrCreate(
+      { type, externalId },
+      {
+        name,
+        description,
+        language,
+        cloneUrl,
+        repositoryCreatedAt,
+        repositoryUpdatedAt,
+      }
+    );
     return repository;
   } catch (err) {
-    const isDuplicate =
-      err.code === 11000 && err.keyPattern?.type && err.keyPattern?.externalId;
-    if (isDuplicate) {
-      const repository = await Repositories.findOne({ type, externalId });
-      await handleRepoSync(repository);
-      return repository;
-    }
     const error = new errors.BadRequest(err);
     logger.error(error);
     throw error;
   }
 };
-
-async function handleRepoSync(repository) {
-  const shouldStartSync = !!(
-    repository.type === 'github' && repository.installationId
-  );
-  if (shouldStartSync) {
-    await importRepositoryQueue.queueJob({ id: repository.id });
-  }
-}
+export const startSync = async ({ repository, user }) => {
+  // eslint-disable-next-line no-param-reassign
+  repository.sync = {
+    status: 'queued',
+    queuedAt: new Date(),
+    addedBy: user,
+  };
+  await repository.save();
+  await importRepositoryQueue.queueJob({ id: repository.id });
+};
 
 export const createMany = async (repositories) => {
   try {
@@ -136,22 +126,6 @@ export const sendNotification = async (msg) => {
 
   const result = await publish(snsTopic, { repos: msg }, snsFilter);
   return result;
-};
-
-export const createOrUpdate = async (repository) => {
-  if (!repository.externalId) return false;
-  try {
-    await Repositories.update(
-      { externalId: repository.externalId },
-      repository,
-      { upsert: true, setDefaultsOnInsert: true }
-    );
-    return true;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
 };
 
 export const findByExternalId = async (externalId) => {
@@ -269,6 +243,7 @@ export const aggregateRepositories = async (
             updatedAt,
             repoStats,
             isPinned,
+            sync,
           } = repo;
           const {
             smartComments = 0,
@@ -294,6 +269,7 @@ export const aggregateRepositories = async (
             users: repo.repoStats.userIds,
             updatedAt,
             isPinned,
+            sync,
             smartcomments: includeSmartComments
               ? await findSmartCommentsByExternalId(
                   externalId,

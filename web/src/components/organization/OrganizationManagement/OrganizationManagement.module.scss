@@ -36,3 +36,8 @@
 .email {
   width: 320px;
 }
+
+.invite-button {
+  &:active,
+  &:focus:not(:active) {}
+}
