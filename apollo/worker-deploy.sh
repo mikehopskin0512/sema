@@ -21,8 +21,6 @@ VERSION=$BRANCH-$SHA1-$NODE_ENV
 
 IMAGE=$ECR_URL/$NAME:$VERSION
 
-aws configure set default.region "${AWS_REGION}"
-
 # Authenticate against our Docker registry
 aws ecr get-login-password | docker login --username AWS --password-stdin https://091235034633.dkr.ecr.us-east-1.amazonaws.com
 echo "creating new task definition with image..."
