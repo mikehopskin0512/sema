@@ -8,7 +8,8 @@ export const { SEMA_CLIENT_ID } = process.env;
 export const { SEMA_CLIENT_SECRET } = process.env;
 export const { SEGMENT_API_KEY } = process.env;
 
-export const SEMA_INTERCOM_HELP_URL = 'https://intercom.help/sema-software/en/articles';
+export const SEMA_INTERCOM_HELP_URL =
+  'https://intercom.help/sema-software/en/articles';
 export const SEMA_FAQ_TAGS = `${SEMA_INTERCOM_HELP_URL}/6147189-how-do-i-use-tags-in-the-chrome-extension`;
 export const SEMA_FAQ_SUMMARIES = `${SEMA_INTERCOM_HELP_URL}/6147171-how-do-i-use-summaries-in-the-chrome-extension`;
 
@@ -170,35 +171,35 @@ export const EMOJIS = [
     title: 'No reaction',
     emoji: '⚪',
     github_emoji: ':white_circle:',
-    key: 'none'
+    key: 'none',
   },
   {
     _id: EMOJIS_ID.AWESOME,
     title: 'This code is <b>awesome</b>',
     emoji: '🏆',
     github_emoji: ':trophy:',
-    key: 'awesome'
+    key: 'awesome',
   },
   {
     _id: EMOJIS_ID.GOOD,
     title: 'This code <b>looks good</b>',
     emoji: '👌',
     github_emoji: ':ok_hand:',
-    key: 'good'
+    key: 'good',
   },
   {
     _id: EMOJIS_ID.QUESTION,
     title: 'I have a <b>question</b>',
     emoji: '❓',
     github_emoji: ':question:',
-    key: 'question'
+    key: 'question',
   },
   {
     _id: EMOJIS_ID.FIX,
     title: 'This code <b>needs a fix</b>',
     emoji: '🛠',
     github_emoji: ':hammer_and_wrench:',
-    key: 'fix'
+    key: 'fix',
   },
 ];
 
@@ -301,8 +302,8 @@ export const COLOR_MODE_ATTRIBUTE = 'data-color-mode';
 export const COLOR_MODES = {
   LIGHT: 'light',
   DARK: 'dark',
-  AUTO: 'auto'
-}
+  AUTO: 'auto',
+};
 
 export const THEMES = {
   DARK: 'dark',
@@ -310,18 +311,21 @@ export const THEMES = {
   DARK_HIGH_CONTRAST: 'dark_high_contrast',
   LIGHT: 'light',
   LIGHT_HIGH_CONTRAST: 'light_high_contrast',
-}
+};
 
 export const THEMES_BACKGROUNDS = {
   LIGHT: 'rgb(255, 255, 255)',
   DARK: 'rgb(13, 17, 23)',
   DARK_HIGH_CONTRAST: 'rgb(10, 12, 16)',
-  DARK_DIMMED: 'rgb(34, 39, 46)'
-}
+  DARK_DIMMED: 'rgb(34, 39, 46)',
+};
 
 export const IS_HIGHLIGHTS_ACTIVE = process.env.SEMA_HIGHLIGHTS_OFF !== 'true';
 
 export const SEMA_REMINDER_ROOT_ID = 'sema-reminder-root';
+
+export const SEMA_CREATE_COMMENT_STATUS_ROOT_ID =
+  'sema-create-comment-status-root';
 
 export const SEMA_REMINDER_SESSION_STORAGE_KEY = 'semaReminderClosed';
 
@@ -340,7 +344,7 @@ export const SEGMENT_EVENTS = {
   CLICKED_LOGIN_TOASTER: 'CE Clicked Login Toaster',
   INSERTED_SNIPPET: 'CE Inserted Snippet',
   VIEWED_SNIPPET: 'CE Viewed Snippet',
-  COPIED_SNIPPET: 'CE Copied Snippet'
+  COPIED_SNIPPET: 'CE Copied Snippet',
 };
 
 export const SEMA_TEXTAREA_IDENTIFIER = 'sema-identifier';
@@ -368,5 +372,5 @@ export const TAGS_KEYS = {
   READABLE: 'Readable',
   REUSABLE: 'Reusable',
   SECURE: 'Secure',
-  UNREADABLE: 'Unreadable'
-}
+  UNREADABLE: 'Unreadable',
+};

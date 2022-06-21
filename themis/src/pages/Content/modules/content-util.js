@@ -1,4 +1,6 @@
 import $ from 'cash-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 // eslint-disable-next-line camelcase
 import jwt_decode from 'jwt-decode';
 import { segmentTrack } from './segment';
@@ -26,6 +28,7 @@ import {
   USERS_URL,
   ORGANIZATIONS_URL,
   SEGMENT_EVENTS,
+  SEMA_CREATE_COMMENT_STATUS_ROOT_ID,
 } from '../constants';
 
 import suggest from './commentSuggestions';
@@ -46,6 +49,8 @@ import {
 // eslint-disable-next-line import/no-cycle
 import store from './redux/store';
 import phrases from './highlightPhrases';
+import CreateCommentStatusToaster from '../components/createCommentStatusToaster';
+import { getActiveThemeClass } from '../../../../utils/theme';
 
 export const getGithubMetadata = () => {
   const url = window.location.href || '';
@@ -56,14 +61,19 @@ export const getGithubMetadata = () => {
   const [, , , , repo, , pull_number] = decoupleUrl;
   const head = document.querySelector('span[class*="head-ref"] a')?.textContent;
   const base = document.querySelector('span[class*="base-ref"] a')?.textContent;
-  const id = document.querySelector('meta[name="octolytics-actor-id"]')
+  const id = document
+    .querySelector('meta[name="octolytics-actor-id"]')
     ?.content?.split(',')?.[0];
-  const login = document.querySelector('meta[name="octolytics-actor-login"]')
-    ?.content;
+  const login = document.querySelector(
+    'meta[name="octolytics-actor-login"]'
+  )?.content;
   const requester = document.querySelector('a[class*="author"]')?.textContent;
-  const requesterAvatarUrl = document.querySelector(`img[alt*="@${requester}"]`)?.src;
-  const title = document.querySelector('span[data-snek-id="issue-title"]')
-    ?.innerText;
+  const requesterAvatarUrl = document.querySelector(
+    `img[alt*="@${requester}"]`
+  )?.src;
+  const title = document.querySelector(
+    'span[data-snek-id="issue-title"]'
+  )?.innerText;
   // eslint-disable-next-line camelcase
   const clone_url = document.querySelector('#clone-help-git-url')?.value;
 
@@ -92,7 +102,8 @@ export const isTextBox = (element) => {
 
 export const isValidSemaTextBox = (element) => {
   const parent = $(element).parents('file-attachment');
-  const fileHeaderSibling = parent.length && $(parent).siblings('.comment-form-head');
+  const fileHeaderSibling =
+    parent.length && $(parent).siblings('.comment-form-head');
   return isTextBox(element) && fileHeaderSibling.length;
 };
 
@@ -106,9 +117,7 @@ const SEMA_TEXT = {
 
 export const getSemaGithubText = (rawEmojis, tags) => {
   // TODO: should be fixed after refactoring for emojis / don't use styles <b> in names
-  const emojis = rawEmojis
-    .replaceAll('<b>', '')
-    .replaceAll('</b>', '');
+  const emojis = rawEmojis.replaceAll('<b>', '').replaceAll('</b>', '');
 
   if (!emojis && !tags) {
     return '';
@@ -134,13 +143,15 @@ export const getInitialSemaValues = (textbox) => {
   const { value } = textbox;
   let initialReaction = EMOJIS[0];
   let initialTags = TAGS_INIT;
-  let githubEmoji; let
-    selectedTags;
+  let githubEmoji;
+  let selectedTags;
   if (value.includes('Summary')) {
-    const reactionStart = value.indexOf(SEMA_TEXT.SUMMARY) + SEMA_TEXT.SUMMARY.length;
-    const reactionEnd = value.indexOf(SEMA_TEXT.SEPARATOR) > 0
-      ? value.indexOf(SEMA_TEXT.SEPARATOR)
-      : value.lastIndexOf(':') + 1;
+    const reactionStart =
+      value.indexOf(SEMA_TEXT.SUMMARY) + SEMA_TEXT.SUMMARY.length;
+    const reactionEnd =
+      value.indexOf(SEMA_TEXT.SEPARATOR) > 0
+        ? value.indexOf(SEMA_TEXT.SEPARATOR)
+        : value.lastIndexOf(':') + 1;
     const reactionStr = value.substring(reactionStart, reactionEnd);
     githubEmoji = reactionStr.substring(1, reactionStr.lastIndexOf(':'));
   }
@@ -155,7 +166,7 @@ export const getInitialSemaValues = (textbox) => {
 
   if (githubEmoji?.trim()) {
     const emojiObj = EMOJIS.find(
-      (emoji) => emoji.github_emoji === `:${githubEmoji}:`,
+      (emoji) => emoji.github_emoji === `:${githubEmoji}:`
     );
     if (emojiObj) {
       initialReaction = emojiObj;
@@ -168,7 +179,7 @@ export const getInitialSemaValues = (textbox) => {
       let selected = tagObj[SELECTED];
 
       const selectedTag = selectedTags.find(
-        (tag) => tag === positiveTag || tag === negativeTag,
+        (tag) => tag === positiveTag || tag === negativeTag
       );
       if (selectedTag) {
         selected = selectedTag === positiveTag ? POSITIVE : NEGATIVE;
@@ -238,11 +249,12 @@ export const getAllTags = async () => {
 export const onConversationMutationObserver = ([mutation]) => {
   if (mutation.addedNodes.length) {
     const nodeIndex = [...mutation.addedNodes].findIndex(
-      (node) => 'classList' in node && node.classList.contains('js-timeline-item'),
+      (node) =>
+        'classList' in node && node.classList.contains('js-timeline-item')
     );
 
     const singleNode = [...mutation.addedNodes].findIndex(
-      (node) => 'classList' in node && node.classList.contains('review-comment'),
+      (node) => 'classList' in node && node.classList.contains('review-comment')
     );
 
     const { smartComment } = store.getState();
@@ -250,9 +262,7 @@ export const onConversationMutationObserver = ([mutation]) => {
 
     if (nodeIndex !== -1) {
       const newCommentDiv = mutation.addedNodes[nodeIndex];
-      const { id } = newCommentDiv.querySelector(
-        'div.timeline-comment-group',
-      );
+      const { id } = newCommentDiv.querySelector('div.timeline-comment-group');
       commentId = id;
     } else if (singleNode !== -1) {
       const { id } = mutation.addedNodes[singleNode];
@@ -275,11 +285,10 @@ export const onConversationMutationObserver = ([mutation]) => {
 export const onFilesChangedMutationObserver = ([mutation]) => {
   if (mutation.addedNodes.length) {
     const threadNode = [...mutation.addedNodes].findIndex(
-      (node) => 'classList' in node
-        && node.classList.contains('review-comment'),
+      (node) => 'classList' in node && node.classList.contains('review-comment')
     );
     const singleNode = [...mutation.addedNodes].findIndex(
-      (node) => 'classList' in node && node.classList.contains('comment-holder'),
+      (node) => 'classList' in node && node.classList.contains('comment-holder')
     );
 
     const { smartComment } = store.getState();
@@ -303,7 +312,7 @@ export const onFilesChangedMutationObserver = ([mutation]) => {
 export const getGithubInlineMetadata = (id) => {
   const [fileDivId] = id.split('new_inline_comment_diff_').pop().split('_');
   const filename = document.querySelector(
-    `div[id=${fileDivId}] div[class^="file-header"] a`,
+    `div[id=${fileDivId}] div[class^="file-header"] a`
   )?.title;
 
   let fileExtension = '';
@@ -313,7 +322,7 @@ export const getGithubInlineMetadata = (id) => {
   }
 
   const allElements = Array.from(
-    document.querySelectorAll(`div[id=${fileDivId}] table tbody tr td`),
+    document.querySelectorAll(`div[id=${fileDivId}] table tbody tr td`)
   );
 
   const allLineNos = allElements.reduce((acc, curr) => {
@@ -326,7 +335,11 @@ export const getGithubInlineMetadata = (id) => {
 
   const lineNumbers = Object.keys(allLineNos);
 
-  const inlineMetada = { filename, file_extension: fileExtension, line_numbers: lineNumbers };
+  const inlineMetada = {
+    filename,
+    file_extension: fileExtension,
+    line_numbers: lineNumbers,
+  };
 
   return inlineMetada;
 };
@@ -371,7 +384,10 @@ export function getSemaIds(activeElement) {
 }
 
 const isReply = (textarea) => {
-  const isReplyComment = ['js-resolvable-thread-contents', 'review-thread-reply'].some((replyClass) => (($(textarea).parents(`.${replyClass}`).length > 0)));
+  const isReplyComment = [
+    'js-resolvable-thread-contents',
+    'review-thread-reply',
+  ].some((replyClass) => $(textarea).parents(`.${replyClass}`).length > 0);
   return isReplyComment;
 };
 
@@ -390,6 +406,11 @@ const getGithubId = (elementId) => {
 export async function writeSemaToGithub(activeElement) {
   const { _id: userId, isLoggedIn } = store.getState().user;
 
+  if (!userId) {
+    showCreateCommentToaster();
+    return;
+  }
+
   if (!isLoggedIn || !activeElement) {
     return;
   }
@@ -399,24 +420,31 @@ export async function writeSemaToGithub(activeElement) {
 
   const githubId = getGithubId(activeElement.id);
 
-  const isPullRequestReview = activeElement?.id && activeElement.id.includes('pending_pull_request_review_');
-  const isPullRequestReviewChanges = activeElement?.id && activeElement.id.includes('pull_request_review_body');
+  const isPullRequestReview =
+    activeElement?.id &&
+    activeElement.id.includes('pending_pull_request_review_');
+  const isPullRequestReviewChanges =
+    activeElement?.id && activeElement.id.includes('pull_request_review_body');
   const onFilesTab = document.URL.split('/').pop().includes('files');
 
   const location = onFilesTab ? 'files changed' : 'conversation';
 
   if (location === 'conversation') {
-    store.dispatch(addMutationObserver({
-      selector: 'div.pull-discussion-timeline .js-discussion',
-      config: { childList: true, subtree: true },
-      onMutationEvent: onConversationMutationObserver,
-    }));
+    store.dispatch(
+      addMutationObserver({
+        selector: 'div.pull-discussion-timeline .js-discussion',
+        config: { childList: true, subtree: true },
+        onMutationEvent: onConversationMutationObserver,
+      })
+    );
   } else {
-    store.dispatch(addMutationObserver({
-      selector: 'div#files',
-      config: { childList: true, subtree: true },
-      onMutationEvent: onFilesChangedMutationObserver,
-    }));
+    store.dispatch(
+      addMutationObserver({
+        selector: 'div#files',
+        config: { childList: true, subtree: true },
+        onMutationEvent: onFilesChangedMutationObserver,
+      })
+    );
     inLineMetada = getGithubInlineMetadata(activeElement.id);
   }
 
@@ -436,12 +464,13 @@ export async function writeSemaToGithub(activeElement) {
       }
       return acc;
     },
-    [],
+    []
   );
 
-  const selectedEmojiString = selectedEmojiObj?.title && selectedEmojiObj?.title !== 'No reaction'
-    ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
-    : '';
+  const selectedEmojiString =
+    selectedEmojiObj?.title && selectedEmojiObj?.title !== 'No reaction'
+      ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
+      : '';
 
   const selectedTagsString = selectedTags.join(', ');
 
@@ -449,14 +478,16 @@ export async function writeSemaToGithub(activeElement) {
 
   let textboxValue = activeElement.value;
 
-  const { selectedSuggestedComments } = store.getState().semasearches[semaSearchId];
+  const { selectedSuggestedComments } =
+    store.getState().semasearches[semaSearchId];
 
   // TODO: Momentary implementation, for Tags retrieved from MongoDB
   const tags = selectedTags.map(
     // eslint-disable-next-line no-underscore-dangle
-    (tag) => TAGS_ON_DB.find(({ label }) => label === tag)._id,
+    (tag) => TAGS_ON_DB.find(({ label }) => label === tag)._id
   );
-  const isValueHasSemaReactions = textboxValue.includes('Summary') || textboxValue.includes('Tags');
+  const isValueHasSemaReactions =
+    textboxValue.includes('Summary') || textboxValue.includes('Tags');
   if (isValueHasSemaReactions) {
     // Use individual REGEX's for reactions and tags
     textboxValue = textboxValue.replace(`\n${SEMA_TEXT.START_SEPARATOR}\n`, '');
@@ -475,7 +506,9 @@ export async function writeSemaToGithub(activeElement) {
 
   const { githubMetadata, lastUserSmartComment } = store.getState();
 
-  let fileExtention = $(activeElement)?.parents('.file')?.attr('data-file-type');
+  let fileExtention = $(activeElement)
+    ?.parents('.file')
+    ?.attr('data-file-type');
   if (!fileExtention) {
     const url = $(activeElement)
       .parents('.file')
@@ -488,7 +521,12 @@ export async function writeSemaToGithub(activeElement) {
   }
 
   comment = {
-    githubMetadata: { ...githubMetadata, ...inLineMetada, file_extension: fileExtention, organization: extractOrganizationNameFromUrl() },
+    githubMetadata: {
+      ...githubMetadata,
+      ...inLineMetada,
+      file_extension: fileExtention,
+      organization: extractOrganizationNameFromUrl(),
+    },
     userId,
     comment: textboxValue,
     location,
@@ -502,7 +540,7 @@ export async function writeSemaToGithub(activeElement) {
     store.dispatch(removeMutationObserver());
     const pullRequestReviewId = activeElement?.id.split('_').pop();
     const commentDiv = document.querySelector(
-      `div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`,
+      `div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`
     );
     comment.githubMetadata.commentId = commentDiv?.id;
 
@@ -535,7 +573,8 @@ export async function writeSemaToGithub(activeElement) {
     location,
     is_sema_bar_used: false,
     is_reply: isReply(activeElement),
-    is_suggested_comment_used: activeElement.value.includes(lastUserSmartComment),
+    is_suggested_comment_used:
+      activeElement.value.includes(lastUserSmartComment),
   };
   if (typeof semaString === 'string' && semaString.length) {
     opts.is_sema_bar_used = true;
@@ -545,6 +584,23 @@ export async function writeSemaToGithub(activeElement) {
   const semaIds = getSemaIds(activeElement);
   store.dispatch(resetSemaStates(semaIds));
 }
+
+const showCreateCommentToaster = () => {
+  const toasterRoot = document.getElementById(
+    SEMA_CREATE_COMMENT_STATUS_ROOT_ID
+  );
+  if (!toasterRoot) {
+    const node = document.createElement('div');
+    node.id = SEMA_CREATE_COMMENT_STATUS_ROOT_ID;
+    node.className = `${getActiveThemeClass()}`;
+    document.body.appendChild(node);
+    ReactDOM.render(
+      // eslint-disable-next-line react/jsx-filename-extension
+      <CreateCommentStatusToaster />,
+      node
+    );
+  }
+};
 
 // TODO: should be deleted after outsideClick refactoring
 function closeSemaOpenElements(event) {
@@ -566,14 +622,15 @@ function onGithubSubmitClicked(event) {
   const { target } = event;
   const parentButton = $(target).parents('button')?.[0];
   const isButton = $(target).is('button') || $(parentButton).is('button');
-  const isSubmitButton = isButton
-    && ($(target).attr('type') === 'submit'
-      || $(parentButton).attr('type') === 'submit');
+  const isSubmitButton =
+    isButton &&
+    ($(target).attr('type') === 'submit' ||
+      $(parentButton).attr('type') === 'submit');
 
   if (isSubmitButton) {
     const formParent = $(target).parents('form')?.[0];
     const textarea = $(formParent).find(
-      'file-attachment div text-expander textarea',
+      'file-attachment div text-expander textarea'
     )?.[0];
 
     writeSemaToGithub(textarea);
@@ -598,7 +655,7 @@ export function onDocumentClicked(event) {
 export const toggleTagSelection = (
   operation,
   tags,
-  isUserOperation = false,
+  isUserOperation = false
 ) => {
   /**
    * {
@@ -636,8 +693,8 @@ export const toggleTagSelection = (
 
       // If tag is already selected, set selection to null on toggle
       if (
-        isSelected
-        && (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE])
+        isSelected &&
+        (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE])
       ) {
         modifiedObj[SELECTED] = null;
         modifiedObj[IS_DIRTY] = isUserOperation;
@@ -664,7 +721,7 @@ export async function onSuggestion() {
 
   if (isValid) {
     const semabarContainer = $(activeElement).siblings(
-      `div.${SEMABAR_CLASS}`,
+      `div.${SEMABAR_CLASS}`
     )[0];
 
     const semabarId = $(semabarContainer).attr('id');
@@ -682,7 +739,7 @@ export async function onSuggestion() {
           id: semabarId,
           selectedReaction: suggestedReaction,
           isReactionDirty: false,
-        }),
+        })
       );
     }
 
@@ -692,7 +749,7 @@ export async function onSuggestion() {
         addSuggestedTags({
           id: semabarId,
           suggestedTags,
-        }),
+        })
       );
     }
   }
@@ -707,8 +764,8 @@ export const getHighlights = (text) => {
     const { start, end } = newTokenData;
     let isOverlapped = false;
     if (
-      (start >= startOffset && start <= endOffset)
-      || (end >= startOffset && end <= endOffset)
+      (start >= startOffset && start <= endOffset) ||
+      (end >= startOffset && end <= endOffset)
     ) {
       isOverlapped = true;
     }
@@ -771,8 +828,11 @@ export const getHighlights = (text) => {
       const prevChar = str[index - 1];
 
       if (
-        (nextChar === undefined || DELIMITERS.some((delimitter) => delimitter === nextChar))
-        && (prevChar === undefined || DELIMITERS.some((delimitter) => delimitter === prevChar))) {
+        (nextChar === undefined ||
+          DELIMITERS.some((delimitter) => delimitter === nextChar)) &&
+        (prevChar === undefined ||
+          DELIMITERS.some((delimitter) => delimitter === prevChar))
+      ) {
         indices.push(index);
       }
     }
@@ -801,9 +861,13 @@ export const checkSubmitButton = (semabarId, data) => {
   const parents = $(`#${semabarId}`).parentsUntil('form');
   const lastParent = parents[parents.length - 1];
   const formButtons = $(lastParent).next();
-  const primaryButton = $(formButtons).contents().find('button.btn.btn-primary');
+  const primaryButton = $(formButtons)
+    .contents()
+    .find('button.btn.btn-primary');
   // eslint-disable-next-line max-len
-  const shouldShowButton = selectedReaction.title !== EMOJIS[0].title || (selectedTags.find((tag) => tag.selected));
+  const shouldShowButton =
+    selectedReaction.title !== EMOJIS[0].title ||
+    selectedTags.find((tag) => tag.selected);
   if (!textareaValue) {
     if (shouldShowButton) {
       $(primaryButton).removeAttr('disabled');
@@ -869,7 +933,10 @@ export const checkIfPullRequestReviewUrl = () => {
   const smartCommentId = localStorage.getItem('smart_comment_id') || null;
   if (hasPullRequestReviewId && smartCommentId) {
     const githubId = url.split('#')?.pop() || null;
-    const smartComment = { _id: smartCommentId, 'githubMetadata.commentId': githubId };
+    const smartComment = {
+      '_id': smartCommentId,
+      'githubMetadata.commentId': githubId,
+    };
     updateSmartComment(smartComment);
     localStorage.removeItem('smart_comment_id');
   }
@@ -892,4 +959,4 @@ export const extractOrganizationNameFromUrl = () => {
     return org;
   }
   return null;
-}
+};
