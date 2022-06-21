@@ -268,6 +268,7 @@ export const aggregateRepositories = async (
             createdAt,
             updatedAt,
             repoStats,
+            isPinned,
           } = repo;
           const {
             smartComments = 0,
@@ -292,6 +293,7 @@ export const aggregateRepositories = async (
             createdAt,
             users: repo.repoStats.userIds,
             updatedAt,
+            isPinned,
             smartcomments: includeSmartComments
               ? await findSmartCommentsByExternalId(
                   externalId,
@@ -505,3 +507,19 @@ export const getRepoByUserIds = async (userIds = [], populateUsers = false) => {
     return error;
   }
 };
+
+export const toggleIsPinned = async (_id) => {
+  try {
+    const repo = await get(_id);
+    Repositories.findOneAndUpdate({ _id }, { isPinned: !repo.isPinned }, {
+      new: true,
+      upsert: false,
+      setDefaultsOnInsert: true,
+    });
+    return true;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+}

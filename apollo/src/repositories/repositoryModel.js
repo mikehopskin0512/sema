@@ -80,6 +80,7 @@ const repositoriesSchema = new mongoose.Schema(
       type: repoStatsSchema,
       default: {},
     },
+    isPinned: Boolean,
   },
   { timestamps: true }
 );

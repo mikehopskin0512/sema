@@ -40,14 +40,16 @@ const RepoList = ({
   onSearchChange,
   search,
   withSearch,
-  isLoaded
+  isLoaded,
+  pinnedRepos = [],
+  otherReposCount,
 }) => {
   const dispatch = useDispatch();
   const { token, selectedOrganization } = useSelector((state) => state.authState);
 
   const [view, setView] = useState('grid');
   const [sort, setSort] = useState({});
-  const [filteredRepos, setFilteredRepos] = useState([]);
+  const [filteredRepos, setFilteredRepos] = useState({ other: [], pinned: [] });
   const { isOrganizationAdmin } = usePermission();
   const { clearAlert } = alertOperations;
 
@@ -63,30 +65,42 @@ const RepoList = ({
   }
 
   const sortRepos = async () => {
-    setFilteredRepos([]);
-    if (!repos?.length) {
+    setFilteredRepos({ other: [], pinned: [] });
+    if (!repos?.length && !pinnedRepos.length) {
       return []
     }
     const sortedRepos = [...repos];
+    const sortedPinnedRepos = [...pinnedRepos];
     const getSortValue = (a, b) => a !== b ? (a > b ? 1 : -1) : 0;
     switch (sort.value) {
       case 'a-z':
-        sortedRepos.sort((a, b) => getSortValue(a.name?.toLowerCase(), b.name?.toLowerCase()))
+        sortedRepos.sort((a, b) => getSortValue(a.name?.toLowerCase(), b.name?.toLowerCase()));
+        sortedPinnedRepos.sort((a, b) => getSortValue(a.name?.toLowerCase(), b.name?.toLowerCase()));
         break;
       case 'z-a':
-        sortedRepos.sort((a, b) => getSortValue(b.name?.toLowerCase(), a.name?.toLowerCase()))
+        sortedRepos.sort((a, b) => getSortValue(b.name?.toLowerCase(), a.name?.toLowerCase()));
+        sortedPinnedRepos.sort((a, b) => getSortValue(b.name?.toLowerCase(), a.name?.toLowerCase()));
         break;
       case 'dateAdded':
-        sortedRepos.sort((a, b) => getSortValue(new Date(b.createdAt), new Date(a.createdAt)))
+        sortedRepos.sort((a, b) => getSortValue(new Date(b.createdAt), new Date(a.createdAt)));
+        sortedPinnedRepos.sort((a, b) => getSortValue(new Date(b.createdAt), new Date(a.createdAt)));
         break;
       case 'mostRecent':
         sortedRepos.sort((a, b) => {
-          const [lastItemA] = a.repoStats.reactions.slice(-1)
-          const [lastItemB] = b.repoStats.reactions.slice(-1)
+          const [lastItemA] = a.repoStats.reactions.slice(-1);
+          const [lastItemB] = b.repoStats.reactions.slice(-1);
           if (!lastItemA) {
-            return 0
+            return 0;
           }
-          return getSortValue(new Date(lastItemB.createdAt), new Date(lastItemA.createdAt))
+          return getSortValue(new Date(lastItemB.createdAt), new Date(lastItemA.createdAt));
+        });
+        sortedPinnedRepos.sort((a, b) => {
+          const [lastItemA] = a.repoStats.reactions.slice(-1);
+          const [lastItemB] = b.repoStats.reactions.slice(-1);
+          if (!lastItemA) {
+            return 0;
+          }
+          return getSortValue(new Date(lastItemB.createdAt), new Date(lastItemA.createdAt));
         })
         break;
       case 'mostActive':
@@ -94,12 +108,17 @@ const RepoList = ({
           const totalCommentsA = getCommentsCountLastMonth(a)
           const totalCommentsB = getCommentsCountLastMonth(b)
           return getSortValue(totalCommentsB, totalCommentsA);
-        })
+        });
+        sortedPinnedRepos.sort((a, b) => {
+          const totalCommentsA = getCommentsCountLastMonth(a)
+          const totalCommentsB = getCommentsCountLastMonth(b)
+          return getSortValue(totalCommentsB, totalCommentsA);
+        });
         break;
       default:
         break;
     }
-    setFilteredRepos(sortedRepos)
+    setFilteredRepos({ other: sortedRepos, pinned: sortedPinnedRepos });
   };
 
   const renderCards = (repos) => {
@@ -115,7 +134,7 @@ const RepoList = ({
 
   useEffect(() => {
     sortRepos();
-  }, [sort, repos]);
+  }, [sort, repos, pinnedRepos]);
 
   const [isRepoListOpen, setRepoListOpen] = useState(false);
   return (
@@ -196,11 +215,17 @@ const RepoList = ({
                   <RepoSkeleton />
                 </div>
               </div>
-            )) : renderCards(filteredRepos)}
+            )) :
+              <div>
+                <div className="has-text-weight-semibold is-size-5 ml-10 mb-25">{`Pinned repos (${pinnedRepos.length})`}</div>
+                <div className={clsx("is-flex is-flex-wrap", !filteredRepos.pinned.length && 'ml-10' )}>{!pinnedRepos.length ? 'No Pinned Repos yet. Add your first one!' : (search && filteredRepos.pinned.length === 0) ? 'No Results Found. We couldn’t find any match' : renderCards(filteredRepos.pinned)}</div>
+                <div className="has-text-weight-semibold is-size-5 ml-10 mb-25 mt-40">{`Other repos (${otherReposCount})`}</div>
+                <div className={clsx("is-flex is-flex-wrap", !filteredRepos.other.length && 'ml-10' )}>{!repos.length ? 'No Repos yet.' : (search && filteredRepos.other.length === 0) ? 'No Results Found. We couldn’t find any match' : renderCards(filteredRepos.other)}</div>
+                </div>}
           </div>
         ) : null}
         {view === 'list' ? (
-          <RepoTable data={filteredRepos} removeRepo={removeRepo} isOrganizationView={type !== 'MY_REPOS'} />
+          <RepoTable search={search} otherReposCount={otherReposCount} data={filteredRepos} removeRepo={removeRepo} isOrganizationView={type !== 'MY_REPOS'} />
         ) : null}
       </div>
     ) : null

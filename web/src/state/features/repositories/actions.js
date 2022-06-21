@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import * as types from './types';
 import {
-  filterSemaRepos, getDashboardRepositories, getRepo, getRepos, getRepositoryOverview, postAnalysis, postRepositories,
+  filterSemaRepos, getDashboardRepositories, getRepo, getRepos, getRepositoryOverview, postAnalysis, postRepositories, toggleIsPinned,
 } from './api';
 import { alertOperations } from '../alerts';
 
@@ -332,5 +332,40 @@ export const fetchRepoDashboard = (query, token) => async (dispatch) => {
     } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestFetchDashboardReposError(errMessage));
+  }
+};
+
+export const requestToggleIsPinned = (id) => ({
+  type: types.REQUEST_TOGGLE_IS_PINNED,
+  id,
+});
+
+export const requestToggleIsPinnedSuccess = () => ({
+  type: types.REQUEST_TOGGLE_IS_PINNED_SUCCESS,
+});
+
+export const requestToggleIsPinnedError = (errors, id) => ({
+  type: types.REQUEST_TOGGLE_IS_PINNED_ERROR,
+  errors,
+  id,
+});
+
+export const toggleIsPinnedRepos = (id, token) => async (dispatch) => {
+  try {
+    dispatch(requestToggleIsPinned(id));
+    await toggleIsPinned({ id }, token);
+
+    dispatch(requestToggleIsPinnedSuccess());
+  } catch (error) {
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestToggleIsPinnedError(errMessage, id));
   }
 };

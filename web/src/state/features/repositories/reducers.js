@@ -241,7 +241,42 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       error: action.errors,
-    };
+      };
+  case types.REQUEST_TOGGLE_IS_PINNED:
+      const newRepos = state.data.repositories.map(repo => {
+        if (repo._id === action.id) {
+          return { ...repo, isPinned: !repo.isPinned }
+        }
+        return repo;
+      });
+    return {
+      ...state,
+      data: {
+        ...state.data,
+        repositories: newRepos,
+      },
+      isFetching: true,
+      };
+  case types.REQUEST_TOGGLE_IS_PINNED_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+    }
+    case types.REQUEST_TOGGLE_IS_PINNED_ERROR:
+      const repos = state.data.repositories.map(repo => {
+        if (repo._id === action.id) {
+          return { ...repo, isPinned: !repo.isPinned }
+        }
+        return repo;
+      });
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          repositories: repos,
+        },
+        isFetching: false,
+        };
   default:
     return state;
   }

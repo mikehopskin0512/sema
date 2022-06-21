@@ -5,25 +5,31 @@ import styles from './repoTable.module.scss';
 import RepoRow from '../repoRow';
 import usePermission from '../../../hooks/usePermission';
 
-const RepoTable = ({ data, removeRepo, isOrganizationView }) => {
+const RepoTable = ({ data, removeRepo, isOrganizationView, search, otherReposCount }) => {
   const { isOrganizationAdmin } = usePermission();
+
+  const renderTableRaw = () => {
+    return (<tr className="has-background-gray-300">
+      <th className="is-uppercase has-text-weight-semibold is-size-8 pr-10 px-10">Repo</th>
+      <th className="is-uppercase has-text-weight-semibold is-size-8 p-10">Languages</th>
+      <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema code reviews</th>
+      <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema comments</th>
+      <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema commenters</th>
+      <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema Users</th>
+      {isOrganizationAdmin() && <th aria-label="action-header" />}
+    </tr>);
+  }
 
   return (
     <div className={clsx('table-container', styles['table-wrapper'])}>
       <table className={clsx('table is-fullwidth my-25', styles.table)}>
-        <thead className={clsx('is-fullwidth', styles.thead)}>
-          <tr>
-            <th className="is-uppercase has-text-weight-semibold is-size-8 p-10">Repo</th>
-            <th className="is-uppercase has-text-weight-semibold is-size-8 p-10">Languages</th>
-            <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema code reviews</th>
-            <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema comments</th>
-            <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema commenters</th>
-            <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema Users</th>
-            {isOrganizationAdmin() && <th aria-label="action-header" />}
-          </tr>
-        </thead>
-        <tbody className="is-fullwidth">
-          {data.map((item) => (<RepoRow {...item} key={`guide-${item._id}`} removeRepo={removeRepo} isOrganizationView={isOrganizationView} />))}
+        <tbody className="is-fullwidth mt-25">
+          <tr className="has-text-weight-semibold is-size-5"><div className="my-25">{`Pinned repos (${data.pinned.length})`}</div></tr>
+          {renderTableRaw()}
+          {data.pinned.length ? data.pinned.map((item) => (<RepoRow {...item} key={`guide-${item._id}`} removeRepo={removeRepo} isOrganizationView={isOrganizationView} />)) : (!search) ? <p className="mt-25">No Pinned Repos yet. Add your first one!</p> : <p className="mt-25">No Results Found. We couldn’t find any match</p>}
+          <tr className="has-text-weight-semibold is-size-5 pl-10 pb-25 pt-25"><div className="my-25 ">{`Other repos (${otherReposCount})`}</div></tr>
+          {renderTableRaw()}
+          {data.other.length ? data.other.map((item) => (<RepoRow {...item} key={`guide-${item._id}`} removeRepo={removeRepo} isOrganizationView={isOrganizationView} />)) : (!search) ? <p className="mt-25">No Pinned Repos yet. Add your first one!</p> : <p className="mt-25">No Results Found. We couldn’t find any match</p>}
         </tbody>
       </table>
     </div>

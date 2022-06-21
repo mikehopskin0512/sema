@@ -1,4 +1,4 @@
-import { getAll, create, get } from '../../utils/api';
+import { getAll, create, get, patch } from '../../utils/api';
 
 export const postRepositories = (params, token) => create('/api/proxy/repositories', params, token);
 export const getRepos = (params, token) => getAll('/api/proxy/repositories', { params }, token);
@@ -17,3 +17,4 @@ export const getTagsStats = (filter, token) => getAll(
 );
 export const getRepositoryOverview = (params, token) => getAll('/api/proxy/repositories/overview', { params }, token);
 export const getDashboardRepositories = (params, token) => getAll('/api/proxy/repositories/dashboard', { params }, token);
+export const toggleIsPinned = (params, token) => patch('/api/proxy/repositories/toggleIsPinned', { params }, token);

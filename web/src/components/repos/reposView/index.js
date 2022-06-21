@@ -28,6 +28,7 @@ const ReposView = ({
   const [repos, setRepos] = useState({
     favorites: [],
     other: [],
+    pinned: [],
   });
   const [page, setPage] = useState(1);
   const isMoreReposAvailable = repos.other.length > NUM_PER_PAGE && NUM_PER_PAGE * page < repos.other.length;
@@ -37,11 +38,14 @@ const ReposView = ({
   useEffect(() => {
     if (githubUser && type === 'user') {
       const favoriteRepoIds = githubUser.repositories.filter((repo) => repo.isFavorite).map((repo) => repo.id);
-      const otherRepos = [...repositories];
-      const favoriteRepos = remove(otherRepos, (repo) => favoriteRepoIds.includes(repo.externalId));
+      const repos = [...repositories];
+      const favoriteRepos = remove(repos, (repo) => favoriteRepoIds.includes(repo.externalId));
+      const otherRepos = repos.filter(repo => !repo.isPinned);
+      const pinnedRepos = repos.filter(repo => repo.isPinned === true);
       setRepos({
         favorites: favoriteRepos,
-        other: otherRepos
+        other: otherRepos,
+        pinned: pinnedRepos,
       });
     }
   }, [repositories]);
@@ -49,26 +53,30 @@ const ReposView = ({
   useEffect(() => {
     if (organizations && type === 'organization') {
       const repos = organizations.repos;
+      const pinnedRepos = repos.filter(repo => repo.isPinned === true);
+      const otherRepos = repos.filter(repo => !repo.isPinned);
       setRepos({
         favorites: [],
-        other: repos
+        other: otherRepos,
+        pinned: pinnedRepos,
       });
     }
   }, [organizations]);
 
   return ( !repositories.isFetching &&
     <>
-      <div className={clsx('my-40', styles['repos-container'])}>
-        {/* <RepoList type="FAVORITES" repos={repos.favorites} /> */}
-        <RepoList
+    <div className={clsx('my-40', styles['repos-container'])}>
+      <RepoList
           type={type === 'organization' ? 'REPOS' : 'MY_REPOS'}
           repos={repos.other.slice(0, NUM_PER_PAGE * page)}
+          pinnedRepos={repos.pinned}
           search={searchQuery}
           onSearchChange={onSearchChange}
           withSearch={withSearch}
           isLoaded={isLoaded}
+          otherReposCount={repos.other.length}
         />
-        {isEmptyRepo && <EmptyRepo />}
+        {isEmptyRepo && !searchQuery && <EmptyRepo />}
       </div>
       <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth has-footer-margin">
         {isMoreReposAvailable && (

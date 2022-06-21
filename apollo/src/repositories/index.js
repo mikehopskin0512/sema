@@ -8,7 +8,7 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 import {
-  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId, aggregateReactions, aggregateTags, aggregateRepositories, getRepositories,
+  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId, aggregateReactions, aggregateTags, aggregateRepositories, getRepositories, toggleIsPinned,
 } from './repositoryService';
 import checkEnv from "../middlewares/checkEnv";
 
@@ -147,6 +147,20 @@ export default (app, passport) => {
       }
       return res.status(404).send({
         message: 'Not found',
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.patch('/toggleIsPinned', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id } = req.query;
+
+    try {
+      await toggleIsPinned(id);
+      return res.status(200).send({
+        success: 'ok',
       });
     } catch (error) {
       logger.error(error);

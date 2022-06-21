@@ -2,28 +2,40 @@ import React, { useRef, useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './repoRow.module.scss';
 import RepoUsers from '../repoUsers';
 import { PATHS } from '../../../utils/constants';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
-import { OptionsIcon } from '../../Icons';
+import Tooltip from '../../Tooltip';
+import { OptionsIcon, StarFilledIcon, StarOutlineScg } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
 import usePermission from '../../../hooks/usePermission';
 import DeleteRepoModal from '../repoCard/deleteRepoModal';
+import { toggleIsPinnedRepos } from '../../../state/features/repositories/actions';
+import { black900, orange400 } from '../../../../styles/_colors.module.scss';
 
 const RepoRow = (props) => {
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.authState);
   const titleRef = useRef(null);
   const {
-    externalId = '', name = '', body = '', repoStats, users = [], language = '', _id: repoId, removeRepo, isOrganizationView = false,
+    externalId = '', name = '', body = '', repoStats, users = [], language = '', _id: repoId, removeRepo, isOrganizationView = false, isPinned = false,
   } = props;
   const { isOrganizationAdmin } = usePermission();
   const [isDeleteRepoModalOpen, toggleDeleteModal] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   const onRemoveRepo = async (e) => {
     e.stopPropagation();
     await removeRepo(repoId);
     toggleDeleteModal(false);
   };
+
+  const onToggleIsPinned = async (e) => {
+    e.stopPropagation();
+    await dispatch(toggleIsPinnedRepos(repoId, token));
+  }
 
   const ActionColumn = () => {
     if (isOrganizationAdmin()) {
@@ -56,8 +68,13 @@ const RepoRow = (props) => {
           <td className={clsx('py-15 has-background-white px-10', styles.document)}>
             <div className="is-flex is-align-items-center">
               {/* <FontAwesomeIcon icon={faStarSolid} color="#FFA20F" className="mr-20" /> */}
+              <Tooltip direction='top' text={isPinned ? 'Remove from Pinned Repos' : 'Pin this Repo'} isActive={true} showDelay={0}>
+                <div className="mt-5" onClick={onToggleIsPinned} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+                  {isPinned ? <StarFilledIcon color={orange400} /> : <StarOutlineScg color={hovered ? orange400 : black900} />}
+                </div>
+              </Tooltip>
               <OverflowTooltip ref={titleRef} text={name}>
-                <p ref={titleRef} className={clsx("has-text-weight-semibold is-size-6", styles.body)}>{name}</p>
+                <p ref={titleRef} className={clsx("has-text-weight-semibold is-size-6 ml-25", styles.body)}>{name}</p>
               </OverflowTooltip>
             </div>
           </td>
@@ -86,7 +103,7 @@ const RepoRow = (props) => {
           <td className={clsx('py-15 has-background-white px-10')}>
             <RepoUsers users={isOrganizationView ? repoStats.userIds : users} />
           </td>
-          {ActionColumn()}
+            {ActionColumn()}
         </tr>
       </Link>
       {isOrganizationAdmin() && (
@@ -95,7 +112,7 @@ const RepoRow = (props) => {
           onCancel={() => toggleDeleteModal(false)}
           onConfirm={onRemoveRepo}
         />
-      )}
+        )}
     </>
   );
 };
