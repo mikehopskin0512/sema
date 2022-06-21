@@ -18,6 +18,8 @@ pipeline {
         STAGING_MONGODB_NAME = credentials('STAGING_MONGODB_NAME')
         BACKUP_SERVER_PASS = credentials('BACKUP_SERVER_PASS')
         BACKUP_SERVER_USER = credentials('BACKUP_SERVER_USER')
+        AWS_REGION = 'us-east-1'
+        AWS_DEFAULT_REGION = 'us-east-1'
     }
 
     options {
@@ -36,12 +38,6 @@ pipeline {
             failFast true
             parallel {
                 stage('Build Apollo') {
-                    agent {
-                        docker {
-                            image 'cimg/base:2022.01'
-                            args '-u root --privileged --net host -v /var/run/docker.sock:/var/run/docker.sock'
-                        }
-                    }
                     steps {
                         script {
                             buildApollo(params.ENVIRONMENT, params.BRANCH_NAME)
@@ -49,12 +45,6 @@ pipeline {
                     }
                 }
                 stage('Build Apollo Worker'){
-                    agent {
-                        docker {
-                            image 'cimg/base:2022.01'
-                            args '-u root --privileged --net host -v /var/run/docker.sock:/var/run/docker.sock'
-                        }
-                    }
                     steps{
                         script{
                             buildApolloWorker(params.ENVIRONMENT, params.BRANCH_NAME)
