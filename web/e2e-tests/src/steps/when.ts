@@ -160,7 +160,7 @@ When(
 )
 
 When(
-    /^I remove all elements "([^"]*)?" with button "([^"]*)?" under "([^"]*)?" with confirmation "([^"]*)?"$/,
+    /^I remove all elements "([^"]*)?" with button "([^"]*)?" under "([^"]*)?" with confirmation "([^"]*)?" till "([^"]*)?"$/,
     removeElementsWhileExist
 )
 
