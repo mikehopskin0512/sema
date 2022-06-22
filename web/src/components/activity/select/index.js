@@ -11,8 +11,8 @@ import styles from './select.module.scss';
 import { blue500, gray700 } from '../../../../styles/_colors.module.scss';
 import { DROPDOWN_SORTING_TYPES, SORTING_TYPES } from '../../../utils/constants';
 import { getPriorityListFromUser, sortWithPriority } from '../../../utils/sorts';
-import { CloseIcon, ReplayArrowIcon, SearchIcon } from '@/components/Icons';
-import InputField from '@/components/inputs/InputField';
+import { CloseIcon, ReplayArrowIcon, SearchIcon } from '../../../components/Icons';
+import InputField from '../../../components/inputs/InputField';
 
 const sortDropdown = (options, sortType, user) => {
   switch (sortType) {

@@ -14,7 +14,8 @@ const InputField = ({
   iconRight,
   placeholder = '',
   isMultiLine = false,
-  additionalClass
+  additionalClass,
+  onRightIconClick
 }) => {
   return (
     <div className={clsx("is-full-width", additionalClass ?? '')}>
@@ -65,7 +66,9 @@ const InputField = ({
           </span>
         )}
         {iconRight && (
-          <span className={clsx(
+          <span
+            onClick={() => onRightIconClick?.()}
+            className={clsx(
             'icon is-small is-right is-clickable',
             error && 'has-text-red-500',
           )}>

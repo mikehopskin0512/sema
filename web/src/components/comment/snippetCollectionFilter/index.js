@@ -158,7 +158,7 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
             />
           </div>
         )}
-        <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end">
+        <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end pt-20">
           <SearchIcon
             color={gray500}
             size="medium"
