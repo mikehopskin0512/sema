@@ -35,8 +35,9 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
     const tagsToDisplay = addTags(tags, types);
 
     const ids = new Set(tagsIds?.flat());
+
     return tagsToDisplay?.filter(tag => ids.has(tag.value));
-  }, [tags])
+  }, [tags, collections])
 
 
   useAuthEffect(() => {
