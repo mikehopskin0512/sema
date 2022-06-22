@@ -161,7 +161,7 @@ const SnapshotModal = ({
         title: snapshotData.title,
       });
     }
-  }, [snapshotData]);
+  }, [snapshotData, type]);
 
   const containerStyle = useMemo(() => (dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && activityTypeData?.length > 3) ? { overflowY: 'scroll', maxHeight: '372px' } : null, [dataType, activityTypeData]);
 
