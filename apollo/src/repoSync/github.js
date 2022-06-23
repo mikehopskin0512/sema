@@ -233,7 +233,7 @@ async function findDuplicate(githubComment, otherComments) {
   return await SmartComment.findById(existing._id);
 }
 
-function removeSemaSignature(text) {
+export function removeSemaSignature(text) {
   if (looksLikeSemaComment(text)) {
     const [body] = splitSemaComment(text);
     return body;
@@ -244,7 +244,7 @@ function removeSemaSignature(text) {
 
 function splitSemaComment(text) {
   const [rawBody, rawSignature] = dropQuotedText(text).split(
-    /__\r?\n\[!\[sema-logo\].*?&nbsp;/im
+    /__\r?\n\[!\[sema-logo\].*?(?:\*\*Summary:)/im
   );
 
   if (rawSignature) {
@@ -270,9 +270,12 @@ function dropQuotedText(text) {
     .join('\n');
 }
 
-function extractTagsFromSemaComment(text) {
+export function extractTagsFromSemaComment(text) {
   try {
     const [, signature] = splitSemaComment(text);
+
+    if (!signature) return [];
+
     return (
       signature
         .match(/Tags:(.*)$/im)?.[1]
@@ -288,8 +291,10 @@ function extractTagsFromSemaComment(text) {
   }
 }
 
-async function extractReactionFromSemaComment(text) {
+export async function extractReactionFromSemaComment(text) {
   const [, signature] = splitSemaComment(text);
+  if (!signature) return null;
+
   const emoji = EMOJIS.find((e) => signature.includes(e.github_emoji));
   if (emoji) {
     const reaction = await findReactionById(emoji._id);

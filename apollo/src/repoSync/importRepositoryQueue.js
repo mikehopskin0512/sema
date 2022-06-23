@@ -7,9 +7,15 @@ import { getOctokit, getOwnerAndRepo } from './repoSyncService';
 const queue = queues.self(module);
 
 export default async function importRepository({ id }) {
-  logger.info(`Repo sync: ${queue.name} processing repository ${id}`);
-
   const repository = await Repository.findById(id);
+  if (!repository)
+    logger.info(
+      `Repo sync: ${queue.name} processing repository ${id}: not found`
+    );
+
+  logger.info(
+    `Repo sync: ${queue.name} processing repository ${repository.fullName} ${id}`
+  );
 
   const isRepoSyncSupported = repository.type === 'github';
   if (!isRepoSyncSupported) {
@@ -54,7 +60,12 @@ export default async function importRepository({ id }) {
     ]);
 
     await setSyncCompleted(repository);
+
+    logger.info(
+      `Repo sync: Completed processing repository ${repository.fullName} ${id}`
+    );
   } catch (error) {
+    logger.error(error);
     await setSyncErrored(repository, error);
     throw error;
   }
