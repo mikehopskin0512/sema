@@ -1,3 +1,4 @@
+import Bluebird from 'bluebird';
 import logger from '../shared/logger';
 import { queues } from '../queues';
 import Repository from '../repositories/repositoryModel';
@@ -83,7 +84,7 @@ async function importComments({
 }) {
   const pages = resumablePaginate({ octokit, endpoint, type, repository });
   for await (const data of pages) {
-    await Promise.all(data.map(importComment));
+    await Bluebird.resolve(data).map(importComment, { concurrency: 10 });
   }
 }
 
@@ -99,14 +100,14 @@ async function importReviews({ octokit, endpoint, repository, importComment }) {
   });
 
   for await (const data of pages) {
-    await Promise.all(
-      data.map((pullRequest) =>
+    await Bluebird.resolve(data).map(
+      (pullRequest) =>
         importReviewsFromPullRequest({
           octokit,
           pullRequest,
           importComment,
-        })
-      )
+        }),
+      { concurrency: 10 }
     );
   }
 }
@@ -122,7 +123,10 @@ async function importReviewsFromPullRequest({
     pull_number: pullRequest.number,
   });
 
-  await Promise.all(reviews.filter((r) => r.body.trim()).map(importComment));
+  await Bluebird.resolve(reviews.filter((r) => r.body.trim())).map(
+    importComment,
+    { concurrency: 10 }
+  );
 }
 
 async function setSyncStarted(repository) {
