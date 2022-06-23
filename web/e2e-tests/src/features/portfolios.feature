@@ -4,6 +4,7 @@ Feature: Portfolios
   @PTA71_2
   Scenario: Portfolios user data can be edited
     When I open the site "/dashboard"
+    And  I pause for 2000ms
     Then I expect that element "trophyBtn" becomes displayed
     When I click on the element "trophyBtn"
     Then I expect that element "portfolioLibraryTab" becomes displayed
@@ -39,20 +40,24 @@ Feature: Portfolios
     Then I expect that element "portfolioLibraryTab" becomes displayed
     And  I expect that element "addNewPortfolioBtn" becomes displayed
     When I click on the element "addNewPortfolioBtn"
-    Then I expect that element "portfolioListNames" becomes displayed
-    And  I pause for 2000ms
+    And  I pause for 3000ms
+    And  I refresh the page
+    Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
+    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn" till "1"
+    Then I expect that element "portfolioListNames" does appear exactly "1" times
+    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
     
     When I click on the element "reposTab"
-    Then I expect that element "reposContainer" becomes displayed
     And  I pause for 3000ms
+    Then I expect that element "reposContainer" becomes displayed
     And  I expect that element "1stReposCard" becomes displayed
-    And  I pause for 1000ms
     When I click on the element "1stReposCard"
-    And  I pause for 1000ms
+    And  I pause for 2000ms
+    And  I click on the element "1stReposCard" if visible
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "allTimeDateRange" becomes displayed
-    When I click on the element "allTimeDateRange"
+    Then I expect that element "last7DaysDateRange" becomes displayed
+    When I click on the element "last7DaysDateRange"
     And  I click on the element "dateRangeFilter"
     Then I expect that element "snapshotBtn" becomes displayed
 
@@ -85,11 +90,12 @@ Feature: Portfolios
     And  I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshot was added to your portfolio."
     And  I expect that element "saveSnapshotToPortfolioNotificationLink" becomes displayed
     When I click on the element "saveSnapshotToPortfolioNotificationLink"
-
+  
     Then I expect that element "portfoliosUserName" becomes displayed
     And  I expect that element "portfoliosUserGitHubLink" becomes displayed
     And  I expect that element "portfoliosChangePersonalOverviewBtn" becomes displayed
-
+    And  I refresh the page
+#  https://semalab.atlassian.net/browse/EAST-1459
     Then I expect that element "portfoliosSnapshotsBoard" becomes displayed
     And  I expect that new item "portfoliosSnapshotName" is added to portfolio
     And  I expect that element "portfoliosSnapshotDescription" becomes displayed
@@ -102,32 +108,43 @@ Feature: Portfolios
     Then I expect that element "portfoliosDeleteSnapshotConfirmBtn" becomes displayed
     When I click on the element "portfoliosDeleteSnapshotConfirmBtn"
     Then I expect that element "portfoliosSnapshotsBoard" becomes not displayed
+  
+    When I click on the element "trophyBtn"
+    Then I expect that element "snapshotLibraryTab" becomes displayed
+    When I click on the element "snapshotLibraryTab"
+    And  I pause for 3000ms
+    And  I expect that element "snapshotListThreeDotsBtns" becomes displayed
+    When I remove all elements "snapshotListTitles" with button "snapshotListDeleteBtn" under "snapshotListThreeDotsBtns" with confirmation "snapshotConfirmationDeleteBtn" till "0"
+    And  I expect that element "snapshotListTitles" becomes not displayed
 
   @PTA71_5
   Scenario: Snapshot can be saved for code stats tags
     When I open the site "/dashboard"
     Then I expect that element "trophyBtn" becomes displayed
     When I click on the element "trophyBtn"
-
     Then I expect that element "portfolioLibraryTab" becomes displayed
     And  I expect that element "addNewPortfolioBtn" becomes displayed
     When I click on the element "addNewPortfolioBtn"
-    Then I expect that element "portfolioListNames" becomes displayed
-    And  I pause for 2000ms
+    And  I pause for 3000ms
+    And  I refresh the page
+    Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
+    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn" till "1"
+    Then I expect that element "portfolioListNames" does appear exactly "1" times
+    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
 
     When I click on the element "reposTab"
-    Then I expect that element "reposContainer" becomes displayed
     And  I pause for 3000ms
+    Then I expect that element "reposContainer" becomes displayed
     And  I expect that element "1stReposCard" becomes displayed
-    And  I pause for 1000ms
     When I click on the element "1stReposCard"
-    And  I pause for 1000ms
+    And  I pause for 2000ms
+    And  I click on the element "1stReposCard" if visible
     Then I expect that element "codeStatsTabBtn" becomes displayed
     When I click on the element "codeStatsTabBtn"
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "allTimeDateRange" becomes displayed
-    When I click on the element "allTimeDateRange"
+    Then I expect that element "last7DaysDateRange" becomes displayed
+    When I click on the element "last7DaysDateRange"
     Then I expect that element "codeStatsTagsSnapshotBtn" becomes displayed
 
     When I click on the element "codeStatsTagsSnapshotBtn"
@@ -165,18 +182,20 @@ Feature: Portfolios
     And  I expect that element "portfoliosUserGitHubLink" becomes displayed
     And  I expect that element "portfoliosChangePersonalOverviewBtn" becomes displayed
 
+    When I refresh the page
+#  https://semalab.atlassian.net/browse/EAST-1459
     Then I expect that element "portfoliosSnapshotsBoard" becomes displayed
     And  I expect that new item "portfoliosSnapshotName" is added to portfolio
     And  I expect that element "portfoliosSnapshotVerticalDescription" becomes displayed
     And  I expect that element "portfoliosSnapshotVerticalDescription" matches the text "codeTags - snapshot description"
 
-    When I click on the element "portfoliosSnapshotThreeDotsMenuBtn"
-    Then I expect that element "portfoliosSnapshotDeleteBtn" becomes displayed
-
-    When I click on the element "portfoliosSnapshotDeleteBtn"
-    Then I expect that element "portfoliosDeleteSnapshotConfirmBtn" becomes displayed
-    When I click on the element "portfoliosDeleteSnapshotConfirmBtn"
-    Then I expect that element "portfoliosSnapshotsBoard" becomes not displayed
+    When I click on the element "trophyBtn"
+    Then I expect that element "snapshotLibraryTab" becomes displayed
+    When I click on the element "snapshotLibraryTab"
+    And  I pause for 3000ms
+    And  I expect that element "snapshotListThreeDotsBtns" becomes displayed
+    When I remove all elements "snapshotListTitles" with button "snapshotListDeleteBtn" under "snapshotListThreeDotsBtns" with confirmation "snapshotConfirmationDeleteBtn" till "0"
+    And  I expect that element "snapshotListTitles" becomes not displayed
 
   @PTA71_4
   Scenario: Snapshot can be saved for code stats summaries
@@ -187,22 +206,29 @@ Feature: Portfolios
     Then I expect that element "portfolioLibraryTab" becomes displayed
     And  I expect that element "addNewPortfolioBtn" becomes displayed
     When I click on the element "addNewPortfolioBtn"
-    Then I expect that element "portfolioListNames" becomes displayed
-    And  I pause for 2000ms
+    And  I pause for 3000ms
+    And  I refresh the page
+    Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
+    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn" till "1"
+    Then I expect that element "portfolioListNames" does appear exactly "1" times
+    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
 
     When I click on the element "reposTab"
-    Then I expect that element "reposContainer" becomes displayed
     And  I pause for 3000ms
+    Then I expect that element "reposContainer" becomes displayed
     And  I expect that element "1stReposCard" becomes displayed
-    And  I pause for 2000ms
     When I click on the element "1stReposCard"
-    And  I pause for 1000ms
+    And  I pause for 2000ms
+    And  I click on the element "1stReposCard" if visible
     Then I expect that element "codeStatsTabBtn" becomes displayed
     When I click on the element "codeStatsTabBtn"
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "allTimeDateRange" becomes displayed
-    When I click on the element "allTimeDateRange"
+    Then I expect that element "last7DaysDateRange" becomes displayed
+    When I click on the element "last7DaysDateRange"
+
+    Then I expect that element "dateRangeFilter" becomes displayed
+    When I click on the element "dateRangeFilter"
     Then I expect that element "codeStatsSummariesSnapshotBtn" becomes displayed
 
     When I click on the element "codeStatsSummariesSnapshotBtn"
@@ -239,44 +265,52 @@ Feature: Portfolios
     And  I expect that element "portfoliosUserGitHubLink" becomes displayed
     And  I expect that element "portfoliosChangePersonalOverviewBtn" becomes displayed
 
+    When I refresh the page
+#  https://semalab.atlassian.net/browse/EAST-1459
     Then I expect that element "portfoliosSnapshotsBoard" becomes displayed
     And  I expect that new item "portfoliosSnapshotName" is added to portfolio
     And  I expect that element "portfoliosSnapshotVerticalDescription" becomes displayed
     And  I expect that element "portfoliosSnapshotVerticalDescription" matches the text "codeStats - snapshot description"
 
-    When I click on the element "portfoliosSnapshotThreeDotsMenuBtn"
-    Then I expect that element "portfoliosSnapshotDeleteBtn" becomes displayed
-
-    When I click on the element "portfoliosSnapshotDeleteBtn"
-    Then I expect that element "portfoliosDeleteSnapshotConfirmBtn" becomes displayed
-    When I click on the element "portfoliosDeleteSnapshotConfirmBtn"
-    Then I expect that element "portfoliosSnapshotsBoard" becomes not displayed
+    When I click on the element "trophyBtn"
+    Then I expect that element "snapshotLibraryTab" becomes displayed
+    When I click on the element "snapshotLibraryTab"
+    And  I pause for 3000ms
+    And  I expect that element "snapshotListThreeDotsBtns" becomes displayed
+    When I remove all elements "snapshotListTitles" with button "snapshotListDeleteBtn" under "snapshotListThreeDotsBtns" with confirmation "snapshotConfirmationDeleteBtn" till "0"
+    And  I expect that element "snapshotListTitles" becomes not displayed
 
   @PTA71_6
   Scenario: Snapshot can be edited in portfolios
     When I open the site "/dashboard"
     Then I expect that element "trophyBtn" becomes displayed
     When I click on the element "trophyBtn"
+    Then I expect that element "snapshotLibraryTab" becomes displayed
+    When I click on the element "snapshotLibraryTab"
+    And  I pause for 3000ms
+    When I remove all elements "snapshotListTitles" with button "snapshotListDeleteBtn" under "snapshotListThreeDotsBtns" with confirmation "snapshotConfirmationDeleteBtn" till "0"
+    And  I expect that element "snapshotListTitles" becomes not displayed
 
     Then I expect that element "portfolioLibraryTab" becomes displayed
-    And  I expect that element "addNewPortfolioBtn" becomes displayed
+    When I click on the element "portfolioLibraryTab"
+    Then I expect that element "addNewPortfolioBtn" becomes displayed
     When I click on the element "addNewPortfolioBtn"
     Then I expect that element "portfolioListNames" becomes displayed
     And  I pause for 2000ms
 
     When I click on the element "reposTab"
+    And  I pause for 3000ms
     Then I expect that element "reposContainer" becomes displayed
-    And  I pause for 4000ms
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
     And  I pause for 2000ms
     And  I click on the element "1stReposCard" if visible
-    And  I pause for 2000ms
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "allTimeDateRange" becomes displayed
-    When I click on the element "allTimeDateRange"
-    And  I click on the element "dateRangeFilter"
+    Then I expect that element "last7DaysDateRange" becomes displayed
+    When I click on the element "last7DaysDateRange"
+    Then I expect that element "dateRangeFilter" becomes displayed
+    When I click on the element "dateRangeFilter"
     Then I expect that element "snapshotBtn" becomes displayed
 
     When I click on the element "snapshotBtn"
@@ -296,7 +330,9 @@ Feature: Portfolios
     And  I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshot was added to your portfolio."
     And  I expect that element "saveSnapshotToPortfolioNotificationLink" becomes displayed
     When I click on the element "saveSnapshotToPortfolioNotificationLink"
-
+    Then I expect that element "portfoliosUserName" becomes displayed
+    When I refresh the page
+#  https://semalab.atlassian.net/browse/EAST-1459
     Then I expect that element "portfoliosSnapshotThreeDotsMenuBtn" becomes displayed
     When I click on the element "portfoliosSnapshotThreeDotsMenuBtn"
     Then I expect that element "portfoliosSnapshotEditBtn" becomes displayed
@@ -309,13 +345,8 @@ Feature: Portfolios
     And  I click on the element "editSnapshotSaveBtn"
 
     Then I expect that element "saveSnapshotTitleInput" becomes not displayed
+#  https://semalab.atlassian.net/browse/EAST-1461
     And  I expect that element "portfoliosSnapshotName" matches the text "snapshot name updated"
-    When I click on the element "portfoliosSnapshotThreeDotsMenuBtn"
-    Then I expect that element "portfoliosSnapshotDeleteBtn" becomes displayed
-    When I click on the element "portfoliosSnapshotDeleteBtn"
-    Then I expect that element "portfoliosDeleteSnapshotConfirmBtn" becomes displayed
-    When I click on the element "portfoliosDeleteSnapshotConfirmBtn"
-    Then I expect that element "portfoliosSnapshotsBoard" becomes not displayed
 
   @PTA95 @smoke
   Scenario: Portfolio Manager elements are displayed correctly
@@ -327,8 +358,9 @@ Feature: Portfolios
     And  I expect that element "addNewPortfolioBtn" becomes displayed
     When I click on the element "addNewPortfolioBtn"
     And  I pause for 3000ms
+    And  I refresh the page
     Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
-    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn"
+    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn" till "1"
     Then I expect that element "portfolioListNames" does appear exactly "1" times
     And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
 
@@ -357,25 +389,16 @@ Feature: Portfolios
     When I open the site "/dashboard"
     Then I expect that element "trophyBtn" becomes displayed
     When I click on the element "trophyBtn"
-
-    Then I expect that element "portfolioLibraryTab" becomes displayed
-    And  I expect that element "addNewPortfolioBtn" becomes displayed
-    When I click on the element "addNewPortfolioBtn"
-    And  I pause for 3000ms
-    Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
-    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn"
-    Then I expect that element "portfolioListNames" does appear exactly "1" times
-    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
-
     Then I expect that element "portfolioLibraryTab" becomes displayed
     And  I expect that element "addNewPortfolioBtn" becomes displayed
     When I click on the element "addNewPortfolioBtn"
     And  I click on the element "addNewPortfolioBtn"
     And  I pause for 3000ms
     Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
-    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn"
+    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn" till "1"
     Then I expect that element "portfolioListNames" does appear exactly "1" times
     And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
+
     When I click on the element "portfolioListThreeDotsBtns"
     Then I expect that element "portfolioListDuplicateBtn" becomes displayed
     And  I expect that element "portfolioListDeleteBtn" becomes not displayed
@@ -391,20 +414,21 @@ Feature: Portfolios
     When I click on the element "addNewPortfolioBtn"
     And  I pause for 3000ms
     Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
-    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn"
+    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn" till "1"
     Then I expect that element "portfolioListNames" does appear exactly "1" times
     And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
 
     When I click on the element "reposTab"
-    Then I expect that element "reposContainer" becomes displayed
     And  I pause for 3000ms
+    Then I expect that element "reposContainer" becomes displayed
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
     And  I pause for 2000ms
+    And  I click on the element "1stReposCard" if visible
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "allTimeDateRange" becomes displayed
-    When I click on the element "allTimeDateRange"
+    Then I expect that element "last7DaysDateRange" becomes displayed
+    When I click on the element "last7DaysDateRange"
     And  I click on the element "dateRangeFilter"
     Then I expect that element "snapshotBtn" becomes displayed
 
@@ -425,7 +449,9 @@ Feature: Portfolios
     And  I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshot was added to your portfolio."
     And  I expect that element "saveSnapshotToPortfolioNotificationLink" becomes displayed
     When I click on the element "saveSnapshotToPortfolioNotificationLink"
-
+    Then I expect that element "portfoliosUserName" becomes displayed
+    When I refresh the page
+#  https://semalab.atlassian.net/browse/EAST-1459
     Then I expect that element "portfoliosSnapshotsBoard" becomes displayed
     And  I expect that new item "portfoliosSnapshotName" is added to portfolio
     And  I expect that element "portfoliosSnapshotDescription" becomes displayed
@@ -455,6 +481,117 @@ Feature: Portfolios
 #  NEW TEST FOR DUPLICATING
 #  https://semalab.atlassian.net/browse/EAST-1412
 
+  @PTA100 @smoke
+  Scenario: All snapshots can be removed from the list
+    When I open the site "/dashboard"
+
+    When I click on the element "reposTab"
+    And  I pause for 3000ms
+    Then I expect that element "reposContainer" becomes displayed
+    And  I expect that element "1stReposCard" becomes displayed
+    When I click on the element "1stReposCard"
+    And  I pause for 2000ms
+    And  I click on the element "1stReposCard" if visible
+    Then I expect that element "dateRangeFilter" becomes displayed
+    When I click on the element "dateRangeFilter"
+    Then I expect that element "last7DaysDateRange" becomes displayed
+    When I click on the element "last7DaysDateRange"
+    And  I click on the element "dateRangeFilter"
+    Then I expect that element "snapshotBtn" becomes displayed
+
+    When I click on the element "snapshotBtn"
+    Then I expect that element "saveSnapshotTitleInput" becomes displayed
+    And  I expect that element "saveSnapshotDescriptionInput" becomes displayed
+
+    When I set "activity logs" with timestamp to the inputfield "saveSnapshotTitleInput"
+    And  I click on the element "saveSnapshotDescriptionInput"
+    And  I add "activity logs - snapshot description" to the inputfield "saveSnapshotDescriptionInput"
+    And  I pause for 1000ms
+    When I click on the element "saveSnapshotSaveBtn"
+
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+
+    Then I expect that element "snapshotLibraryTab" becomes displayed
+    When I click on the element "snapshotLibraryTab"
+    And  I pause for 3000ms
+    And  I expect that element "snapshotListThreeDotsBtns" becomes displayed
+    When I remove all elements "snapshotListTitles" with button "snapshotListDeleteBtn" under "snapshotListThreeDotsBtns" with confirmation "snapshotConfirmationDeleteBtn" till "0"
+    And  I expect that element "snapshotListTitles" becomes not displayed
+
+  @PTA100_2
+  Scenario: Snapshots can be removed from the portfolio
+    When I open the site "/dashboard"
+
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+
+    Then I expect that element "portfolioLibraryTab" becomes displayed
+    And  I expect that element "addNewPortfolioBtn" becomes displayed
+    When I click on the element "addNewPortfolioBtn"
+    And  I pause for 2000ms
+    And  I refresh the page
+    Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
+    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn" till "1"
+    Then I expect that element "portfolioListNames" does appear exactly "1" times
+    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
+
+    When I click on the element "reposTab"
+    And  I pause for 3000ms
+    Then I expect that element "reposContainer" becomes displayed
+    And  I expect that element "1stReposCard" becomes displayed
+    When I click on the element "1stReposCard"
+    And  I pause for 2000ms
+    And  I click on the element "1stReposCard" if visible
+    Then I expect that element "dateRangeFilter" becomes displayed
+    When I click on the element "dateRangeFilter"
+    Then I expect that element "last7DaysDateRange" becomes displayed
+    When I click on the element "last7DaysDateRange"
+    And  I click on the element "dateRangeFilter"
+    Then I expect that element "snapshotBtn" becomes displayed
+
+    When I click on the element "snapshotBtn"
+    Then I expect that element "saveSnapshotTitleInput" becomes displayed
+
+    When I set "activity logs" with timestamp to the inputfield "saveSnapshotTitleInput"
+    And  I click on the element "saveSnapshotDescriptionInput"
+    And  I add "activity logs - snapshot description" to the inputfield "saveSnapshotDescriptionInput"
+    And  I pause for 1000ms
+    And  I click on the element "saveSnapshotAddToPortfolio"
+    And  I pause for 1000ms
+    And  I press "ArrowDown"
+    And  I press "Enter"
+    Then I expect that element "saveSnapshotAddToPortfolio" not matches the text "None"
+    And  I expect that element "saveSnapshotSaveBtn" becomes displayed
+    When I click on the element "saveSnapshotSaveBtn"
+    Then I expect that element "saveSnapshotModal" becomes not displayed
+    And  I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshot was added to your portfolio."
+    And  I expect that element "saveSnapshotToPortfolioNotificationLink" becomes displayed
+    When I click on the element "saveSnapshotToPortfolioNotificationLink"
+    Then I expect that element "portfoliosUserName" becomes displayed
+
+    When I refresh the page
+#  https://semalab.atlassian.net/browse/EAST-1459
+
+    Then I expect that element "portfoliosSnapshotThreeDotsMenuBtn" becomes displayed
+    When I click on the element "portfoliosSnapshotThreeDotsMenuBtn"
+    Then I expect that element "portfoliosSnapshotDeleteBtn" becomes displayed
+
+    When I click on the element "portfoliosSnapshotDeleteBtn"
+    Then I expect that element "portfoliosDeleteSnapshotConfirmBtn" becomes displayed
+    When I click on the element "portfoliosDeleteSnapshotConfirmBtn"
+    Then I expect that element "portfoliosSnapshotsBoard" becomes not displayed
+
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+
+    Then I expect that element "snapshotLibraryTab" becomes displayed
+    When I click on the element "snapshotLibraryTab"
+    And  I pause for 3000ms
+    And  I expect that element "snapshotListThreeDotsBtns" becomes displayed
+    When I remove all elements "snapshotListTitles" with button "snapshotListDeleteBtn" under "snapshotListThreeDotsBtns" with confirmation "snapshotConfirmationDeleteBtn" till "0"
+    And  I expect that element "snapshotListTitles" becomes not displayed
+
   @PTA71 @smoke
   Scenario: Portfolios elements are displayed correctly for portfolio without snapshots
     When I open the site "/dashboard"
@@ -466,7 +603,7 @@ Feature: Portfolios
     When I click on the element "addNewPortfolioBtn"
     And  I pause for 3000ms
     Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
-    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn"
+    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn" till "1"
     Then I expect that element "portfolioListNames" does appear exactly "1" times
     And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
 

@@ -38,4 +38,4 @@ USER node
 ENV NODE_ENV production
 
 # Run npm start script with PM2 when container starts
-CMD [ "pm2-runtime", "node", "--", "./bin/worker", "-i", "max" ]
+CMD [ "pm2-runtime", "node", "--", "./bin/worker" ]

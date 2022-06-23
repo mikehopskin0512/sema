@@ -4,23 +4,7 @@ import { loggerEnabled } from '../config';
 
 export default bunyan.createLogger({
   name: 'apollo',
-  streams: [
-    getOutputStream(),
-    {
-      level: 'info',
-      type: 'rotating-file',
-      path: `logs/apollo-info.${process.pid}.log`,
-      period: '1d',
-      count: 4,
-    },
-    {
-      level: 'error',
-      type: 'rotating-file',
-      path: `logs/apollo-error.${process.pid}.log`,
-      period: '1d',
-      count: 4,
-    },
-  ].filter(Boolean),
+  streams: [getOutputStream()].filter(Boolean),
 });
 
 function getOutputStream() {

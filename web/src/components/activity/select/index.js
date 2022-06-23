@@ -128,6 +128,7 @@ const CustomSelect = props => {
   } = props;
 
   const { value, onChange, options, isMulti } = selectProps;
+
   const { user } = useSelector(state => ({
     user: state.authState.user
   }));

@@ -11,6 +11,7 @@ import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
 import { snapshotsOperations } from '../../../state/features/snapshots';
 import MarkdownEditor from '../../markdownEditor';
+import { gray600 } from '../../../../styles/_colors.module.scss';
 
 const { duplicateSnapshot } = snapshotsOperations;
 
@@ -95,7 +96,7 @@ const ChartSnapshot = React.forwardRef(({
             ]}
             trigger={(
               <div className={clsx("is-clickable is-flex", isOwner && "mr-40")}>
-                <OptionsIcon />
+                <OptionsIcon color={gray600} />
               </div>
             )}
           />
