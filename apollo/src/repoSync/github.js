@@ -19,8 +19,16 @@ export default function createGitHubImporter(octokit) {
   const commentsWithoutID = new Cache(10);
   commentsWithoutID.materialize = loadCommentsWithoutID;
 
-  const octokitCache = new Cache(50);
-  octokitCache.materialize = async (url) => await octokit.request(url);
+  const pullRequestCache = new Cache(50);
+  pullRequestCache.materialize = async (url) => {
+    try {
+      const { data: pullRequest } = await octokit.request(url);
+      return pullRequest;
+    } catch (error) {
+      if (error.status === 404) return null;
+      throw error;
+    }
+  };
 
   const userCache = new Cache(100);
   userCache.materialize = async (login) =>
@@ -47,7 +55,12 @@ export default function createGitHubImporter(octokit) {
     const pullRequestURL =
       githubComment.pull_request_url ||
       githubComment.issue_url.replace('/issues/', '/pulls/');
-    const { data: pullRequest } = await octokitCache.get(pullRequestURL);
+
+    const pullRequest = await pullRequestCache.get(pullRequestURL);
+    // Sometimes we get comments for PRs that were deleted on GitHub.
+    // e.g. https://api.github.com/repos/SemaSandbox/astrobee/pulls/comments/702432867
+    if (!pullRequest) return null;
+
     const { repo } = pullRequest.base;
     const otherComments = await commentsWithoutID.get(repo.id);
     const existingComment = await findDuplicate(githubComment, otherComments);
