@@ -120,8 +120,10 @@ const SnapshotModal = ({
 
     try {
       if (type === SNAPSHOT_MODAL_TYPES.EDIT) {
-        dispatch(updateSnapshot(snapshotData._id, { ...snapshotData, ...snapshotDataForSave }, token, true, () => notify('Snapshot was successfully edited.', { type: 'success' })));
-        onClose();
+        dispatch(updateSnapshot(snapshotData._id, { ...snapshotData, ...snapshotDataForSave }, token, true, (data) => {
+          notify('Snapshot was successfully edited.')
+          onClose(data);
+        }, { type: 'success' }));
       } else {
         if (isPortfolioToSet) {
           dispatch(createSnapshot(snapshotDataForSave, selectedPortfolio, token));
