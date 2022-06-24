@@ -9,11 +9,8 @@ const ActivityItemList = ({ comments, isLoading }) => {
 
   if (isLoading) {
     return (
-      <div className="my-10">
+      <div>
         <div className={styles['inner-wrapper']}>
-          <div className={styles['comment-title']}>
-            <CommentSnapTitleSkeleton />
-          </div>
           <div className={styles['comment-wrapper']}>
             <CommentSnapSkeleton />
           </div>

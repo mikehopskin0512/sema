@@ -19,8 +19,16 @@ export default function createGitHubImporter(octokit) {
   const commentsWithoutID = new Cache(10);
   commentsWithoutID.materialize = loadCommentsWithoutID;
 
-  const octokitCache = new Cache(50);
-  octokitCache.materialize = async (url) => await octokit.request(url);
+  const pullRequestCache = new Cache(50);
+  pullRequestCache.materialize = async (url) => {
+    try {
+      const { data: pullRequest } = await octokit.request(url);
+      return pullRequest;
+    } catch (error) {
+      if (error.status === 404) return null;
+      throw error;
+    }
+  };
 
   const userCache = new Cache(100);
   userCache.materialize = async (login) =>
@@ -47,7 +55,12 @@ export default function createGitHubImporter(octokit) {
     const pullRequestURL =
       githubComment.pull_request_url ||
       githubComment.issue_url.replace('/issues/', '/pulls/');
-    const { data: pullRequest } = await octokitCache.get(pullRequestURL);
+
+    const pullRequest = await pullRequestCache.get(pullRequestURL);
+    // Sometimes we get comments for PRs that were deleted on GitHub.
+    // e.g. https://api.github.com/repos/SemaSandbox/astrobee/pulls/comments/702432867
+    if (!pullRequest) return null;
+
     const { repo } = pullRequest.base;
     const otherComments = await commentsWithoutID.get(repo.id);
     const existingComment = await findDuplicate(githubComment, otherComments);
@@ -233,7 +246,7 @@ async function findDuplicate(githubComment, otherComments) {
   return await SmartComment.findById(existing._id);
 }
 
-function removeSemaSignature(text) {
+export function removeSemaSignature(text) {
   if (looksLikeSemaComment(text)) {
     const [body] = splitSemaComment(text);
     return body;
@@ -244,7 +257,7 @@ function removeSemaSignature(text) {
 
 function splitSemaComment(text) {
   const [rawBody, rawSignature] = dropQuotedText(text).split(
-    /__\r?\n\[!\[sema-logo\].*?&nbsp;/im
+    /__\r?\n\[!\[sema-logo\].*?(?:\*\*Summary:)/im
   );
 
   if (rawSignature) {
@@ -270,9 +283,12 @@ function dropQuotedText(text) {
     .join('\n');
 }
 
-function extractTagsFromSemaComment(text) {
+export function extractTagsFromSemaComment(text) {
   try {
     const [, signature] = splitSemaComment(text);
+
+    if (!signature) return [];
+
     return (
       signature
         .match(/Tags:(.*)$/im)?.[1]
@@ -288,8 +304,10 @@ function extractTagsFromSemaComment(text) {
   }
 }
 
-async function extractReactionFromSemaComment(text) {
+export async function extractReactionFromSemaComment(text) {
   const [, signature] = splitSemaComment(text);
+  if (!signature) return null;
+
   const emoji = EMOJIS.find((e) => signature.includes(e.github_emoji));
   if (emoji) {
     const reaction = await findReactionById(emoji._id);
