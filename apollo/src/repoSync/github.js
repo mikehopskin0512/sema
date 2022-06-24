@@ -18,7 +18,7 @@ import { EMOJIS } from '../comments/suggestedComments/constants';
 
 export default function createGitHubImporter(octokit) {
   // Speed some things up.
-  const commentsWithoutID = getCommentsWithoutIDCache();
+  const unmatchedComments = getUnmatchedCommentsCache();
   const pullRequestCache = getPullRequestCache(octokit);
   const userCache = getUserCache(octokit);
   const repositoryIdCache = getRepositoryIdCache();
@@ -43,7 +43,8 @@ export default function createGitHubImporter(octokit) {
     if (!pullRequest) return null;
 
     const { repo } = pullRequest.base;
-    const otherComments = await commentsWithoutID.get(repo.id);
+    const repositoryId = await repositoryIdCache.get(repo.id);
+    const otherComments = await unmatchedComments.get(repositoryId);
     const existingComment = await findDuplicate(githubComment, otherComments);
 
     if (existingComment) {
@@ -58,7 +59,7 @@ export default function createGitHubImporter(octokit) {
       githubComment,
       pullRequest,
       userCache,
-      repositoryIdCache,
+      repositoryId,
     });
   };
 }
@@ -103,7 +104,7 @@ async function createNewSmartComment({
   githubComment,
   pullRequest,
   userCache,
-  repositoryIdCache,
+  repositoryId,
 }) {
   const type = getType(githubComment);
   const text = githubComment.body;
@@ -138,7 +139,6 @@ async function createNewSmartComment({
   });
 
   const sanitizedText = removeSemaSignature(text);
-  const repositoryId = await repositoryIdCache.get(repo.id);
   return await SmartComment.findOrCreate(
     {
       'source.provider': 'github',
@@ -338,17 +338,19 @@ function getPullRequestNumberFromURL(stringUrl) {
   return number;
 }
 
-function getCommentsWithoutIDCache() {
+// Cache of repository MongoDB ID → list of unmatched smart comments (no source ID).
+function getUnmatchedCommentsCache() {
   const cache = new Cache(10);
-  cache.materialize = async (repoID) =>
+  cache.materialize = async (repositoryId) =>
     await SmartComment.find({
+      repositoryId,
       'source.provider': 'github',
       'source.id': null,
-      'githubMetadata.repo_id': repoID,
     }).lean();
   return cache;
 }
 
+// Cache of pull request API URL → pull request details from GitHub.
 function getPullRequestCache(octokit) {
   const cache = new Cache(50);
   cache.materialize = async (url) => {
@@ -363,6 +365,7 @@ function getPullRequestCache(octokit) {
   return cache;
 }
 
+// Cache of user login → GitHub profile.
 function getUserCache(octokit) {
   const cache = new Cache(100);
   cache.materialize = async (login) =>
@@ -370,6 +373,7 @@ function getUserCache(octokit) {
   return cache;
 }
 
+// Cache of repository external ID → MongoDB ID.
 function getRepositoryIdCache() {
   const cache = new Cache(50);
   cache.materialize = async (externalId) => {
