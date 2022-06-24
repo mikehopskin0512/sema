@@ -9,6 +9,7 @@ import {
 } from '../comments/reaction/reactionService';
 import { findOneByLabel as findTagByLabel } from '../comments/tags/tagService';
 import SmartComment from '../comments/smartComments/smartCommentModel';
+import Repository from '../repositories/repositoryModel';
 import {
   findByUsernameOrIdentity,
   createGhostUser,
@@ -16,31 +17,11 @@ import {
 import { EMOJIS } from '../comments/suggestedComments/constants';
 
 export default function createGitHubImporter(octokit) {
-  const commentsWithoutID = new Cache(10);
-  commentsWithoutID.materialize = loadCommentsWithoutID;
-
-  const pullRequestCache = new Cache(50);
-  pullRequestCache.materialize = async (url) => {
-    try {
-      const { data: pullRequest } = await octokit.request(url);
-      return pullRequest;
-    } catch (error) {
-      if (error.status === 404) return null;
-      throw error;
-    }
-  };
-
-  const userCache = new Cache(100);
-  userCache.materialize = async (login) =>
-    (await octokit.request('/users/{login}', { login }))?.data;
-
-  async function loadCommentsWithoutID(repoID) {
-    return await SmartComment.find({
-      'source.provider': 'github',
-      'source.id': null,
-      'githubMetadata.repo_id': repoID,
-    }).lean();
-  }
+  // Speed some things up.
+  const commentsWithoutID = getCommentsWithoutIDCache();
+  const pullRequestCache = getPullRequestCache(octokit);
+  const userCache = getUserCache(octokit);
+  const repositoryIdCache = getRepositoryIdCache();
 
   return async function importComment(githubComment) {
     const type = getType(githubComment);
@@ -77,6 +58,7 @@ export default function createGitHubImporter(octokit) {
       githubComment,
       pullRequest,
       userCache,
+      repositoryIdCache,
     });
   };
 }
@@ -121,6 +103,7 @@ async function createNewSmartComment({
   githubComment,
   pullRequest,
   userCache,
+  repositoryIdCache,
 }) {
   const type = getType(githubComment);
   const text = githubComment.body;
@@ -155,6 +138,7 @@ async function createNewSmartComment({
   });
 
   const sanitizedText = removeSemaSignature(text);
+  const repositoryId = await repositoryIdCache.get(repo.id);
   return await SmartComment.findOrCreate(
     {
       'source.provider': 'github',
@@ -163,6 +147,7 @@ async function createNewSmartComment({
     {
       'comment': sanitizedText,
       'userId': user,
+      repositoryId,
       githubMetadata,
       'reaction': reaction?._id ?? SmartComment.schema.paths.reaction.default(),
       'tags': tags.map((t) => t._id),
@@ -351,4 +336,48 @@ function getPullRequestNumberFromURL(stringUrl) {
   const [, , , pull, number] = url.pathname.split('/');
   assert(pull === 'pull', 'Expected a URL for a pull request');
   return number;
+}
+
+function getCommentsWithoutIDCache() {
+  const cache = new Cache(10);
+  cache.materialize = async (repoID) =>
+    await SmartComment.find({
+      'source.provider': 'github',
+      'source.id': null,
+      'githubMetadata.repo_id': repoID,
+    }).lean();
+  return cache;
+}
+
+function getPullRequestCache(octokit) {
+  const cache = new Cache(50);
+  cache.materialize = async (url) => {
+    try {
+      const { data: pullRequest } = await octokit.request(url);
+      return pullRequest;
+    } catch (error) {
+      if (error.status === 404) return null;
+      throw error;
+    }
+  };
+  return cache;
+}
+
+function getUserCache(octokit) {
+  const cache = new Cache(100);
+  cache.materialize = async (login) =>
+    (await octokit.request('/users/{login}', { login }))?.data;
+  return cache;
+}
+
+function getRepositoryIdCache() {
+  const cache = new Cache(50);
+  cache.materialize = async (externalId) => {
+    const { _id } = await Repository.findOne({
+      type: 'github',
+      externalId,
+    }).select('_id');
+    return _id;
+  };
+  return cache;
 }
