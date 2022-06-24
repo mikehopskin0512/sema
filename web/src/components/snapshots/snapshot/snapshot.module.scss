@@ -28,13 +28,6 @@
   }
 }
 
-.wrapper {
-  @media only screen and (min-width: 1024px) and (max-width: 1439px) {
-    display: flex;
-    flex-wrap: wrap;
-  }
-}
-
 .description-container {
   @media only screen and (min-width: 1024px) {
     min-width: 300px;
