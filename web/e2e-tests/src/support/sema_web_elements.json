@@ -256,7 +256,7 @@
     "snapshotListEditBtn"                       : "//div/p[text()='Snapshot Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']//div[@class='dropdown  is-active is-right']//button[text()='Edit']",
     "snapshotListDuplicateBtn"                  : "//div/p[text()='Snapshot Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']//div[@class='dropdown  is-active is-right']//button[text()='Duplicate']",
     "snapshotListDeleteBtn"                     : "//div/p[text()='Snapshot Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']//div[@class='dropdown  is-active is-right']//button[text()='Delete']",
-
+    "snapshotConfirmationDeleteBtn"             : "//div[@class='modal-card deleteModal_modal__16usq portfolios_snapshots-modal-wrapper__1TH1j']//button[text()='Delete']",
 
 
     "######### CREATE A ORGANIZATION LOCATORS ###########################" : "",

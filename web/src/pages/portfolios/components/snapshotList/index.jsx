@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
@@ -200,6 +200,7 @@ const snapshotList = () => {
         crossClass={styles["snapshots-modal-cross"]}
       />
       <SnapshotModal
+        dataType={editingSnapshot?.componentType}
         key={editingSnapshot?._id}
         active={isEditModalOpen}
         onClose={clearEditingSnapshot}

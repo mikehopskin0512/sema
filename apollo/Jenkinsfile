@@ -18,6 +18,8 @@ pipeline {
         STAGING_MONGODB_NAME = credentials('STAGING_MONGODB_NAME')
         BACKUP_SERVER_PASS = credentials('BACKUP_SERVER_PASS')
         BACKUP_SERVER_USER = credentials('BACKUP_SERVER_USER')
+        AWS_REGION = 'us-east-1'
+        AWS_DEFAULT_REGION = 'us-east-1'
     }
 
     options {

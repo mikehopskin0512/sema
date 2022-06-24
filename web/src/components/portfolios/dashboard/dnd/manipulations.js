@@ -1,4 +1,4 @@
-import { v4 as uuid } from "uuid";
+import { v4 as uuid } from 'uuid';
 import { COMPONENTS_TYPES, DND_CASES_CHECKS } from './constants';
 
 const reorderIndependentRow = ({
@@ -39,7 +39,7 @@ const reorderChildInRow = ({
   return updater(result);
 };
 
-const changeChildDirection = async ({
+const changeChildDirection = ({
   path,
   currentLayout,
   updater,
@@ -52,10 +52,21 @@ const changeChildDirection = async ({
   const isHorizontal = data[splitPath[0]]?.children[splitPath[1]]?.isHorizontal;
   const elemToSet = data[splitPath[0]]?.children[splitPath[1]];
 
+  const transformedElem = {
+    ...elemToSet,
+    isHorizontal: !isHorizontal,
+    componentProps: {
+      ...elemToSet.componentProps,
+      snapshotData: {
+        ...elemToSet?.componentProps?.snapshotData,
+        isHorizontal: !isHorizontal,
+      },
+    },
+  }
+
   if (!isHorizontal) {
-      const sourceElem = data[splitPath[0]]?.children[splitPath[1]];
       data.splice(rowPosition, 0, {
-        children: [{...sourceElem, isHorizontal: !isHorizontal}],
+        children: [transformedElem],
         data: null,
         id: uuid(),
         type: "row",
@@ -74,7 +85,7 @@ const changeChildDirection = async ({
             const emptyElemIndex =  previousRow.children?.findIndex(child => child.isEmpty);
 
             data.splice(rowPosition + 1, 1, {
-              children: emptyElemIndex === 0 ? [{...elemToSet, isHorizontal: !isHorizontal},  previousRow.children[1]] : [previousRow.children[0], {...elemToSet, isHorizontal: !isHorizontal}],
+              children: emptyElemIndex === 0 ? [transformedElem,  previousRow.children[1]] : [previousRow.children[0], transformedElem],
               data: null,
               id: uuid(),
               type: "row",
@@ -83,7 +94,7 @@ const changeChildDirection = async ({
             data.splice(rowPosition, 1);
           } else {
             data.splice(rowPosition, 1, {
-              children: [{...elemToSet, isHorizontal: !isHorizontal},  getEmptyColumn()],
+              children: [transformedElem, getEmptyColumn()],
               data: null,
               id: uuid(),
               type: "row",
@@ -91,7 +102,7 @@ const changeChildDirection = async ({
           }
         } else {
           data.splice(rowPosition, 1, {
-            children: [{...elemToSet, isHorizontal: !isHorizontal},  getEmptyColumn()],
+            children: [transformedElem,  getEmptyColumn()],
             data: null,
             id: uuid(),
             type: "row",
