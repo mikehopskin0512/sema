@@ -303,7 +303,7 @@ export const updateSnapshot = (id, body, token, isLoader = true, onSuccess) => a
     dispatch(requestUpdateSnapshotSuccess(data));
 
     if (payload.status === RESPONSE_STATUSES.SUCCESS && typeof onSuccess === 'function') {
-      onSuccess();
+      onSuccess(data);
     }
 
     return payload;
