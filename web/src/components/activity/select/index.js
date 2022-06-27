@@ -121,11 +121,7 @@ const CustomSelect = props => {
   };
 
   const optionsSorted = useMemo(() => filterMenuItems(), [
-    options,
-    sortType,
-    user,
-    menuIsOpen,
-    search
+    menuIsOpen
   ]);
 
   const selectPropsPrepared = { ...selectProps, options: optionsSorted };
@@ -239,7 +235,7 @@ const CustomSelect = props => {
         small,
         width
       }),
-    [deselectAll, isMulti, selectAll, small, width]
+    []
   );
 
   return (

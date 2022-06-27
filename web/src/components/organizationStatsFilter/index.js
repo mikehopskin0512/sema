@@ -84,7 +84,8 @@ const OrganizationStatsFilter = ({
                     isMulti: true,
                     onChange: value => onChangeFilter('from', value),
                     value: filter.from,
-                    maxDisplayableCount: 2
+                    maxDisplayableCount: 2,
+                    hideSelectedOptions: false,
                   }}
                   sortType={
                     DROPDOWN_SORTING_TYPES.ALPHABETICAL_USER_PRIORIY_SORT
@@ -105,7 +106,8 @@ const OrganizationStatsFilter = ({
                     isMulti: true,
                     onChange: value => onChangeFilter('to', value),
                     value: filter.to,
-                    maxDisplayableCount: 2
+                    maxDisplayableCount: 2,
+                    hideSelectedOptions: false,
                   }}
                   sortType={
                     DROPDOWN_SORTING_TYPES.ALPHABETICAL_USER_PRIORIY_SORT
@@ -150,7 +152,7 @@ const OrganizationStatsFilter = ({
                   onChange: value => onChangeFilter('tags', value),
                   value: filter.tags,
                   hideSelectedOptions: false,
-                  maxDisplayableCount: 2
+                  maxDisplayableCount: 2,
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.NO_SORT}
                 label="Tags"
@@ -170,7 +172,8 @@ const OrganizationStatsFilter = ({
                   isMulti: true,
                   onChange: value => onChangeFilter('repo', value),
                   value: filter.repo,
-                  maxDisplayableCount: 2
+                  maxDisplayableCount: 2,
+                  hideSelectedOptions: false,
                 }}
                 label="Repos"
                 showCheckbox
@@ -189,7 +192,8 @@ const OrganizationStatsFilter = ({
                   isMulti: true,
                   onChange: value => onChangeFilter('pr', value),
                   value: filter.pr,
-                  maxDisplayableCount: 2
+                  maxDisplayableCount: 2,
+                  hideSelectedOptions: false,
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.CHRONOLOGICAL_SORT}
                 label="Pull requests"
