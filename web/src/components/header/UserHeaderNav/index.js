@@ -1,19 +1,12 @@
 import React from 'react'
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
-import clsx from 'clsx';
 import Link from 'next/link';
-import styles from "../header.module.scss";
 import { PATHS } from '../../../utils/constants';
 import { isEmpty } from 'lodash';
 import { useFlags } from '../../launchDarkly';
 
-const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, selectedOrganization }) => {
+const UserHeaderNav = ({ toggleHamburger, type = 'desktop', selectedOrganization }) => {
   const { pathname } = useRouter();
-  const { auth } = useSelector((state) => ({
-    auth: state.authState,
-  }));
-  const { user: { isSemaAdmin } } = auth;
 
   const { personalDashboard } = useFlags();
 
@@ -84,14 +77,6 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
           </a>
         </Link>
         */}
-        <Link href={PATHS.INVITATIONS}>
-          <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 pr-20 ${pathname === PATHS.INVITATIONS && 'has-text-weight-semibold'}`}>
-            <div className="is-flex is-flex-wrap-wrap">
-              Invitations
-              <div className={clsx("ml-3 has-background-blue-700 is-size-9 has-text-white has-text-centered has-text-weight-semibold border-radius-8px", styles.badge)}>{isSemaAdmin ? 'ꝏ' : inviteCount}</div>
-            </div>
-          </a>
-        </Link>
         <Link href={PATHS.SUPPORT}>
           <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname === PATHS.SUPPORT && 'has-text-weight-semibold'}`}>
             Support
@@ -160,12 +145,6 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
           </a>
         </Link>
         */}
-        <Link href={PATHS.INVITATIONS}>
-          <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-            Invitations
-            <span className="badge mr-50 is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin ? 'ꝏ' : inviteCount}</span>
-          </a>
-        </Link>
         <Link href={PATHS.SUPPORT}>
           <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
             Support
