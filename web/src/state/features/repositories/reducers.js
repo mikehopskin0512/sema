@@ -255,13 +255,7 @@ const reducer = (state = initialState, action) => {
         ...state.data,
         repositories: newRepos,
       },
-      isFetching: true,
-      };
-  case types.REQUEST_TOGGLE_IS_PINNED_SUCCESS:
-    return {
-      ...state,
-      isFetching: false,
-    }
+    };
     case types.REQUEST_TOGGLE_IS_PINNED_ERROR:
       const repos = state.data.repositories.map(repo => {
         if (repo._id === action.id) {
@@ -275,8 +269,7 @@ const reducer = (state = initialState, action) => {
           ...state.data,
           repositories: repos,
         },
-        isFetching: false,
-        };
+      };
   default:
     return state;
   }
