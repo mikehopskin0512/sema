@@ -219,8 +219,8 @@ export default (app, passport) => {
     }
   );
 
-  route.patch('/toggleIsPinned', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { id } = req.query;
+  route.patch('/:id/pinned', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id } = req.params;
 
     try {
       await toggleIsPinned(id);

@@ -41,7 +41,7 @@ const ReposView = ({
       const repos = [...repositories];
       const favoriteRepos = remove(repos, (repo) => favoriteRepoIds.includes(repo.externalId));
       const otherRepos = repos.filter(repo => !repo.isPinned);
-      const pinnedRepos = repos.filter(repo => repo.isPinned === true);
+      const pinnedRepos = repos.filter(repo => repo.isPinned);
       setRepos({
         favorites: favoriteRepos,
         other: otherRepos,
@@ -53,7 +53,7 @@ const ReposView = ({
   useEffect(() => {
     if (organizations && type === 'organization') {
       const repos = organizations.repos;
-      const pinnedRepos = repos.filter(repo => repo.isPinned === true);
+      const pinnedRepos = repos.filter(repo => repo.isPinned);
       const otherRepos = repos.filter(repo => !repo.isPinned);
       setRepos({
         favorites: [],

@@ -353,7 +353,7 @@ export const requestToggleIsPinnedError = (errors, id) => ({
 export const toggleIsPinnedRepos = (id, token) => async (dispatch) => {
   try {
     dispatch(requestToggleIsPinned(id));
-    await toggleIsPinned({ id }, token);
+    await toggleIsPinned(id, token);
 
     dispatch(requestToggleIsPinnedSuccess());
   } catch (error) {

@@ -17,4 +17,4 @@ export const getTagsStats = (filter, token) => getAll(
 );
 export const getRepositoryOverview = (params, token) => getAll('/api/proxy/repositories/overview', { params }, token);
 export const getDashboardRepositories = (params, token) => getAll('/api/proxy/repositories/dashboard', { params }, token);
-export const toggleIsPinned = (params, token) => patch('/api/proxy/repositories/toggleIsPinned', { params }, token);
+export const toggleIsPinned = (id, token) => patch(`/api/proxy/repositories/${id}/pinned`, {}, token);
