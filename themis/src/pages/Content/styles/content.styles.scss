@@ -1196,6 +1196,23 @@ h6 {
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 }
 
+#sema-create-comment-status-root {
+  background: inherit;
+  z-index: 2147483647;
+  position: fixed;
+  left: calc(95vw - #{v.$create-comment-status-width});
+  top: calc(98vh - #{v.$create-comment-status-height});
+  border: 1.5px solid var(--color-reminder-border);
+  color: var(--color-reminder-font);
+}
+
+.sema-create-comment-status-container {
+  width: v.$create-comment-status-width;
+  height: v.$create-comment-status-height;
+  padding: 20px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
 .reminder-header {
   display: flex;
   flex: 1;

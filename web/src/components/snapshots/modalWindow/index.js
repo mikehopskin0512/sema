@@ -104,7 +104,7 @@ const SnapshotModal = ({
 
   const onSubmit = async (data) => {
     const selectedPortfolio = data.portfolio?.value;
-    const isPortfolioToSet = selectedPortfolio && selectedPortfolio.value !== '-1';
+    const isPortfolioToSet = !!selectedPortfolio && typeof selectedPortfolio !== 'undefined';
 
     const snapshotDataForSave = {
       userId: user._id,
@@ -120,8 +120,10 @@ const SnapshotModal = ({
 
     try {
       if (type === SNAPSHOT_MODAL_TYPES.EDIT) {
-        dispatch(updateSnapshot(snapshotData._id, { ...snapshotData, ...snapshotDataForSave }, token, true, () => notify('Snapshot was successfully edited.', { type: 'success' })));
-        onClose();
+        dispatch(updateSnapshot(snapshotData._id, { ...snapshotData, ...snapshotDataForSave }, token, true, (data) => {
+          notify('Snapshot was successfully edited.')
+          onClose(data);
+        }, { type: 'success' }));
       } else {
         if (isPortfolioToSet) {
           dispatch(createSnapshot(snapshotDataForSave, selectedPortfolio, token));
@@ -151,7 +153,7 @@ const SnapshotModal = ({
     }
   };
 
-  const defaultSelectValue = { value: '-1', label: 'None' };
+  const defaultSelectValue = { value: undefined, label: 'None' };
   const activityTypeData = useMemo(() => snapshotData?.componentData?.smartComments || [], [snapshotData]);
   const mappedPortfolios = useMemo(() => [defaultSelectValue, ...portfolios?.map(i => ({ value: i._id, label: i.title }))], [portfolios]);
 
@@ -161,7 +163,7 @@ const SnapshotModal = ({
         title: snapshotData.title,
       });
     }
-  }, [snapshotData]);
+  }, [snapshotData, type]);
 
   const containerStyle = useMemo(() => (dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && activityTypeData?.length > 3) ? { overflowY: 'scroll', maxHeight: '372px' } : null, [dataType, activityTypeData]);
 
