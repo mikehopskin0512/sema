@@ -16,10 +16,10 @@ const requestSearchRepoSmartCommentsError = (errors) => ({
   errors,
 });
 
-export const searchRepoSmartComments = (externalId, token, dates) => async (dispatch) => {
+export const searchRepoSmartComments = (externalId, token, filter) => async (dispatch) => {
   try {
     dispatch(requestSearchRepoSmartComments());
-    const { data } = await searchRepositorySmartComments({ repoId: externalId, ...dates }, token);
+    const { data } = await searchRepositorySmartComments({ repoId: externalId, ...filter }, token);
     dispatch(requestSearchRepoSmartCommentsSuccess(data));
   } catch (error) {
     const {

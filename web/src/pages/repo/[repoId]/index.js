@@ -81,6 +81,18 @@ function RepoPage() {
     setIsOrganizationRepo(!isEmpty(selectedOrganization));
   }, [selectedOrganization]);
 
+  useEffect(() => {
+    dispatch(
+      searchRepoSmartComments(
+        repoId,
+        token,
+        dates.startDate && dates.endDate
+          ? { ...getDateSub(dates.startDate, dates.endDate), ...filter}
+          : filter
+      )
+    )
+  }, [filter, dates]);
+
   useAuthEffect(() => {
     if (!isEmpty(selectedOrganization)) {
       dispatch(
