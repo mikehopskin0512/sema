@@ -6,7 +6,6 @@ import CollectionRow from './CollectionRow';
 import CardList from '../cardList';
 import SnippetCollectionFilter from '../snippetCollectionFilter';
 import Helmet, { SnippetCollectionsHelmet } from '../../utils/Helmet';
-import Loader from '../../Loader';
 import Toaster from '../../toaster';
 import Table from '../../labels-management/LabelsTable';
 import {
