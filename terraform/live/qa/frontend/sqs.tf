@@ -6,10 +6,10 @@ locals {
 resource "aws_sqs_queue" "this" {
   for_each                  = toset(local.sqs_queues)
   name                      = "apollo-${var.name_prefix}-${each.key}"
-  delay_seconds             = 30
-  max_message_size          = 2048
-  message_retention_seconds = 86400
-  receive_wait_time_seconds = 10
+  delay_seconds             = 0
+  max_message_size          = 262144
+  message_retention_seconds = 604800
+  receive_wait_time_seconds = 20
 }
 
 resource "aws_sqs_queue_policy" "this" {

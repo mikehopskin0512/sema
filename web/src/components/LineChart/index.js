@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { ResponsiveLine } from '@nivo/line';
 import { blue500, blue900, white50 } from '../../../styles/_colors.module.scss'
 
 const LineChart = ({ data = [] }) => {
-  const tickValues = data?.[0]?.data?.length || 2;
   const breakText = (text) => {
     const dashIndex = text.search('-');
     if (dashIndex !== -1) {
@@ -19,6 +18,19 @@ const LineChart = ({ data = [] }) => {
       <tspan>{text}</tspan>
     )
   }
+
+  const maxGraphYValue = useMemo(() => Math.max(...data?.[0]?.data?.map(i => i.y)), [data]);
+
+  const isFitScreen = maxGraphYValue <= 10;
+
+  const getYAxisGrid = () => {
+    if (isFitScreen) return [...new Array(10).keys()];
+    else {
+      const partsCount = Math.ceil(maxGraphYValue / 10);
+      return [...new Array(partsCount + 1).keys()].map(i => i * 10);
+    }
+  }
+
   return(
       <ResponsiveLine
         data={data}
@@ -41,14 +53,15 @@ const LineChart = ({ data = [] }) => {
           format: e => breakText(e)
         }}
         axisLeft={{
+            maxValue: maxGraphYValue,
             orient: 'left',
             tickSize: 5,
-            tickPadding: 5,
+            tickPadding: 2,
             tickRotation: 0,
             legend: '',
             legendOffset: -40,
             legendPosition: 'middle',
-            tickValues: [...Array(tickValues).keys()],
+            tickValues: getYAxisGrid(),
             format: e => Math.floor(e) === e && e
         }}
         colors={blue900}
@@ -64,7 +77,7 @@ const LineChart = ({ data = [] }) => {
         enableGridY={true}
         isInteractive={false}
         areaBaselineValue={0}
-        gridYValues={[...Array(tickValues).keys()]}
+        gridYValues={getYAxisGrid()}
     />
   )
 }

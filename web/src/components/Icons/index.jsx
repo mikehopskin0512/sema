@@ -92,7 +92,7 @@ import { ReactComponent as TagSvg } from './img/tag.svg';
 import { ReactComponent as InviteSvg } from './img/invite.svg';
 import { ReactComponent as Trophy2Svg } from './img/trophy2.svg';
 import { ReactComponent as FilterBarsSvg } from './img/filter-bars.svg';
-import { ReactComponent as DragTrigger } from './img/drag-trigger.svg';
+import { ReactComponent as DragTrigger } from './img/drag-icon.svg';
 import { ReactComponent as CopyIcon } from './img/copy.svg';
 import { ReactComponent as ReplayIcon } from './img/replay.svg';
 
@@ -505,7 +505,7 @@ export function OkIcon(props) {
 }
 
 export function OptionsIcon(props) {
-  return <Icon {...props}>
+  return <Icon {...props} >
     <OptionsSvg />
   </Icon>
 }

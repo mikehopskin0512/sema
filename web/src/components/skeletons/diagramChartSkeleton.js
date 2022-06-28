@@ -11,8 +11,7 @@ const DiagramChartSkeleton = (props) => (
     foregroundColor="#ecebeb"
     {...props}
   >
-    <rect x="475" y="1" rx="0" ry="0" width="144" height="42" />
-    <rect x="1" y="1" rx="0" ry="0" width="144" height="42" />
+    <rect x="395" y="1" rx="0" ry="0" width="214" height="37" />
     <circle cx="283" cy="186" r="63" />
     <circle cx="406" cy="159" r="52" />
     <circle cx="372" cy="244" r="31" />

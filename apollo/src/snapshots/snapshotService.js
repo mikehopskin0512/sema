@@ -45,7 +45,13 @@ const structureSnapshot = ({
 export const getSnapshotsByUserId = async (userId) => {
   try {
     const snapshots = Snapshot.find({ userId });
-    return await snapshots.lean();
+    return await snapshots.populate({
+      path: 'componentData.smartComments',
+      populate: [{
+        path: 'tags',
+        model: 'Tag',
+      }],
+    }).lean();
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
