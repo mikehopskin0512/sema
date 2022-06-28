@@ -20,15 +20,19 @@ export const getOctokit = async (repository) => {
     },
   });
 
-  // Probe access to the repository
-  try {
-    await octokit.request('/repositories/{id}', { id: repository.externalId });
-  } catch (error) {
-    if (error.status === 404) {
-      // No access.
-      return null;
+  if (repository.externalId) {
+    // Probe access to the repository
+    try {
+      await octokit.request('/repositories/{id}', {
+        id: repository.externalId,
+      });
+    } catch (error) {
+      if (error.status === 404) {
+        // No access.
+        return null;
+      }
+      throw error;
     }
-    throw error;
   }
 
   return octokit;
