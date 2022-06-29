@@ -377,6 +377,9 @@ export const KNOWLEDGE_BASE_SUMMARIES_URL =
 export const KNOWLEDGE_BASE_TAGS_URL =
   'https://intercom.help/sema-software/en/articles/6147189-how-do-i-use-tags-in-the-chrome-extension';
 
+export const KNOWLEDGE_BASE_USER_PORTFOLIO =
+  'https://intercom.help/sema-software/en/articles/6147276-what-is-a-developer-portfolio';
+
 export const NOTIFICATION_TYPE = {
   JOINED_SEMA: 'joined_sema'
 };
