@@ -10,6 +10,7 @@ import { alertOperations } from '../../state/features/alerts';
 import { CloseIcon, SearchIcon } from '../../components/Icons';
 import { InputField } from 'adonis';
 import useDebounce from '../../hooks/useDebounce';
+import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants';
 
 const OrganizationReposList = ({ isActive, onClose }) => {
   const { triggerAlert } = alertOperations;
@@ -89,7 +90,7 @@ const OrganizationReposList = ({ isActive, onClose }) => {
         isActive: true,
         id: repo._id,
       },
-      lastCommentDate: repo.updatedAt ? format(new Date(repo.updatedAt), 'yyyy-MM-dd') : '-',
+      lastCommentDate: repo.updatedAt ? format(new Date(repo.updatedAt), YEAR_MONTH_DAY_FORMAT) : '-',
       totalComments: repo.repoStats?.smartComments || '-',
     })), [repositories, debounceSearchTerm]);
 

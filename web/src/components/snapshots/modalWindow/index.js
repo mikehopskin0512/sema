@@ -104,7 +104,7 @@ const SnapshotModal = ({
 
   const onSubmit = async (data) => {
     const selectedPortfolio = data.portfolio?.value;
-    const isPortfolioToSet = selectedPortfolio && selectedPortfolio.value !== '-1';
+    const isPortfolioToSet = !!selectedPortfolio && typeof selectedPortfolio !== 'undefined';
 
     const snapshotDataForSave = {
       userId: user._id,
@@ -153,7 +153,7 @@ const SnapshotModal = ({
     }
   };
 
-  const defaultSelectValue = { value: '-1', label: 'None' };
+  const defaultSelectValue = { value: undefined, label: 'None' };
   const activityTypeData = useMemo(() => snapshotData?.componentData?.smartComments || [], [snapshotData]);
   const mappedPortfolios = useMemo(() => [defaultSelectValue, ...portfolios?.map(i => ({ value: i._id, label: i.title }))], [portfolios]);
 

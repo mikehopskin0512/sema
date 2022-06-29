@@ -1,9 +1,10 @@
 import { format, subDays } from 'date-fns';
+import { YEAR_MONTH_DAY_FORMAT } from '../../../utils/constants';
 import * as types from './types';
 
 // Dates for default filters
-const today = format(new Date(), 'yyyy-MM-dd');
-const weekAgo = format(subDays(new Date(), 7), 'yyyy-MM-dd');
+const today = format(new Date(), YEAR_MONTH_DAY_FORMAT);
+const weekAgo = format(subDays(new Date(), 7), YEAR_MONTH_DAY_FORMAT);
 
 const initialState = {
   isFetching: false,

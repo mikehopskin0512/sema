@@ -2,10 +2,13 @@
 
 .placeholder {
   color: $gray-600;
+  max-width: 70px;
+  text-align: left;
 }
 
 .select {
   min-width: 150px;
+  max-height: 40px;
 }
 
 .select-outlined {
@@ -14,10 +17,19 @@
 
 .select-container {
   z-index: 10;
+  display: grid;
+
+  div:first-child {
+    order: 2;
+    z-index: 10;
+  }
+
+  div:nth-child(2) {
+    order: 1;
+  }
 }
 
 .control {
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.07);
 }
 
 .menu {
@@ -25,6 +37,10 @@
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.07) !important;
   border-top-left-radius: 0px !important;
   border-top-right-radius: 0px !important;
+
+  div:nth-child(1) {
+    max-height: 220px;
+  }
 }
 
 .img {
@@ -50,6 +66,96 @@
 }
 
 .wrapper {
-  border: 1px solid $gray-500;
+  button {
+    border: 1px solid $gray-500 !important;
+    border-radius: 4px !important;
+  }
+}
+
+.wrapper-active {
+  button {
+    background-color: $blue-0 !important;
+    border: 2px solid $blue-700 !important;
+  }
+}
+
+.clear-all-section {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  padding-left: 8px;
+  padding-right: 8px;
+
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: -0.02em;
+  color: $blue-700;
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+  }
+
+  svg {
+    height: 13px;
+    width: 13px;
+  }
+}
+
+.selected-option {
+  background: $blue-0 !important;
+}
+
+.outer-label {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  color: $gray-900
+}
+
+.select-input {
+  input:focus {
+    background: $blue-0;
+    border: 2px solid $blue-700;
+  }
+}
+
+.select-input-wrapper {
+  background: $white-0;
+  border-bottom: 1px solid $gray-500;
+}
+
+.select-values {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: inherit;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.select-value-item {
+  background: $blue-700;
   border-radius: 4px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  box-sizing: border-box;
+  color: $white-0;
+  font-weight: 600;
+  font-size: 10px;
+  white-space: nowrap;
 }

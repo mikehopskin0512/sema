@@ -129,6 +129,7 @@ export const COLLECTION_TYPE = {
 export const DAYS_IN_WEEK = 7;
 export const DAYS_IN_MONTH = 30;
 export const DAYS_IN_YEAR = 365;
+export const YEAR_MONTH_DAY_FORMAT = `yyyy-MM-dd`;
 
 export const DEFAULT_AVATAR = '/img/default-avatar.jpg';
 
@@ -376,6 +377,9 @@ export const KNOWLEDGE_BASE_SUMMARIES_URL =
 export const KNOWLEDGE_BASE_TAGS_URL =
   'https://intercom.help/sema-software/en/articles/6147189-how-do-i-use-tags-in-the-chrome-extension';
 
+export const KNOWLEDGE_BASE_USER_PORTFOLIO =
+  'https://intercom.help/sema-software/en/articles/6147276-what-is-a-developer-portfolio';
+
 export const NOTIFICATION_TYPE = {
   JOINED_SEMA: 'joined_sema'
 };
@@ -388,6 +392,7 @@ export const SORTING_TYPES = {
 export const DROPDOWN_SORTING_TYPES = {
   ...SORTING_TYPES,
   NO_SORT: 'no_sort',
+  SELECTED_FIRST: 'selected_first',
   ALPHABETICAL_USER_PRIORIY_SORT: 'alphabetical_user_priority',
   CHRONOLOGICAL_SORT: 'chronological_sort'
 };

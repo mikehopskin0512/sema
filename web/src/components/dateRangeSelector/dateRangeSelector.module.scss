@@ -10,7 +10,28 @@
 }
 
 .button {
-  width: 200px;
+  max-height: 40px;
+  width: 229px;
+  border: 1px solid $gray-500 !important;
+  border-radius: 4px !important;
+}
+
+.button-active {
+  background-color: $blue-0 !important;
+  border: 2px solid $blue-700 !important;
+}
+
+.outer-label {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  color: $gray-900;
+
+  span {
+    color: $red-500
+  }
 }
 
 .placeholder {
@@ -27,4 +48,4 @@
 .icon {
   margin-right: 6px;
   min-width: 24px;
-} 
+}
