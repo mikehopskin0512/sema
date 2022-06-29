@@ -2615,6 +2615,37 @@ describe('Import Repository Queue', () => {
       });
     });
   });
+
+  describe('legacy repository with no clone URL', () => {
+    beforeAll(async () => {
+      resetNocks();
+      await Repository.deleteMany();
+      await SmartComment.deleteMany();
+    });
+
+    beforeAll(async () => {
+      repository = await createRepository({
+        name: 'phoenix',
+        type: 'github',
+        id: '237888452',
+      });
+      await startSync({ repository, user });
+    });
+
+    beforeAll(async () => {
+      await handler({ id: repository.id });
+    });
+
+    describe('repository', () => {
+      beforeAll(async () => {
+        repository = await Repository.findById(repository._id);
+      });
+
+      it('should have sync status errored', () => {
+        expect(repository.sync.status).toBe('errored');
+      });
+    });
+  });
 });
 
 function getFirstPageOfPullRequestComments() {
