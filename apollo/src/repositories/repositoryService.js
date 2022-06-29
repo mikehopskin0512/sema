@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import {
   endOfDay,
   toDate,
@@ -13,12 +13,16 @@ import { getRepoUsersMetrics } from '../users/userService';
 import {
   findByExternalId as findSmartCommentsByExternalId,
   getRepoSmartCommentsMetrics,
+  getUniqueCommenters,
+  getUniquePullRequests,
+  getUniqueRequesters,
 } from '../comments/smartComments/smartCommentService';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { metricsStartDate } from '../shared/utils';
 import publish from '../shared/sns';
 import { queue as importRepositoryQueue } from '../repoSync/importRepositoryQueue';
+import { DEFAULT_AVATAR } from '../constants';
 
 const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
 
@@ -498,4 +502,78 @@ export const toggleIsPinned = async (_id) => {
     const error = new errors.NotFound(err);
     return error;
   }
-}
+};
+
+/* 
+  Return the values for the filters.
+  From - authors
+  To - requesters
+  Pull requests - pullRequests
+  Repos - repos
+*/
+export const getReposFilterValues = async (repos = [], startDate, endDate, filterFields = {}) => {
+  try {
+    const filterValues = {}
+    if (isEmpty(filterFields)) {
+      return {}
+    }
+
+    if (filterFields.authors) {
+      const authors = await getUniqueCommenters(repos, startDate, endDate);
+      filterValues.authors = authors.map((author) => {
+        const { user: { firstName, lastName, _id, avatarUrl, username } } = author;
+        return {
+          label:
+            isEmpty(firstName) && isEmpty(lastName)
+              ? username.split('@')[0]
+              : `${firstName} ${lastName}`,
+          value: _id,
+          img: avatarUrl || DEFAULT_AVATAR,
+        };
+      });
+    }
+
+    if (filterFields.requesters) {
+      const requesters = await getUniqueRequesters(repos, startDate, endDate);
+      filterValues.requesters = requesters.map((el) => {
+        const {
+          githubMetadata: {
+            requester,
+            requesterAvatarUrl
+          },
+        } = el;
+        return {
+          label: requester,
+          value: requester,
+          img: requesterAvatarUrl || DEFAULT_AVATAR
+        };
+      });
+    }
+
+    if (filterFields.pullRequests) {
+      const pullRequests = await getUniquePullRequests(repos, startDate, endDate);
+      filterValues.pullRequests = pullRequests.map((pr) => {
+        const {
+          githubMetadata: {
+            head,
+            title = '',
+            pull_number: pullNum = '',
+            updated_at,
+          },
+        } = pr;
+        const prName = title || head || 'Pull Request';
+        return {
+          updated_at: new Date(updated_at),
+          label: `${prName} (#${pullNum || '0'})`,
+          value: pullNum,
+          name: prName,
+        };
+      });
+    }
+    return filterValues;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};

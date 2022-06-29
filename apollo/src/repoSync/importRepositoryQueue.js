@@ -26,6 +26,14 @@ export default async function importRepository({ id }) {
     return;
   }
 
+  if (!repository.cloneUrl) {
+    await setSyncErrored(
+      repository,
+      'Repository not found on GitHub (no clone URL)'
+    );
+    return;
+  }
+
   const octokit = await getOctokit(repository);
   if (!octokit) {
     await setSyncUnauthorized(repository);

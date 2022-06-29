@@ -24,6 +24,8 @@ export default function createGitHubImporter(octokit) {
   const repositoryIdCache = getRepositoryIdCache();
 
   return async function importComment(githubComment) {
+    if (!githubComment.body) return null;
+
     const type = getType(githubComment);
     // Ignore issue comments that belong to GitHub issues
     // and not pull requests.

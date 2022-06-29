@@ -1,9 +1,11 @@
 import Router from 'next/router';
 import * as types from './types';
 import {
-  filterSemaRepos, getDashboardRepositories, getRepo, getRepos, getRepositoryOverview, postAnalysis, postRepositories, toggleIsPinned,
+  filterSemaRepos, getDashboardRepositories, getRepo, getRepos, getRepositoriesFilters, getRepositoryOverview, postAnalysis, postRepositories, toggleIsPinned,
 } from './api';
 import { alertOperations } from '../alerts';
+import { parseErrorMessage } from '../../../utils/errorHandler';
+import { getDateSub } from '../../../utils/parsing';
 
 const { triggerAlert, clearAlert } = alertOperations;
 
@@ -145,6 +147,24 @@ const requestFetchDashboardReposSuccess = (repositories) => ({
 const requestFetchDashboardReposError = (errors) => ({
   type: types.REQUEST_FETCH_DASHBOARD_REPOSITORIES_ERROR,
   errors,
+});
+
+const requestFetchRepoFilters = () => ({
+  type: types.REQUEST_FETCH_REPO_FILTERS,
+});
+
+const requestFetchRepoFiltersSuccess = (filters) => ({
+  type: types.REQUEST_FETCH_REPO_FILTERS_SUCCESS,
+  filters,
+});
+
+const requestFetchRepoFiltersError = (errors) => ({
+  type: types.REQUEST_FETCH_REPO_FILTERS_ERROR,
+  errors,
+});
+
+export const requestClearRepoFilters = () => ({
+  type: types.REQUEST_CLEAR_REPO_FILTERS,
 });
 
 export const addRepositories = (repositoriesData, token) => async (dispatch) => {
@@ -367,5 +387,22 @@ export const toggleIsPinnedRepos = (id, token) => async (dispatch) => {
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestToggleIsPinnedError(errMessage, id));
+  }
+};
+
+export const fetchRepoFilters = (repoIds, dateRange, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchRepoFilters());
+    let dateObj = {}
+    if (dateRange.startDate && dateRange.endDate) {
+      dateObj = getDateSub(dateRange.startDate, dateRange.endDate);
+    }
+    const repos = Array.isArray(repoIds) && repoIds.length >= 1 ? repoIds : [repoIds]
+    const filterFields = { authors: 1, requesters: 1, pullRequests: 1 };
+    const { data } = await getRepositoriesFilters({ externalIds: JSON.stringify(repos), ...dateObj, filterFields }, token)
+    dispatch(requestFetchRepoFiltersSuccess(data.filter));
+  } catch (error) {
+    const errMessage = parseErrorMessage(error)
+    dispatch(requestFetchRepoFiltersError(errMessage));
   }
 };

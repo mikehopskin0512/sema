@@ -92,39 +92,40 @@ Feature: Snippets
     Then I expect that element "allSnippetsNames" becomes displayed
     And  I expect that new item "allSnippetsNames" is added to snippets
 
-  @C2795  @smoke
-  Scenario: Snippet collection can be edited
-    Then I expect that element "userLogo" becomes displayed
-    When I click on the element "userLogo"
-    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
-    When I click on the element "semaCorporateOrganizationLogo"
-    Then I expect that element "snippetsTab" becomes displayed
-    #------------------
-    When I click on the element "snippetsTab"
-    Then I expect that element "threeDotsCollectionBtn" becomes displayed
-    #  C2324
-    When I click on the "1st" element "threeDotsCollectionBtn"
-    Then I expect that element "editCollectionBtn" becomes displayed
-    When I click on the element "editCollectionBtn"
-
-    Then I expect that element "newCollectionTitleInput" becomes displayed
-    When I set "edited" with timestamp to the inputfield "newCollectionTitleInput"
-    When I click on the element "newCollectionLanguagesInput"
-    And  I set "go" to the inputfield "newCollectionLanguagesInput"
-    And  I pause for 3000ms
-    When I press "Enter"
-    Then I expect that element "newCollectionOtherLabelInput" becomes displayed
-    When I click on the element "newCollectionOtherLabelInput"
-    And  I set "prop" to the inputfield "newCollectionOtherLabelInput"
-    And  I pause for 2000ms
-    When I press "Enter"
-    And  I set "test author name" to the inputfield "newCollectionAuthorInput"
-    And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
-    And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
-    When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
-    Then I expect that element "saveNewCollectionBtn" becomes displayed
-    When I click on the button "saveNewCollectionBtn"
-    Then I expect that new item "allCollectionsNames" is added to collections
+#  @C2795  @smoke
+#  https://semalab.atlassian.net/browse/EAST-1457
+#  Scenario: Snippet collection can be edited
+#    Then I expect that element "userLogo" becomes displayed
+#    When I click on the element "userLogo"
+#    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+#    When I click on the element "semaCorporateOrganizationLogo"
+#    Then I expect that element "snippetsTab" becomes displayed
+#    #------------------
+#    When I click on the element "snippetsTab"
+#    Then I expect that element "threeDotsCollectionBtn" becomes displayed
+#    #  C2324
+#    When I click on the "1st" element "threeDotsCollectionBtn"
+#    Then I expect that element "editCollectionBtn" becomes displayed
+#    When I click on the element "editCollectionBtn"
+#
+#    Then I expect that element "newCollectionTitleInput" becomes displayed
+#    When I set "edited" with timestamp to the inputfield "newCollectionTitleInput"
+#    When I click on the element "newCollectionLanguagesInput"
+#    And  I set "go" to the inputfield "newCollectionLanguagesInput"
+#    And  I pause for 3000ms
+#    When I press "Enter"
+#    Then I expect that element "newCollectionOtherLabelInput" becomes displayed
+#    When I click on the element "newCollectionOtherLabelInput"
+#    And  I set "prop" to the inputfield "newCollectionOtherLabelInput"
+#    And  I pause for 2000ms
+#    When I press "Enter"
+#    And  I set "test author name" to the inputfield "newCollectionAuthorInput"
+#    And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+#    And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
+#    When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
+#    Then I expect that element "saveNewCollectionBtn" becomes displayed
+#    When I click on the button "saveNewCollectionBtn"
+#    Then I expect that new item "allCollectionsNames" is added to collections
 
   @C1706 @smoke
   Scenario: Search for existing snippet works

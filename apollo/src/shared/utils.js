@@ -1,9 +1,10 @@
 import crypto from 'crypto';
+import { isEmpty } from 'lodash';
+import { endOfDay, toDate } from 'date-fns';
 import { isWaitListEnabled, orgDomain, semaCorporateOrganizationId } from '../config';
 import { sendEmail } from './emailService';
 import Tag from '../comments/tags/tagModel';
 import UserRole from '../userRoles/userRoleModel';
-import { isEmpty } from 'lodash';
 
 let metricsDaysPast = 29;
 export let metricsStartDate = new Date();
@@ -123,4 +124,11 @@ export const _checkPermission = (organizationId = '', permission, user) => {
     }
   }
   return false
+}
+
+export const dateRangeFilterPipeline = (dateProperty, startDate, endDate) => {
+  if (startDate && endDate) {
+    return { [dateProperty]: { $gte: toDate(new Date(startDate)), $lte: toDate(endOfDay(new Date(endDate))) } }
+  }
+  return {}
 }

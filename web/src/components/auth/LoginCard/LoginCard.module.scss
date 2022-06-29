@@ -73,8 +73,9 @@
   border: none;
 
   &:hover {
-    background-color: rgba($login-title, 0.75);
-    color: rgba($black-950, 0.75);
+    background-color: linear-gradient(86.7deg, $login-button-bg1-hover 0%, $login-button-bg2-hover 102.54%);
+    box-shadow: 0px 0px 20px $login-button-shadow-hover;
+    color: $login-text-hover;
   }
 
   svg path {
@@ -86,6 +87,15 @@
   background-color: transparent;
   border: 2px solid $login-title;
   color: $login-title;
+
+  &:hover {
+    background-color: $signin-button-bg-hover;
+    color: $login-text-hover;
+
+    svg path {
+      fill: $black-950;
+    }
+  }
 
   svg path {
     fill: $login-title;

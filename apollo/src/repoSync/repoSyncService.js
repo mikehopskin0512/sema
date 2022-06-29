@@ -3,6 +3,13 @@ import { Octokit } from '@octokit/rest';
 import { github } from '../config';
 
 export const getOctokit = async (repository) => {
+  const isValidCloneURL = repository.cloneUrl?.startsWith('https://');
+  if (!isValidCloneURL) {
+    // Pre-validate hook will fix the format of the
+    // clone URL, if present.
+    await repository.save();
+  }
+
   const installationId =
     (await findInstallationIdForRepository(repository)) ||
     (await findSomeInstallationId());
@@ -23,9 +30,18 @@ export const getOctokit = async (repository) => {
   if (repository.externalId) {
     // Probe access to the repository
     try {
-      await octokit.request('/repositories/{id}', {
-        id: repository.externalId,
-      });
+      const { data: githubRepository } = await octokit.request(
+        '/repositories/{id}',
+        {
+          id: repository.externalId,
+        }
+      );
+
+      if (!repository.cloneUrl) {
+        // eslint-disable-next-line no-param-reassign
+        repository.cloneUrl = githubRepository.clone_url;
+        await repository.save();
+      }
     } catch (error) {
       if (error.status === 404) {
         // No access.
