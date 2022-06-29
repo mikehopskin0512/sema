@@ -174,6 +174,20 @@ const requestFetchOrganizationSmartCommentOverviewError = () => ({
   type: types.REQUEST_FETCH_ORGANIZATION_SMART_COMMENT_OVERVIEW_ERROR
 });
 
+export const requestFetchOrganizationReposFilters = () => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_REPOS_FILTERS,
+});
+
+export const requestFetchOrganizationReposFiltersSuccess = (filters) => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_REPOS_FILTERS_SUCCESS,
+  filters,
+});
+
+export const requestFetchOrganizationReposFiltersError = (errors) => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_REPOS_FILTERS_ERROR,
+  errors,
+});
+
 export const fetchOrganizationsOfUser = (token) => async (dispatch) => {
   try {
     dispatch(requestFetchOrganizationsOfUser());
@@ -365,4 +379,3 @@ export const uploadOrganizationAvatar = (organizationId, body, token) => async (
     console.error(error);
   }
 };
-

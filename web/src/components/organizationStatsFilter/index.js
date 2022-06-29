@@ -6,22 +6,31 @@ import useDebounce from '../../hooks/useDebounce';
 import styles from './organizationStatsFilter.module.scss';
 import DateRangeSelector from '../dateRangeSelector';
 import CustomSelect from '../activity/select';
-import { DROPDOWN_SORTING_TYPES } from '../../utils/constants';
+import { DROPDOWN_SORTING_TYPES, YEAR_MONTH_DAY_FORMAT } from '../../utils/constants';
 import { ReactionList, TagList } from '../../data/activity';
-import { addDays, format } from 'date-fns';
+import { addDays, endOfDay, format, startOfDay } from 'date-fns';
 import { SearchIcon } from '../Icons';
 import { gray500 } from '../../../styles/_colors.module.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { organizationsOperations } from '../../state/features/organizations[new]';
+
+const { fetchOrgReposFilters } =
+  organizationsOperations;
 
 const OrganizationStatsFilter = ({
   filter,
   individualFilter,
   commentView,
-  filterRepoList,
-  filterUserList,
-  filterRequesterList,
-  filterPRList,
   handleFilter
 }) => {
+  const dispatch = useDispatch();
+  // TODO: Need to update the naming for the organizationNew related code.
+  const { auth, organizations } = useSelector((state) => ({
+    auth: state.authState,
+    organizations: state.organizationsNewState,
+  }));
+  const { token } = auth;
+  const { repos: orgRepos, filterValues } = organizations;
   const [searchString, setSearchString] = useState(filter.search ?? '');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -36,11 +45,12 @@ const OrganizationStatsFilter = ({
     });
   };
 
+  const formatDate = date =>
+    date ? format(addDays(new Date(date), 1), YEAR_MONTH_DAY_FORMAT) : null;
+
   const onDateChange = ({ startDate, endDate }) => {
     setStartDate(startDate);
     setEndDate(endDate);
-    const formatDate = date =>
-      date ? format(addDays(new Date(date), 1), `yyyy-MM-dd`) : null;
     handleFilter({
       ...filter,
       startDate: formatDate(startDate),
@@ -56,6 +66,18 @@ const OrganizationStatsFilter = ({
     setToggleSearch(toggle => !toggle);
   };
 
+  useEffect(() => {
+    if (orgRepos.length) {
+      const repoIds = orgRepos.map((repo) => repo.externalId);
+      const { startDate: start, endDate: end } = filter
+      if ((start && end) || (!start && !end)) {
+        const sDate = start ? startOfDay(new Date(start)) : undefined;
+        const eDate = end ? endOfDay(new Date(end)) : undefined;
+        dispatch(fetchOrgReposFilters(repoIds, { startDate: sDate, endDate: eDate }, token));
+      }
+    }
+  }, [orgRepos, filter, startDate, endDate])
+
   return (
     <>
       <div className="tile mt-20 mb-10 has-background-gray-200">
@@ -69,7 +91,7 @@ const OrganizationStatsFilter = ({
                 start={startDate}
                 end={endDate}
                 onChange={onDateChange}
-                onChangeFilter={onChangeFilter}a
+                onChangeFilter={onChangeFilter} a
                 additionalStyle={styles['filter-border']}
               />
             </div>
@@ -79,7 +101,7 @@ const OrganizationStatsFilter = ({
               >
                 <CustomSelect
                   selectProps={{
-                    options: filterUserList,
+                    options: filterValues.authors,
                     placeholder: '',
                     isMulti: true,
                     onChange: value => onChangeFilter('from', value),
@@ -101,7 +123,7 @@ const OrganizationStatsFilter = ({
               >
                 <CustomSelect
                   selectProps={{
-                    options: filterRequesterList,
+                    options: filterValues.requesters,
                     placeholder: '',
                     isMulti: true,
                     onChange: value => onChangeFilter('to', value),
@@ -167,7 +189,7 @@ const OrganizationStatsFilter = ({
             >
               <CustomSelect
                 selectProps={{
-                  options: filterRepoList,
+                  options: filterValues.repos,
                   placeholder: '',
                   isMulti: true,
                   onChange: value => onChangeFilter('repo', value),
@@ -187,7 +209,7 @@ const OrganizationStatsFilter = ({
             >
               <CustomSelect
                 selectProps={{
-                  options: filterPRList,
+                  options: filterValues.pullRequests,
                   placeholder: '',
                   isMulti: true,
                   onChange: value => onChangeFilter('pr', value),
