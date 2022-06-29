@@ -373,17 +373,6 @@ Feature: Portfolios
     And  I click on the element "portfolioListThreeDotsBtns"
     Then I expect that element "portfolioListDuplicateBtn" becomes displayed
 
-    When I click on the element "snapshotLibraryTab"
-    Then I expect that element "portfolioLibraryTab" becomes displayed
-    And  I expect that element "snapshotListTitles" becomes displayed
-    And  I expect that element "snapshotListDates" becomes displayed
-    And  I expect that element "snapshotListAddToPortfolioBtns" becomes displayed
-    And  I expect that element "snapshotListThreeDotsBtns" becomes displayed
-    When I click on the element "snapshotListThreeDotsBtns"
-    Then I expect that element "snapshotListEditBtn" becomes displayed
-    And  I expect that element "snapshotListDuplicateBtn" becomes displayed
-    And  I expect that element "snapshotListDeleteBtn" becomes displayed
-
   @PTA95_2 @smoke
   Scenario: Snapshot Manager elements are displayed correctly
     When I open the site "/dashboard"
