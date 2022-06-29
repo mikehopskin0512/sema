@@ -384,6 +384,50 @@ Feature: Portfolios
     And  I expect that element "snapshotListDuplicateBtn" becomes displayed
     And  I expect that element "snapshotListDeleteBtn" becomes displayed
 
+  @PTA95_2 @smoke
+  Scenario: Snapshot Manager elements are displayed correctly
+    When I open the site "/dashboard"
+    When I click on the element "reposTab"
+    And  I pause for 3000ms
+    Then I expect that element "reposContainer" becomes displayed
+    And  I expect that element "1stReposCard" becomes displayed
+    When I click on the element "1stReposCard"
+    And  I pause for 2000ms
+    And  I click on the element "1stReposCard" if visible
+    Then I expect that element "dateRangeFilter" becomes displayed
+    When I click on the element "dateRangeFilter"
+    Then I expect that element "last7DaysDateRange" becomes displayed
+    When I click on the element "last7DaysDateRange"
+    And  I click on the element "dateRangeFilter"
+    Then I expect that element "snapshotBtn" becomes displayed
+
+    When I click on the element "snapshotBtn"
+    Then I expect that element "saveSnapshotTitleInput" becomes displayed
+
+    When I set "snapshot 1" to the inputfield "saveSnapshotTitleInput"
+    And  I click on the element "saveSnapshotDescriptionInput"
+    And  I add "snapshot from portfolio" to the inputfield "saveSnapshotDescriptionInput"
+    And  I pause for 1000ms
+    Then I expect that element "saveSnapshotAddToPortfolio" matches the text "None"
+    And  I expect that element "saveSnapshotSaveBtn" becomes displayed
+    When I click on the element "saveSnapshotSaveBtn"
+
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+    Then I expect that element "snapshotLibraryTab" becomes displayed
+
+    When I click on the element "snapshotLibraryTab"
+    Then I expect that element "portfolioLibraryTab" becomes displayed
+    And  I expect that element "snapshotListTitles" becomes displayed
+    And  I expect that element "snapshotListDates" becomes displayed
+    And  I expect that element "snapshotListAddToPortfolioBtns" becomes displayed
+    And  I expect that element "snapshotListThreeDotsBtns" becomes displayed
+    When I click on the element "snapshotListThreeDotsBtns"
+    Then I expect that element "snapshotListEditBtn" becomes displayed
+    And  I expect that element "snapshotListDuplicateBtn" becomes displayed
+    And  I expect that element "snapshotListDeleteBtn" becomes displayed
+
+
   @PTA96 @smoke
   Scenario: All portfolio can be removed from the list except one
     When I open the site "/dashboard"
@@ -477,9 +521,6 @@ Feature: Portfolios
 #    And  I expect that element "portfoliosSnapshotDescription" becomes displayed
 #    And  I expect that element "portfoliosSnapshotDescription" matches the text "activity logs - snapshot description"
 #    https://semalab.atlassian.net/browse/EAST-1405
-
-#  NEW TEST FOR DUPLICATING
-#  https://semalab.atlassian.net/browse/EAST-1412
 
   @PTA100 @smoke
   Scenario: All snapshots can be removed from the list
@@ -592,6 +633,323 @@ Feature: Portfolios
     When I remove all elements "snapshotListTitles" with button "snapshotListDeleteBtn" under "snapshotListThreeDotsBtns" with confirmation "snapshotConfirmationDeleteBtn" till "0"
     And  I expect that element "snapshotListTitles" becomes not displayed
 
+  @PTA97
+  Scenario: Snapshots can be added to portfolio from the portfolio
+    When I open the site "/dashboard"
+
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+
+    Then I expect that element "snapshotLibraryTab" becomes displayed
+    When I click on the element "snapshotLibraryTab"
+    And  I pause for 3000ms
+    When I remove all elements "snapshotListTitles" with button "snapshotListDeleteBtn" under "snapshotListThreeDotsBtns" with confirmation "snapshotConfirmationDeleteBtn" till "0"
+    And  I expect that element "snapshotListTitles" becomes not displayed
+
+    Then I expect that element "portfolioLibraryTab" becomes displayed
+    When I click on the element "portfolioLibraryTab"
+    Then I expect that element "addNewPortfolioBtn" becomes displayed
+    When I click on the element "addNewPortfolioBtn"
+    And  I pause for 2000ms
+    And  I refresh the page
+    Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
+    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn" till "1"
+    Then I expect that element "portfolioListNames" does appear exactly "1" times
+    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
+
+    When I click on the element "reposTab"
+    And  I pause for 3000ms
+    Then I expect that element "reposContainer" becomes displayed
+    And  I expect that element "1stReposCard" becomes displayed
+    When I click on the element "1stReposCard"
+    And  I pause for 2000ms
+    And  I click on the element "1stReposCard" if visible
+    Then I expect that element "dateRangeFilter" becomes displayed
+    When I click on the element "dateRangeFilter"
+    Then I expect that element "last7DaysDateRange" becomes displayed
+    When I click on the element "last7DaysDateRange"
+    And  I click on the element "dateRangeFilter"
+    Then I expect that element "snapshotBtn" becomes displayed
+
+    When I click on the element "snapshotBtn"
+    Then I expect that element "saveSnapshotTitleInput" becomes displayed
+
+    When I set "snapshot 1" to the inputfield "saveSnapshotTitleInput"
+    And  I click on the element "saveSnapshotDescriptionInput"
+    And  I add "snapshot from portfolio" to the inputfield "saveSnapshotDescriptionInput"
+    And  I pause for 1000ms
+    Then I expect that element "saveSnapshotAddToPortfolio" matches the text "None"
+    And  I expect that element "saveSnapshotSaveBtn" becomes displayed
+    When I click on the element "saveSnapshotSaveBtn"
+
+    When I click on the element "snapshotBtn"
+    Then I expect that element "saveSnapshotTitleInput" becomes displayed
+
+    When I set "snapshot 2" to the inputfield "saveSnapshotTitleInput"
+    And  I click on the element "saveSnapshotDescriptionInput"
+    And  I add "snapshot from portfolio 2" to the inputfield "saveSnapshotDescriptionInput"
+    And  I pause for 1000ms
+    Then I expect that element "saveSnapshotAddToPortfolio" matches the text "None"
+    And  I expect that element "saveSnapshotSaveBtn" becomes displayed
+    When I click on the element "saveSnapshotSaveBtn"
+    Then I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshot was saved to the Snapshot Library."
+    And  I pause for 5000ms
+#    test data created
+
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+
+    Then I expect that element "portfolioListNames" becomes displayed
+    When I click on the element "portfolioListNames"
+    Then I expect that element "portfoliosAddSnapshotBtn" becomes displayed
+    When I click on the element "portfoliosAddSnapshotBtn"
+    Then I expect that element "portfoliosAddSnapshotModalTitles" becomes displayed
+    And  I expect that element "portfoliosAddSnapshotModalCheckBoxes" becomes displayed
+    And  I expect that element "portfoliosAddSnapshotModalDates" becomes displayed
+    And  I expect that element "portfoliosAddSnapshotModalConfirmBtn" becomes displayed
+    And  I expect that element "portfoliosAddSnapshotModalCancelBtn" becomes displayed
+    And  I expect that element "portfoliosAddSnapshotModalConfirmBtn" matches the text "Add 0 Snapshots"
+    And  I expect that element "portfoliosAddSnapshotModalConfirmBtn" is not enabled
+    And  I expect that element "portfoliosAddSnapshotModalTitles" does appear exactly "2" times
+
+    When I click on the element "portfoliosAddSnapshotModalCheckBoxes"
+    Then I expect that element "portfoliosAddSnapshotModalConfirmBtn" matches the text "Add 1 Snapshots"
+    And  I expect that element "portfoliosAddSnapshotModalConfirmBtn" is enabled
+
+    When I click on the element "portfoliosAddSnapshotModalConfirmBtn"
+#    Then I expect that element "portfoliosAddSnapshotModal" becomes not displayed
+#    And  I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshots were added to this portfolio"
+
+    And I pause for 10000ms
+    When I refresh the page
+#    https://semalab.atlassian.net/browse/EAST-1467
+
+    Then I expect that element "portfoliosSnapshotsBoard" becomes displayed
+    And  I expect that element "portfoliosSnapshotDescription" becomes displayed
+
+    When I click on the element "portfoliosAddSnapshotBtn"
+    Then I expect that element "portfoliosAddSnapshotModalTitles" becomes displayed
+    And  I expect that element "portfoliosAddSnapshotModalConfirmBtn" matches the text "Add 0 Snapshots"
+    And  I expect that element "portfoliosAddSnapshotModalConfirmBtn" is not enabled
+    And  I expect that element "portfoliosAddSnapshotModalTitles" does appear exactly "1" times
+    And  I expect that element "portfoliosAddSnapshotModalCancelBtn" becomes displayed
+
+    When I click on the element "portfoliosAddSnapshotModalCancelBtn"
+    Then I expect that element "portfoliosAddSnapshotModal" becomes not displayed
+    And  I expect that element "portfoliosAddSnapshotModalTitles" becomes not displayed
+
+  @PTA97_2
+  Scenario: Snapshots can be added to portfolio with 1 snapshot in it from this portfolio
+    When I open the site "/dashboard"
+
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+
+    Then I expect that element "snapshotLibraryTab" becomes displayed
+    When I click on the element "snapshotLibraryTab"
+    And  I pause for 3000ms
+    When I remove all elements "snapshotListTitles" with button "snapshotListDeleteBtn" under "snapshotListThreeDotsBtns" with confirmation "snapshotConfirmationDeleteBtn" till "0"
+    And  I expect that element "snapshotListTitles" becomes not displayed
+
+    Then I expect that element "portfolioLibraryTab" becomes displayed
+    When I click on the element "portfolioLibraryTab"
+    Then I expect that element "addNewPortfolioBtn" becomes displayed
+    When I click on the element "addNewPortfolioBtn"
+    And  I pause for 2000ms
+    And  I refresh the page
+    Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
+    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn" till "1"
+    Then I expect that element "portfolioListNames" does appear exactly "1" times
+    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
+
+    When I click on the element "reposTab"
+    And  I pause for 3000ms
+    Then I expect that element "reposContainer" becomes displayed
+    And  I expect that element "1stReposCard" becomes displayed
+    When I click on the element "1stReposCard"
+    And  I pause for 2000ms
+    And  I click on the element "1stReposCard" if visible
+    Then I expect that element "dateRangeFilter" becomes displayed
+    When I click on the element "dateRangeFilter"
+    Then I expect that element "last7DaysDateRange" becomes displayed
+    When I click on the element "last7DaysDateRange"
+    And  I click on the element "dateRangeFilter"
+    Then I expect that element "snapshotBtn" becomes displayed
+
+    When I click on the element "snapshotBtn"
+    Then I expect that element "saveSnapshotTitleInput" becomes displayed
+
+    When I set "snapshot 1" to the inputfield "saveSnapshotTitleInput"
+    And  I click on the element "saveSnapshotDescriptionInput"
+    And  I add "snapshot from portfolio" to the inputfield "saveSnapshotDescriptionInput"
+    And  I pause for 1000ms
+    And  I click on the element "saveSnapshotAddToPortfolio"
+    And  I pause for 1000ms
+    And  I press "ArrowDown"
+    And  I press "Enter"
+    Then I expect that element "saveSnapshotAddToPortfolio" not matches the text "None"
+    And  I expect that element "saveSnapshotSaveBtn" becomes displayed
+    When I click on the element "saveSnapshotSaveBtn"
+
+    When I click on the element "snapshotBtn"
+    Then I expect that element "saveSnapshotTitleInput" becomes displayed
+
+    When I set "snapshot 2" to the inputfield "saveSnapshotTitleInput"
+    And  I click on the element "saveSnapshotDescriptionInput"
+    And  I add "snapshot from portfolio 2" to the inputfield "saveSnapshotDescriptionInput"
+    And  I pause for 1000ms
+    Then I expect that element "saveSnapshotAddToPortfolio" matches the text "None"
+    And  I expect that element "saveSnapshotSaveBtn" becomes displayed
+    When I click on the element "saveSnapshotSaveBtn"
+    Then I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshot was saved to the Snapshot Library."
+    And  I pause for 5000ms
+#    test data created
+
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+
+    Then I expect that element "portfolioListNames" becomes displayed
+    When I click on the element "portfolioListNames"
+    Then I expect that element "portfoliosAddSnapshotBtn" becomes displayed
+
+    Then I expect that element "portfoliosSnapshotsBoard" becomes displayed
+    And  I expect that element "portfoliosSnapshotName" becomes displayed
+    And  I expect that element "portfoliosSnapshotName" matches the text "snapshot 1"
+
+    When I click on the element "portfoliosAddSnapshotBtn"
+    Then I expect that element "portfoliosAddSnapshotModalTitles" becomes displayed
+    And  I expect that element "portfoliosAddSnapshotModalConfirmBtn" matches the text "Add 0 Snapshots"
+    And  I expect that element "portfoliosAddSnapshotModalConfirmBtn" is not enabled
+    And  I expect that element "portfoliosAddSnapshotModalTitles" does appear exactly "1" times
+
+    When I click on the element "portfoliosAddSnapshotModalCheckBoxes"
+    Then I expect that element "portfoliosAddSnapshotModalConfirmBtn" matches the text "Add 1 Snapshots"
+    And  I expect that element "portfoliosAddSnapshotModalConfirmBtn" is enabled
+
+    When I click on the element "portfoliosAddSnapshotModalConfirmBtn"
+#    Then I expect that element "portfoliosAddSnapshotModal" becomes not displayed
+#    And  I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshots were added to this portfolio"
+
+    And I pause for 10000ms
+    When I refresh the page
+#    https://semalab.atlassian.net/browse/EAST-1467
+
+    Then I expect that element "portfoliosSnapshotName" becomes displayed
+    And  I expect that element "portfoliosSnapshotName" does appear exactly "2" times
+
+    When I click on the element "portfoliosAddSnapshotBtn"
+    Then I expect that element "portfoliosAddSnapshotModal" becomes displayed
+    And  I expect that element "portfoliosAddSnapshotModalTitles" becomes not displayed
+    And  I expect that element "portfoliosAddSnapshotModalConfirmBtn" matches the text "Add 0 Snapshots"
+    And  I expect that element "portfoliosAddSnapshotModalConfirmBtn" is not enabled
+
+#  @PTA97_3
+#  Scenario: Snapshots can be added to portfolio from snapshot library
+#    When I open the site "/dashboard"
+#
+#    Then I expect that element "trophyBtn" becomes displayed
+#    When I click on the element "trophyBtn"
+#
+#    Then I expect that element "snapshotLibraryTab" becomes displayed
+#    When I click on the element "snapshotLibraryTab"
+#    And  I pause for 3000ms
+#    When I remove all elements "snapshotListTitles" with button "snapshotListDeleteBtn" under "snapshotListThreeDotsBtns" with confirmation "snapshotConfirmationDeleteBtn" till "0"
+#    And  I expect that element "snapshotListTitles" becomes not displayed
+#
+#    Then I expect that element "portfolioLibraryTab" becomes displayed
+#    When I click on the element "portfolioLibraryTab"
+#    Then I expect that element "addNewPortfolioBtn" becomes displayed
+#    When I click on the element "addNewPortfolioBtn"
+#    And  I pause for 2000ms
+#    And  I refresh the page
+#    Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
+#    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn" till "1"
+#    Then I expect that element "portfolioListNames" does appear exactly "1" times
+#    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
+#
+#    When I click on the element "reposTab"
+#    And  I pause for 3000ms
+#    Then I expect that element "reposContainer" becomes displayed
+#    And  I expect that element "1stReposCard" becomes displayed
+#    When I click on the element "1stReposCard"
+#    And  I pause for 2000ms
+#    And  I click on the element "1stReposCard" if visible
+#    Then I expect that element "dateRangeFilter" becomes displayed
+#    When I click on the element "dateRangeFilter"
+#    Then I expect that element "last7DaysDateRange" becomes displayed
+#    When I click on the element "last7DaysDateRange"
+#    And  I click on the element "dateRangeFilter"
+#    Then I expect that element "snapshotBtn" becomes displayed
+#
+#    When I click on the element "snapshotBtn"
+#    Then I expect that element "saveSnapshotTitleInput" becomes displayed
+#
+#    When I set "snapshot 1" to the inputfield "saveSnapshotTitleInput"
+#    And  I click on the element "saveSnapshotDescriptionInput"
+#    And  I add "snapshot from portfolio" to the inputfield "saveSnapshotDescriptionInput"
+#    And  I pause for 1000ms
+#    Then I expect that element "saveSnapshotAddToPortfolio" matches the text "None"
+#    And  I expect that element "saveSnapshotSaveBtn" becomes displayed
+#    When I click on the element "saveSnapshotSaveBtn"
+#
+#    When I click on the element "snapshotBtn"
+#    Then I expect that element "saveSnapshotTitleInput" becomes displayed
+#
+#    When I set "snapshot 2" to the inputfield "saveSnapshotTitleInput"
+#    And  I click on the element "saveSnapshotDescriptionInput"
+#    And  I add "snapshot from portfolio 2" to the inputfield "saveSnapshotDescriptionInput"
+#    And  I pause for 1000ms
+#    Then I expect that element "saveSnapshotAddToPortfolio" matches the text "None"
+#    And  I expect that element "saveSnapshotSaveBtn" becomes displayed
+#    When I click on the element "saveSnapshotSaveBtn"
+#    Then I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshot was saved to the Snapshot Library."
+#    And  I pause for 5000ms
+##    test data created
+#
+#    Then I expect that element "trophyBtn" becomes displayed
+#    When I click on the element "trophyBtn"
+#    Then I expect that element "snapshotLibraryTab" becomes displayed
+#    When I click on the element "snapshotLibraryTab"
+#    And  I pause for 3000ms
+#
+#    And  I expect that element "snapshotLibAddToPortfolioBtn" becomes displayed
+#    When I click on the element "snapshotLibAddToPortfolioBtn"
+#    Then I expect that element "snapshotLibAddToPortfolioModalPortfolios" becomes displayed
+#    And  I expect that element "snapshotLibAddToPortfolioModalDate" becomes displayed
+#    And  I expect that element "snapshotLibAddToPortfolioModalVisibility" becomes displayed
+#    And  I expect that element "snapshotLibAddToPortfolioModalCheckBoxes" becomes displayed
+#    And  I expect that element "snapshotLibAddToPortfolioModalCancelBtn" becomes displayed
+#    And  I expect that element "snapshotLibAddToPortfolioModalPortfolios" does appear exactly "2" times
+#    And  I expect that element "snapshotLibAddToPortfolioModalSubmitBtn" becomes displayed
+#    And  I expect that element "snapshotLibAddToPortfolioModalSubmitBtn" is not enabled
+#
+#    When I click on the element "snapshotLibAddToPortfolioModalCheckBoxes"
+#    Then I expect that element "snapshotLibAddToPortfolioModalSubmitBtn" is enabled
+#    And  I expect that element "snapshotLibAddToPortfolioModalSelectedPortfolios" becomes displayed
+#    When I click on the element "snapshotLibAddToPortfolioModalSubmitBtn"
+#    Then I expect that element "snapshotLibAddToPortfolioModalPortfolios" becomes not displayed
+#    And  I expect that element "snapshotLibAddToPortfolioModal" becomes not displayed
+#    And  I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshot was added Snapshot was added succesfully."
+#    And  I expect that element "saveSnapshotToPortfolioNotificationLink" becomes displayed
+#    When I click on the element "saveSnapshotToPortfolioNotificationLink"
+#
+#    Then I expect that element "portfoliosUserName" becomes displayed
+#    When I refresh the page
+#    Then I expect that element "portfoliosSnapshotsBoard" becomes displayed
+#    And  I expect that element "portfoliosSnapshotDescription" becomes displayed
+#    And  I expect that element "portfoliosSnapshotDescription" matches the text "snapshot from portfolio"
+#
+#
+#    When I click on the element "trophyBtn"
+#    Then I expect that element "snapshotLibraryTab" becomes displayed
+#    When I click on the element "snapshotLibraryTab"
+#    And  I pause for 3000ms
+#
+#    todo continue after discussion
+
+
+
+
   @PTA71 @smoke
   Scenario: Portfolios elements are displayed correctly for portfolio without snapshots
     When I open the site "/dashboard"
@@ -635,3 +993,9 @@ Feature: Portfolios
     And  I pause for 3000ms
     And  I switch to opened tab "https://github.com/SemaQAAutomationAdmin"
     Then I expect that the absolute url is "github.com/SemaQAAutomationAdmin"
+
+
+
+#   NEW TEST Create another portfolio from portfolio
+#  NEW TEST FOR DUPLICATING
+#  https://semalab.atlassian.net/browse/EAST-1412

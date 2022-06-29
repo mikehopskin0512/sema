@@ -221,11 +221,13 @@
     "portfoliosChangePersonalOverviewBtn"       : "//button[contains(@class,'portfoliosDashboard_edit-icon__2TqWp')]",
     "portfoliosPersonalOverview"                : "//div[contains(@class,'portfoliosDashboard_user-overview__22VtD')]//div[contains(@class,'content')]//div[@class='public-DraftStyleDefault-block public-DraftStyleDefault-ltr']",
     "portfoliosPersonalOverviewText"            : "//div[@class='portfoliosDashboard_user-overview__22VtD has-background-white-0 pl-230 pr-35']//div[@class='public-DraftStyleDefault-block public-DraftStyleDefault-ltr']/span/span",
+
     "portfoliosEditPersonalOverviewInput"       : "//div[@role='textbox']//div[@class='public-DraftStyleDefault-block public-DraftStyleDefault-ltr']",
     "portfoliosEditPersonalOverviewInputText"   : "//div[@role='textbox']//div[@class='public-DraftStyleDefault-block public-DraftStyleDefault-ltr']/span/span",
     "portfoliosEditPersonalOverviewCloseBtn"    : "//button[@class='delete'][@aria-label='close']",
     "portfoliosEditPersonalOverviewCancelBtn"   : "//section[contains(@class,'editModal_modal-body__EcS0H')]//button[text()='Cancel']",
     "portfoliosEditPersonalOverviewSaveBtn"     : "//section[contains(@class,'editModal_modal-body__EcS0H')]//button[text()='Save changes']",
+
     "portfoliosSnapshotsBoard"                  : "//div[contains(@class,'snapshot_snapshot__BxUL9')]",
     "portfoliosSnapshotFirstName"               : "//div[contains(@class,'portfoliosDashboard_draggable-columns__y09Ok')][1]//div[@class='column is-full pt-0']/div[1]",
     "portfoliosSnapshotName"                    : "//div[contains(@class,'portfoliosDashboard_draggable-columns__y09Ok')]//div[@class='column is-full pt-0']/div[1]",
@@ -238,6 +240,31 @@
     "portfoliosDeleteSnapshotCancelBtn"         : "//div[@class='modal is-active']//div[@class='modal-card deleteModal_modal__16usq']//button[@type='button'][normalize-space()='Cancel']",
     "portfoliosDeleteSnapshotConfirmBtn"        : "//div[@class='modal is-active']//div[@class='modal-card deleteModal_modal__16usq']//button[@type='button'][normalize-space()='Delete']",
 
+    "portfoliosAddSnapshotBtn"                  : "//button[normalize-space()='+ Add Snapshot']",
+    "portfoliosAddSnapshotModal"                : "//div[@class='modal-card addModal_modal__iNw9D']",
+    "portfoliosAddSnapshotModalTitles"          : "//table[contains(@class,'table_table-container__B2eEf')]//p[contains(@class,'addModal_table-cell-value')]",
+    "portfoliosAddSnapshotModalCheckBoxes"      : "//table[contains(@class,'table_table-container__B2eEf')]//div[@class='is-flex is-align-items-center is-justify-content-center has-background-white checkbox_wrapper__R5BjM']",
+    "portfoliosAddSnapshotModalSelectedCheckBox": "//table[contains(@class,'table_table-container__B2eEf')]//div[contains(@class,'checkbox_wrapper')]/*[name()='svg']",
+
+    "portfoliosAddSnapshotModalDates"           : "//table[contains(@class,'table_table-container__B2eEf')]//span[contains(@class,'addModal_table-cell-value')]",
+    "portfoliosAddSnapshotModalConfirmBtn"      : "//button[contains(normalize-space(),'Snapshots')]",
+    "portfoliosAddSnapshotModalCancelBtn"       : "//div[@class='is-flex is-align-items-center is-justify-content-space-between']//div//button[@type='button'][normalize-space()='Cancel']",
+
+    "snapshotLibAddToPortfolioBtn"                      : "",
+    "snapshotLibAddToPortfolioModal"                    : "",
+    "snapshotLibAddToPortfolioModalPortfolios"          : "",
+    "snapshotLibAddToPortfolioModalDate"                : "",
+    "snapshotLibAddToPortfolioModalVisibility"          : "",
+    "snapshotLibAddToPortfolioModalCheckBoxes"          : "",
+    "snapshotLibAddToPortfolioModalSelectedPortfolios"  : "",
+    "snapshotLibAddToPortfolioModalCancelBtn"           : "",
+    "snapshotLibAddToPortfolioModalSubmitBtn"           : "",
+
+
+
+
+
+    "######### PORTFOLIOS MANAGEMENT LOCATORS ###########################" : "",
     "portfolioLibraryTab"                       : "//span[normalize-space()='Portfolio Library']",
     "addNewPortfolioBtn"                        : "//button[@class='button is-primary']/span[text()='Add New Portfolio']",
     "portfolioListNames"                        : "//div/p[text()='Portfolio Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']//span",

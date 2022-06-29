@@ -138,8 +138,12 @@ Then(
     checkEqualTextForElements
 )
 
-
 Then(
     /^I expect that the role for user "([^"]*)?" is( not)* updated to "([^"]*)?"$/,
     checkRoleForUser
 )
+
+Then(
+    /^I expect that element "([^"]*)?" is( not)* enabled$/,
+    isEnabled
+);
