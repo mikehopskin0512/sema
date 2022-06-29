@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { InputField } from 'adonis';
@@ -24,44 +24,40 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
   const { tags } = tagState;
   const { token } = auth;
   const { isOrganizationAdminOrLibraryEditor, checkAccess } = usePermission();
+  const [authors, setAuthors] = useState([]);
+  const [sources, setSources] = useState([]);
   const isSemaAdminOrLibraryEditor = checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canCreateCollections');
-
-  const getRelevantTags = useCallback((types) => {
-    if (!tags.length) return [];
-    const tagsIds = collections?.reduce((acc, item) => {
-      acc.push(item?.collectionData?.tags?.map(i => i.tag));
-      return acc;
-    }, []);
-    const tagsToDisplay = addTags(tags, types);
-
-    const ids = new Set(tagsIds?.flat());
-
-    return tagsToDisplay?.filter(tag => ids.has(tag.value));
-  }, [tags, collections])
-
 
   useAuthEffect(() => {
     dispatch(fetchTagList(token));
   }, []);
 
-  const sources = useMemo(() => {
+  useEffect(() => {
+    if (sources.length) return;
+
     if (collections.length > 0) {
       const src = collections
         .map(item => item?.collectionData?.source)
         .filter((v, i, a) => v && a.indexOf(v) === i);
-      return src.map(v => ({ value: v, label: v }));
+      const result = src.map(v => ({ value: v, label: v }));
+      setSources(result);
+    } else {
+      setSources([]);
     }
-    return [];
   }, [collections]);
 
-  const authors = useMemo(() => {
-    if (collections.length > 0) {
+  useEffect(() => {
+    if (authors.length) return;
+
+    if (collections.length > 0 && !authors.length) {
       const filtered = collections
         .map(item => item?.collectionData?.author)
         .filter((v, i, a) => v && a.indexOf(v) === i);
-      return filtered.map(v => ({ value: v, label: v }));
+      const result = filtered.map(v => ({ value: v, label: v }));
+      setAuthors(result);
+    } else {
+      setAuthors([]);
     }
-    return [];
   }, [collections]);
 
   const statusOptions = [
@@ -82,17 +78,22 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
     setToggleSearch(toggle => !toggle);
   };
 
+  const labelsOptions = useMemo(() => addTags(tags, ['guide', 'other', 'custom']), [tags]);
+
+  const languageOptions = useMemo(() => addTags(tags, ['language']), [tags]);
+
   return (
     <>
       <div className="p-0 mb-0 columns is-multiline is-vcentered">
         <div className={clsx(`column ${styles['filter-box']}`)}>
           <CustomSelect
             selectProps={{
-              options: getRelevantTags(['guide', 'other', 'custom']),
+              options: labelsOptions,
               placeholder: '',
               isMulti: true,
               onChange: value => onChangeFilter('labels', value),
-              value: filter.labels
+              value: filter.labels,
+              hideSelectedOptions: false,
             }}
             label="Labels"
             showCheckbox
@@ -102,11 +103,12 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
         <div className={clsx(`column ${styles['filter-box']}`)}>
           <CustomSelect
             selectProps={{
-              options: getRelevantTags(['language']),
+              options: languageOptions,
               placeholder: '',
               isMulti: true,
               onChange: value => onChangeFilter('languages', value),
-              value: filter.languages
+              value: filter.languages,
+              hideSelectedOptions: false,
             }}
             label="Languages"
             showCheckbox
@@ -120,7 +122,8 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
               placeholder: '',
               isMulti: true,
               onChange: value => onChangeFilter('sources', value),
-              value: filter.sources
+              value: filter.sources,
+              hideSelectedOptions: false,
             }}
             label="Source"
             showCheckbox
@@ -134,7 +137,8 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
               placeholder: '',
               isMulti: true,
               onChange: value => onChangeFilter('authors', value),
-              value: filter.authors
+              value: filter.authors,
+              hideSelectedOptions: false,
             }}
             sortType={DROPDOWN_SORTING_TYPES.ALPHABETICAL_USER_PRIORIY_SORT}
             label="Author"
@@ -150,7 +154,8 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
                 placeholder: '',
                 isMulti: true,
                 onChange: value => onChangeFilter('status', value),
-                value: filter.status
+                value: filter.status,
+                hideSelectedOptions: false,
               }}
               sortType={DROPDOWN_SORTING_TYPES.NO_SORT}
               label="Status"
@@ -159,7 +164,7 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
             />
           </div>
         )}
-        <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end">
+        <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end pt-20">
           <SearchIcon
             color={gray500}
             size="medium"

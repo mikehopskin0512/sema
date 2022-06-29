@@ -388,6 +388,7 @@ export const SORTING_TYPES = {
 export const DROPDOWN_SORTING_TYPES = {
   ...SORTING_TYPES,
   NO_SORT: 'no_sort',
+  SELECTED_FIRST: 'selected_first',
   ALPHABETICAL_USER_PRIORIY_SORT: 'alphabetical_user_priority',
   CHRONOLOGICAL_SORT: 'chronological_sort'
 };

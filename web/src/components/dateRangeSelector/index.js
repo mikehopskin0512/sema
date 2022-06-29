@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DayPickerRangeController } from 'react-dates';
-import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { isEqual, setDate, subDays, subMonths } from 'date-fns';
+import { isEqual, subDays, subMonths } from 'date-fns';
 import moment from 'moment';
 import usePopup from '../../hooks/usePopup';
 import styles from './dateRangeSelector.module.scss';
@@ -130,7 +129,12 @@ const DateRangeSelector = (props) => {
   return (
     <>
       <div className={clsx('dropdown is-flex is-justify-content-stretch is-align-items-stretch', isOpen ? 'is-active' : null, isRight ? 'is-right' : null)}>
-        <div className={clsx("dropdown-trigger is-flex-grow-1 is-flex", additionalStyle ?? '')}>
+        <div className={clsx("dropdown-trigger is-flex-grow-1 is-flex is-flex-direction-column", additionalStyle ?? '')}>
+           <span
+             className={styles['outer-label']}
+           >
+            Date Range <span>*</span>
+        </span>
           <button
             type="button"
             className={clsx(
@@ -138,6 +142,7 @@ const DateRangeSelector = (props) => {
               outlined ? 'has-background-white' : 'has-background-gray-100',
               outlined ? styles.outlined : 'border-none',
               styles.button,
+              isOpen && styles['button-active']
             )}
             onClick={toggleMenu}
             {...buttonProps}

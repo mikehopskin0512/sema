@@ -64,7 +64,7 @@ const OrganizationStatsFilter = ({
             className="is-flex is-flex-wrap-wrap is-align-items-stretch is-relative"
             style={{ zIndex: 2 }}
           >
-            <div className={clsx('my-5 mr-10', styles['filter-container'])}>
+            <div className={clsx('my-5 mr-10 is-flex is-align-content-flex-end', styles['filter-container'])}>
               <DateRangeSelector
                 start={startDate}
                 end={endDate}
@@ -83,7 +83,9 @@ const OrganizationStatsFilter = ({
                     placeholder: '',
                     isMulti: true,
                     onChange: value => onChangeFilter('from', value),
-                    value: filter.from
+                    value: filter.from,
+                    maxDisplayableCount: 2,
+                    hideSelectedOptions: false,
                   }}
                   sortType={
                     DROPDOWN_SORTING_TYPES.ALPHABETICAL_USER_PRIORIY_SORT
@@ -103,7 +105,9 @@ const OrganizationStatsFilter = ({
                     placeholder: '',
                     isMulti: true,
                     onChange: value => onChangeFilter('to', value),
-                    value: filter.to
+                    value: filter.to,
+                    maxDisplayableCount: 2,
+                    hideSelectedOptions: false,
                   }}
                   sortType={
                     DROPDOWN_SORTING_TYPES.ALPHABETICAL_USER_PRIORIY_SORT
@@ -126,7 +130,8 @@ const OrganizationStatsFilter = ({
                   hideSelectedOptions: false,
                   isMulti: true,
                   onChange: value => onChangeFilter('reactions', value),
-                  value: filter.reactions
+                  value: filter.reactions,
+                  maxDisplayableCount: 2
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.NO_SORT}
                 label="Summaries"
@@ -135,7 +140,7 @@ const OrganizationStatsFilter = ({
             </div>
             <div
               className={clsx(
-                'my-5 mr-10 ml-5 has-background-white',
+                'my-5 mr-10 ml-5',
                 styles['filter-container']
               )}
             >
@@ -146,7 +151,8 @@ const OrganizationStatsFilter = ({
                   isMulti: true,
                   onChange: value => onChangeFilter('tags', value),
                   value: filter.tags,
-                  hideSelectedOptions: false
+                  hideSelectedOptions: false,
+                  maxDisplayableCount: 2,
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.NO_SORT}
                 label="Tags"
@@ -155,7 +161,7 @@ const OrganizationStatsFilter = ({
             </div>
             <div
               className={clsx(
-                'my-5 ml-5 mr-10 has-background-white',
+                'my-5 ml-5 mr-10',
                 styles['filter-container']
               )}
             >
@@ -165,7 +171,9 @@ const OrganizationStatsFilter = ({
                   placeholder: '',
                   isMulti: true,
                   onChange: value => onChangeFilter('repo', value),
-                  value: filter.repo
+                  value: filter.repo,
+                  maxDisplayableCount: 2,
+                  hideSelectedOptions: false,
                 }}
                 label="Repos"
                 showCheckbox
@@ -173,7 +181,7 @@ const OrganizationStatsFilter = ({
             </div>
             <div
               className={clsx(
-                'my-5 ml-5 has-background-white',
+                'my-5 ml-5',
                 styles['filter-container']
               )}
             >
@@ -183,7 +191,9 @@ const OrganizationStatsFilter = ({
                   placeholder: '',
                   isMulti: true,
                   onChange: value => onChangeFilter('pr', value),
-                  value: filter.pr
+                  value: filter.pr,
+                  maxDisplayableCount: 2,
+                  hideSelectedOptions: false,
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.CHRONOLOGICAL_SORT}
                 label="Pull requests"
@@ -191,7 +201,7 @@ const OrganizationStatsFilter = ({
               />
             </div>
           </div>
-          <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end pr-25">
+          <div className="field px-5 mt-30 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end pr-25">
             <SearchIcon
               color={gray500}
               size="medium"
