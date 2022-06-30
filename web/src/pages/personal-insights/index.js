@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { findIndex, isEmpty, uniqBy } from 'lodash';
 import SnapshotBar from '../../components/snapshots/snapshotBar';
 import { InfoOutlineIcon } from '../../components/Icons';
 import { endOfDay, isWithinInterval, startOfDay } from 'date-fns';
@@ -69,9 +68,6 @@ const PersonalInsights = () => {
     dateOption: ''
   });
   const [commentView, setCommentView] = useState('received');
-  const [filterUserList, setFilterUserList] = useState([]);
-  const [filterRequesterList, setFilterRequesterList] = useState([]);
-  const [filterPRList, setFilterPRList] = useState([]);
   const [filterRepoList, setFilterRepoList] = useState([]);
   const [filteredComments, setFilteredComments] = useState([]);
   const [outOfRangeComments, setOutOfRangeComments] = useState([]);
@@ -218,73 +214,6 @@ const PersonalInsights = () => {
     getCommentsOverview(filter);
   }, [JSON.stringify(filter), commentView]);
 
-  const setFilterValues = overview => {
-    if (!overview?.smartComments?.length) {
-      return;
-    }
-    const requesters = overview.smartComments
-      .filter(item => item.githubMetadata.requester)
-      .map(({ githubMetadata }) => {
-        return {
-          label: githubMetadata.requester,
-          value: githubMetadata.requester,
-          img: githubMetadata.requesterAvatarUrl || DEFAULT_AVATAR
-        };
-      });
-    const users = overview.smartComments
-      .filter(item => item.userId)
-      .map(item => {
-        const {
-          firstName = '',
-          lastName = '',
-          _id = '',
-          avatarUrl = '',
-          username = 'User@email.com'
-        } = item.userId;
-        return {
-          label:
-            isEmpty(firstName) && isEmpty(lastName)
-              ? username.split('@')[0]
-              : `${firstName} ${lastName}`,
-          value: _id,
-          img: isEmpty(avatarUrl) ? DEFAULT_AVATAR : avatarUrl
-        };
-      });
-    const prs = overview.smartComments
-      .filter(item => item.githubMetadata)
-      .map(item => {
-        const {
-          githubMetadata: {
-            head,
-            title = '',
-            pull_number: pullNum = '',
-            updated_at
-          }
-        } = item;
-        const prName = title || head || 'Pull Request';
-        return {
-          updated_at: new Date(updated_at),
-          label: `${prName} (#${pullNum || '0'})`,
-          value: pullNum,
-          name: prName
-        };
-      });
-    let filteredPRs = [];
-    prs.forEach(item => {
-      const index = findIndex(filteredPRs, { value: item.value });
-      if (index !== -1) {
-        if (isEmpty(filteredPRs[index].prName)) {
-          filteredPRs[index] = item;
-        }
-      } else {
-        filteredPRs.push(item);
-      }
-    });
-    setFilterRequesterList(uniqBy(requesters, 'value'));
-    setFilterUserList(uniqBy(users, 'value'));
-    setFilterPRList(filteredPRs);
-  };
-
   const filterComments = overview => {
     if (overview && overview.smartComments) {
       const { startDate, endDate } = filter;
@@ -311,7 +240,6 @@ const PersonalInsights = () => {
   useEffect(() => {
     const { overview } = comments;
     filterComments(overview);
-    setFilterValues(overview);
   }, [comments, filter]);
 
   const renderTopReactions = () => {
@@ -436,9 +364,6 @@ const PersonalInsights = () => {
         </div>
         <StatsFilter
           filterRepoList={filterRepoList}
-          filterUserList={filterUserList}
-          filterRequesterList={filterRequesterList}
-          filterPRList={filterPRList}
           handleFilter={handleFilter}
         />
         <SnapshotBar text="New Feature! Save these charts and comments as Snapshots on your Portfolio." />

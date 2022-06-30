@@ -1,13 +1,16 @@
 import logger from '../shared/logger';
 import { queues } from '../queues';
-import { findByExternalId } from '../repositories/repositoryService';
+import Repository from '../repositories/repositoryModel';
 import createGitHubImporter from '../repoSync/github';
 import { getOctokit } from '../repoSync/repoSyncService';
 
 const queue = queues.self(module);
 
 export default async function githubWebhook(body) {
-  const repository = await findByExternalId(body.repository.id);
+  const repository = await Repository.findOne({
+    type: 'github',
+    externalId: body.repository.id.toString(),
+  });
   const isRepoSyncSupported = repository.type === 'github';
   if (!isRepoSyncSupported) {
     logger.error(
@@ -16,9 +19,23 @@ export default async function githubWebhook(body) {
     return;
   }
 
+  const comment = body.comment || body.review;
+  if (!comment) {
+    logger.error('Repo sync: No comment or review found in webhook payload');
+    return;
+  }
+
+  if (!repository.cloneUrl && body.repository?.clone_url) {
+    repository.cloneUrl = body.repository.clone_url;
+    await repository.save();
+    logger.info(
+      `Updated repository clone URL for ${repository.fullName} ${repository.cloneUrl}`
+    );
+  }
+
   const octokit = await getOctokit(repository);
   const importComment = createGitHubImporter(octokit);
-  await importComment(body.comment);
+  await importComment(comment);
 }
 
 export { queue };

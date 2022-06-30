@@ -23,7 +23,8 @@ function getOutputStream() {
     objectMode: true,
     transform(json, encoding, callback) {
       const { level, msg, err } = JSON.parse(json);
-      const line = `${LEVELS[level]}: ${err ? err.stack : msg}\n`;
+      const message = err ? err.stack || err.message || err.toString() : msg;
+      const line = `${LEVELS[level]}: ${message}\n`;
       callback(null, line);
     },
   });

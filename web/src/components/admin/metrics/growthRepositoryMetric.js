@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import Table from '../../table';
 import { smartCommentsOperations } from '../../../state/features/smart-comments';
 import ExportButton from '../exportButton';
+import { YEAR_MONTH_DAY_FORMAT } from '../../../utils/constants';
 
 const { fetchGrowthOfRepositoryMetrics, exportGrowthOfRepository } = smartCommentsOperations;
 
@@ -41,7 +42,7 @@ const GrowthRepositoryMetric = () => {
 
   const dataSource = useMemo(() => growthOfRepository.map((item) => ({
     ...item,
-    date: format(new Date(item.date), 'yyyy-MM-dd'),
+    date: format(new Date(item.date), YEAR_MONTH_DAY_FORMAT),
   })), [growthOfRepository]);
 
   return (

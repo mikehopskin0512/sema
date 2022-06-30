@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { format, parseISO, subDays } from 'date-fns';
 import DatePicker from 'react-datepicker';
+import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants';
 
 const today = new Date();
 const weekAgo = subDays(today, 7);
@@ -18,13 +19,13 @@ const DateRangeFilter = (props) => {
 
   // Update report url when filters change
   const setStartDate = (date) => {
-    const params = format(date, 'yyyy-MM-dd');
+    const params = format(date, YEAR_MONTH_DAY_FORMAT);
     updateFilters(paramStartDate, params);
     _setStartDate(date);
   };
 
   const setEndDate = (date) => {
-    const params = format(date, 'yyyy-MM-dd');
+    const params = format(date, YEAR_MONTH_DAY_FORMAT);
     updateFilters(paramEndDate, params);
     _setEndDate(date);
   };
@@ -35,14 +36,14 @@ const DateRangeFilter = (props) => {
         className="input-datepicker"
         style={{ width: '5rem' }}
         placeholderText="Start date"
-        dateFormat="yyyy-MM-dd"
+        dateFormat={YEAR_MONTH_DAY_FORMAT}
         selected={startDate}
         onChange={(date) => setStartDate(date)} />-
       <DatePicker
         className="input-datepicker"
         style={{ width: '5rem' }}
         placeholderText="End date"
-        dateFormat="yyyy-MM-dd"
+        dateFormat={YEAR_MONTH_DAY_FORMAT}
         selected={endDate}
         onChange={(date) => setEndDate(date)} />
     </div>

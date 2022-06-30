@@ -19,6 +19,7 @@ import {
   getRepositories,
   getRepository,
   startSync,
+  getReposFilterValues,
 } from './repositoryService';
 import checkEnv from '../middlewares/checkEnv';
 
@@ -215,6 +216,28 @@ export default (app, passport) => {
       const repository = await getRepository(id);
       await startSync({ repository, user: req.user });
       res.sendStatus(200);
+    }
+  );
+
+  route.get(
+    '/filter-values',
+    passport.authenticate(['bearer'], { session: false }),
+    async (req, res) => {
+      try {
+        const { externalIds, startDate, endDate, filterFields } = req.query;
+        const values = await getReposFilterValues(
+          JSON.parse(externalIds),
+          startDate,
+          endDate,
+          { ...JSON.parse(filterFields) }
+        );
+        return res.status(200).send({
+          filter: { ...values },
+        });
+      } catch (error) {
+        logger.error(error);
+        return res.status(error.statusCode).send(error);
+      }
     }
   );
 
