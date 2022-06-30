@@ -235,7 +235,7 @@ const CustomSelect = props => {
         small,
         width
       }),
-    []
+    [deselectAll]
   );
 
   return (
