@@ -1,7 +1,7 @@
 @import "../../../../styles/_colors.module.scss";
 
 .table-wrapper {
-  overflow-x: auto;
+  overflow-x: scroll !important;
 }
 
 .table {
