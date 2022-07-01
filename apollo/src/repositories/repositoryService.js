@@ -246,7 +246,6 @@ export const aggregateRepositories = async (
             createdAt,
             updatedAt,
             repoStats,
-            isPinned,
             sync,
           } = repo;
           const {
@@ -272,7 +271,6 @@ export const aggregateRepositories = async (
             createdAt,
             users: repo.repoStats.userIds,
             updatedAt,
-            isPinned,
             sync,
             smartcomments: includeSmartComments
               ? await findSmartCommentsByExternalId(

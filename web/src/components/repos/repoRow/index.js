@@ -12,7 +12,6 @@ import { OptionsIcon, StarFilledIcon, StarOutlineScg } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
 import usePermission from '../../../hooks/usePermission';
 import DeleteRepoModal from '../repoCard/deleteRepoModal';
-import { toggleIsPinnedRepos } from '../../../state/features/repositories/actions';
 import { black900, orange400 } from '../../../../styles/_colors.module.scss';
 import { toggleUserRepoPinned } from '../../../state/features/auth/actions';
 import { toggleOrgRepoPinned } from '../../../state/features/organizations[new]/actions';

@@ -355,41 +355,6 @@ export const fetchRepoDashboard = (query, token) => async (dispatch) => {
   }
 };
 
-export const requestToggleIsPinned = (id) => ({
-  type: types.REQUEST_TOGGLE_IS_PINNED,
-  id,
-});
-
-export const requestToggleIsPinnedSuccess = () => ({
-  type: types.REQUEST_TOGGLE_IS_PINNED_SUCCESS,
-});
-
-export const requestToggleIsPinnedError = (errors, id) => ({
-  type: types.REQUEST_TOGGLE_IS_PINNED_ERROR,
-  errors,
-  id,
-});
-
-export const toggleIsPinnedRepos = (id, token) => async (dispatch) => {
-  try {
-    dispatch(requestToggleIsPinned(id));
-    await toggleIsPinned(id, token);
-
-    dispatch(requestToggleIsPinnedSuccess());
-  } catch (error) {
-    const {
-      response: {
-        data: { message },
-        status,
-        statusText,
-      },
-    } = error;
-    const errMessage = message || `${status} - ${statusText}`;
-
-    dispatch(requestToggleIsPinnedError(errMessage, id));
-  }
-};
-
 export const fetchRepoFilters = (repoIds, dateRange, token) => async (dispatch) => {
   try {
     dispatch(requestFetchRepoFilters());

@@ -10,7 +10,6 @@ import styles from './repoCard.module.scss';
 import RepoUsers from '../repoUsers';
 import { PATHS } from '../../../utils/constants';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
-import { toggleIsPinnedRepos } from '../../../state/features/repositories/actions';
 import { black900, orange400 } from '../../../../styles/_colors.module.scss';
 import Tooltip from '../../Tooltip';
 import { toggleOrgRepoPinned } from '../../../state/features/organizations[new]/actions';

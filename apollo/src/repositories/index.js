@@ -19,7 +19,6 @@ import {
   getRepositories,
   getRepository,
   startSync,
-  toggleIsPinned,
   getReposFilterValues,
 } from './repositoryService';
 import checkEnv from '../middlewares/checkEnv';
