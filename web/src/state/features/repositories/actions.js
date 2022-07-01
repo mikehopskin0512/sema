@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import * as types from './types';
 import {
-  filterSemaRepos, getDashboardRepositories, getRepo, getRepos, getRepositoriesFilters, getRepositoryOverview, postAnalysis, postRepositories, toggleIsPinned,
+  filterSemaRepos, getDashboardRepositories, getRepo, getRepos, getRepositoriesFilters, getRepositoryOverview, postAnalysis, postRepositories,
 } from './api';
 import { alertOperations } from '../alerts';
 import { parseErrorMessage } from '../../../utils/errorHandler';
