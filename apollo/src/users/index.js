@@ -16,6 +16,7 @@ import {
   verifyUser, resetVerification,
   joinOrg,
   initiatePasswordReset, validatePasswordReset, resetPassword,
+  toggleUserRepoPinned,
 } from './userService';
 import { setRefreshToken, createRefreshToken, createAuthToken } from '../auth/authService';
 import { redeemInvite, checkIsInvitationValid } from '../invitations/invitationService';
@@ -341,6 +342,21 @@ export default (app, passport) => {
     try {
       const snapshots = await getSnapshotsByUserId(id);
       return res.status(200).send(snapshots);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.patch('/:id/toggleUserRepoPinned', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id } = req.params;
+    const { repoId } = req.body;
+
+    try {
+      await toggleUserRepoPinned(id, repoId);
+      return res.status(200).send({
+        success: 'ok',
+      });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

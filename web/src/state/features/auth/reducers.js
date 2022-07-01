@@ -1,6 +1,8 @@
+import { remove } from 'lodash';
 import * as types from './types';
 import { REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS } from '../suggest-snippets/types';
 import { PROFILE_VIEW_MODE } from '../../../utils/constants';
+import { REQUEST_TOGGLE_PINNED_ORG_REPO, REQUEST_TOGGLE_PINNED_ORG_REPO_ERROR } from '../organizations[new]/types';
 
 const initialState = {
   isFetching: false,
@@ -10,6 +12,7 @@ const initialState = {
   userVoiceToken: null,
   selectedOrganization: {},
   profileViewMode: PROFILE_VIEW_MODE.INDIVIDUAL_VIEW,
+  pinnedRepos: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -199,7 +202,41 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       profileViewMode: action.profileViewMode,
-    };
+      };
+    case types.REQUEST_TOGGLE_PINNED_USER_REPO:
+    case types.REQUEST_TOGGLE_PINNED_USER_REPO_ERROR:
+        const newPinnedRepos = state.user.pinnedRepos ? [...state.user.pinnedRepos] : [];
+        if (newPinnedRepos.includes(action.repoId)) {
+          remove(newPinnedRepos, (id) => id === action.repoId);
+        } else {
+          newPinnedRepos.push(action.repoId);
+        }
+        return {
+          ...state,
+          user: {
+            ...state.user,
+            pinnedRepos: newPinnedRepos,
+          },
+      };
+    case REQUEST_TOGGLE_PINNED_ORG_REPO:
+    case REQUEST_TOGGLE_PINNED_ORG_REPO_ERROR:
+      const pinnedReposNew = [...state.selectedOrganization.organization.pinnedRepos];
+      const { repoId } = action.payload;
+      if (pinnedReposNew.includes(repoId)) {
+        remove(pinnedReposNew, (id) => id === repoId);
+      } else {
+        pinnedReposNew.push(repoId);
+      }
+      return {
+        ...state,
+        selectedOrganization: {
+          ...state.selectedOrganization,
+          organization: {
+            ...state.selectedOrganization.organization,
+            pinnedRepos: pinnedReposNew,
+          }
+        }
+      };
   default:
     return state;
   }

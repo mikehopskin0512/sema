@@ -14,10 +14,12 @@ import usePermission from '../../../hooks/usePermission';
 import DeleteRepoModal from '../repoCard/deleteRepoModal';
 import { toggleIsPinnedRepos } from '../../../state/features/repositories/actions';
 import { black900, orange400 } from '../../../../styles/_colors.module.scss';
+import { toggleUserRepoPinned } from '../../../state/features/auth/actions';
+import { toggleOrgRepoPinned } from '../../../state/features/organizations[new]/actions';
 
 const RepoRow = (props) => {
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.authState);
+  const { token, user, selectedOrganization } = useSelector((state) => state.authState);
   const titleRef = useRef(null);
   const {
     externalId = '', name = '', body = '', repoStats, users = [], language = '', _id: repoId, removeRepo, isOrganizationView = false, isPinned = false,
@@ -34,7 +36,16 @@ const RepoRow = (props) => {
 
   const onToggleIsPinned = async (e) => {
     e.stopPropagation();
-    await dispatch(toggleIsPinnedRepos(repoId, token));
+    selectedOrganization?.organization ? await dispatch(toggleOrgRepoPinned({
+      orgId: selectedOrganization.organization._id,
+      repoId,
+      token
+    })) : 
+      await dispatch(toggleUserRepoPinned({
+        userId: user._id,
+        repoId,
+        token
+      }));
   }
 
   const ActionColumn = () => {
@@ -68,7 +79,7 @@ const RepoRow = (props) => {
           <td className={clsx('py-15 has-background-white px-10', styles.document)}>
             <div className="is-flex is-align-items-center">
               {/* <FontAwesomeIcon icon={faStarSolid} color="#FFA20F" className="mr-20" /> */}
-              <Tooltip direction='top' text={isPinned ? 'Remove from Pinned Repos' : 'Pin this Repo'} isActive={true} showDelay={0}>
+              <Tooltip direction='right' text={isPinned ? 'Remove from Pinned Repos' : 'Pin this Repo'} isActive={true} showDelay={0} isRepoPage={true}>
                 <div className="mt-5" onClick={onToggleIsPinned} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
                   {isPinned ? <StarFilledIcon color={orange400} /> : <StarOutlineScg color={hovered ? orange400 : black900} />}
                 </div>

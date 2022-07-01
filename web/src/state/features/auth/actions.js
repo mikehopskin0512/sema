@@ -5,7 +5,7 @@ import * as types from './types';
 import { toggleActiveCollection } from '../comments/api';
 import {
   auth, exchangeToken, getUser, createUser, putUser, patchUser,
-  postUserOrg, verifyUser, resetVerification,
+  postUserOrg, verifyUser, resetVerification, togglePinnedUserRepo,
 } from './api';
 
 import { alertOperations } from '../alerts';
@@ -263,6 +263,17 @@ const requestUpdateUserError = (errors) => ({
   errors,
 });
 
+export const requestTogglePinnedUserRepo = (repoId) => ({
+  type: types.REQUEST_TOGGLE_PINNED_USER_REPO,
+  repoId,
+});
+
+export const requestTogglePinnedUserRepoError = (errors, repoId) => ({
+  type: types.REQUEST_TOGGLE_PINNED_USER_REPO_ERROR,
+  errors,
+  repoId,
+});
+
 export const setUser = function (user) {
   return {
     type: types.SET_USER,
@@ -413,5 +424,24 @@ export const setActiveUserCollections = (id, token) => async (dispatch) => {
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(toggleUserCollectionActiveError(errMessage));
     return status || '401';
+  }
+};
+
+export const toggleUserRepoPinned = ({ userId, repoId, token }) => async (dispatch) => {
+  try {
+    dispatch(requestTogglePinnedUserRepo(repoId));
+    await togglePinnedUserRepo(userId, { repoId }, token);
+
+  } catch (error) {
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestTogglePinnedUserRepoError(errMessage, repoId));
   }
 };

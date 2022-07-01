@@ -1,3 +1,4 @@
+import { remove } from 'lodash';
 import * as types from './types';
 
 const initialState = {
@@ -211,7 +212,26 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       error: action.errors,
-    };
+      };
+    case types.REQUEST_TOGGLE_PINNED_ORG_REPO:
+    case types.REQUEST_TOGGLE_PINNED_ORG_REPO_ERROR:
+      const { repoId, orgId } = action.payload;
+      const newOrgs = state.organizations.map(org => {
+        if (org.organization._id === orgId) {
+          const newPinnedRepos = [...org.organization.pinnedRepos];
+          if (newPinnedRepos.includes(repoId)) {
+            remove(newPinnedRepos, (id) => id === repoId);
+          } else {
+            newPinnedRepos.push(repoId);
+          }
+          org.organization.pinnedRepos = newPinnedRepos;
+        }
+        return org;
+      });
+      return {
+        ...state,
+        organizations: newOrgs,
+      };
   default:
     return state;
   }

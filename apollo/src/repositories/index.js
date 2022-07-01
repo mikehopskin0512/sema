@@ -219,20 +219,6 @@ export default (app, passport) => {
       res.sendStatus(200);
     }
   );
-
-  route.patch('/:id/pinned', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { id } = req.params;
-
-    try {
-      await toggleIsPinned(id);
-      return res.status(200).send({
-        success: 'ok',
-      });
-    } catch (error) {
-      logger.error(error);
-      return res.status(error.statusCode).send(error);
-    }
-  });
   
   route.get(
     '/filter-values',

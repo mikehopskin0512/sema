@@ -13,6 +13,8 @@ import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 import { toggleIsPinnedRepos } from '../../../state/features/repositories/actions';
 import { black900, orange400 } from '../../../../styles/_colors.module.scss';
 import Tooltip from '../../Tooltip';
+import { toggleOrgRepoPinned } from '../../../state/features/organizations[new]/actions';
+import { toggleUserRepoPinned } from '../../../state/features/auth/actions';
 
 const statLabels = {
   smartCodeReviews: 'Sema Code Reviews',
@@ -23,7 +25,7 @@ const statLabels = {
 
 const RepoCard = (props) => {
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.authState);
+  const { token, user, selectedOrganization } = useSelector((state) => state.authState);
   const titleRef = useRef(null);
   const {
     name, externalId, _id: repoId, repoStats, users = [], column = 3, isOrganizationView = false, onRemoveRepo, isPinned = false
@@ -48,7 +50,16 @@ const RepoCard = (props) => {
 
   const onToggleIsPinned = async (e) => {
     e.stopPropagation();
-    await dispatch(toggleIsPinnedRepos(repoId, token));
+    selectedOrganization?.organization ? await dispatch(toggleOrgRepoPinned({
+      orgId: selectedOrganization.organization._id,
+      repoId,
+      token
+    })) : 
+      await dispatch(toggleUserRepoPinned({
+        userId: user._id,
+        repoId,
+        token
+      }));
   }
 
   return (

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { remove } from 'lodash';
 import Organization from './organizationModel';
 import errors from '../shared/errors';
 import logger from '../shared/logger';
@@ -290,4 +291,22 @@ export const updateOrganizationAvatar = async (organizationId, userId, file) => 
     .populate('role');
 
   return role;
+};
+
+export const toggleOrgRepoPinned = async (organizationId, repoId) => {
+  const organization = await Organization.findById(organizationId);
+  const newPinnedRepos = [...organization.pinnedRepos];
+  
+  if (newPinnedRepos.includes(repoId)) {
+    remove(newPinnedRepos, (id) => id === repoId);
+  } else {
+    newPinnedRepos.push(repoId);
+  }
+
+  await Organization.findOneAndUpdate(
+    { _id: organizationId },
+    { $set: { pinnedRepos: newPinnedRepos } }
+  );
+
+  return true;
 };

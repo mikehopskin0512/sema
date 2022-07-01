@@ -20,11 +20,13 @@ const ReposView = ({
   withSearch,
   isLoaded
 }) => {
-  const { githubUser, repositories, organizations } = useSelector((state) => ({
+  const { authState, githubUser, repositories, organizations } = useSelector((state) => ({
     githubUser: state.authState.user.identities?.[0],
     repositories: state.repositoriesState.data.repositories,
-    organizations: state.organizationsNewState
+    organizations: state.organizationsNewState,
+    authState: state.authState,
   }));
+  const { user, selectedOrganization } = authState;
   const [repos, setRepos] = useState({
     favorites: [],
     other: [],
@@ -40,28 +42,29 @@ const ReposView = ({
       const favoriteRepoIds = githubUser.repositories.filter((repo) => repo.isFavorite).map((repo) => repo.id);
       const repos = [...repositories];
       const favoriteRepos = remove(repos, (repo) => favoriteRepoIds.includes(repo.externalId));
-      const otherRepos = repos.filter(repo => !repo.isPinned);
-      const pinnedRepos = repos.filter(repo => repo.isPinned);
+
+      const pinnedRepos = repos.filter(repo => user.pinnedRepos?.includes(repo._id.toString()));
+      const otherRepos = repos.filter(repo => !user.pinnedRepos?.includes(repo._id.toString()));
       setRepos({
         favorites: favoriteRepos,
         other: otherRepos,
         pinned: pinnedRepos,
       });
     }
-  }, [repositories]);
+  }, [repositories, user]);
 
   useEffect(() => {
     if (organizations && type === 'organization') {
       const repos = organizations.repos;
-      const pinnedRepos = repos.filter(repo => repo.isPinned);
-      const otherRepos = repos.filter(repo => !repo.isPinned);
+      const pinnedRepos = repos.filter(repo => selectedOrganization.organization.pinnedRepos?.includes(repo._id.toString()));
+      const otherRepos = repos.filter(repo => !selectedOrganization.organization.pinnedRepos?.includes(repo._id.toString()));
       setRepos({
         favorites: [],
         other: otherRepos,
         pinned: pinnedRepos,
       });
     }
-  }, [organizations]);
+  }, [organizations, selectedOrganization]);
 
   return ( !repositories.isFetching &&
     <>

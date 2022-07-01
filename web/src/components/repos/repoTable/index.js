@@ -26,10 +26,10 @@ const RepoTable = ({ data, removeRepo, isOrganizationView, search, otherReposCou
         <tbody className="is-fullwidth mt-25">
           <tr className="has-text-weight-semibold is-size-5"><div className="my-25">{`Pinned repos (${data.pinned.length})`}</div></tr>
           {renderTableRaw()}
-          {data.pinned.length ? data.pinned.map((item) => (<RepoRow {...item} key={`guide-${item._id}`} removeRepo={removeRepo} isOrganizationView={isOrganizationView} />)) : (!search) ? <p className="mt-25">No Pinned Repos yet. Add your first one!</p> : <p className="mt-25">No Results Found. We couldn’t find any match</p>}
+          {data.pinned.length ? data.pinned.map((item) => (<RepoRow {...item} key={`guide-${item._id}`} removeRepo={removeRepo} isOrganizationView={isOrganizationView} isPinned={true} />)) : (!search) ? <p className="mt-25">No Pinned Repos yet. Add your first one!</p> : <p className="mt-25">No Results Found. We couldn’t find any match</p>}
           <tr className="has-text-weight-semibold is-size-5 pl-10 pb-25 pt-25"><div className="my-25 ">{`Other repos (${otherReposCount})`}</div></tr>
           {renderTableRaw()}
-          {data.other.length ? data.other.map((item) => (<RepoRow {...item} key={`guide-${item._id}`} removeRepo={removeRepo} isOrganizationView={isOrganizationView} />)) : (!search) ? <p className="mt-25">No Pinned Repos yet. Add your first one!</p> : <p className="mt-25">No Results Found. We couldn’t find any match</p>}
+          {data.other.length ? data.other.map((item) => (<RepoRow {...item} key={`guide-${item._id}`} removeRepo={removeRepo} isOrganizationView={isOrganizationView} isPinned={false} />)) : (!search) ? <p className="mt-25">No Pinned Repos yet. Add your first one!</p> : <p className="mt-25">No Results Found. We couldn’t find any match</p>}
         </tbody>
       </table>
     </div>

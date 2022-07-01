@@ -488,22 +488,6 @@ export const getRepoByUserIds = async (userIds = [], populateUsers = false) => {
   }
 };
 
-export const toggleIsPinned = async (_id) => {
-  try {
-    const repo = await get(_id);
-    Repositories.findOneAndUpdate({ _id }, { isPinned: !repo.isPinned }, {
-      new: true,
-      upsert: false,
-      setDefaultsOnInsert: true,
-    });
-    return true;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
-};
-
 /* 
   Return the values for the filters.
   From - authors

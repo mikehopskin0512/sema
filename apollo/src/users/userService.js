@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import _ from 'lodash';
+import _, { remove } from 'lodash';
 import User from './userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -708,3 +708,21 @@ export const createGhostUser = async (attributes) =>
     isActive: false,
     origin: 'sync',
   });
+
+  export const toggleUserRepoPinned = async (userId, repoId) => {
+    const user = await User.findById(userId);
+    const newPinnedRepos = [...user.pinnedRepos];
+    
+    if (newPinnedRepos.includes(repoId)) {
+      remove(newPinnedRepos, (id) => id === repoId);
+    } else {
+      newPinnedRepos.push(repoId);
+    }
+  
+    await User.findOneAndUpdate(
+      { _id: userId },
+      { $set: { pinnedRepos: newPinnedRepos } }
+    );
+  
+    return true;
+  };
