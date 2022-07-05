@@ -187,6 +187,11 @@ export default (app, passport) => {
       if (startDate && endDate) {
         dateRange = { startDate, endDate };
       }
+      if (!repoId) {
+        return res.status(401).send({
+          message: 'Repo ID is required.'
+        })
+      }
 
       try {
         const { smartComments, total} = await searchSmartComments(
