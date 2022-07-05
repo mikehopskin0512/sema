@@ -6,7 +6,6 @@ import CollectionRow from './CollectionRow';
 import CardList from '../cardList';
 import SnippetCollectionFilter from '../snippetCollectionFilter';
 import Helmet, { SnippetCollectionsHelmet } from '../../utils/Helmet';
-import Loader from '../../Loader';
 import Toaster from '../../toaster';
 import Table from '../../labels-management/LabelsTable';
 import {
@@ -162,9 +161,7 @@ const CommentCollectionsList = () => {
     localStorage.setItem(SEMA_COLLECTIONS_VIEW_MODE, value);
   }
 
-  const isLoaderNeeded = isEmpty(selectedOrganization) ?
-    isFetching :
-    !organizationCollections.length && organizationsNewState.isFetching;
+  const isLoaderNeeded = isFetching || organizationsNewState.isFetching;
 
   return (
     <div>

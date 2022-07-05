@@ -19,8 +19,9 @@ import { DEFAULT_AVATAR } from '../../../utils/constants';
 import styles from './styles.module.scss';
 import * as api from '../../../state/utils/api';
 
-const { fetchRepositoryOverview, fetchReposByIds } = repositoriesOperations;
 const { searchRepoSmartComments } = repoSmartCommentsOperations;
+const { fetchRepositoryOverview, fetchReposByIds, fetchRepoFilters } =
+  repositoriesOperations;
 const { fetchOrganizationRepos } = organizationsOperations;
 
 const tabTitle = {
@@ -38,7 +39,7 @@ function RepoPage() {
   }));
   const { token, selectedOrganization } = auth;
   const {
-    data: { overview },
+    data: { overview, filterValues },
   } = repositories;
   const totalMetrics = {
     pullRequests: overview.repoStats?.smartCodeReviews ?? 0,
@@ -121,6 +122,7 @@ function RepoPage() {
         (dates.startDate && dates.endDate) ||
         (!dates.startDate && !dates.endDate)
       ) {
+          dispatch(fetchRepoFilters(repoId, dates, token));
           await Promise.all([
             dispatch(
               fetchRepositoryOverview(
@@ -173,67 +175,12 @@ function RepoPage() {
     if (!overview?.smartcomments?.length) {
       return;
     }
-    const requesters = overview.smartcomments
-      .filter((item) => item.githubMetadata.requester)
-      .map(({ githubMetadata }) => ({
-        label: githubMetadata.requester,
-        value: githubMetadata.requester,
-        img: githubMetadata.requesterAvatarUrl || DEFAULT_AVATAR,
-      }));
-    const users = overview.smartcomments
-      .filter((item) => item.userId)
-      .map((item) => {
-        const {
-          firstName = '',
-          lastName = '',
-          _id = '',
-          avatarUrl = '',
-          username = 'User@email.com',
-        } = item.userId;
-        return {
-          label:
-            isEmpty(firstName) && isEmpty(lastName)
-              ? username.split('@')[0]
-              : `${firstName} ${lastName}`,
-          value: _id,
-          img: avatarUrl || DEFAULT_AVATAR,
-        };
-      });
-    const prs = overview.smartcomments
-      .filter((item) => item.githubMetadata)
-      .map((item) => {
-        const {
-          githubMetadata: {
-            head,
-            title = '',
-            pull_number: pullNum = '',
-            updated_at: updatedAt,
-          },
-        } = item;
-        const prName = title || head || 'Pull Request';
-        return {
-          updated_at: new Date(updatedAt),
-          label: `${prName} (#${pullNum || '0'})`,
-          value: pullNum,
-          name: prName,
-        };
-      });
-    const filteredPRs = [];
-    prs.forEach((item) => {
-      const index = findIndex(filteredPRs, { value: item.value });
-      if (index !== -1) {
-        if (isEmpty(filteredPRs[index].prName)) {
-          filteredPRs[index] = item;
-        }
-      } else {
-        filteredPRs.push(item);
-      }
-    });
+    const { pullRequests, requesters, authors } = filterValues;
     setFilterRequesterList(uniqBy(requesters, 'value'));
-    setFilterUserList(uniqBy(users, 'value'));
-    setFilterPRList(filteredPRs);
+    setFilterUserList(uniqBy(authors, 'value'));
+    setFilterPRList(pullRequests);
     setIsLoading(false);
-  }, [overview]);
+  }, [overview, filterValues]);
 
   const onDateChange = ({ startDate: newStartDate, endDate: newEndDate }) => {
     setStartDate(newStartDate);

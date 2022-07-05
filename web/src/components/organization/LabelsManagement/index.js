@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuid } from 'uuid';
 import { useRouter } from 'next/router';
 import LabelsTable from '../../labels-management/LabelsTable';
 import LabelsTableRow from '../../labels-management/LabelsTableRow';
@@ -81,7 +82,7 @@ const LabelsManagement = ({ activeOrganization }) => {
         <LabelsTable
           data={filteredData}
           columns={[{ label: 'Label'}, { label: 'Category', isHiddenMobile: true }, { label: 'Snippets', isHiddenMobile: true }]}
-          renderRow={(tag) => <LabelsTableRow data={tag} key={`tag-${tag.label}`} token={token} />}
+          renderRow={(tag) => <LabelsTableRow data={tag} key={`tag-${tag.label}-${uuid()}`} token={token} />}
         />
       ) : (
         <div className="is-flex py-25 is-justify-content-center">

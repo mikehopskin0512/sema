@@ -95,7 +95,6 @@ export const generateChartDataByDays = (smartcomments, diff, startDate, endDate)
     reactions = mergeTwoData(reactions, 'd');
     tags = reduceTagsData(tags, 'd')
   }
-  console.log(reactions)
   return { reactionsByDay: reactions, tagsByDay: tags };
 }
 

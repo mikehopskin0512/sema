@@ -26,23 +26,21 @@ describe('Github Webhook Queue', () => {
     });
   });
 
-  describe('newly added repository', () => {
+  beforeAll(async () => {
+    repository = await createRepository({
+      name: 'phoenix',
+      type: 'github',
+      id: '237888452',
+      cloneUrl: 'https://github.com/Semalab/phoenix',
+    });
+  });
+
+  describe('issue comment webhook', () => {
     let comments;
 
     beforeAll(async () => {
       resetNocks();
       nockPhoenixInstallation();
-      await Repository.deleteMany();
-      await SmartComment.deleteMany();
-    });
-
-    beforeAll(async () => {
-      repository = await createRepository({
-        name: 'phoenix',
-        type: 'github',
-        id: '237888452',
-        cloneUrl: 'https://github.com/Semalab/phoenix',
-      });
     });
 
     describe('processing queue', () => {
@@ -95,8 +93,291 @@ describe('Github Webhook Queue', () => {
         });
       });
 
-      it('should create smart comments on queue and should not create duplicate comments', () => {
+      it('should create a smart comment from the issue comment', () => {
         expect(comments.length).toBe(1);
+      });
+    });
+  });
+
+  describe('pull request review webhook', () => {
+    let comment;
+
+    beforeAll(async () => {
+      resetNocks();
+      nockPhoenixInstallation();
+    });
+
+    describe('processing queue', () => {
+      beforeAll(async () => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/3')
+          .reply(200, getPullRequestDetailPR3());
+      });
+
+      beforeAll(async () => {
+        const payload = {
+          action: 'submitted',
+          review: {
+            id: 1021950326,
+            user: {
+              login: 'pangeaware',
+              id: 1045023,
+              type: 'User',
+            },
+            body: '\r\n\r\n__\r\n[![sema-logo](https://app.semasoftware.com/img/sema-tray-logo.gif)](https://semasoftware.com/gh) &nbsp;**Summary:** :ok_hand: This code looks good\r\n',
+            commit_id: 'b0d0207b87d2500bc1d908b5e063a77d64044b0e',
+            submitted_at: '2022-06-28T15:32:54Z',
+            state: 'approved',
+            html_url:
+              'https://github.com/Semalab/phoenix/pull/3#pullrequestreview-1021950326',
+            pull_request_url:
+              'https://api.github.com/repos/Semalab/phoenix/pulls/3',
+            author_association: 'COLLABORATOR',
+          },
+          repository: {
+            id: '237888452',
+          },
+          pull_request: {
+            user: {
+              login: 'ada',
+            },
+            base: {
+              repo: {
+                name: 'phoenix',
+                id: '237888452',
+                html_url: 'https://github.com/Semalab/phoenix',
+              },
+            },
+          },
+        };
+        await handler(payload);
+        comment = await SmartComment.findOne({
+          'repositoryId': repository._id,
+          'source.id': 'pullRequestReview:1021950326',
+        });
+      });
+
+      it('should create a smart comment from the pull request review', () => {
+        expect(comment).toBeTruthy();
+      });
+    });
+  });
+
+  describe('pull request review webhook with null body', () => {
+    let comment;
+
+    beforeAll(async () => {
+      resetNocks();
+      nockPhoenixInstallation();
+      await SmartComment.deleteMany();
+    });
+
+    describe('processing queue', () => {
+      beforeAll(async () => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/3')
+          .reply(200, getPullRequestDetailPR3());
+      });
+
+      beforeAll(async () => {
+        const payload = {
+          action: 'submitted',
+          review: {
+            id: 1021950326,
+            user: {
+              login: 'pangeaware',
+              id: 1045023,
+              type: 'User',
+            },
+            body: null,
+            commit_id: 'b0d0207b87d2500bc1d908b5e063a77d64044b0e',
+            submitted_at: '2022-06-28T15:32:54Z',
+            state: 'approved',
+            html_url:
+              'https://github.com/Semalab/phoenix/pull/3#pullrequestreview-1021950326',
+            pull_request_url:
+              'https://api.github.com/repos/Semalab/phoenix/pulls/3',
+            author_association: 'COLLABORATOR',
+          },
+          repository: {
+            id: '237888452',
+          },
+          pull_request: {
+            user: {
+              login: 'ada',
+            },
+            base: {
+              repo: {
+                name: 'phoenix',
+                id: '237888452',
+                html_url: 'https://github.com/Semalab/phoenix',
+              },
+            },
+          },
+        };
+        await handler(payload);
+        comment = await SmartComment.findOne({
+          'repositoryId': repository._id,
+          'source.id': 'pullRequestReview:1021950326',
+        });
+      });
+
+      it('should not create a smart comment', () => {
+        expect(comment).toBeFalsy();
+      });
+    });
+  });
+
+  describe('when repository does not have a clone URL', () => {
+    let comments;
+
+    beforeAll(async () => {
+      resetNocks();
+      nockPhoenixInstallation();
+    });
+
+    beforeAll(async () => {
+      repository.cloneUrl = null;
+      await repository.save();
+    });
+
+    beforeAll(async () => {
+      nock('https://api.github.com')
+        .get('/repos/Semalab/phoenix/pulls/3')
+        .reply(200, getPullRequestDetailPR3());
+    });
+
+    beforeAll(async () => {
+      const payload = {
+        action: 'submitted',
+        review: {
+          id: 1021950326,
+          user: {
+            login: 'pangeaware',
+            id: 1045023,
+            type: 'User',
+          },
+          body: 'LGTM',
+          commit_id: 'b0d0207b87d2500bc1d908b5e063a77d64044b0e',
+          submitted_at: '2022-06-28T15:32:54Z',
+          state: 'approved',
+          html_url:
+            'https://github.com/Semalab/phoenix/pull/3#pullrequestreview-1021950326',
+          pull_request_url:
+            'https://api.github.com/repos/Semalab/phoenix/pulls/3',
+          author_association: 'COLLABORATOR',
+        },
+        repository: {
+          id: '237888452',
+          clone_url: 'https://github.com/Semalab/phoenix.git',
+        },
+        pull_request: {
+          user: {
+            login: 'ada',
+          },
+          base: {
+            repo: {
+              name: 'phoenix',
+              id: '237888452',
+              html_url: 'https://github.com/Semalab/phoenix',
+            },
+          },
+        },
+      };
+      await handler(payload);
+      comments = await SmartComment.find({ repositoryId: repository._id });
+    });
+
+    it('should create a smart comment', () => {
+      expect(comments.length).toBe(1);
+    });
+
+    describe('repository', () => {
+      beforeAll(async () => {
+        repository = await Repository.findById(repository._id);
+      });
+
+      it('should have clone URL', () => {
+        expect(repository.cloneUrl).toBe('https://github.com/Semalab/phoenix');
+      });
+    });
+  });
+
+  describe('when repository has a legacy clone URL', () => {
+    let comments;
+
+    beforeAll(async () => {
+      resetNocks();
+      nockPhoenixInstallation();
+    });
+
+    beforeAll(async () => {
+      await Repository.updateOne(
+        { _id: repository._id },
+        {
+          $set: { cloneUrl: 'git@github.com:Semalab/phoenix.git' },
+        }
+      );
+    });
+
+    beforeAll(async () => {
+      nock('https://api.github.com')
+        .get('/repos/Semalab/phoenix/pulls/3')
+        .reply(200, getPullRequestDetailPR3());
+    });
+
+    beforeAll(async () => {
+      const payload = {
+        action: 'submitted',
+        review: {
+          id: 1021950326,
+          user: {
+            login: 'pangeaware',
+            id: 1045023,
+            type: 'User',
+          },
+          body: 'LGTM',
+          commit_id: 'b0d0207b87d2500bc1d908b5e063a77d64044b0e',
+          submitted_at: '2022-06-28T15:32:54Z',
+          state: 'approved',
+          html_url:
+            'https://github.com/Semalab/phoenix/pull/3#pullrequestreview-1021950326',
+          pull_request_url:
+            'https://api.github.com/repos/Semalab/phoenix/pulls/3',
+          author_association: 'COLLABORATOR',
+        },
+        repository: {
+          id: '237888452',
+          clone_url: 'https://github.com/Semalab/phoenix.git',
+        },
+        pull_request: {
+          user: {
+            login: 'ada',
+          },
+          base: {
+            repo: {
+              name: 'phoenix',
+              id: '237888452',
+              html_url: 'https://github.com/Semalab/phoenix',
+            },
+          },
+        },
+      };
+      await handler(payload);
+      comments = await SmartComment.find({ repositoryId: repository._id });
+    });
+
+    it('should create a smart comment', () => {
+      expect(comments.length).toBe(1);
+    });
+
+    describe('repository', () => {
+      beforeAll(async () => {
+        repository = await Repository.findById(repository._id);
+      });
+
+      it('should have clone URL', () => {
+        expect(repository.cloneUrl).toBe('https://github.com/Semalab/phoenix');
       });
     });
   });

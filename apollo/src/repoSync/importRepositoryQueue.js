@@ -1,3 +1,4 @@
+import Bluebird from 'bluebird';
 import logger from '../shared/logger';
 import { queues } from '../queues';
 import Repository from '../repositories/repositoryModel';
@@ -7,14 +8,28 @@ import { getOctokit, getOwnerAndRepo } from './repoSyncService';
 const queue = queues.self(module);
 
 export default async function importRepository({ id }) {
-  logger.info(`Repo sync: ${queue.name} processing repository ${id}`);
-
   const repository = await Repository.findById(id);
+  if (!repository)
+    logger.info(
+      `Repo sync: ${queue.name} processing repository ${id}: not found`
+    );
+
+  logger.info(
+    `Repo sync: ${queue.name} processing repository ${repository.fullName} ${id}`
+  );
 
   const isRepoSyncSupported = repository.type === 'github';
   if (!isRepoSyncSupported) {
     logger.error(
       `Repo sync: Skipping repo sync for repository ${id}, type is ${repository.type}`
+    );
+    return;
+  }
+
+  if (!repository.cloneUrl) {
+    await setSyncErrored(
+      repository,
+      'Repository not found on GitHub (no clone URL)'
     );
     return;
   }
@@ -54,7 +69,12 @@ export default async function importRepository({ id }) {
     ]);
 
     await setSyncCompleted(repository);
+
+    logger.info(
+      `Repo sync: Completed processing repository ${repository.fullName} ${id}`
+    );
   } catch (error) {
+    logger.error(error);
     await setSyncErrored(repository, error);
     throw error;
   }
@@ -72,7 +92,7 @@ async function importComments({
 }) {
   const pages = resumablePaginate({ octokit, endpoint, type, repository });
   for await (const data of pages) {
-    await Promise.all(data.map(importComment));
+    await Bluebird.resolve(data).map(importComment, { concurrency: 10 });
   }
 }
 
@@ -88,14 +108,14 @@ async function importReviews({ octokit, endpoint, repository, importComment }) {
   });
 
   for await (const data of pages) {
-    await Promise.all(
-      data.map((pullRequest) =>
+    await Bluebird.resolve(data).map(
+      (pullRequest) =>
         importReviewsFromPullRequest({
           octokit,
           pullRequest,
           importComment,
-        })
-      )
+        }),
+      { concurrency: 10 }
     );
   }
 }
@@ -111,7 +131,10 @@ async function importReviewsFromPullRequest({
     pull_number: pullRequest.number,
   });
 
-  await Promise.all(reviews.filter((r) => r.body.trim()).map(importComment));
+  await Bluebird.resolve(reviews.filter((r) => r.body.trim())).map(
+    importComment,
+    { concurrency: 10 }
+  );
 }
 
 async function setSyncStarted(repository) {

@@ -2291,6 +2291,59 @@ describe('Import Repository Queue', () => {
     });
   });
 
+  describe('when the pull request is no longer found on GitHub', () => {
+    let comments;
+
+    beforeAll(async () => {
+      resetNocks();
+      nockPhoenixInstallation();
+      await SmartComment.deleteMany();
+      repository.sync = {};
+      await repository.save();
+    });
+
+    beforeAll(() => {
+      const firstComment = getFirstPageOfPullRequestComments()[0];
+
+      nock('https://api.github.com')
+        .get('/repos/Semalab/phoenix/pulls/comments')
+        .query({ sort: 'created', direction: 'desc', page: 1 })
+        .reply(200, [firstComment]);
+    });
+
+    beforeAll(() => {
+      nock('https://api.github.com')
+        .get('/repos/Semalab/phoenix/issues/comments')
+        .query(() => true)
+        .reply(200, []);
+    });
+
+    beforeAll(() => {
+      nock('https://api.github.com')
+        .get('/repos/Semalab/phoenix/pulls')
+        .query(() => true)
+        .reply(200, []);
+    });
+
+    beforeAll(() => {
+      nock('https://api.github.com')
+        .get('/repos/Semalab/phoenix/pulls/3')
+        .reply(404, { message: 'Not found' });
+    });
+
+    beforeAll(async () => {
+      await handler({ id: repository.id });
+    });
+
+    beforeAll(async () => {
+      comments = await findSmartCommentsByExternalId(repository.externalId);
+    });
+
+    it('should not import the comment', async () => {
+      expect(comments.length).toBe(0);
+    });
+  });
+
   describe('public repository', () => {
     let comments;
 
@@ -2559,6 +2612,37 @@ describe('Import Repository Queue', () => {
         it('should have sync status unauthorized', () => {
           expect(repository.sync.status).toBe('unauthorized');
         });
+      });
+    });
+  });
+
+  describe('legacy repository with no clone URL', () => {
+    beforeAll(async () => {
+      resetNocks();
+      await Repository.deleteMany();
+      await SmartComment.deleteMany();
+    });
+
+    beforeAll(async () => {
+      repository = await createRepository({
+        name: 'phoenix',
+        type: 'github',
+        id: '237888452',
+      });
+      await startSync({ repository, user });
+    });
+
+    beforeAll(async () => {
+      await handler({ id: repository.id });
+    });
+
+    describe('repository', () => {
+      beforeAll(async () => {
+        repository = await Repository.findById(repository._id);
+      });
+
+      it('should have sync status errored', () => {
+        expect(repository.sync.status).toBe('errored');
       });
     });
   });

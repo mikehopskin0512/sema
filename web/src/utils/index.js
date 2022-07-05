@@ -97,7 +97,7 @@ export const isOrganizationDefaultCollection = (organization, collection) => `${
 
 export const addTags = (tags, types) => tags
   .filter((tag) => types.some((type) => type === tag.type))
-  .map(({ tag, _id, label }) => ({ value: tag || _id, label }))
+  .map(({ tag, _id, label }) => ({ value: tag || _id, label })).filter(i => i.label?.trim()?.length);
 
 export const filterNonSemaUsers = (users) => {
   return users ? users.filter((user) => !user.organizations || !user.organizations.length || user.organizations.every((organization) => organization._id !== SEMA_CORPORATE_ORGANIZATION_ID)) : [];

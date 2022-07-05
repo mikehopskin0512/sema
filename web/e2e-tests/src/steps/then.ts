@@ -22,6 +22,7 @@ import checkRoleForUser from "../support/check/checkRoleForUser";
 import checkEqualTextToSavedVariable from "../support/check/checkEqualTextToSavedVariable";
 import checkEqualTextToSavedVariableByIndex from "../support/check/checkEqualTextToSavedVariableByIndex";
 import checkSearchedResults from "../support/check/checkSearchedResults";
+import isClickable from "../support/check/isClickable";
 Then(
     /^I expect that the url is( not)* "([^"]*)?"$/,
     checkURLPath
@@ -138,8 +139,18 @@ Then(
     checkEqualTextForElements
 )
 
-
 Then(
     /^I expect that the role for user "([^"]*)?" is( not)* updated to "([^"]*)?"$/,
     checkRoleForUser
 )
+
+Then(
+    /^I expect that element "([^"]*)?" is( not)* clickable$/,
+    isClickable
+);
+
+Then(
+    /^I expect that element "([^"]*)?" is( not)* enabled$/,
+    isEnabled
+);
+

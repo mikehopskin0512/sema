@@ -9,6 +9,7 @@ import {
   reorderIndependentRow,
   replaceChildInAnotherParent,
 } from './manipulations';
+import { EmptyListPlaceholder } from '../emptyListPlaceholder';
 
 const DashboardDraggableList = ({
   pageLayout,
@@ -66,7 +67,7 @@ const DashboardDraggableList = ({
     }, [layout, pageLayout, replaceChildInAnotherParent, reorderChildInRow, reorderIndependentRow]);
 
 
-  const onDirectionUpdateClick = async ({ snapshot, type, path }) => {
+  const onDirectionUpdateClick = ({ snapshot, type, path }) => {
     if (type !== 'comments') return;
 
     const updater = (data) => {
@@ -74,7 +75,7 @@ const DashboardDraggableList = ({
       updateLayout(data);
     };
 
-    await changeChildDirection({ currentLayout: layout, updater, path, isHorizontal: snapshot.isHorizontal });
+    changeChildDirection({ currentLayout: layout, updater, path, isHorizontal: snapshot.isHorizontal });
 
     onSnapshotDirectionUpdate({
       snapshot,
@@ -97,6 +98,14 @@ const DashboardDraggableList = ({
       />
     );
   };
+
+  if (!layout.length) {
+    return (
+      <div className="is-flex mt-50">
+        <EmptyListPlaceholder />
+      </div>
+    )
+  }
 
   return (
     <div>

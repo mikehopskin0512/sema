@@ -7,6 +7,7 @@ import { fullName } from '../../utils';
 import styles from './invitationsGrid.module.scss';
 import { CloseIcon, UndoIcon } from '../Icons';
 import { isInvitationPending } from '../../utils/invitations';
+import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants';
 
 const InvitationsGrid = ({
   type,
@@ -165,7 +166,7 @@ const InvitationsGrid = ({
             {item.senderName}
           </>
         ),
-        sent: format(new Date(item.createdAt), 'yyyy-MM-dd'),
+        sent: format(new Date(item.createdAt), YEAR_MONTH_DAY_FORMAT),
         actions: item,
       };
     }) : [];

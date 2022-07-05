@@ -16,6 +16,12 @@ const initialState = {
         totalSmartComments: 0
       }
     },
+    filterValues: {
+      requesters: [],
+      authors: [],
+      pullRequests: [],
+      repos: [],
+    }
   },
 
 };
@@ -220,6 +226,42 @@ const reducer = (state = initialState, action) => {
         overview: action.overview,
       },
       error: action.errors,
+    };
+  case types.REQUEST_FETCH_REPO_FILTERS:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_FETCH_REPO_FILTERS_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        filterValues: {...state.data.filterValues, ...action.filters}
+      },
+      error: {},
+    };
+  case types.REQUEST_FETCH_REPO_FILTERS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
+  case types.REQUEST_CLEAR_REPO_FILTERS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        filterValues: {
+          requesters: [],
+          authors: [],
+          pullRequests: [],
+          repos: [],
+        }
+      },
+      error: {},
     };
   case types.REQUEST_FETCH_DASHBOARD_REPOSITORIES:
     return {

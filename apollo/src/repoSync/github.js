@@ -9,6 +9,7 @@ import {
 } from '../comments/reaction/reactionService';
 import { findOneByLabel as findTagByLabel } from '../comments/tags/tagService';
 import SmartComment from '../comments/smartComments/smartCommentModel';
+import Repository from '../repositories/repositoryModel';
 import {
   findByUsernameOrIdentity,
   createGhostUser,
@@ -16,25 +17,15 @@ import {
 import { EMOJIS } from '../comments/suggestedComments/constants';
 
 export default function createGitHubImporter(octokit) {
-  const commentsWithoutID = new Cache(10);
-  commentsWithoutID.materialize = loadCommentsWithoutID;
-
-  const octokitCache = new Cache(50);
-  octokitCache.materialize = async (url) => await octokit.request(url);
-
-  const userCache = new Cache(100);
-  userCache.materialize = async (login) =>
-    (await octokit.request('/users/{login}', { login }))?.data;
-
-  async function loadCommentsWithoutID(repoID) {
-    return await SmartComment.find({
-      'source.provider': 'github',
-      'source.id': null,
-      'githubMetadata.repo_id': repoID,
-    }).lean();
-  }
+  // Speed some things up.
+  const unmatchedComments = getUnmatchedCommentsCache();
+  const pullRequestCache = getPullRequestCache(octokit);
+  const userCache = getUserCache(octokit);
+  const repositoryIdCache = getRepositoryIdCache();
 
   return async function importComment(githubComment) {
+    if (!githubComment.body) return null;
+
     const type = getType(githubComment);
     // Ignore issue comments that belong to GitHub issues
     // and not pull requests.
@@ -47,9 +38,15 @@ export default function createGitHubImporter(octokit) {
     const pullRequestURL =
       githubComment.pull_request_url ||
       githubComment.issue_url.replace('/issues/', '/pulls/');
-    const { data: pullRequest } = await octokitCache.get(pullRequestURL);
+
+    const pullRequest = await pullRequestCache.get(pullRequestURL);
+    // Sometimes we get comments for PRs that were deleted on GitHub.
+    // e.g. https://api.github.com/repos/SemaSandbox/astrobee/pulls/comments/702432867
+    if (!pullRequest) return null;
+
     const { repo } = pullRequest.base;
-    const otherComments = await commentsWithoutID.get(repo.id);
+    const repositoryId = await repositoryIdCache.get(repo.id);
+    const otherComments = await unmatchedComments.get(repositoryId);
     const existingComment = await findDuplicate(githubComment, otherComments);
 
     if (existingComment) {
@@ -64,6 +61,7 @@ export default function createGitHubImporter(octokit) {
       githubComment,
       pullRequest,
       userCache,
+      repositoryId,
     });
   };
 }
@@ -108,6 +106,7 @@ async function createNewSmartComment({
   githubComment,
   pullRequest,
   userCache,
+  repositoryId,
 }) {
   const type = getType(githubComment);
   const text = githubComment.body;
@@ -150,6 +149,7 @@ async function createNewSmartComment({
     {
       'comment': sanitizedText,
       'userId': user,
+      repositoryId,
       githubMetadata,
       'reaction': reaction?._id ?? SmartComment.schema.paths.reaction.default(),
       'tags': tags.map((t) => t._id),
@@ -233,7 +233,7 @@ async function findDuplicate(githubComment, otherComments) {
   return await SmartComment.findById(existing._id);
 }
 
-function removeSemaSignature(text) {
+export function removeSemaSignature(text) {
   if (looksLikeSemaComment(text)) {
     const [body] = splitSemaComment(text);
     return body;
@@ -244,7 +244,7 @@ function removeSemaSignature(text) {
 
 function splitSemaComment(text) {
   const [rawBody, rawSignature] = dropQuotedText(text).split(
-    /__\r?\n\[!\[sema-logo\].*?&nbsp;/im
+    /__\r?\n\[!\[sema-logo\].*?(?:\*\*Summary:)/im
   );
 
   if (rawSignature) {
@@ -270,9 +270,12 @@ function dropQuotedText(text) {
     .join('\n');
 }
 
-function extractTagsFromSemaComment(text) {
+export function extractTagsFromSemaComment(text) {
   try {
     const [, signature] = splitSemaComment(text);
+
+    if (!signature) return [];
+
     return (
       signature
         .match(/Tags:(.*)$/im)?.[1]
@@ -288,8 +291,10 @@ function extractTagsFromSemaComment(text) {
   }
 }
 
-async function extractReactionFromSemaComment(text) {
+export async function extractReactionFromSemaComment(text) {
   const [, signature] = splitSemaComment(text);
+  if (!signature) return null;
+
   const emoji = EMOJIS.find((e) => signature.includes(e.github_emoji));
   if (emoji) {
     const reaction = await findReactionById(emoji._id);
@@ -333,4 +338,52 @@ function getPullRequestNumberFromURL(stringUrl) {
   const [, , , pull, number] = url.pathname.split('/');
   assert(pull === 'pull', 'Expected a URL for a pull request');
   return number;
+}
+
+// Cache of repository MongoDB ID → list of unmatched smart comments (no source ID).
+function getUnmatchedCommentsCache() {
+  const cache = new Cache(10);
+  cache.materialize = async (repositoryId) =>
+    await SmartComment.find({
+      repositoryId,
+      'source.provider': 'github',
+      'source.id': null,
+    }).lean();
+  return cache;
+}
+
+// Cache of pull request API URL → pull request details from GitHub.
+function getPullRequestCache(octokit) {
+  const cache = new Cache(50);
+  cache.materialize = async (url) => {
+    try {
+      const { data: pullRequest } = await octokit.request(url);
+      return pullRequest;
+    } catch (error) {
+      if (error.status === 404) return null;
+      throw error;
+    }
+  };
+  return cache;
+}
+
+// Cache of user login → GitHub profile.
+function getUserCache(octokit) {
+  const cache = new Cache(100);
+  cache.materialize = async (login) =>
+    (await octokit.request('/users/{login}', { login }))?.data;
+  return cache;
+}
+
+// Cache of repository external ID → MongoDB ID.
+function getRepositoryIdCache() {
+  const cache = new Cache(50);
+  cache.materialize = async (externalId) => {
+    const { _id } = await Repository.findOne({
+      type: 'github',
+      externalId,
+    }).select('_id');
+    return _id;
+  };
+  return cache;
 }

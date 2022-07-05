@@ -38,7 +38,7 @@ services:
     volumes:
       - ./apollo:/usr/app
       - /usr/app/node_modules
-    command: npm run worker
+    command: [ "npm", "run", "worker" ]
     depends_on:
       - mongodb
     container_name: phoenix.apollo.worker.local

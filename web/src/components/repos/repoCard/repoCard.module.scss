@@ -11,13 +11,8 @@
 }
 
 .card-width-3c {
-  width: calc(100%/4);
-  max-width: calc(100%/4);
-
-  @media only screen and (max-width: 1440px) {
-    width: calc(100%/3);
-    max-width: calc(100%/3);
-  }
+  width: calc(100%/3);
+  max-width: calc(100%/3);
 
   @media only screen and (max-width: 1280px) {
     width: calc(100%/2);
@@ -93,5 +88,5 @@
 
 .repo-skeleton-background {
   background-color: rgba($skeleton-back, 0.3);
-
+  width: '100%';
 }
