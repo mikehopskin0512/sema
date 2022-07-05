@@ -228,7 +228,7 @@
     "portfoliosEditPersonalOverviewCancelBtn"   : "//section[contains(@class,'editModal_modal-body__EcS0H')]//button[text()='Cancel']",
     "portfoliosEditPersonalOverviewSaveBtn"     : "//section[contains(@class,'editModal_modal-body__EcS0H')]//button[text()='Save changes']",
 
-    "portfoliosSnapshotsBoard"                  : "//div[contains(@class,'snapshot_snapshot__BxUL9')]",
+    "portfoliosSnapshotsBoard"                  : "//div[@class='container portfoliosDashboard_snaps-container__3H17s']",
     "portfoliosSnapshotFirstName"               : "//div[contains(@class,'portfoliosDashboard_draggable-columns__y09Ok')][1]//div[@class='column is-full pt-0']/div[1]",
     "portfoliosSnapshotName"                    : "//div[contains(@class,'portfoliosDashboard_draggable-columns__y09Ok')]//div[@class='column is-full pt-0']/div[1]",
     "portfoliosSnapshotFirstDescription"        : "//div[contains(@class,'portfoliosDashboard_draggable-columns__y09Ok')][1]//div[@class='column is-full pt-0']/div[2]//span/*",
@@ -250,6 +250,11 @@
     "portfoliosAddSnapshotModalConfirmBtn"      : "//button[contains(normalize-space(),'Snapshots')]",
     "portfoliosAddSnapshotModalCancelBtn"       : "//div[@class='is-flex is-align-items-center is-justify-content-space-between']//div//button[@type='button'][normalize-space()='Cancel']",
 
+    "portfoliosPublicPrivatSwitch"              : "//label[contains(@for,'activeSwitch-')]",
+    "portfoliosShareBtn"                        : "//div[@class='is-flex ml-20 is-clickable']//*[name()='svg']",
+    "portfoliosSaveToPdf"                       : "//button/p[text()='Save as PDF']",
+
+
     "snapshotLibAddToPortfolioBtn"                      : "",
     "snapshotLibAddToPortfolioModal"                    : "",
     "snapshotLibAddToPortfolioModalPortfolios"          : "",
@@ -260,20 +265,17 @@
     "snapshotLibAddToPortfolioModalCancelBtn"           : "",
     "snapshotLibAddToPortfolioModalSubmitBtn"           : "",
 
-
-
-
-
     "######### PORTFOLIOS MANAGEMENT LOCATORS ###########################" : "",
     "portfolioLibraryTab"                       : "//span[normalize-space()='Portfolio Library']",
     "addNewPortfolioBtn"                        : "//button[@class='button is-primary']/span[text()='Add New Portfolio']",
     "portfolioListNames"                        : "//div/p[text()='Portfolio Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']//span",
     "portfolioListDates"                        : "//div/p[text()='Portfolio Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']/td[3]",
     "portfolioListVisibility"                   : "//div/p[text()='Portfolio Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']/td[4]/div",
-    "portfolioListShareBtns"                    : "//div/p[text()='Portfolio Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']//div[@class='tooltip_tooltip-Wrapper__3n7GE']",
+    "portfolioListShareBtns"                    : "//div/p[text()='Portfolio Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']//div[@class='tooltip_tooltip-Wrapper__3n7GE']//*[name()='svg']",
     "portfolioListThreeDotsBtns"                : "//div/p[text()='Portfolio Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']//div[@class='dropdown  is-right']",
     "portfolioListDuplicateBtn"                 : "//div/p[text()='Portfolio Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']//div[@class='dropdown  is-active is-right']//button[text()='Duplicate Portfolio']",
     "portfolioListDeleteBtn"                    : "//div/p[text()='Portfolio Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']//div[@class='dropdown  is-active is-right']//button[text()='Delete']",
+    "portfolioListShareTooltip"                 : "//div/p[text()='Portfolio Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']//div[@class='tooltip_tooltip-Wrapper__3n7GE']//div[contains(@class,'tooltip_Tooltip-Tip__2S_iM')]",
 
     "snapshotLibraryTab"                        : "//span[normalize-space()='Snapshot Library']",
     "snapshotListTitles"                        : "//div/p[text()='Snapshot Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody//td[2]",
@@ -284,6 +286,7 @@
     "snapshotListDuplicateBtn"                  : "//div/p[text()='Snapshot Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']//div[@class='dropdown  is-active is-right']//button[text()='Duplicate']",
     "snapshotListDeleteBtn"                     : "//div/p[text()='Snapshot Library']/../following-sibling::div/table[contains(@class,'table_table-container__B2eEf')]/tbody/tr[@role='row']//div[@class='dropdown  is-active is-right']//button[text()='Delete']",
     "snapshotConfirmationDeleteBtn"             : "//div[@class='modal-card deleteModal_modal__16usq portfolios_snapshots-modal-wrapper__1TH1j']//button[text()='Delete']",
+
 
 
     "######### CREATE A ORGANIZATION LOCATORS ###########################" : "",

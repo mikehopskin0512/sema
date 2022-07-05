@@ -56,8 +56,9 @@ Feature: Portfolios
     And  I click on the element "1stReposCard" if visible
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "last7DaysDateRange" becomes displayed
-    When I click on the element "last7DaysDateRange"
+    Then I expect that element "last30DaysDateRange" becomes displayed
+    When I click on the element "last30DaysDateRange"
+    And  I pause for 1000ms
     And  I click on the element "dateRangeFilter"
     Then I expect that element "snapshotBtn" becomes displayed
 
@@ -90,7 +91,7 @@ Feature: Portfolios
     And  I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshot was added to your portfolio."
     And  I expect that element "saveSnapshotToPortfolioNotificationLink" becomes displayed
     When I click on the element "saveSnapshotToPortfolioNotificationLink"
-  
+
     Then I expect that element "portfoliosUserName" becomes displayed
     And  I expect that element "portfoliosUserGitHubLink" becomes displayed
     And  I expect that element "portfoliosChangePersonalOverviewBtn" becomes displayed
@@ -108,7 +109,7 @@ Feature: Portfolios
     Then I expect that element "portfoliosDeleteSnapshotConfirmBtn" becomes displayed
     When I click on the element "portfoliosDeleteSnapshotConfirmBtn"
     Then I expect that element "portfoliosSnapshotsBoard" becomes not displayed
-  
+
     When I click on the element "trophyBtn"
     Then I expect that element "snapshotLibraryTab" becomes displayed
     When I click on the element "snapshotLibraryTab"
@@ -143,8 +144,10 @@ Feature: Portfolios
     When I click on the element "codeStatsTabBtn"
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "last7DaysDateRange" becomes displayed
-    When I click on the element "last7DaysDateRange"
+    Then I expect that element "last14DaysDateRange" becomes displayed
+    When I click on the element "last14DaysDateRange"
+    And  I pause for 1000ms
+    And  I click on the element "dateRangeFilter"
     Then I expect that element "codeStatsTagsSnapshotBtn" becomes displayed
 
     When I click on the element "codeStatsTagsSnapshotBtn"
@@ -224,8 +227,8 @@ Feature: Portfolios
     When I click on the element "codeStatsTabBtn"
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "last7DaysDateRange" becomes displayed
-    When I click on the element "last7DaysDateRange"
+    Then I expect that element "last30DaysDateRange" becomes displayed
+    When I click on the element "last30DaysDateRange"
 
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
@@ -307,8 +310,8 @@ Feature: Portfolios
     And  I click on the element "1stReposCard" if visible
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "last7DaysDateRange" becomes displayed
-    When I click on the element "last7DaysDateRange"
+    Then I expect that element "last30DaysDateRange" becomes displayed
+    When I click on the element "last30DaysDateRange"
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "snapshotBtn" becomes displayed
@@ -385,8 +388,8 @@ Feature: Portfolios
     And  I click on the element "1stReposCard" if visible
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "last7DaysDateRange" becomes displayed
-    When I click on the element "last7DaysDateRange"
+    Then I expect that element "last30DaysDateRange" becomes displayed
+    When I click on the element "last30DaysDateRange"
     And  I click on the element "dateRangeFilter"
     Then I expect that element "snapshotBtn" becomes displayed
 
@@ -437,7 +440,7 @@ Feature: Portfolios
     And  I expect that element "portfolioListDeleteBtn" becomes not displayed
 
   @PTA94
-  Scenario: Portfolios elements can be duplicated
+  Scenario: Portfolios elements can be duplicated in portfolio management
     When I open the site "/dashboard"
     Then I expect that element "trophyBtn" becomes displayed
     When I click on the element "trophyBtn"
@@ -460,8 +463,8 @@ Feature: Portfolios
     And  I click on the element "1stReposCard" if visible
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "last7DaysDateRange" becomes displayed
-    When I click on the element "last7DaysDateRange"
+    Then I expect that element "last30DaysDateRange" becomes displayed
+    When I click on the element "last30DaysDateRange"
     And  I click on the element "dateRangeFilter"
     Then I expect that element "snapshotBtn" becomes displayed
 
@@ -524,8 +527,8 @@ Feature: Portfolios
     And  I click on the element "1stReposCard" if visible
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "last7DaysDateRange" becomes displayed
-    When I click on the element "last7DaysDateRange"
+    Then I expect that element "last30DaysDateRange" becomes displayed
+    When I click on the element "last30DaysDateRange"
     And  I click on the element "dateRangeFilter"
     Then I expect that element "snapshotBtn" becomes displayed
 
@@ -575,8 +578,8 @@ Feature: Portfolios
     And  I click on the element "1stReposCard" if visible
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "last7DaysDateRange" becomes displayed
-    When I click on the element "last7DaysDateRange"
+    Then I expect that element "last30DaysDateRange" becomes displayed
+    When I click on the element "last30DaysDateRange"
     And  I click on the element "dateRangeFilter"
     Then I expect that element "snapshotBtn" becomes displayed
 
@@ -655,8 +658,8 @@ Feature: Portfolios
     And  I click on the element "1stReposCard" if visible
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "last7DaysDateRange" becomes displayed
-    When I click on the element "last7DaysDateRange"
+    Then I expect that element "last30DaysDateRange" becomes displayed
+    When I click on the element "last30DaysDateRange"
     And  I click on the element "dateRangeFilter"
     Then I expect that element "snapshotBtn" becomes displayed
 
@@ -760,8 +763,8 @@ Feature: Portfolios
     And  I click on the element "1stReposCard" if visible
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
-    Then I expect that element "last7DaysDateRange" becomes displayed
-    When I click on the element "last7DaysDateRange"
+    Then I expect that element "last30DaysDateRange" becomes displayed
+    When I click on the element "last30DaysDateRange"
     And  I click on the element "dateRangeFilter"
     Then I expect that element "snapshotBtn" becomes displayed
 
@@ -865,8 +868,8 @@ Feature: Portfolios
 #    And  I click on the element "1stReposCard" if visible
 #    Then I expect that element "dateRangeFilter" becomes displayed
 #    When I click on the element "dateRangeFilter"
-#    Then I expect that element "last7DaysDateRange" becomes displayed
-#    When I click on the element "last7DaysDateRange"
+#    Then I expect that element "last30DaysDateRange" becomes displayed
+#    When I click on the element "last30DaysDateRange"
 #    And  I click on the element "dateRangeFilter"
 #    Then I expect that element "snapshotBtn" becomes displayed
 #
@@ -937,7 +940,150 @@ Feature: Portfolios
 #    todo continue after discussion
 
 
+#  NEW TEST FOR DUPLICATING
+#  https://semalab.atlassian.net/browse/EAST-1412
 
+
+#  ---------
+#  @PTA94_2     #https://semalab.atlassian.net/browse/EAST-1405
+#  Scenario: Portfolios elements can be duplicated from inside
+#    Then I expect that element "trophyBtn" becomes displayed
+#    When I click on the element "trophyBtn"
+#
+#    Then I expect that element "portfolioLibraryTab" becomes displayed
+#    And  I expect that element "addNewPortfolioBtn" becomes displayed
+#    When I click on the element "addNewPortfolioBtn"
+#    And  I pause for 3000ms
+#    Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
+#    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn"
+#    Then I expect that element "portfolioListNames" does appear exactly "1" times
+#    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
+#
+#    When I click on the element "reposTab"
+#    Then I expect that element "reposContainer" becomes displayed
+#    And  I pause for 3000ms
+#    And  I expect that element "1stReposCard" becomes displayed
+#    And  I pause for 1000ms
+#    When I click on the element "1stReposCard"
+#    And  I pause for 1000ms
+#    Then I expect that element "dateRangeFilter" becomes displayed
+#    When I click on the element "dateRangeFilter"
+#    Then I expect that element "allTimeDateRange" becomes displayed
+#    When I click on the element "allTimeDateRange"
+#    And  I click on the element "dateRangeFilter"
+#    Then I expect that element "snapshotBtn" becomes displayed
+#
+#    When I click on the element "snapshotBtn"
+#    Then I expect that element "saveSnapshotTitleInput" becomes displayed
+#    And  I expect that element "saveSnapshotDescriptionInput" becomes displayed
+#
+#    When I set "activity logs" with timestamp to the inputfield "saveSnapshotTitleInput"
+#    And  I click on the element "saveSnapshotDescriptionInput"
+#    And  I add "activity logs - snapshot description" to the inputfield "saveSnapshotDescriptionInput"
+#    And  I click on the element "saveSnapshotAddToPortfolio"
+#    And  I pause for 1000ms
+#    And  I press "ArrowDown"
+#    And  I press "Enter"
+#    Then I expect that element "saveSnapshotAddToPortfolio" not matches the text "None"
+#    When I click on the element "saveSnapshotSaveBtn"
+#    And  I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshot was added to your portfolio."
+#    And  I expect that element "saveSnapshotToPortfolioNotificationLink" becomes displayed
+#    When I click on the element "saveSnapshotToPortfolioNotificationLink"
+#
+#    Then I expect that element "portfoliosSnapshotsBoard" becomes displayed
+#    And  I expect that new item "portfoliosSnapshotName" is added to portfolio
+#    And  I expect that element "portfoliosSnapshotDescription" becomes displayed
+#    And  I expect that element "portfoliosSnapshotDescription" matches the text "activity logs - snapshot description"
+#
+#    Then I expect that element "trophyBtn" becomes displayed
+#    When I click on the element "trophyBtn"
+#
+#    Then I expect that element "portfolioListNames" becomes displayed
+#    And  I expect that element "addNewPortfolioBtn" becomes displayed
+#    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
+#    When I save the text of element "portfolioListNames"
+#    And  I pause for 3000ms
+#    And  I click on the element "portfolioListThreeDotsBtns"
+#    Then I expect that element "portfolioListDuplicateBtn" becomes displayed
+#    When I click on the element "portfolioListDuplicateBtn"
+#    And  I pause for 20000ms
+#    Then I expect that element "portfolioListNames" does appear exactly "2" times
+#    And  I expect that "2nd" element "portfolioListNames" matches the saved variable with text "_Copy"
+#    When I click on the "2nd" element "portfolioListNames"
+#    Then I expect that element "portfoliosSnapshotsBoard" becomes displayed
+#    And  I expect that element "portfoliosSnapshotDescription" becomes displayed
+#    And  I expect that element "portfoliosSnapshotDescription" matches the text "activity logs - snapshot description"
+
+
+  @PTA112
+  Scenario: Public Portfolios can be shared by the button
+    When I open the site "/dashboard"
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+
+    Then I expect that element "portfolioLibraryTab" becomes displayed
+    When I click on the element "portfolioLibraryTab"
+    Then I expect that element "addNewPortfolioBtn" becomes displayed
+    When I click on the element "addNewPortfolioBtn"
+    And  I pause for 2000ms
+    And  I refresh the page
+    Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
+    When I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn" till "1"
+    Then I expect that element "portfolioListNames" does appear exactly "1" times
+    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
+    And  I expect that element "portfolioListVisibility" becomes displayed
+    And  I expect that element "portfolioListVisibility" matches the text "private"
+    And  I expect that element "portfolioListShareBtns" becomes displayed
+    And  I pause for 1000ms
+
+    When I hover over element "portfolioListShareBtns"
+    Then I expect that element "portfolioListShareTooltip" becomes displayed
+    And  I expect that element "portfolioListShareTooltip" not matches the text "Click to copy to clipboard"
+    When I click on the element "portfolioListShareBtns"
+    And  I hover over element "portfolioListShareBtns"
+    Then I expect that element "portfolioListShareTooltip" not matches the text "Copied to clipboard"
+    
+  @PTA112_2
+  Scenario: Privat Portfolios can not be shared by the button
+    When I open the site "/dashboard"
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+
+    Then I expect that element "portfolioLibraryTab" becomes displayed
+    When I click on the element "portfolioLibraryTab"
+    Then I expect that element "addNewPortfolioBtn" becomes displayed
+    When I click on the element "addNewPortfolioBtn"
+    And  I pause for 2000ms
+    And  I refresh the page
+    Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
+    When I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn" till "1"
+    Then I expect that element "portfolioListNames" does appear exactly "1" times
+    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
+    And  I expect that element "portfolioListVisibility" becomes displayed
+    And  I expect that element "portfolioListVisibility" matches the text "private"
+    And  I expect that element "portfolioListShareBtns" becomes displayed
+    And  I pause for 1000ms
+    When I click on the element "portfolioListNames"
+    Then I expect that element "portfoliosPublicPrivatSwitch" becomes displayed
+    When I click on the element "portfoliosPublicPrivatSwitch"
+    And  I pause for 1000ms
+    And  I click on the element "trophyBtn"
+    Then I expect that element "portfolioListNames" does appear exactly "1" times
+    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
+    And  I expect that element "portfolioListVisibility" becomes displayed
+    And  I expect that element "portfolioListVisibility" matches the text "public"
+    And  I pause for 1000ms
+    And  I expect that element "portfolioListShareBtns" becomes displayed
+
+    When I hover over element "portfolioListShareBtns"
+    Then I expect that element "portfolioListShareTooltip" becomes displayed
+    And  I expect that element "portfolioListShareTooltip" matches the text "Click to copy to clipboard"
+    When I click on the element "portfolioListShareBtns"
+    And  I pause for 10000ms
+    And  I hover over element "portfolioListNames"
+    And  I hover over element "portfolioListShareBtns"
+    Then I expect that element "portfolioListShareTooltip" becomes displayed
+    And  I expect that element "portfolioListShareTooltip" matches the text "Copied to clipboard"
 
   @PTA71 @smoke
   Scenario: Portfolios elements are displayed correctly for portfolio without snapshots
@@ -982,9 +1128,3 @@ Feature: Portfolios
     And  I pause for 3000ms
     And  I switch to opened tab "https://github.com/SemaQAAutomationAdmin"
     Then I expect that the absolute url is "github.com/SemaQAAutomationAdmin"
-
-
-
-#   NEW TEST Create another portfolio from portfolio
-#  NEW TEST FOR DUPLICATING
-#  https://semalab.atlassian.net/browse/EAST-1412
