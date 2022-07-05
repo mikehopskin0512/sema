@@ -216,21 +216,21 @@ const reducer = (state = initialState, action) => {
     case types.REQUEST_TOGGLE_PINNED_ORG_REPO:
     case types.REQUEST_TOGGLE_PINNED_ORG_REPO_ERROR:
       const { repoId, orgId } = action.payload;
-      const newOrgs = state.organizations.map(org => {
+      const orgs = state.organizations.map(org => {
         if (org.organization._id === orgId) {
-          const newPinnedRepos = [...org.organization.pinnedRepos];
-          if (newPinnedRepos.includes(repoId)) {
-            remove(newPinnedRepos, (id) => id === repoId);
+          const orgPinnedRepos = [...org.organization.pinnedRepos];
+          if (orgPinnedRepos.includes(repoId)) {
+            remove(orgPinnedRepos, (id) => id === repoId);
           } else {
-            newPinnedRepos.push(repoId);
+            orgPinnedRepos.push(repoId);
           }
-          org.organization.pinnedRepos = newPinnedRepos;
+          org.organization.pinnedRepos = orgPinnedRepos;
         }
         return org;
       });
       return {
         ...state,
-        organizations: newOrgs,
+        organizations: orgs,
       };
   default:
     return state;

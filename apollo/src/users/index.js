@@ -348,7 +348,7 @@ export default (app, passport) => {
     }
   });
 
-  route.patch('/:id/toggleUserRepoPinned', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+  route.patch('/:id/pinned-repos', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { id } = req.params;
     const { repoId } = req.body;
 

@@ -9,4 +9,4 @@ export const patchUser = (id, params, token) => patch(`/api/proxy/users/${id}`, 
 export const verifyUser = (params, token) => getAll(`/api/proxy/users/verification/${token}`, params);
 export const resetVerification = (params) => create('/api/proxy/users/verification', params);
 export const postUserOrg = (userId, params, token) => create(`/api/proxy/users/${userId}/organizations`, params, token);
-export const togglePinnedUserRepo = (userId, body, token) => patch(`/api/proxy/users/${userId}/toggleUserRepoPinned`, body, token);
+export const togglePinnedUserRepo = (userId, body, token) => patch(`/api/proxy/users/${userId}/pinned-repos`, body, token);

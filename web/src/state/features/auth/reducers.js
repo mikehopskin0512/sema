@@ -205,27 +205,27 @@ const reducer = (state = initialState, action) => {
       };
     case types.REQUEST_TOGGLE_PINNED_USER_REPO:
     case types.REQUEST_TOGGLE_PINNED_USER_REPO_ERROR:
-        const newPinnedRepos = state.user.pinnedRepos ? [...state.user.pinnedRepos] : [];
-        if (newPinnedRepos.includes(action.repoId)) {
-          remove(newPinnedRepos, (id) => id === action.repoId);
+        const userPinnedRepos = state.user.pinnedRepos ? [...state.user.pinnedRepos] : [];
+        if (userPinnedRepos.includes(action.repoId)) {
+          remove(userPinnedRepos, (id) => id === action.repoId);
         } else {
-          newPinnedRepos.push(action.repoId);
+          userPinnedRepos.push(action.repoId);
         }
         return {
           ...state,
           user: {
             ...state.user,
-            pinnedRepos: newPinnedRepos,
+            pinnedRepos: userPinnedRepos,
           },
       };
     case REQUEST_TOGGLE_PINNED_ORG_REPO:
     case REQUEST_TOGGLE_PINNED_ORG_REPO_ERROR:
-      const pinnedReposNew = [...state.selectedOrganization.organization.pinnedRepos];
+      const orgPinnedRepos = [...state.selectedOrganization.organization.pinnedRepos];
       const { repoId } = action.payload;
-      if (pinnedReposNew.includes(repoId)) {
-        remove(pinnedReposNew, (id) => id === repoId);
+      if (orgPinnedRepos.includes(repoId)) {
+        remove(orgPinnedRepos, (id) => id === repoId);
       } else {
-        pinnedReposNew.push(repoId);
+        orgPinnedRepos.push(repoId);
       }
       return {
         ...state,
@@ -233,7 +233,7 @@ const reducer = (state = initialState, action) => {
           ...state.selectedOrganization,
           organization: {
             ...state.selectedOrganization.organization,
-            pinnedRepos: pinnedReposNew,
+            pinnedRepos: orgPinnedRepos,
           }
         }
       };
