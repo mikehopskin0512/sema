@@ -217,7 +217,7 @@ Feature: Snippets
     Then I expect that new item "allCollectionsNames" is added to collections
 
   @C1714
-  Scenario:  "View more" snippets shows
+  Scenario: "View more" snippets shows
     When I open the site "/snippets"
     Then I expect that element "searchIconBtn" becomes displayed
     When I click on the button "searchIconBtn"
