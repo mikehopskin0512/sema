@@ -67,7 +67,6 @@ function RepoPage() {
     to: [],
     reactions: [],
     tags: [],
-    search: '',
     pr: [],
     dateOption: '',
     pageNumber: 1,

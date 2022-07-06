@@ -630,8 +630,8 @@ export const findByExternalId = async (repoId, populate, createdAt) => {
   }
 };
 
-export const searchSmartComments = async (
-  repoId,
+export const searchSmartComments = async ({
+  repoIds,
   dateRange,
   fromUserList,
   toUserList,
@@ -640,11 +640,13 @@ export const searchSmartComments = async (
   pullRequests,
   searchQuery,
   pageNumber,
-  pageSize
-) => {
+  pageSize,
+  reviewer,
+  author
+}) => {
   try {
     let findQuery = {
-      'githubMetadata.repo_id': repoId
+      'githubMetadata.repo_id': { $in: repoIds }
     };
 
     if (dateRange) {
@@ -654,6 +656,20 @@ export const searchSmartComments = async (
           $gte: toDate(new Date(dateRange.startDate)),
           $lte: toDate(endOfDay(new Date(dateRange.endDate)))
         }
+      };
+    }
+
+    if (reviewer) {
+      findQuery = {
+        ...findQuery,
+        'githubMetadata.user.login': reviewer
+      };
+    }
+
+    if (author) {
+      findQuery = {
+        ...findQuery,
+        'githubMetadata.requester': author
       };
     }
 

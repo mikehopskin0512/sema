@@ -171,7 +171,7 @@ export default (app, passport) => {
     passport.authenticate(['bearer'], { session: false }),
     async (req, res) => {
       const {
-        repoId,
+        repoIds,
         startDate,
         endDate,
         fromUserList,
@@ -181,22 +181,24 @@ export default (app, passport) => {
         pullRequests,
         searchQuery,
         pageNumber = 1,
-        pageSize = 10
+        pageSize = 10,
+        requester: author,
+        reviewer
       } = req.body;
 
       let dateRange = undefined;
       if (startDate && endDate) {
         dateRange = { startDate, endDate };
       }
-      if (!repoId) {
+      if (!repoIds) {
         return res.status(401).send({
           message: 'Repo ID is required.'
         })
       }
 
       try {
-        const { smartComments, total} = await searchSmartComments(
-          repoId,
+        const { smartComments, total} = await searchSmartComments({
+          repoIds,
           dateRange,
           fromUserList,
           toUserList,
@@ -205,8 +207,10 @@ export default (app, passport) => {
           pullRequests,
           searchQuery,
           pageNumber,
-          pageSize
-        );
+          pageSize,
+          reviewer,
+          author,
+        });
 
         const totalPage = Math.ceil(total/pageSize);
         return res.status(201).send({
