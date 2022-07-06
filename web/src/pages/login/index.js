@@ -99,7 +99,7 @@ if (!isAuthenticated || user.isWaitlist) {
               <img src="/img/logo-neon.png" />
             </div>
             <div className="is-flex is-flex-wrap-wrap is-justify-content-space-around">
-              <div className="is-flex-grow-1 is-flex is-flex-direction-column is-align-items-center is-justify-content-center" >
+              <div className="is-flex is-flex-direction-column is-align-items-center is-justify-content-center" >
                 <div style={{ maxWidth: 500 }}>
                   <h1 className={clsx("my-40", styles.title)}>Write more meaningful code reviews.</h1>
                   <div className="feature-list mt-20">
@@ -141,12 +141,21 @@ if (!isAuthenticated || user.isWaitlist) {
                   </div>
                 </div>
               </div>
-              <div className="is-hidden-touch" style={{ minWidth: 50 }} />
-              <div className="is-flex-grow-2">
-                {/** Show on Desktop */}
+              <div className="is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only" style={{ minWidth: 50 }} />
+              <div>
+                {/** Show on WideScreens */}
                 <div
                   className={clsx(
-                    'colored-shadow has-text-centered is-hidden-touch px-80 pt-110 pb-15',
+                    'colored-shadow has-text-centered is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only px-80 pt-110 pb-15',
+                    styles['login-tile'],
+                  )}
+                >
+                  {renderCard()}
+                </div>
+                {/** Show on desktop */}
+                <div
+                  className={clsx(
+                    'colored-shadow has-text-centered is-hidden-touch is-hidden-fullhd pt-50 pb-15 px-30',
                     styles['login-tile'],
                   )}
                 >
