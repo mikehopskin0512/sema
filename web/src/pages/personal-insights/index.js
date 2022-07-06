@@ -444,7 +444,7 @@ const PersonalInsights = () => {
             )}
           </div>
         </div>
-        <ActivityItemList comments={filteredComments} isLoading={isFetching} />
+        <ActivityItemList comments={filteredComments} isLoading={isFetching} pagination={pagination} setFilter={setFilter} />
       </div>
     </>
   );
