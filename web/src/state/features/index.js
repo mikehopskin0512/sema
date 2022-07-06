@@ -7,7 +7,6 @@ export { default as invitationsState } from './invitations';
 export { default as notificationsState } from './notifications';
 export { default as organizationsState } from './organizations';
 export { default as passwordState } from './password-reset';
-export { default as repoSmartCommentsState } from './repo-smart-comments';
 export { default as repositoriesState } from './repositories';
 export { default as reportsState } from './reports';
 export { default as sourcesState } from './sources';

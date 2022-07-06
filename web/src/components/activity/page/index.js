@@ -3,12 +3,13 @@ import { useSelector } from 'react-redux';
 import ActivityItem from '../item';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../snapshots/modalWindow';
 import SnapshotBar from '../../snapshots/snapshotBar';
+import Pagination from '@/components/pagination';
 
-const ActivityPage = () => {
-  const { repoSmartComments } = useSelector((state) => ({
-    repoSmartComments: state.repoSmartCommentsState,
+const ActivityPage = ({ setFilter }) => {
+  const { comments } = useSelector((state) => ({
+    comments: state.commentsState,
   }));
-  const { data: { smartComments } } = repoSmartComments;
+  const { searchResults: smartComments, pagination } = comments;
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -24,6 +25,13 @@ const ActivityPage = () => {
           <p>No activity found!</p>
         </div>
       )}
+      <Pagination
+        currentPage={pagination.pageNumber}
+        totalCount={pagination.total}
+        pageSize={pagination.pageSize}
+        setPageSize={(pageSize) => setFilter((oldState) => ({ ...oldState, pageSize }))}
+        onPageChange={(page) => setFilter((oldState) => ({ ...oldState, pageNumber: page }))}
+      />
     </>
   );
 };

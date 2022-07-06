@@ -3,13 +3,13 @@ import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { findIndex, isEmpty, uniqBy } from 'lodash';
+import { filter, findIndex, isEmpty, uniqBy } from 'lodash';
 import ActivityPage from '../../../components/activity/page';
 import RepoPageLayout from '../../../components/repos/repoPageLayout';
 import StatsPage from '../../../components/stats';
 import Helmet from '../../../components/utils/Helmet';
+import { commentsOperations } from '../../../state/features/comments';
 import { repositoriesOperations } from '../../../state/features/repositories';
-import { repoSmartCommentsOperations } from '../../../state/features/repo-smart-comments';
 import { organizationsOperations } from '../../../state/features/organizations[new]';
 import { getDateSub } from '../../../utils/parsing';
 import useAuthEffect from '../../../hooks/useAuthEffect';
@@ -19,9 +19,9 @@ import { DEFAULT_AVATAR } from '../../../utils/constants';
 import styles from './styles.module.scss';
 import * as api from '../../../state/utils/api';
 
-const { searchRepoSmartComments } = repoSmartCommentsOperations;
 const { fetchRepositoryOverview, fetchReposByIds, fetchRepoFilters } =
   repositoriesOperations;
+const { filterRepoSmartComments } = commentsOperations;
 const { fetchOrganizationRepos } = organizationsOperations;
 
 const tabTitle = {
@@ -70,6 +70,8 @@ function RepoPage() {
     search: '',
     pr: [],
     dateOption: '',
+    pageNumber: 1,
+    pageSize: 10
   });
   const [filterUserList, setFilterUserList] = useState([]);
   const [filterRequesterList, setFilterRequesterList] = useState([]);
@@ -81,18 +83,6 @@ function RepoPage() {
   useEffect(() => {
     setIsOrganizationRepo(!isEmpty(selectedOrganization));
   }, [selectedOrganization]);
-
-  useEffect(() => {
-    dispatch(
-      searchRepoSmartComments(
-        repoId,
-        token,
-        dates.startDate && dates.endDate
-          ? { ...getDateSub(dates.startDate, dates.endDate), ...filter}
-          : filter
-      )
-    )
-  }, [filter, dates]);
 
   useAuthEffect(() => {
     if (!isEmpty(selectedOrganization)) {
@@ -115,6 +105,27 @@ function RepoPage() {
     }
   }, []);
 
+  const searchSmartComments = (filterData) => {
+    const filter = {
+      ...getDateSub(dates.startDate, dates.endDate),
+      fromUserList: filterData.from.map((f) => (f.value)),
+      toUserList: filterData.to.map((t) => (t.value)),
+      summaries: filterData.reactions.map((r) => (r.value)),
+      tags: filterData.tags.map((t) => (t.value)),
+      pullRequests: filterData.pr.map((p) => (p.value)),
+      searchQuery: filterData.search,
+      pageNumber: filterData.pageNumber,
+      pageSize: filterData.pageSize
+    }
+    dispatch(
+      filterRepoSmartComments(
+        repoId,
+        token,
+        filter
+      )
+    )
+  };
+
   const refresh = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -133,25 +144,17 @@ function RepoPage() {
                   : null
               )
             ),
-            dispatch(
-              searchRepoSmartComments(
-                repoId,
-                token,
-                dates.startDate && dates.endDate
-                  ? getDateSub(dates.startDate, dates.endDate)
-                  : null
-              )
-            )
+            searchSmartComments(filter)
           ]);
         }
     } finally {
       setIsLoading(false);
     }
-  }, [repoId, dates, dispatch, token]);
+  }, [repoId, dates, dispatch, token, filter]);
 
   useAuthEffect(() => {
     refresh();
-  }, [repoId, dates]);
+  }, [repoId, dates, filter]);
 
   // Prevent from doing multiple calls while user is selecting dates
   useEffect(() => {
@@ -215,6 +218,7 @@ function RepoPage() {
           onChangeFilter={onChangeFilter}
           onDateChange={onDateChange}
           tab={selectedTab}
+          onSearch={(search) => searchSmartComments({ ...filter, search })}
         />
 
         <div className={clsx(styles.divider, 'my-20 mx-10')} />
@@ -226,7 +230,7 @@ function RepoPage() {
         />
       </div>
       {selectedTab === 'activity' && (
-        <ActivityPage startDate={startDate} endDate={endDate} filter={filter} />
+        <ActivityPage startDate={startDate} endDate={endDate} filter={filter} setFilter={setFilter} />
       )}
       {selectedTab === 'stats' && (
         <div className={styles.wrapper}>

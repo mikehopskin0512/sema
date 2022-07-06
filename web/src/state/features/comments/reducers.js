@@ -8,6 +8,15 @@ const initialState = {
   smartComments: [],
   summary: {},
   overview: {},
+  searchResults: [],
+  pagination: {
+    pageSize: 1,
+    pageNumber: 1,
+    totalPage: 0,
+    total: 0,
+    hasNextPage: false,
+    hasPreviousPage: false
+  }
 };
 
 const reducer = (state = initialState, action) => {
@@ -121,6 +130,25 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.error
     }
+  case types.REQUEST_FILTER_REPO_SMART_COMMENTS:
+    return {
+      ...state,
+      isFetching: true,
+    }
+  case types.REQUEST_FILTER_REPO_SMART_COMMENTS_SUCCESS:
+    return {
+        ...state,
+        searchResults: action.results.smartComments,
+        pagination: action.results.paginationData,
+        isFetching: false,
+      }
+  case types.REQUEST_FILTER_REPO_SMART_COMMENTS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.error
+    }
+    
   default:
     return state;
   }
