@@ -186,7 +186,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
   }
 
   const onCopy = () => {
-    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(userData.handle, portfolio._id)}`);
+    navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}${PATHS.PORTFOLIO.VIEW(userData.handle, portfolio._id)}`);
     changeIsCopied(true);
     setTimeout(() => changeIsCopied(false), 5000);
   };
