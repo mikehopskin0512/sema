@@ -229,11 +229,21 @@ const OrganizationInsights = () => {
     )
   };
 
+  const getCommentsBounds = (comments) => {
+    const sorted = comments.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)) ?? [];
+    return { start: sorted[0]?.createdAt, finish: sorted[sorted.length - 1]?.createdAt }
+  }
+
   useEffect(() => {
+    searchSmartComments(filter);
+  }, [filter]);
+
+  useEffect(() => {
+    const { start, finish } = getCommentsBounds(filteredComments);
     const dates = setSmartCommentsDateRange(
       filteredComments,
-      filter?.startDate ?? subDays(new Date(), 360),
-      filter?.endDate ?? new Date(),
+      filter?.startDate ?? start,
+      filter?.endDate ?? finish,
     );
     const {
       startDay,
@@ -247,8 +257,7 @@ const OrganizationInsights = () => {
       startDate: new Date(startDay),
       endDate: endDay,
     });
-    searchSmartComments(filter);
-  }, [filter]);
+  }, [filteredComments])
 
   useEffect(() => {
     const { startDate, endDate, groupBy } = dateData;
