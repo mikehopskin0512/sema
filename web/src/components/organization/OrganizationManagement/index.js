@@ -51,12 +51,12 @@ const OrganizationManagement = ({ activeOrganization }) => {
   const organizationId = activeOrganization?.organization?._id;
 
   useAuthEffect(() => {
-    if (organizationId) {
+    if (organizationId && perPage && page) {
       dispatch(fetchOrganizationMembers(organizationId, { page, perPage }, token));
       dispatch(fetchRoles(token));
       dispatch(getInvitesBySender({senderId: user._id}, token))
     }
-  }, [user, dispatch, page, perPage, organizationId]);
+  }, [user, dispatch, page, perPage, organizationId, activeOrganization]);
 
   const rolesOptions = useMemo(() => roles?.map((role) => ({
     value: role._id,
@@ -222,22 +222,22 @@ const OrganizationManagement = ({ activeOrganization }) => {
         <div className="is-flex">
           {/* TODO: uncomment when it will be needed  */}
           {(isOrganizationAdmin || isSemaAdmin) && (
-             <button 
-               className={clsx('button is-primary is-outlined mr-8', styles['invite-button'])} 
+             <button
+               className={clsx('button is-primary is-outlined mr-8', styles['invite-button'])}
                onClick={onInviteLinkCopy}
-             > 
-               <CopyButtonIcon size='small' /> 
-               <span className='ml-10'>Copy Invitation Link</span> 
+             >
+               <CopyButtonIcon size='small' />
+               <span className='ml-10'>Copy Invitation Link</span>
              </button>
-           )} 
-          <button 
-             className='button is-primary border-radius-4px' 
-             type='button' 
-             onClick={goToInvitePage} 
-           > 
-             <PlusIcon size='small' /> 
-             <span className='ml-10'>Invite New Members</span> 
-           </button> 
+           )}
+          <button
+             className='button is-primary border-radius-4px'
+             type='button'
+             onClick={goToInvitePage}
+           >
+             <PlusIcon size='small' />
+             <span className='ml-10'>Invite New Members</span>
+           </button>
         </div>
       </div>
       <div className='hero-body py-0 px-0'>
