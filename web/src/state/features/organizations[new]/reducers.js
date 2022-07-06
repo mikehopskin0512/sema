@@ -11,6 +11,17 @@ const initialState = {
   smartComments: [],
   summary: {},
   overview: {},
+  insightsData: {
+    searchResults: [],
+    pagination: {
+      pageSize: 1,
+      pageNumber: 1,
+      totalPage: 0,
+      total: 0,
+      hasNextPage: false,
+      hasPreviousPage: false
+    },
+  },
   invalidEmails: [],
   fetchedOrganizations: false,
   filterValues: {
@@ -212,6 +223,29 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
+
+  case types.REQUEST_FETCH_ORG_INSIGHTS_COMMENTS:
+    return {
+      ...state,
+      isFetching: true,
+    }
+  case types.REQUEST_FETCH_ORG_INSIGHTS_COMMENTS_SUCCESS:
+    return {
+      ...state,
+      insightsData: {
+        ...state.insightsData,
+        searchResults: action.results.smartComments,
+        pagination: action.results.paginationData,
+      },
+      isFetching: false,
+    }
+  case types.REQUEST_FETCH_ORG_INSIGHTS_COMMENTS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.error
+    }
+
   default:
     return state;
   }

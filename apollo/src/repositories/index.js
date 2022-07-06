@@ -172,6 +172,7 @@ export default (app, passport) => {
     async (req, res) => {
       const {
         repoId,
+        orgId,
         startDate,
         endDate,
         fromUserList,
@@ -181,14 +182,15 @@ export default (app, passport) => {
         pullRequests,
         searchQuery,
         pageNumber = 1,
-        pageSize = 10
+        pageSize = 10,
+        repo
       } = req.body;
 
       let dateRange = undefined;
       if (startDate && endDate) {
         dateRange = { startDate, endDate };
       }
-      if (!repoId) {
+      if (!repoId && !orgId) {
         return res.status(401).send({
           message: 'Repo ID is required.'
         })
@@ -205,14 +207,16 @@ export default (app, passport) => {
           pullRequests,
           searchQuery,
           pageNumber,
-          pageSize
+          pageSize,
+          orgId,
+          repo
         );
 
         const totalPage = Math.ceil(total/pageSize);
         return res.status(201).send({
           paginationData: {
             pageSize,
-            pageNumber,
+            pageNumber: pageNumber > totalPage ? 1 : pageNumber,
             totalPage,
             total,
             hasNextPage: pageNumber < totalPage,

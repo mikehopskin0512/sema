@@ -640,12 +640,33 @@ export const searchSmartComments = async (
   pullRequests,
   searchQuery,
   pageNumber,
-  pageSize
+  pageSize,
+  orgId,
+  repo = []
 ) => {
   try {
-    let findQuery = {
-      'githubMetadata.repo_id': repoId
-    };
+    let findQuery = {};
+
+    // For organizations insights data fetch only
+    if (orgId) {
+      if (repo.length) {
+        findQuery = {
+          ...findQuery,
+          'githubMetadata.repo_id': { $in: repo }
+        }
+      } else {
+        const organizationRepos = await getOrganizationRepos(orgId);
+        findQuery = {
+          ...findQuery,
+          'githubMetadata.repo_id': { $in: organizationRepos.map((repo) => repo.externalId) }
+        }
+      }
+    } else {
+      findQuery = {
+        ...findQuery,
+        'githubMetadata.repo_id': { $in: [repoId] }
+      }
+    }
 
     if (dateRange) {
       findQuery = {
@@ -1094,7 +1115,7 @@ export const getUniqueCommenters = async (repoIds, startDate, endDate) => {
           "user.avatarUrl": 1,
         }
       }
-      
+
     ]).exec();
     return values
   } catch (err) {
@@ -1128,7 +1149,7 @@ export const getUniqueRequesters = async (repoIds, startDate, endDate) => {
           "_id": 0
         }
       }
-      
+
     ]).exec();
     return values
   } catch (err) {

@@ -21,7 +21,7 @@ const OrganizationStatsFilter = ({
   filter,
   individualFilter,
   commentView,
-  handleFilter
+  handleFilter,
 }) => {
   const dispatch = useDispatch();
   // TODO: Need to update the naming for the organizationNew related code.
@@ -67,6 +67,11 @@ const OrganizationStatsFilter = ({
   };
 
   useEffect(() => {
+    const isInitialDatesNeeded = !filter.startDate && !filter.endDate && startDate && endDate;
+    if (isInitialDatesNeeded) {
+      handleFilter({...filter, startDate, endDate})
+    }
+
     if (orgRepos.length) {
       const repoIds = orgRepos.map((repo) => repo.externalId);
       const { startDate: start, endDate: end } = filter

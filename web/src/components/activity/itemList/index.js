@@ -2,10 +2,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import ActivityItem from '../item'
 import styles from '../../../components/skeletons/charts.module.scss';
-import { CommentSnapTitleSkeleton } from '../../skeletons/commentSnapTitleSkeleton';
 import CommentSnapSkeleton from '../../skeletons/commentSnapSkeleton';
+import Pagination from '@/components/pagination';
+import { useSelector } from 'react-redux';
 
-const ActivityItemList = ({ comments, isLoading }) => {
+const ActivityItemList = ({ comments, isLoading, setFilter, isPaginationNeeded }) => {
+  const { organizations } = useSelector(state => ({
+    organizations: state.organizationsNewState
+  }))
+
+  const { insightsData: { pagination } } = organizations;
 
   if (isLoading) {
     return (
@@ -37,6 +43,15 @@ const ActivityItemList = ({ comments, isLoading }) => {
           </div>
         )
       }
+      {isPaginationNeeded && (
+        <Pagination
+          currentPage={pagination.pageNumber}
+          totalCount={pagination.total}
+          pageSize={pagination.pageSize}
+          setPageSize={(pageSize) => setFilter((oldState) => ({ ...oldState, pageSize }))}
+          onPageChange={(page) => setFilter((oldState) => ({ ...oldState, pageNumber: page }))}
+        />
+      )}
     </>
   )
 }

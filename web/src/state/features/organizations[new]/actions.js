@@ -12,7 +12,7 @@ import {
   inviteToOrganization,
   uploadAvatar,
 } from './api';
-import { toggleActiveCollection, getSmartCommentOverview, getSmartCommentSummary } from '../comments/api';
+import { toggleActiveCollection, getSmartCommentOverview, getSmartCommentSummary, searchSmartComments } from '../comments/api';
 import * as types from './types';
 import { setSelectedOrganization } from '../auth/actions';
 
@@ -187,6 +187,20 @@ export const requestFetchOrganizationReposFiltersError = (errors) => ({
   type: types.REQUEST_FETCH_ORGANIZATION_REPOS_FILTERS_ERROR,
   errors,
 });
+
+const requestFetchOrgSmartComments = () => ({
+  type: types.REQUEST_FETCH_ORG_INSIGHTS_COMMENTS
+});
+
+const requestFetchOrgSmartCommentsSuccess = (results) => ({
+  type: types.REQUEST_FETCH_ORG_INSIGHTS_COMMENTS_SUCCESS,
+  results
+});
+
+const requestFetchOrgSmartCommentsError = () => ({
+  type: types.REQUEST_FETCH_ORG_INSIGHTS_COMMENTS_ERROR
+});
+
 
 export const fetchOrganizationsOfUser = (token) => async (dispatch) => {
   try {
@@ -377,5 +391,23 @@ export const uploadOrganizationAvatar = (organizationId, body, token) => async (
     dispatch(fetchOrganizationsOfUser(token));
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const filterRepoSmartComments = (orgId, token, filter) => async (dispatch) => {
+  try {
+    dispatch(requestFetchOrgSmartComments());
+    const { data } = await searchSmartComments({ orgId, ...filter }, token);
+    dispatch(requestFetchOrgSmartCommentsSuccess(data));
+  } catch (error) {
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchOrgSmartCommentsError(errMessage));
   }
 };
