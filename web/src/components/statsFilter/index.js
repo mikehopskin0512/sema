@@ -5,7 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './statsFilter.module.scss';
 import DateRangeSelector from '../dateRangeSelector';
 import CustomSelect from '../activity/select';
-import { DROPDOWN_SORTING_TYPES, YEAR_MONTH_DAY_FORMAT } from '../../utils/constants';
+import {
+  DROPDOWN_SORTING_TYPES,
+  YEAR_MONTH_DAY_FORMAT,
+} from '../../utils/constants';
 import { ReactionList, TagList } from '../../data/activity';
 import { isEmpty } from 'lodash';
 import { addDays, format } from 'date-fns';
@@ -14,13 +17,9 @@ import { InputField } from 'adonis';
 import { gray500 } from '../../../styles/_colors.module.scss';
 import { repositoriesOperations } from '../../state/features/repositories';
 
-const { fetchRepoFilters } =
-  repositoriesOperations;
+const { fetchRepoFilters } = repositoriesOperations;
 
-const StatsFilter = ({
-  filterRepoList,
-  handleFilter
-}) => {
+const StatsFilter = ({ filterRepoList, handleFilter, onSearch }) => {
   const dispatch = useDispatch();
   const { auth, repositories } = useSelector((state) => ({
     auth: state.authState,
@@ -29,32 +28,35 @@ const StatsFilter = ({
   const {
     data: { filterValues },
   } = repositories;
-  const { token, user: { identities } } = auth;
+  const {
+    token,
+    user: { identities },
+  } = auth;
   const userRepos = identities?.length ? identities[0].repositories : [];
   const [filter, setFilter] = useState({
     startDate: null,
     endDate: null,
-    search: '',
     from: [],
     to: [],
     reactions: [],
     tags: [],
     pr: [],
-    repo: []
+    repo: [],
   });
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [toggleSearch, setToggleSearch] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState('');
 
   const onChangeFilter = (type, value) => {
     setFilter({
       ...filter,
-      [type]: value
+      [type]: value,
     });
   };
 
   const handleSearchToggle = () => {
-    setToggleSearch(toggle => !toggle);
+    setToggleSearch((toggle) => !toggle);
   };
 
   useEffect(() => {
@@ -66,21 +68,35 @@ const StatsFilter = ({
   const onDateChange = ({ startDate, endDate }) => {
     setStartDate(startDate);
     setEndDate(endDate);
-    const formatDate = date =>
+    const formatDate = (date) =>
       date ? format(new Date(date), YEAR_MONTH_DAY_FORMAT) : null;
     setFilter({
       ...filter,
       startDate: formatDate(startDate),
-      endDate: formatDate(endDate)
+      endDate: formatDate(endDate),
     });
   };
+
+  const handleKeyPress = (event) => {
+    const isEnterKey = event?.key === 'Enter';
+    if (isEnterKey) {
+      onSearch(searchKeyword)
+    }
+  }
 
   useEffect(() => {
     if (userRepos?.length) {
       const repoIds = userRepos.map((repo) => repo.id);
-      (async () => await dispatch(fetchRepoFilters(repoIds, { startDate: filter.startDate, endDate: filter.endDate }, token)))();
+      (async () =>
+        await dispatch(
+          fetchRepoFilters(
+            repoIds,
+            { startDate: filter.startDate, endDate: filter.endDate },
+            token
+          )
+        ))();
     }
-  }, [userRepos, filter])
+  }, [userRepos, filter]);
 
   return (
     <>
@@ -99,13 +115,15 @@ const StatsFilter = ({
                 onChangeFilter={onChangeFilter}
               />
             </div>
-            <div className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}>
+            <div
+              className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}
+            >
               <CustomSelect
                 selectProps={{
                   options: filterValues.authors,
                   placeholder: '',
                   isMulti: true,
-                  onChange: value => onChangeFilter('from', value),
+                  onChange: (value) => onChangeFilter('from', value),
                   value: filter.from,
                   maxDisplayableCount: 1,
                   hideSelectedOptions: false,
@@ -116,13 +134,15 @@ const StatsFilter = ({
                 outlined
               />
             </div>
-            <div className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}>
+            <div
+              className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}
+            >
               <CustomSelect
                 selectProps={{
                   options: filterValues.requesters,
                   placeholder: '',
                   isMulti: true,
-                  onChange: value => onChangeFilter('to', value),
+                  onChange: (value) => onChangeFilter('to', value),
                   value: filter.to,
                   maxDisplayableCount: 1,
                   hideSelectedOptions: false,
@@ -133,16 +153,18 @@ const StatsFilter = ({
                 outlined
               />
             </div>
-            <div className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}>
+            <div
+              className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}
+            >
               <CustomSelect
                 selectProps={{
                   options: ReactionList,
                   placeholder: '',
                   hideSelectedOptions: false,
                   isMulti: true,
-                  onChange: value => onChangeFilter('reactions', value),
+                  onChange: (value) => onChangeFilter('reactions', value),
                   value: filter.reactions,
-                  maxDisplayableCount: 1
+                  maxDisplayableCount: 1,
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.NO_SORT}
                 label="Summaries"
@@ -150,16 +172,18 @@ const StatsFilter = ({
                 outlined
               />
             </div>
-            <div className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}>
+            <div
+              className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}
+            >
               <CustomSelect
                 selectProps={{
                   options: TagList,
                   placeholder: '',
                   isMulti: true,
-                  onChange: value => onChangeFilter('tags', value),
+                  onChange: (value) => onChangeFilter('tags', value),
                   value: filter.tags,
                   hideSelectedOptions: false,
-                  maxDisplayableCount: 1
+                  maxDisplayableCount: 1,
                 }}
                 sortType={DROPDOWN_SORTING_TYPES.NO_SORT}
                 label="Tags"
@@ -167,13 +191,15 @@ const StatsFilter = ({
                 outlined
               />
             </div>
-            <div className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}>
+            <div
+              className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}
+            >
               <CustomSelect
                 selectProps={{
                   options: filterRepoList,
                   placeholder: '',
                   isMulti: true,
-                  onChange: value => onChangeFilter('repo', value),
+                  onChange: (value) => onChangeFilter('repo', value),
                   value: filter.repo,
                   maxDisplayableCount: 1,
                   hideSelectedOptions: false,
@@ -183,13 +209,15 @@ const StatsFilter = ({
                 outlined
               />
             </div>
-            <div className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}>
+            <div
+              className={clsx('my-5 ml-10 mr-10', styles['filter-container'])}
+            >
               <CustomSelect
                 selectProps={{
                   options: filterValues.pullRequests,
                   placeholder: '',
                   isMulti: true,
-                  onChange: value => onChangeFilter('pr', value),
+                  onChange: (value) => onChangeFilter('pr', value),
                   value: filter.pr,
                   maxDisplayableCount: 1,
                   hideSelectedOptions: false,
@@ -210,19 +238,23 @@ const StatsFilter = ({
             </div>
           </div>
           {toggleSearch && (
-            <div
-              className={clsx(
-                `field mt-0 mb-0 is-flex-grow-1 ${styles['search-bar']}`
-              )}
-            >
-              <InputField
-                className="has-background-white"
-                type="text"
-                placeholder="Search"
-                onChange={value => onChangeFilter('search', value)}
-                value={filter.search}
-                iconLeft={<SearchIcon />}
-              />
+            <div className="is-flex is-flex-grow-1">
+              <div
+                className={clsx(
+                  `field mt-0 mb-0 is-flex-grow-1 mr-10 ${styles['search-bar']}`
+                )}
+              >
+                <InputField
+                  className="has-background-white"
+                  type="text"
+                  placeholder="Search"
+                  onChange={(value) => setSearchKeyword(value)}
+                  value={searchKeyword}
+                  iconLeft={<SearchIcon />}
+                  onKeyPress={(event) => handleKeyPress(event)}
+                />
+              </div>
+              {onSearch && <button class="button is-primary" onClick={() => onSearch(searchKeyword)}>Search</button>}
             </div>
           )}
           <hr
@@ -238,7 +270,7 @@ StatsFilter.defaultProps = {
   filterRequesterList: [],
   filterPRList: [],
   filteredComments: [],
-  filterRepoList: []
+  filterRepoList: [],
 };
 
 StatsFilter.propTypes = {
@@ -246,7 +278,7 @@ StatsFilter.propTypes = {
   filterRequesterList: PropTypes.array.isRequired,
   filterPRList: PropTypes.array.isRequired,
   filteredComments: PropTypes.array.isRequired,
-  filterRepoList: PropTypes.array.isRequired
+  filterRepoList: PropTypes.array.isRequired,
 };
 
 export default StatsFilter;
