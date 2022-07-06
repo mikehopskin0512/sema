@@ -1042,7 +1042,7 @@ Feature: Portfolios
     When I click on the element "portfolioListShareBtns"
     And  I hover over element "portfolioListShareBtns"
     Then I expect that element "portfolioListShareTooltip" not matches the text "Copied to clipboard"
-    
+
   @PTA112_2
   Scenario: Privat Portfolios can not be shared by the button
     When I open the site "/dashboard"
@@ -1084,6 +1084,42 @@ Feature: Portfolios
     And  I hover over element "portfolioListShareBtns"
     Then I expect that element "portfolioListShareTooltip" becomes displayed
     And  I expect that element "portfolioListShareTooltip" matches the text "Copied to clipboard"
+
+  @PTA115
+  Scenario: Portfolios can be renamed
+    When I open the site "/dashboard"
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+
+    Then I expect that element "portfolioLibraryTab" becomes displayed
+    And  I expect that element "addNewPortfolioBtn" becomes displayed
+    When I click on the element "addNewPortfolioBtn"
+    And  I pause for 3000ms
+    Then I expect that element "portfolioListThreeDotsBtns" becomes displayed
+    And  I remove all elements "portfolioListNames" with button "portfolioListDeleteBtn" under "portfolioListThreeDotsBtns" with confirmation "portfoliosDeleteSnapshotConfirmBtn" till "1"
+    Then I expect that element "portfolioListNames" does appear exactly "1" times
+    And  I expect that element "portfolioListThreeDotsBtns" becomes displayed
+
+    When I click on the element "portfolioListNames"
+    Then I expect that element "portfoliosName" becomes displayed
+    And  I expect that element "portfoliosEditNameBtn" becomes displayed
+    And  I expect that element "portfoliosInputName" becomes not displayed
+
+    When I click on the element "portfoliosEditNameBtn"
+    Then I expect that element "portfoliosInputName" becomes displayed
+
+    When I click on the element "portfoliosInputName"
+    And  I pause for 1000ms
+    And  I clear the inputfield "portfoliosInputName"
+    And  I pause for 1000ms
+    And  I set "portfolio changed" to the inputfield "portfoliosInputName"
+    And  I click on the element "portfoliosUserName"
+    Then I expect that element "portfoliosName" matches the text "portfolio changed"
+
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+    Then I expect that element "portfolioListNames" becomes displayed
+    And  I expect that element "portfolioListNames" matches the text "portfolio changed"
 
   @PTA71 @smoke
   Scenario: Portfolios elements are displayed correctly for portfolio without snapshots
