@@ -33,6 +33,7 @@ import {
   FETCH_CURRENT_USER_SUCCESS,
   FETCH_CURRENT_USER_ERROR,
   UPDATE_CURRENT_USER,
+  CHANGE_IS_SNIPPET_SAVED
 } from './actionConstants';
 
 export const removeNotification = (payload) => ({
@@ -196,5 +197,10 @@ export const fetchCurrentUserError = (error) => ({
 
 export const updateCurrentUser = (payload) => ({
   type: UPDATE_CURRENT_USER,
+  payload,
+});
+
+export const changeIsSnippetSaved = (payload) => ({
+  type: CHANGE_IS_SNIPPET_SAVED,
   payload,
 });
