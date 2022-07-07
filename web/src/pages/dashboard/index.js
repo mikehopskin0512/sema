@@ -12,11 +12,11 @@ import withLayout from '../../components/layout';
 import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
 import OnboardingModal from '../../components/onboarding/onboardingModal';
 import ReposView from '../../components/repos/reposView';
-
-import Loader from '../../components/Loader';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { isExtensionInstalled } from '../../utils/extension';
 import { ON_INPUT_DEBOUNCE_INTERVAL_MS, PATHS, PROFILE_VIEW_MODE } from '../../utils/constants';
+import FFOnboardingModal from '@/components/onboarding/fastOnboardingModal';
+import { toggleFFOnboardingModal } from '../../state/features/auth/actions';
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
@@ -26,8 +26,6 @@ const {
   updateUserHasExtension,
 } = authOperations;
 const {
-  inviteOrganizationUser,
-  fetchOrganizationsOfUser,
 } = organizationsOperations;
 const {
   setSelectedOrganization,
@@ -70,6 +68,7 @@ const Dashboard = () => {
     token,
     user,
     selectedOrganization,
+    ffOnboarding
   } = auth;
   const {
     identities,
@@ -78,6 +77,7 @@ const Dashboard = () => {
     username,
   } = user;
   const { roles } = rolesState;
+  const { isModalOpen: isFFModalOpened } = ffOnboarding;
   const { organizations: organizations } = organizationsState;
   const { inviteOrganizationId } = router.query;
   const userRepos = identities?.length ? identities[0].repositories : [];
@@ -239,8 +239,17 @@ const Dashboard = () => {
     }
   }, [page]);
   useEffect(() => {
-    if (!_.isEmpty(user) && isOnboarded === null) {
+    const isFFOnboardingStarted = JSON.parse(localStorage?.getItem('is_ff_onboarding_started'));
+
+    if (!_.isEmpty(user) && isOnboarded === null && !isFFOnboardingStarted) {
       toggleOnboardingModalActive(true);
+    }
+
+    if (isFFOnboardingStarted) {
+      const updatedUser = { ...user, ...{ isFastForwardOnboarding: true, isOnboarded: new Date() } };
+      dispatch(updateUser(updatedUser, token));
+      localStorage?.removeItem('is_ff_onboarding_started');
+      dispatch(toggleFFOnboardingModal(true));
     }
   }, [isOnboarded]);
 
@@ -271,6 +280,8 @@ const Dashboard = () => {
         onSubmit={onboardUser}
         isPluginInstalled={isPluginInstalled}
       />
+
+      <FFOnboardingModal isModalActive={isFFModalOpened ?? false} onClose={() => dispatch(toggleFFOnboardingModal(false))}/>
     </>
   );
 };
