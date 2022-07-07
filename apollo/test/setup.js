@@ -3,9 +3,10 @@ import { differenceInMinutes } from 'date-fns';
 import mongoose from 'mongoose';
 import Ironium from 'ironium';
 import nock from 'nock';
+import timekeeper from 'timekeeper';
 import app from '../src/app';
 import resetNocks from './nocks';
-import seed from './seed';
+import { baseSeed } from './seed';
 
 nock.disableNetConnect();
 nock.enableNetConnect('localhost');
@@ -13,6 +14,7 @@ nock.enableNetConnect('localhost');
 jest.mock('../src/notifications/notificationService');
 
 beforeAll(async () => {
+  timekeeper.travel(new Date('2022-06-01T01:15:00.000Z'));
   resetNocks();
   await Promise.all([clearMongoDB(), Ironium.purgeQueues()]);
 });
@@ -26,7 +28,7 @@ afterAll(async () => {
 async function clearMongoDB() {
   const collections = [...Object.values(mongoose.connection.collections)];
   await Promise.all(collections.map((collection) => collection.deleteMany()));
-  await seed();
+  await baseSeed();
 }
 
 expect.extend({

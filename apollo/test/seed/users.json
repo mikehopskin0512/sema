@@ -1,0 +1,469 @@
+[
+  {
+    "_id": "61041e153e90570022942e58",
+    "inviteCount": 10,
+    "isActive": true,
+    "isVerified": true,
+    "isWaitlist": false,
+    "termsAccepted": false,
+    "lastLogin": "2022-06-21T17:10:14.812Z",
+    "origin": "waitlist",
+    "isSemaAdmin": true,
+    "username": "codykenny@gmail.com",
+    "password": null,
+    "firstName": "Brendan",
+    "lastName": "Cody-Kenny",
+    "jobTitle": "",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/6106595?v=4",
+    "identities": [
+      {
+        "emails": ["codykenny@gmail.com"],
+        "provider": "github",
+        "id": "6106595",
+        "username": "codykenb",
+        "email": "codykenny@gmail.com",
+        "firstName": "Brendan",
+        "lastName": "Cody-Kenny",
+        "profileUrl": "https://api.github.com/users/codykenb",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/6106595?v=4",
+        "repositories": [
+          {
+            "isFavorite": false,
+            "id": "237888452",
+            "fullName": "Semalab/phoenix",
+            "githubUrl": "https://github.com/Semalab/phoenix"
+          },
+          {
+            "isFavorite": false,
+            "id": "349127237",
+            "fullName": "SemaSandbox/carpark-pytho",
+            "githubUrl": "https://github.com/SemaSandbox/carpark-pytho"
+          },
+          {
+            "isFavorite": false,
+            "id": "185455571",
+            "fullName": "Semalab/backend-commitanalysis",
+            "githubUrl": "https://github.com/Semalab/backend-commitanalysis"
+          },
+          {
+            "isFavorite": false,
+            "id": "137924011",
+            "fullName": "Semalab/smp-rest",
+            "githubUrl": "https://github.com/Semalab/smp-rest"
+          },
+          {
+            "isFavorite": false,
+            "id": "231375705",
+            "fullName": "Semalab/backend-gitblame",
+            "githubUrl": "https://github.com/Semalab/backend-gitblame"
+          },
+          {
+            "isFavorite": false,
+            "id": "180396842",
+            "fullName": "Semalab/lint-analysis",
+            "githubUrl": "https://github.com/Semalab/lint-analysis"
+          },
+          {
+            "isFavorite": false,
+            "id": "189634432",
+            "fullName": "Semalab/terraform-sm",
+            "githubUrl": "https://github.com/Semalab/terraform-sm"
+          },
+          {
+            "isFavorite": false,
+            "id": "185455361",
+            "fullName": "Semalab/backend-core",
+            "githubUrl": "https://github.com/Semalab/backend-core"
+          },
+          {
+            "isFavorite": false,
+            "id": "197005474",
+            "fullName": "Semalab/backend-techdebt",
+            "githubUrl": "https://github.com/Semalab/backend-techdebt"
+          },
+          {
+            "isFavorite": false,
+            "id": "63476337",
+            "fullName": "TheAlgorithms/Python",
+            "githubUrl": "https://github.com/TheAlgorithms/Python"
+          },
+          {
+            "isFavorite": false,
+            "id": "232591931",
+            "fullName": "Semalab/backend-currentfilessummar",
+            "githubUrl": "https://github.com/Semalab/backend-currentfilessummar"
+          },
+          {
+            "isFavorite": false,
+            "id": "451461428",
+            "fullName": "codykenb/Programming_and_tools_for_AI_NUIG",
+            "githubUrl": "https://github.com/codykenb/Programming_and_tools_for_AI_NUIG"
+          },
+          {
+            "isFavorite": false,
+            "id": "190571697",
+            "fullName": "Semalab/backend-codesync",
+            "githubUrl": "https://github.com/Semalab/backend-codesync"
+          },
+          {
+            "isFavorite": false,
+            "id": "127900773",
+            "fullName": "Semalab/tools",
+            "githubUrl": "https://github.com/Semalab/tools"
+          },
+          {
+            "isFavorite": false,
+            "id": "127454664",
+            "fullName": "Semalab/smp",
+            "githubUrl": "https://github.com/Semalab/smp"
+          },
+          {
+            "isFavorite": false,
+            "id": "185458822",
+            "fullName": "Semalab/backend-orchestrator",
+            "githubUrl": "https://github.com/Semalab/backend-orchestrator"
+          },
+          {
+            "isFavorite": false,
+            "id": "188831126",
+            "fullName": "Semalab/dockerbuild-smp",
+            "githubUrl": "https://github.com/Semalab/dockerbuild-smp"
+          },
+          {
+            "isFavorite": false,
+            "id": "158561630",
+            "fullName": "Semalab/carpark-python",
+            "githubUrl": "https://github.com/Semalab/carpark-python"
+          },
+          {
+            "isFavorite": false,
+            "id": "185458147",
+            "fullName": "Semalab/backend-linters",
+            "githubUrl": "https://github.com/Semalab/backend-linters"
+          },
+          {
+            "isFavorite": false,
+            "id": "486276344",
+            "fullName": "Semalab/backend-thirdparty-licenses",
+            "githubUrl": "https://github.com/Semalab/backend-thirdparty-licenses"
+          },
+          {
+            "isFavorite": false,
+            "id": "489380227",
+            "fullName": "Semalab/backend-dotnetlinter",
+            "githubUrl": "https://github.com/Semalab/backend-dotnetlinter"
+          },
+          {
+            "isFavorite": false,
+            "id": "185464855",
+            "fullName": "Semalab/backend-qualitymetrics",
+            "githubUrl": "https://github.com/Semalab/backend-qualitymetrics"
+          },
+          {
+            "isFavorite": false,
+            "id": "404809527",
+            "fullName": "SemaSandbox/pyomyo",
+            "githubUrl": "https://github.com/SemaSandbox/pyomyo"
+          }
+        ]
+      }
+    ],
+    "verificationToken": "f604cd4d597be9a9910896db3d248d20dfa757b3",
+    "verificationExpires": "2021-07-31T15:43:17.632Z",
+    "termsAcceptedAt": "2021-07-30T15:43:17.632Z",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "625ed0c4c157b5fd0e424c24",
+        "collectionData": "625ed0b6f6950b4285f184c2"
+      },
+      {
+        "isActive": true,
+        "_id": "6272bd6df21c3100d03a3531",
+        "collectionData": "60f74df6b83864106f28bb0e"
+      }
+    ],
+    "organizations": [],
+    "createdAt": "2021-07-30T15:43:17.636Z",
+    "updatedAt": "2022-06-21T17:10:14.812Z",
+    "__v": 2,
+    "isOnboarded": "2021-11-22T23:45:21.093Z",
+    "companyName": "Sema Corporate",
+    "cohort": "1_21.30",
+    "hasExtension": false,
+    "banners": { "organizationCreate": true },
+    "handle": "codykenb"
+  },
+  {
+    "_id": "60b727b6ad927f001e3f4fb2",
+    "inviteCount": 10,
+    "isActive": true,
+    "isVerified": true,
+    "isWaitlist": false,
+    "termsAccepted": true,
+    "lastLogin": "2022-06-23T20:55:40.838Z",
+    "isSemaAdmin": true,
+    "origin": "invitation",
+    "username": "justin@digitalchamps.com",
+    "password": null,
+    "jobTitle": "",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/1270524?v=4",
+    "identities": [
+      {
+        "emails": [
+          "jramers@gmail.com",
+          "justin@teamvibe.com",
+          "justin@digitalchamps.com",
+          "jramers@semasoftware.com",
+          "1270524+jrock17@users.noreply.github.com"
+        ],
+        "provider": "github",
+        "id": "1270524",
+        "username": "jrock17",
+        "email": "justin@digitalchamps.com",
+        "firstName": "Justin",
+        "lastName": "Ramers",
+        "profileUrl": "https://api.github.com/users/jrock17",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/1270524?v=4",
+        "repositories": [
+          {
+            "isFavorite": false,
+            "id": "237888452",
+            "fullName": "Semalab/phoenix",
+            "githubUrl": "https://github.com/Semalab/phoenix"
+          },
+          {
+            "isFavorite": false,
+            "id": "47958907",
+            "fullName": "teamvibe/maple",
+            "githubUrl": "https://github.com/teamvibe/maple"
+          },
+          {
+            "isFavorite": false,
+            "id": "158561630",
+            "fullName": "Semalab/carpark-python",
+            "githubUrl": "https://github.com/Semalab/carpark-python"
+          },
+          {
+            "isFavorite": false,
+            "id": "349127237",
+            "fullName": "SemaSandbox/carpark-python",
+            "githubUrl": "https://github.com/SemaSandbox/carpark-python"
+          },
+          {
+            "isFavorite": false,
+            "id": "319504793",
+            "fullName": "Family-Bill-Pay/billpay-api",
+            "githubUrl": "https://github.com/Family-Bill-Pay/billpay-api"
+          },
+          {
+            "isFavorite": false,
+            "id": "319504916",
+            "fullName": "Family-Bill-Pay/billpay-frontend",
+            "githubUrl": "https://github.com/Family-Bill-Pay/billpay-frontend"
+          },
+          {
+            "isFavorite": false,
+            "id": "71719970",
+            "fullName": "teamvibe/javascript",
+            "githubUrl": "https://github.com/teamvibe/javascript"
+          }
+        ]
+      }
+    ],
+    "verificationToken": null,
+    "verificationExpires": null,
+    "termsAcceptedAt": "2021-06-02T06:39:50.292Z",
+    "organizations": [],
+    "createdAt": "2021-06-02T06:39:50.293Z",
+    "updatedAt": "2022-06-23T20:55:40.838Z",
+    "__v": 2,
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "625ed0d6c157b5fd0e424d4a",
+        "collectionData": "625ed0b6f6950b4285f185e8"
+      },
+      {
+        "isActive": true,
+        "_id": "6272bd6df21c3100d03a3657",
+        "collectionData": "60f74df6b83864106f28bb0e"
+      }
+    ],
+    "isOnboarded": "2021-11-23T02:11:39.359Z",
+    "companyName": "Sema Corporate",
+    "cohort": "1_21.22",
+    "firstName": "Justin",
+    "lastName": "Ramers",
+    "hasExtension": true,
+    "banners": { "organizationCreate": true },
+    "handle": "jrock17"
+  },
+  {
+    "_id": "60b20ec1ad927f001e3f4f7e",
+    "inviteCount": 9,
+    "isActive": true,
+    "isVerified": true,
+    "isWaitlist": false,
+    "termsAccepted": true,
+    "lastLogin": "2022-06-25T10:07:11.230Z",
+    "isSemaAdmin": true,
+    "origin": "waitlist",
+    "username": "mattvanitallie@gmail.com",
+    "password": null,
+    "firstName": "Matt",
+    "lastName": "Van Itallie",
+    "jobTitle": "",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/31629621?v=4",
+    "identities": [
+      {
+        "emails": [
+          "31629621+mattvanitallie@users.noreply.github.com",
+          "mattvanitallie@gmail.com"
+        ],
+        "provider": "github",
+        "id": "31629621",
+        "username": "mattvanitallie",
+        "email": "mattvanitallie@gmail.com",
+        "firstName": "",
+        "lastName": "",
+        "profileUrl": "https://api.github.com/users/mattvanitallie",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/31629621?v=4",
+        "repositories": [
+          {
+            "isFavorite": false,
+            "id": "391620249",
+            "fullName": "SemaSandbox/astrobee",
+            "githubUrl": "https://github.com/SemaSandbox/astrobee"
+          },
+          {
+            "isFavorite": false,
+            "id": "237888452",
+            "fullName": "Semalab/phoenix",
+            "githubUrl": "https://github.com/Semalab/phoenix"
+          },
+          {
+            "isFavorite": false,
+            "id": "158561630",
+            "fullName": "Semalab/carpark-python",
+            "githubUrl": "https://github.com/Semalab/carpark-python"
+          },
+          {
+            "isFavorite": false,
+            "id": "349127237",
+            "fullName": "SemaSandbox/carpark-python",
+            "githubUrl": "https://github.com/SemaSandbox/carpark-python"
+          },
+          {
+            "isFavorite": false,
+            "id": "349127640",
+            "fullName": "SemaSandbox/carpark-java",
+            "githubUrl": "https://github.com/SemaSandbox/carpark-java"
+          },
+          {
+            "isFavorite": false,
+            "id": "370541785",
+            "fullName": "SemaSandbox/Project_Interns",
+            "githubUrl": "https://github.com/SemaSandbox/Project_Interns"
+          },
+          {
+            "isFavorite": false,
+            "id": "185455571",
+            "fullName": "Semalab/backend-commitanalysis",
+            "githubUrl": "https://github.com/Semalab/backend-commitanalysis"
+          },
+          {
+            "isFavorite": false,
+            "id": "404809527",
+            "fullName": "SemaSandbox/pyomyo",
+            "githubUrl": "https://github.com/SemaSandbox/pyomyo"
+          },
+          {
+            "isFavorite": false,
+            "id": "189634432",
+            "fullName": "Semalab/terraform-sm",
+            "githubUrl": "https://github.com/Semalab/terraform-sm"
+          },
+          {
+            "isFavorite": false,
+            "id": "404888948",
+            "fullName": "SemaSandbox/cockroac",
+            "githubUrl": "https://github.com/SemaSandbox/cockroac"
+          },
+          {
+            "isFavorite": false,
+            "id": "416081270",
+            "fullName": "SemaSandbox/algo",
+            "githubUrl": "https://github.com/SemaSandbox/algo"
+          },
+          {
+            "isFavorite": false,
+            "id": "415029011",
+            "fullName": "SemaSandbox/manim",
+            "githubUrl": "https://github.com/SemaSandbox/manim"
+          },
+          {
+            "isFavorite": false,
+            "id": "416764713",
+            "fullName": "SemaSandbox/openmct",
+            "githubUrl": "https://github.com/SemaSandbox/openmct"
+          },
+          {
+            "isFavorite": false,
+            "id": "416770975",
+            "fullName": "SemaSandbox/osal",
+            "githubUrl": "https://github.com/SemaSandbox/osal"
+          },
+          {
+            "isFavorite": false,
+            "id": "416827518",
+            "fullName": "SemaSandbox/cumulus",
+            "githubUrl": "https://github.com/SemaSandbox/cumulus"
+          },
+          {
+            "isFavorite": false,
+            "id": "416074250",
+            "fullName": "SemaSandbox/model",
+            "githubUrl": "https://github.com/SemaSandbox/model"
+          },
+          {
+            "isFavorite": false,
+            "id": "416077170",
+            "fullName": "SemaSandbox/pandas",
+            "githubUrl": "https://github.com/SemaSandbox/pandas"
+          }
+        ]
+      }
+    ],
+    "verificationToken": null,
+    "verificationExpires": null,
+    "termsAcceptedAt": "2021-05-29T09:52:01.472Z",
+    "organizations": [],
+    "createdAt": "2021-05-29T09:52:01.476Z",
+    "updatedAt": "2022-06-25T10:07:11.231Z",
+    "__v": 2,
+    "collections": [
+      {
+        "isActive": false,
+        "_id": "62715f48da9879001f6625dc",
+        "collectionData": "625ed0b6f6950b4285f184ce"
+      },
+      {
+        "isActive": true,
+        "_id": "62715f48da9879001f6625dd",
+        "collectionData": "625efcb1164ad2001e6f5291"
+      },
+      {
+        "isActive": true,
+        "_id": "62b1c975195326001eaa9061",
+        "collectionData": "6278d23020f49f001d3ea117"
+      }
+    ],
+    "isOnboarded": "2021-12-06T19:58:54.263Z",
+    "companyName": "Sema Corporate",
+    "cohort": "",
+    "hasExtension": true,
+    "banners": {},
+    "handle": "mattvanitallie"
+  }
+]
