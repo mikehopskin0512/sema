@@ -16,7 +16,6 @@ import useAuthEffect from '../../hooks/useAuthEffect';
 import { isExtensionInstalled } from '../../utils/extension';
 import { ON_INPUT_DEBOUNCE_INTERVAL_MS, PATHS, PROFILE_VIEW_MODE } from '../../utils/constants';
 import FFOnboardingModal from '@/components/onboarding/fastOnboardingModal';
-import { toggleFFOnboardingModal } from '../../state/features/auth/actions';
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
@@ -77,9 +76,9 @@ const Dashboard = () => {
     username,
   } = user;
   const { roles } = rolesState;
-  const { isModalOpen: isFFModalOpened } = ffOnboarding;
   const { organizations: organizations } = organizationsState;
   const { inviteOrganizationId } = router.query;
+  const [isFFModalOpened, setIsFFModalOpened] = useState(false);
   const userRepos = identities?.length ? identities[0].repositories : [];
   // Now we should show the UI in cases when we receive an empty arrays
   const isLoaded = !userRepos || (userRepos && repositories.data.repositories);
@@ -245,13 +244,13 @@ const Dashboard = () => {
       toggleOnboardingModalActive(true);
     }
 
-    if (isFFOnboardingStarted) {
+    if (isFFOnboardingStarted && !isOnboarded) {
+      setIsFFModalOpened(true);
       const updatedUser = { ...user, ...{ isFastForwardOnboarding: true, isOnboarded: new Date() } };
       dispatch(updateUser(updatedUser, token));
       localStorage?.removeItem('is_ff_onboarding_started');
-      dispatch(toggleFFOnboardingModal(true));
     }
-  }, [isOnboarded]);
+  }, [isOnboarded, user]);
 
   const isSkeletonHidden = isLoaded && !auth.isFetching && !repositories.isFetching;
 
@@ -281,7 +280,7 @@ const Dashboard = () => {
         isPluginInstalled={isPluginInstalled}
       />
 
-      <FFOnboardingModal isModalActive={isFFModalOpened ?? false} onClose={() => dispatch(toggleFFOnboardingModal(false))}/>
+      <FFOnboardingModal isModalActive={isFFModalOpened} onClose={() => setIsFFModalOpened(false)}/>
     </>
   );
 };
