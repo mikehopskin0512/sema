@@ -17,6 +17,7 @@ import Metrics from '../../../components/metrics';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import styles from './styles.module.scss';
 import * as api from '../../../state/utils/api';
+import InteractionCircleChart from '@/components/chart/InteractionCircleChart';
 
 const { fetchRepositoryOverview, fetchReposByIds, fetchRepoFilters } =
   repositoriesOperations;
@@ -178,6 +179,10 @@ function RepoPage() {
       isOrganizationRepo={isOrganizationRepo}
     >
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
+
+      <div style={{height: '500px', width: '50%', display: 'flex', position: 'relative'}}>
+        <InteractionCircleChart />
+      </div>
 
       <div className={styles.wrapper}>
         <FilterBar
