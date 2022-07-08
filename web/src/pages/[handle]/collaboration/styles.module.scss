@@ -1,0 +1,43 @@
+@import "../../../../styles/colors.module";
+
+.collaboration-page-wrapper {
+  background: $gray-200;
+  height: 100vh;
+  width: 100vw;
+}
+
+.collaboration-page-title {
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.collaboration-page-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  padding-left: 80px;
+  padding-right: 80px;
+  padding-top: 40px;
+  margin-bottom: 70px;
+}
+
+.collaboration-page-logo {
+  width: 143px;
+  height: 48px;
+}
+
+.collaboration-page-logo-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.collaboration-page-fake-graph {
+  width: 550px;
+  height: 550px;
+  border-radius: 50%;
+  background-color: $blue-700;
+  margin-bottom: 60px;
+}

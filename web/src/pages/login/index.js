@@ -28,7 +28,7 @@ const Login = () => {
   const {
     query: { token: inviteToken, organization: organizationId, isFastForwardOnboarding },
   } = router;
-  
+
   const [isFFOnboardingStarted, setIsFFOnboardingStarted] = useLocalStorage('is_ff_onboarding_started', false);
 
   const dispatch = useDispatch();
@@ -55,7 +55,7 @@ const Login = () => {
   }, [])
 
   useEffect(() => {
-    if (isFastForwardOnboarding) {
+    if (isFastForwardOnboarding && !isAuthenticated) {
       onGithubLogin();
     }
   }, [isFastForwardOnboarding])

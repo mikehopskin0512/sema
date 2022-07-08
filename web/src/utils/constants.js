@@ -207,6 +207,7 @@ export const PATHS = {
   ONBOARDING: '/onboarding',
   REGISTER: '/register',
   PASSWORD_RESET: '/password-reset',
+  COLLABORATION: '/collaboration',
   REPORTS: '/reports',
   SETTINGS: '/settings',
   ORGANIZATION_CREATE: '/organizations/add',
