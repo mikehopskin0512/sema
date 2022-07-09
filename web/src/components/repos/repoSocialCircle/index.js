@@ -12,9 +12,10 @@ const RepoSocialCircle = ({ repoId }) => {
 
   useEffect(() => {
     getRepoSocialGraph({repoId}, token)
-      .then((res) => setInteractions(res.data));
+      .then((res) => setInteractions(res?.data?.interactionsByUsers));
   }, [repoId, token])
 
+  // TODO: mobile styles
   return (
     <div className={clsx(styles.card, 'is-flex is-justify-content-space-between')}>
       <div className="mr-32 has-text-centered px-24">
@@ -28,18 +29,22 @@ const RepoSocialCircle = ({ repoId }) => {
             Larger, closer circles to your avatar indicate more collaboration, while smaller, more distant circles indicate less interactions.
           </p>
         </div>
+        {/* TODO: need to add svg for background */}
         <div className={styles.buttons}>
           <span className="is-size-4 has-text-weight-semibold">Share:</span>
           <div className="mt-16">
+            {/* TODO: social buttons */}
             social buttons
           </div>
           <div className="mt-32">
             <button className="button is-primary mr-12">
               <DownloadIcon size="small" />
+              {/* TODO: save as a picture */}
               <span className="ml-8 has-text-weight-semibold">Download</span>
             </button>
             <button className="button is-primary is-outlined">
               <LinkIcon size="small"/>
+              {/* TODO: copy sharable link */}
               <span className="ml-8 has-text-weight-semibold">Copy Link</span>
             </button>
           </div>

@@ -42,10 +42,10 @@ function RepoPage() {
     data: { overview, filterValues },
   } = repositories;
   const totalMetrics = {
-    pullRequests: overview.repoStats?.smartCodeReviews ?? 0,
-    comments: overview.repoStats?.smartComments ?? 0,
-    commenters: overview.repoStats?.smartCommenters ?? 0,
-    users: overview.repoStats?.semaUsers ?? 0,
+    pullRequests: overview?.repoStats?.smartCodeReviews ?? 0,
+    comments: overview?.repoStats?.smartComments ?? 0,
+    commenters: overview?.repoStats?.smartCommenters ?? 0,
+    users: overview?.repoStats?.semaUsers ?? 0,
   };
 
   const {
