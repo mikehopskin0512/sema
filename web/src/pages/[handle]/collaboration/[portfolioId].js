@@ -33,7 +33,7 @@ const CollaborationPublicPage = () => {
     <div className={styles['collaboration-page-wrapper']}>
       {isFetching && (
         <div className='is-flex is-align-items-center is-justify-content-center' style={{ height: '50vh' }}>
-          <Loader customText='Loading' />
+          <Loader customText='Loading...' />
         </div>
       )}
 

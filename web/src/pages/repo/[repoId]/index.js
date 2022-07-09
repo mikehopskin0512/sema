@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { findIndex, isEmpty, uniqBy } from 'lodash';
+import { isEmpty, uniqBy } from 'lodash';
 import ActivityPage from '../../../components/activity/page';
 import RepoPageLayout from '../../../components/repos/repoPageLayout';
 import StatsPage from '../../../components/stats';
@@ -14,7 +14,6 @@ import { getDateSub } from '../../../utils/parsing';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import FilterBar from '../../../components/repos/repoPageLayout/components/FilterBar';
 import Metrics from '../../../components/metrics';
-import { DEFAULT_AVATAR } from '../../../utils/constants';
 import styles from './styles.module.scss';
 import * as api from '../../../state/utils/api';
 
@@ -40,10 +39,10 @@ function RepoPage() {
     data: { overview, filterValues },
   } = repositories;
   const totalMetrics = {
-    pullRequests: overview.repoStats?.smartCodeReviews ?? 0,
-    comments: overview.repoStats?.smartComments ?? 0,
-    commenters: overview.repoStats?.smartCommenters ?? 0,
-    users: overview.repoStats?.semaUsers ?? 0,
+    pullRequests: overview?.repoStats?.smartCodeReviews ?? 0,
+    comments: overview?.repoStats?.smartComments ?? 0,
+    commenters: overview?.repoStats?.smartCommenters ?? 0,
+    users: overview?.repoStats?.semaUsers ?? 0,
   };
 
   const {
