@@ -255,13 +255,22 @@ export default (app, passport) => {
         const requesters = groupBy(givenComments, 'githubMetadata.requester');
         const commentators = groupBy(receivedComments, 'githubMetadata.user.login');
         const interactionsByUsers = {};
+        // TODO: could be done more accurate
         Object.keys(commentators).map(key => {
-          interactionsByUsers[key] = commentators[key].length + (interactionsByUsers[key] || 0);
+          interactionsByUsers[key] = {
+            name: key,
+            avatarUrl: commentators[key][0].userId?.avatarUrl,
+            count: commentators[key].length,
+          };
         })
         Object.keys(requesters).map(key => {
-          interactionsByUsers[key] = requesters[key].length + (interactionsByUsers[key] || 0);
+          interactionsByUsers[key] = {
+            name: key,
+            avatarUrl: interactionsByUsers[key]?.avatarUrl || null,
+            count: requesters[key].length + (interactionsByUsers[key]?.count || 0),
+          }
         })
-        return res.status(201).send({totalInteractionsCount, interactionsByUsers});
+        return res.status(201).send({totalInteractionsCount, interactionsByUsers: Object.values(interactionsByUsers)});
       } catch (error) {
         logger.error(error);
         return res.status(error.statusCode).send(error);
