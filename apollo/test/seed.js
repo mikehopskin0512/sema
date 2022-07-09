@@ -13,7 +13,7 @@ const SEEDS = loadSeeds();
 // Base seed for Apollo to work. All test should have this,
 // (already provided by setup).
 export async function baseSeed() {
-  await Promise.all([seedReactions(), seedTags()]);
+  await Promise.all([seedReactions(), seedTags(), seedRoles()]);
 }
 
 // Imports seed data into many collections.
@@ -46,6 +46,15 @@ async function seedTags() {
     _id: ObjectId(doc._id),
   }));
   await mongoose.connection.collections.tags.insertMany(data);
+}
+
+async function seedRoles() {
+  const filename = path.join(DATA_PATH, 'rolesV2.json');
+  const data = JSON.parse(fs.readFileSync(filename)).map((doc) => ({
+    ...doc,
+    _id: ObjectId(doc._id),
+  }));
+  await mongoose.connection.collections.roles.insertMany(data);
 }
 
 function loadSeeds() {

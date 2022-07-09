@@ -9,7 +9,7 @@ export const getRoleByName = async (name) => {
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
-    return error;
+    throw error;
   }
 };
 
@@ -20,6 +20,6 @@ export const getRoles = async () => {
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
-    return error;
+    throw error;
   }
 };
