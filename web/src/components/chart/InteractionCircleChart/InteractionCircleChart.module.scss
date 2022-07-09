@@ -1,0 +1,75 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  width: 500px;
+}
+
+.img {
+  width: inherit;
+  height: inherit;
+  border-radius: 100px;
+}
+
+.circle-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.circle {
+  border-radius: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.user-0 {
+  height: 150px;
+  width: 150px;
+  transform: translate(-50%, -50%);
+}
+
+.user-1 {
+  height: 100px;
+  width: 100px;
+  transform: translate(-120%, -170%);
+}
+
+.user-2 {
+  height: 100px;
+  width: 100px;
+  transform: translate(20%, -170%);
+  /* transform: translate(-50%, -190%); */
+}
+
+.user-3 {
+  height: 100px;
+  width: 100px;
+  transform: translate(90%, -60%);
+}
+
+.user-4 {
+  height: 100px;
+  width: 100px;
+  transform: translate(60%, 50%);
+}
+
+.user-5 {
+  height: 100px;
+  width: 100px;
+  transform: translate(-50%, 90%);
+}
+
+.user-6 {
+  height: 100px;
+  width: 100px;
+  transform: translate(-160%, 50%);
+}
+
+.user-7 {
+  height: 100px;
+  width: 100px;
+  transform: translate(-190%, -60%);
+}
