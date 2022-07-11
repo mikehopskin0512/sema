@@ -1,11 +1,16 @@
 import InteractionCircleChart from '../../chart/InteractionCircleChart';
 import { DownloadIcon, FacebookIcon, InstagramIcon, LinkedinIcon, LinkIcon, TwitterIcon } from '../../Icons';
+import InteractionCircleChart from '../../../components/chart/InteractionCircleChart';
+import { DownloadIcon, LinkIcon } from '../../../components/Icons';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { blue700 } from '../../../../styles/_colors.module.scss';
 import { getRepoSocialGraph } from '../../../state/features/repositories/api';
 import styles from './repoSocialCircle.module.scss';
+import { PrivateRepoBanner } from '../../../components/repos/repoSocialCircle/banners/privateRepoBanner';
+import { NotSyncedRepoBanner } from '../../../components/repos/repoSocialCircle/banners/notSyncedRepoBanner';
+import { SyncInProgressRepoBanner } from '@/components/repos/repoSocialCircle/banners/syncInProgressBanner';
 
 const RepoSocialCircle = ({ repoId }) => {
   const [interactions, setInteractions] = useState([]);
@@ -14,9 +19,11 @@ const RepoSocialCircle = ({ repoId }) => {
   const repoName = repositories.find((repo) => repo.id === repoId)?.fullName;
   const gitHubHandle = user?.identities[0]?.username;
   // TODO: add a real calculation
-  const isRepoSynced = true;
+  const isRepoSynced = false;
   // TODO: add a real calculation
   const isRepoPrivate = false;
+  // TODO: add a real calculation
+  const isSyncingNow = true;
 
   useEffect(() => {
     getRepoSocialGraph({repoId}, token)
@@ -24,11 +31,15 @@ const RepoSocialCircle = ({ repoId }) => {
   }, [repoId, token])
 
   if (isRepoPrivate) {
-    return <div>private banner should be here</div>
+    return <PrivateRepoBanner />
+  }
+
+  if (isSyncingNow) {
+    return <SyncInProgressRepoBanner />
   }
 
   if (!isRepoSynced) {
-    return <div>sync in progress banner should be here</div>
+    return <NotSyncedRepoBanner />
   }
 
   const socialButtons = [
