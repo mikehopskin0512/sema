@@ -4,9 +4,7 @@ import { useSelector } from 'react-redux';
 import styles from './InteractionCircleChart.module.scss';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 
-const InteractionCircleChart = ({ interactions = {} }) => {
-  const { user } = useSelector((state) => state.authState);
-
+const InteractionCircleChart = ({ interactions = {}, user }) => {
   // TODO: need to add a banner if it's a private repo
   // TODO: need to add a banner if sync is not complete
 

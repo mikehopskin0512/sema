@@ -12,7 +12,7 @@ import { SyncInProgressRepoBanner } from '../../repos/repoSocialCircle/banners/s
 
 const RepoSocialCircle = ({ repoId }) => {
   const [interactions, setInteractions] = useState([]);
-  const { token, user } = useSelector((state) => state.authState);
+  const { user } = useSelector((state) => state.authState);
   const { data: { repositories } } = useSelector((state) => state.repositoriesState);
   const repoName = repositories.find((repo) => repo.id === repoId)?.fullName;
   const handle = user?.identities[0]?.username;
@@ -26,8 +26,10 @@ const RepoSocialCircle = ({ repoId }) => {
   // TODO: should be extracted to a hook or a component
   useEffect(() => {
     getRepoSocialGraph({handle, repoId})
-      .then((res) => setInteractions(res?.data?.interactionsByUsers));
-  }, [repoId, token])
+      .then((res) => {
+        setInteractions(res?.data?.interactionsByUsers)
+      });
+  }, [repoId])
 
   if (isRepoPrivate) {
     return <PrivateRepoBanner />
@@ -80,7 +82,7 @@ const RepoSocialCircle = ({ repoId }) => {
         </div>
       </div>
       <div style={{width: '100%', display: 'flex', position: 'relative'}}>
-        <InteractionCircleChart interactions={interactions} />
+        <InteractionCircleChart interactions={interactions} user={user} />
       </div>
     </div>
 
