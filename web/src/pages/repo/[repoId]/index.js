@@ -1,6 +1,5 @@
-import InteractionCircleChart from '@/components/chart/InteractionCircleChart';
-import RepoSocialCircle from '@/components/repos/repoSocialCircle';
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import RepoSocialCircle from '../../../components/repos/repoSocialCircle';
 import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -16,7 +15,6 @@ import { getDateSub } from '../../../utils/parsing';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import FilterBar from '../../../components/repos/repoPageLayout/components/FilterBar';
 import Metrics from '../../../components/metrics';
-import { DEFAULT_AVATAR } from '../../../utils/constants';
 import styles from './styles.module.scss';
 import * as api from '../../../state/utils/api';
 
