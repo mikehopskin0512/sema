@@ -9,11 +9,23 @@ import styles from './repoSocialCircle.module.scss';
 const RepoSocialCircle = ({ repoId }) => {
   const [interactions, setInteractions] = useState([]);
   const { token } = useSelector((state) => state.authState);
+  // TODO: add a real calculation
+  const isRepoSynced = true;
+  // TODO: add a real calculation
+  const isRepoPrivate = false;
 
   useEffect(() => {
     getRepoSocialGraph({repoId}, token)
       .then((res) => setInteractions(res?.data?.interactionsByUsers));
   }, [repoId, token])
+
+  if (isRepoPrivate) {
+    return <div>private banner should be here</div>
+  }
+
+  if (!isRepoSynced) {
+    return <div>sync in progress banner should be here</div>
+  }
 
   // TODO: mobile styles
   return (
