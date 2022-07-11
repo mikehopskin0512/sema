@@ -16,6 +16,8 @@ import styles from './login.module.scss';
 import { alertOperations } from '../../state/features/alerts';
 import { authOperations } from '../../state/features/auth';
 import { invitationsOperations } from '../../state/features/invitations';
+import * as analytics from '../../utils/analytics';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const { clearAlert } = alertOperations;
 const { authenticate } = authOperations;
@@ -24,8 +26,10 @@ const { fetchInvite, acceptInvite, trackOrganizationInviteAccepted } = invitatio
 const Login = () => {
   const router = useRouter();
   const {
-    query: { token: inviteToken, organization: organizationId },
+    query: { token: inviteToken, organization: organizationId, isFastForwardOnboarding },
   } = router;
+  
+  const [isFFOnboardingStarted, setIsFFOnboardingStarted] = useLocalStorage('is_ff_onboarding_started', false);
 
   const dispatch = useDispatch();
 
@@ -39,6 +43,22 @@ const Login = () => {
   const { user, isAuthenticated, token } = auth;
   const { showAlert, alertType, alertLabel } = alerts;
   const isWaitlistFunctionality = Boolean(parseInt(process.env.NEXT_PUBLIC_WAITLIST_ENABLED));
+
+  const onGithubLogin = () => {
+    setIsFFOnboardingStarted(true);
+    window.location.href = '/api/identities/github';
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_LOGIN, { url: '/login' });
+  };
+
+  useEffect(() => {
+    setIsFFOnboardingStarted(false);
+  }, [])
+
+  useEffect(() => {
+    if (isFastForwardOnboarding) {
+      onGithubLogin();
+    }
+  }, [isFastForwardOnboarding])
 
   // Check for updated state in selectedTag
   useEffect(() => {
