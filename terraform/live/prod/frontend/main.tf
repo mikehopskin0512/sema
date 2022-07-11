@@ -135,6 +135,6 @@ module "apollo_worker" {
     data.aws_iam_policy_document.this.json
   ]
 
-  min_capacity = 1
-  max_capacity = 1
+  min_capacity = 4
+  max_capacity = 4
 }
