@@ -5,8 +5,6 @@ import yaml from 'yamljs';
 import path from 'path';
 import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
-import errors from '../shared/errors';
-import { addAcceptedInviteActivity } from '../notifications/notificationService';
 import {
   create,
   findByToken,
@@ -61,13 +59,7 @@ export default (app, passport) => {
     const isAdmin = isSemaAdmin(user);
     const { isMagicLink } = invitation;
     const isPersonalInvite = !isMagicLink;
-    const canCreateInvitation = user.inviteCount > 0 || isAdmin;
 
-    if (!canCreateInvitation) {
-      return res
-        .status(HTTPStatus.BAD_REQUEST)
-        .send({ message: 'User does not have enough invites.' });
-    }
     if (isMagicLink && !isAdmin) {
       return res
         .status(HTTPStatus.UNAUTHORIZED)

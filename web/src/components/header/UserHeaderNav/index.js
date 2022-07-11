@@ -1,19 +1,45 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
-import clsx from 'clsx';
+import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
-import styles from "../header.module.scss";
 import { PATHS } from '../../../utils/constants';
 import { isEmpty } from 'lodash';
 import { useFlags } from '../../launchDarkly';
+import { InviteModal } from '../../../components/header/InviteModal';
+import * as analytics from '../../../utils/analytics';
+import { invitationsOperations } from '../../../state/features/invitations';
 
-const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, selectedOrganization }) => {
+const { createInviteAndHydrateUser, trackSendInvite } = invitationsOperations;
+
+const UserHeaderNav = ({ toggleHamburger, type = 'desktop', selectedOrganization }) => {
   const { pathname } = useRouter();
-  const { auth } = useSelector((state) => ({
-    auth: state.authState,
-  }));
-  const { user: { isSemaAdmin } } = auth;
+  const dispatch = useDispatch();
+  const [isInviteModal, setInviteModal] = useState(false);
+
+  const {
+    auth: {
+      user: userData,
+      token
+    },
+  } = useSelector(
+    (state) => ({
+      auth: state.authState,
+    }),
+  );
+
+  const { _id: userId  } = userData;
+
+  const onInvitationsSend = async (email) => {
+    const invitation = {
+      recipient: email,
+      sender: userId,
+      isMagicLink: false
+    };
+    const { status } = await dispatch(createInviteAndHydrateUser(invitation, token));
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_SEND_INVITATION, { recipient: email });
+    trackSendInvite(email, invitation.senderName, invitation.senderEmail, 'user');
+    return status === 201;
+  }
 
   const { personalDashboard } = useFlags();
 
@@ -84,14 +110,6 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
           </a>
         </Link>
         */}
-        <Link href={PATHS.INVITATIONS}>
-          <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 pr-20 ${pathname === PATHS.INVITATIONS && 'has-text-weight-semibold'}`}>
-            <div className="is-flex is-flex-wrap-wrap">
-              Invitations
-              <div className={clsx("ml-3 has-background-blue-700 is-size-9 has-text-white has-text-centered has-text-weight-semibold border-radius-8px", styles.badge)}>{isSemaAdmin ? 'ꝏ' : inviteCount}</div>
-            </div>
-          </a>
-        </Link>
         <Link href={PATHS.SUPPORT}>
           <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname === PATHS.SUPPORT && 'has-text-weight-semibold'}`}>
             Support
@@ -135,6 +153,13 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
             Personal Insights
           </a>
         </Link>
+
+        <a aria-hidden='true' className='navbar-item has-text-weight-semibold is-uppercase' onClick={() => {
+          setInviteModal(true);
+        }}>
+          Recommend a Friend
+        </a>
+
         {
           !isEmpty(selectedOrganization) && (
             <Link href={`${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.REPOS}`}>
@@ -160,12 +185,6 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
           </a>
         </Link>
         */}
-        <Link href={PATHS.INVITATIONS}>
-          <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-            Invitations
-            <span className="badge mr-50 is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin ? 'ꝏ' : inviteCount}</span>
-          </a>
-        </Link>
         <Link href={PATHS.SUPPORT}>
           <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
             Support
@@ -188,6 +207,7 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
       {
         type === 'desktop' ? renderDesktopNav() : renderMobileNav()
       }
+      <InviteModal isActive={isInviteModal} onClose={setInviteModal} onSubmit={onInvitationsSend} />
     </>
   )
 }

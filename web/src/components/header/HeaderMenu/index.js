@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
@@ -18,24 +18,27 @@ import { TrophyIcon } from '../../Icons';
 import UserMenuItem from '../UserMenuItem';
 import Tooltip from '../../Tooltip';
 import { useFlags } from '../../launchDarkly';
+import { invitationsOperations } from '../../../state/features/invitations';
+import * as analytics from '../../../utils/analytics';
+import { InviteModal } from '../../../components/header/InviteModal';
 
 const { setSelectedOrganization, setProfileViewMode } = authOperations;
+const { createInviteAndHydrateUser, trackSendInvite } = invitationsOperations;
+
 
 const HeaderMenu = ({
   handleLogout,
-  user,
+  user
 }) => {
+  const [isInviteModal, setInviteModal] = useState(false);
   const userMenu = useRef(null);
   const {
     firstName = '',
     lastName = '',
-    roles = [],
-    avatarUrl: userAvatar,
-    handle
   } = user;
   const { notificationFeed } = useFlags();
   const fullName = `${firstName} ${lastName}`;
-  const { auth: { selectedOrganization, token }, organizations, portfolios } = useSelector(
+  const { auth: { selectedOrganization, token, user: userData }, organizations, portfolios } = useSelector(
     (state) => ({
       auth: state.authState,
       organizations: state.organizationsNewState.organizations,
@@ -43,6 +46,7 @@ const HeaderMenu = ({
     }),
   );
   const { _id: portfolioId = '' } = portfolios.length ? portfolios[0] : {};
+  const { _id: userId } = userData;
   const dispatch = useDispatch();
   const router = useRouter();
   const { checkAccess } = usePermission();
@@ -112,6 +116,18 @@ const HeaderMenu = ({
     router.push(`${PATHS.PORTFOLIO.PORTFOLIOS}`);
   };
 
+  const onInvitationsSend = async (email) => {
+    const invitation = {
+      recipient: email,
+      sender: userId,
+      isMagicLink: false
+    };
+    const { status } = await dispatch(createInviteAndHydrateUser(invitation, token));
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_SEND_INVITATION, { recipient: email });
+    trackSendInvite(email, invitation.senderName, invitation.senderEmail, 'user');
+    return status === 201;
+  }
+
   const isNoOrganizations = !organizations.length;
 
   return (
@@ -161,6 +177,18 @@ const HeaderMenu = ({
           </Link>
           <hr className="navbar-divider m-0 has-background-gray-300" />
           </>)}
+          <span
+            role="button"
+            className="navbar-item px-15 py-20"
+            onClick={() => {
+              toggleUserMenu();
+              setInviteModal(true);
+            }}
+            aria-hidden="true"
+          >
+             Recommend a Friend
+          </span>
+          <hr className="navbar-divider m-0 has-background-gray-300" />
           <Link href={PATHS.PROFILE}>
             <span
               role="button"
@@ -197,6 +225,7 @@ const HeaderMenu = ({
           </div>
         </a>
       </div>
+      <InviteModal isActive={isInviteModal} onClose={setInviteModal} onSubmit={onInvitationsSend} />
     </>
   );
 }
