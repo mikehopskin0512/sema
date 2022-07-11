@@ -17,11 +17,11 @@ const RepoSocialCircle = ({ repoId }) => {
   const repoName = repositories.find((repo) => repo.id === repoId)?.fullName;
   const gitHubHandle = user?.identities[0]?.username;
   // TODO: add a real calculation
-  const isRepoSynced = false;
+  const isRepoSynced = true;
   // TODO: add a real calculation
   const isRepoPrivate = false;
   // TODO: add a real calculation
-  const isSyncingNow = true;
+  const isSyncingNow = false;
 
   useEffect(() => {
     getRepoSocialGraph({repoId}, token)
