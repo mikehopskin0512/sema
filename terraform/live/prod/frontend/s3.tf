@@ -1,24 +1,18 @@
-resource "aws_s3_bucket" "this" {
-  bucket = local.s3_scr_avatars
-  policy = data.aws_iam_policy_document.s3_scr_avatars.json
-
-  lifecycle {
-    ignore_changes = [
-      cors_rule
-    ]
-  }
+locals {
+  buckets_names = ["scr-avatars", "scr-infographics"]
 }
 
-resource "aws_s3_bucket_acl" "this" {
-  bucket = aws_s3_bucket.this.id
-  acl    = "public-read"
+module "s3_avatars" {
+  source   = "../../../modules/phoenix_s3_buckets"
+  for_each = toset(local.buckets_names)
+
+  name_prefix = var.name_prefix
+  bucket_name = each.key
+
+  publisher_arns = [
+    module.phoenix.execution_role_arn,
+    module.apollo.execution_role_arn
+  ]
+
 }
 
-resource "aws_s3_bucket_cors_configuration" "this" {
-  bucket = aws_s3_bucket.this.bucket
-
-  cors_rule {
-    allowed_methods = ["GET"]
-    allowed_origins = ["*"]
-  }
-}
