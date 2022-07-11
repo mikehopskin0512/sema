@@ -6,9 +6,9 @@ import { useSelector } from 'react-redux';
 import { blue700 } from '../../../../styles/_colors.module.scss';
 import { getRepoSocialGraph } from '../../../state/features/repositories/api';
 import styles from './repoSocialCircle.module.scss';
-import { PrivateRepoBanner } from '../../../components/repos/repoSocialCircle/banners/privateRepoBanner';
-import { NotSyncedRepoBanner } from '../../../components/repos/repoSocialCircle/banners/notSyncedRepoBanner';
-import { SyncInProgressRepoBanner } from '@/components/repos/repoSocialCircle/banners/syncInProgressBanner';
+import { PrivateRepoBanner } from '../../repos/repoSocialCircle/banners/privateRepoBanner';
+import { NotSyncedRepoBanner } from '../../repos/repoSocialCircle/banners/notSyncedRepoBanner';
+import { SyncInProgressRepoBanner } from '../../repos/repoSocialCircle/banners/syncInProgressBanner';
 
 const RepoSocialCircle = ({ repoId }) => {
   const [interactions, setInteractions] = useState([]);
@@ -55,7 +55,6 @@ const RepoSocialCircle = ({ repoId }) => {
             Larger, closer circles to your avatar indicate more collaboration, while smaller, more distant circles indicate less interactions.
           </p>
         </div>
-        {/* TODO: need to add svg for background */}
         <div className={styles.buttons}>
           <span className="is-size-4 has-text-weight-semibold">Share:</span>
           <div className="mt-16 is-flex is-justify-content-center">
