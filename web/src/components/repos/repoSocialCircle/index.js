@@ -1,7 +1,5 @@
 import InteractionCircleChart from '../../chart/InteractionCircleChart';
 import { DownloadIcon, FacebookIcon, InstagramIcon, LinkedinIcon, LinkIcon, TwitterIcon } from '../../Icons';
-import InteractionCircleChart from '../../../components/chart/InteractionCircleChart';
-import { DownloadIcon, LinkIcon } from '../../../components/Icons';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
