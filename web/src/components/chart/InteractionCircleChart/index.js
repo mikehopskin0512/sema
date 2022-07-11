@@ -17,7 +17,7 @@ const InteractionCircleChart = ({ interactions = {} }) => {
   // TODO there should be a different way to layout it, because the user always will be at the center, so, it's just an example but it should be done in layout
   const users = [
     user,
-    ...interactions.sort((a, b) => b.count - a.count).slice(0, 7),
+    ...interactions?.sort((a, b) => b.count - a.count).slice(0, 21),
   ]
 
   return (
