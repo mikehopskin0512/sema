@@ -245,13 +245,11 @@ export default (app, passport) => {
   );
 
   route.get(
-    '/collaboration',
-    passport.authenticate(['bearer'], { session: false }),
+    '/collaboration/:handle/:repoId',
     async (req, res) => {
       try {
-        const githubHandle = req.user.identities[0].username;
-        const { repoId } = req.query;
-        const { givenComments, receivedComments } = await getCollaborativeSmartComments({repoId, githubHandle});
+        const { repoId, handle } = req.params;
+        const { givenComments, receivedComments } = await getCollaborativeSmartComments({repoId, handle});
         const totalInteractionsCount = receivedComments.length + givenComments.length;
         const requesters = groupBy(givenComments, 'githubMetadata.requester');
         const commentators = groupBy(receivedComments, 'githubMetadata.user.login');
