@@ -280,6 +280,11 @@ export const setProfileViewModeSuccess = (profileViewMode) => ({
   profileViewMode,
 });
 
+export const toggleFFOnboardingModal = (payload) => ({
+  type: types.TOGGLE_FF_ONBOARDING_MODAL,
+  payload
+})
+
 export const setSelectedOrganization = (selectedOrganization) => (dispatch) => {
   localStorage.setItem('sema_selected_organization', JSON.stringify(selectedOrganization));
   dispatch(setSelectedOrganizationSuccess(selectedOrganization));
