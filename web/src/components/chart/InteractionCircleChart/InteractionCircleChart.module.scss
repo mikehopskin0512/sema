@@ -1,0 +1,161 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  width: 500px;
+}
+
+.img {
+  width: inherit;
+  height: inherit;
+  border-radius: 100px;
+}
+
+.circle-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.circle {
+  border-radius: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.user-0 {
+  height: 150px;
+  width: 150px;
+  transform: translate(-50%, -50%);
+}
+
+.user-1 {
+  height: 100px;
+  width: 100px;
+  transform: translate(-120%, -170%);
+}
+
+.user-2 {
+  height: 100px;
+  width: 100px;
+  transform: translate(20%, -170%);
+  /* transform: translate(-50%, -190%); */
+}
+
+.user-3 {
+  height: 100px;
+  width: 100px;
+  transform: translate(90%, -60%);
+}
+
+.user-4 {
+  height: 100px;
+  width: 100px;
+  transform: translate(60%, 50%);
+}
+
+.user-5 {
+  height: 100px;
+  width: 100px;
+  transform: translate(-50%, 90%);
+}
+
+.user-6 {
+  height: 100px;
+  width: 100px;
+  transform: translate(-160%, 50%);
+}
+
+.user-7 {
+  height: 100px;
+  width: 100px;
+  transform: translate(-190%, -60%);
+}
+
+/* Outer circle */
+.user-8 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-400%, -80%);
+}
+
+.user-9 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-330%, -210%);
+}
+
+.user-10 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-220%, -340%);
+}
+
+.user-11 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-40%, -390%);
+}
+
+.user-12 {
+  height: 70px;
+  width: 70px;
+  transform: translate(130%, -350%);
+}
+
+.user-13 {
+  height: 70px;
+  width: 70px;
+  transform: translate(230%, -210%);
+}
+
+.user-14 {
+  height: 70px;
+  width: 70px;
+  transform: translate(300%, -50%);
+}
+
+.user-15 {
+  height: 70px;
+  width: 70px;
+  transform: translate(280%, 90%);
+}
+
+.user-16 {
+  height: 70px;
+  width: 70px;
+  transform: translate(220%, 220%);
+}
+
+.user-17 {
+  height: 70px;
+  width: 70px;
+  transform: translate(90%, 290%);
+}
+
+.user-18 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-60%, 310%);
+}
+
+
+.user-19 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-200%, 270%);
+}
+
+.user-20 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-330%, 190%);
+}
+
+.user-21 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-380%, 60%);
+}

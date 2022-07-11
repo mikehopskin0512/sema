@@ -1,0 +1,41 @@
+@import "../../../../styles/_colors.module.scss";
+
+.card {
+  background-color: $gray-100;
+  box-shadow: 0 2px 3px 0 #20202033;
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.title {
+  color: $blue-700;
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: $blue-700;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+.text {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  max-width: 450px;
+  margin-top: 40px;
+  margin-bottom: 60px;
+}
+
+.buttons {
+  padding-bottom: 55px;
+  background-image: url('/img/illustration-screen.svg');
+  background-size: 100%;
+  background-repeat: no-repeat;
+}

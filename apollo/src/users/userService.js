@@ -689,6 +689,16 @@ export async function getOrganizationUsersMetrics(organizationId) {
   return doc;
 }
 
+export const findUsersByGitHubHandle = async (handles) => {
+  try {
+    return User.find({ identities: { $elemMatch: { username: { $in: handles } } } }).lean().exec()
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
 export const findByHandle = async (handle) => {
   try {
     const query = User.findOne({ handle });

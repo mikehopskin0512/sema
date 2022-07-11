@@ -8,6 +8,7 @@ import { getCollaborativeSmartComments } from '../comments/smartComments/smartCo
 import { version } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
+import { findUsersByGitHubHandle } from '../users/userService';
 
 import {
   createMany,
@@ -254,14 +255,28 @@ export default (app, passport) => {
         const totalInteractionsCount = receivedComments.length + givenComments.length;
         const requesters = groupBy(givenComments, 'githubMetadata.requester');
         const commentators = groupBy(receivedComments, 'githubMetadata.user.login');
+        const users = await findUsersByGitHubHandle([...Object.keys(commentators), ...Object.keys(requesters)]);
+        const avatarsByUsers = new Map(users.map(user => ([user.identities[0].username, user])))
         const interactionsByUsers = {};
-        Object.keys(commentators).map(key => {
-          interactionsByUsers[key] = commentators[key].length + (interactionsByUsers[key] || 0);
+        // TODO: could be done more accurate
+        Object.keys(commentators).forEach(key => {
+          interactionsByUsers[key] = {
+            name: key,
+            count: commentators[key].length,
+            avatarUrl: avatarsByUsers.get(key)?.identities[0].avatarUrl,
+          };
         })
-        Object.keys(requesters).map(key => {
-          interactionsByUsers[key] = requesters[key].length + (interactionsByUsers[key] || 0);
+        Object.keys(requesters).forEach(key => {
+          interactionsByUsers[key] = {
+            name: key,
+            count: requesters[key].length + (interactionsByUsers[key]?.count || 0),
+            avatarUrl: avatarsByUsers.get(key)?.identities[0].avatarUrl,
+          }
         })
-        return res.status(201).send({totalInteractionsCount, interactionsByUsers});
+        return res.status(201).send({
+          totalInteractionsCount,
+          interactionsByUsers: Object.values(interactionsByUsers),
+        });
       } catch (error) {
         logger.error(error);
         return res.status(error.statusCode).send(error);

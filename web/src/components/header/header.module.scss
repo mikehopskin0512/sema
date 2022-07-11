@@ -50,3 +50,42 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.invite-modal {
+  z-index: 10000;
+
+  .close-button {
+    position: absolute;
+    top: 48px;
+    right: 30px;
+  }
+}
+
+.invite-modal-content {
+  width: 512px !important;
+}
+
+.invite-modal-title {
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 40px;
+  color: $black-900;
+  margin-bottom: 24px;
+}
+
+.success-screen-text {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.tick-wrapper {
+  background: rgba(#0081A7, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+}
