@@ -15,7 +15,7 @@ const RepoSocialCircle = ({ repoId }) => {
   const { token, user } = useSelector((state) => state.authState);
   const { data: { repositories } } = useSelector((state) => state.repositoriesState);
   const repoName = repositories.find((repo) => repo.id === repoId)?.fullName;
-  const gitHubHandle = user?.identities[0]?.username;
+  const handle = user?.identities[0]?.username;
   // TODO: add a real calculation
   const isRepoSynced = true;
   // TODO: add a real calculation
@@ -23,8 +23,9 @@ const RepoSocialCircle = ({ repoId }) => {
   // TODO: add a real calculation
   const isSyncingNow = false;
 
+  // TODO: should be extracted to a hook or a component
   useEffect(() => {
-    getRepoSocialGraph({repoId}, token)
+    getRepoSocialGraph({handle, repoId})
       .then((res) => setInteractions(res?.data?.interactionsByUsers));
   }, [repoId, token])
 
@@ -46,7 +47,7 @@ const RepoSocialCircle = ({ repoId }) => {
     <div className={clsx(styles.card, 'is-flex is-justify-content-space-between')}>
       <div style={{minWidth: '500px'}} className="has-text-centered px-24">
         <h3 className={styles.title}>Your GitHub Social Circle</h3>
-        <h6 className={styles.subtitle}>{gitHubHandle} for {repoName}</h6>
+        <h6 className={styles.subtitle}>{handle} for {repoName}</h6>
         <div className={styles.text}>
           <p>
             Your GitHub Social Circle is a representation of who you’ve been collaborating with most in this repo over the last year.
