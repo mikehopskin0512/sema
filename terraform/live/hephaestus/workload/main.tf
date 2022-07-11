@@ -20,9 +20,9 @@ module "ecs_ec2_provider" {
   ecs_cluster_name       = aws_ecs_cluster.main.name
   instance_type          = "c6i.xlarge"
   root_block_volume_size = 100
-  min_size               = 2
-  max_size               = 2
-  desired_capacity       = 2
+  min_size               = 5
+  max_size               = 10
+  desired_capacity       = 10
 }
 
 module "hephaestus_summaries" {
@@ -70,8 +70,8 @@ module "hephaestus_summaries" {
 
   requires_compatibilities_ec2_enabled = true
 
-  min_capacity = 2
-  max_capacity = 2
+  min_capacity = 10
+  max_capacity = 10
 
   depends_on = [
     module.ecs_ec2_provider
@@ -123,8 +123,8 @@ module "hephaestus_tags" {
 
   requires_compatibilities_ec2_enabled = true
 
-  min_capacity = 2
-  max_capacity = 2
+  min_capacity = 10
+  max_capacity = 10
 
   depends_on = [
     module.ecs_ec2_provider
