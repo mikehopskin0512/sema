@@ -54,8 +54,8 @@ const CollectionRow = ({ data }) => {
 
   return (
     <Link href={`?cid=${_id}`}>
-      <tr className="has-background-white my-10 is-clickable">
-        <td className="py-15 has-background-white px-10 is-relative" width={80}>
+      <tr className="has-background-white my-10 is-clickable is-fullwidth">
+        <td className="py-15 has-background-white px-10 is-relative" width={67}>
           {isHighlightNeeded && <div className={clsx('has-background-orange-300 is-absolute', styles['collection-highlight'])}/>}
           <div className="is-flex is-flex-direction-column is-justify-content-center">
           <div className="field" aria-hidden onClick={onClickChild}>
@@ -72,10 +72,10 @@ const CollectionRow = ({ data }) => {
           </div>
           </div>
         </td>
-        <td className="py-15 has-background-white px-10 is-hidden-mobile">
-          <div className="is-flex is-align-items-center is-justify-content-space-between">
+        <td className="py-15 has-background-white px-10 is-hidden-mobile m-0" width={"27%"}>
+          <div className={clsx("is-flex is-align-items-center is-justify-content-space-between m-0", styles.title)}>
             <OverflowTooltip ref={titleRef} text={name}>
-              <p ref={titleRef} className={clsx("is-size-7 has-text-weight-semibold has-overflow-ellipsis pr-15", styles.title)}>
+              <p ref={titleRef} className={clsx("is-size-7 has-text-weight-semibold has-overflow-ellipsis m-0", styles.titleText)}>
                 {name}
               </p>
             </OverflowTooltip>
@@ -93,35 +93,35 @@ const CollectionRow = ({ data }) => {
             )}
           </div>
         </td>
-        <td className="py-15 has-background-white px-10 is-hidden-mobile">
-          <div className="is-flex is-flex-direction-column is-justify-content-center">
+        <td className="py-15 has-background-white px-10 is-hidden-mobile" width={327}>
+          <div className="is-flex is-flex-direction-column is-justify-content-center is-fullwidth">
             <p className={clsx("is-size-7", styles.description)}>
               {description}
             </p>
           </div>
         </td>
-        <td className="py-15 has-background-white px-10 is-hidden-mobile" width={100}>
+        <td className="py-15 has-background-white px-10 is-hidden-mobile" style={{minWidth: '110px'}}>
           <div className="is-flex is-flex-direction-column is-justify-content-center">
             <p className="is-size-7 has-text-weight-semibold">
               {source || ''}
             </p>
           </div>
         </td>
-        <td className="py-15 has-background-white px-10 is-hidden-mobile" width={100}>
+        <td className="py-15 has-background-white px-10 is-hidden-mobile has-overflow-ellipsis" width={217} style={{minWidth: '217px'}}>
           <div className="is-flex is-flex-direction-column is-justify-content-center">
-            <p className="is-size-7 has-text-weight-semibold">
+            <p className="is-size-7 has-text-weight-semibold" style={{maxWidth: "100%"}}>
               {author}
             </p>
           </div>
         </td>
-        <td className="py-15 has-background-white px-10 is-hidden-mobile" width={100}>
+        <td className="py-15 has-background-white px-10 is-hidden-mobile" width={"9%"}>
           <div className="is-flex is-flex-direction-column is-justify-content-center">
-            <p className="is-size-7 has-text-weight-semibold has-text-centered">
+            <p className="is-size-7 has-text-centered has-text-weight-semibold">
               {commentsCount}
             </p>
           </div>
         </td>
-        <td className="py-15 has-background-white px-10 is-hidden-mobile" width={100}>
+        <td className="py-15 has-background-white px-10 is-hidden-mobile" width={canEdit ? "8%" : "15%"}>
           <div className="is-flex is-flex-direction-column is-justify-content-center">
             <p className="is-size-7 has-text-weight-semibold">
             { isNotArchived ? 'Available' : 'Archived' }
@@ -129,7 +129,7 @@ const CollectionRow = ({ data }) => {
           </div>
         </td>
         { canEdit && (
-          <td className="py-15 has-background-white px-10 is-hidden-mobile" width={100}>
+          <td className="py-15 has-background-white px-10 is-hidden-mobile" width={"10%"}>
             <ActionMenu collectionData={collectionData} collectionActive={isActive} />
           </td>
         )}

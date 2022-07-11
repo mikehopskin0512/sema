@@ -1,0 +1,35 @@
+@import '../../styles/content.styles';
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.snippetButton {
+  border: 1px dashed var(--color-add-snippet-button-border);
+  border-radius: 10px;
+  display: flex;
+  align-items: center; 
+  font-weight: bold;
+  font-size: 10px;
+  color: var(--color-add-snippet-button-text);
+  padding: 5px 12px; 
+  cursor: pointer;
+  background-color: var(--color-add-snippet-button-bg);
+  margin-right: 8px;
+  &:disabled {
+    color: var(--color-add-snippet-button-text-disabled);
+    border: 1px dashed var(--color-add-snippet-button-border-disabled);
+  }
+}
+
+.icon {
+  width: 10px; 
+  height: 10px; 
+  margin-right: 13px;
+}
+
+.successText {
+  color: var(--color-success-add-snippet-button-text);
+}

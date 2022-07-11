@@ -186,7 +186,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
   }
 
   const onCopy = () => {
-    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(userData.handle, portfolio._id)}`);
+    navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}${PATHS.PORTFOLIO.VIEW(userData.handle, portfolio._id)}`);
     changeIsCopied(true);
     setTimeout(() => changeIsCopied(false), 5000);
   };
@@ -440,7 +440,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
           </div>
         </div>
         <div className={clsx('container', styles['snaps-container'])}>
-          <p className="mb-5 is-size-4 has-text-weight-semibold">Snapshots</p>
+          <p className="mb-5 is-size-4 has-text-weight-semibold">{layout.length ? 'Snapshots' : ''}</p>
           <DashboardDraggableList
             pageLayout={layout}
             updateLayout={onLayoutChange}

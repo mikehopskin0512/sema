@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import apollo from '../../../test/apolloClient';
 import User from '../../users/userModel';
+import Organization from '../../organizations/organizationModel';
 import { createGhostUser } from '../../users/userService';
 import createUser from '../../../test/helpers/userHelper';
 
@@ -43,6 +44,31 @@ describe('GET /identities/github/cb', () => {
           verified: true,
           primary: true,
           visibility: 'public',
+        },
+      ])
+      .get('/user/repos')
+      .query({ per_page: 100, page: 1 })
+      .reply(200, [
+        {
+          owner: {
+            id: '3456',
+            login: 'jrock17',
+            type: 'User',
+          },
+        },
+        {
+          owner: {
+            id: '1234',
+            login: 'Semalab',
+            type: 'Organization',
+          },
+        },
+        {
+          owner: {
+            id: '2345',
+            login: 'SemaSandbox',
+            type: 'Organization',
+          },
         },
       ]);
   });
@@ -111,6 +137,12 @@ describe('GET /identities/github/cb', () => {
       const cookies = getCookies(headers['set-cookie']);
       const jwt = decode(cookies.get('_phoenix'));
       expect(jwt._id).toEqualID(user._id);
+    });
+
+    it('should sync organizations', async () => {
+      const organizations = await Organization.find({});
+      const organizationLogins = organizations.map((o) => o.name).sort();
+      expect(organizationLogins).toEqual(['SemaSandbox', 'Semalab']);
     });
   });
 

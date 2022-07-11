@@ -1,1 +1,21 @@
-[{"name":"Admin","canViewAdmin":true,"canEditUsers":true,"canEditComments":true,"canEditGuides":true,"canManageLinks":true,"_id":"614f2f6fab9fd21a7421364a"},{"name":"Library Admin","canViewAdmin":false,"canEditUsers":false,"canEditComments":true,"canEditGuides":false,"canManageLinks":false,"_id":"614f2f6fab9fd21a7421364b"}]
+[
+  {
+    "name": "Admin",
+    "canViewAdmin": true,
+    "canEditUsers": true,
+    "canEditComments": true,
+    "canEditGuides": true,
+    "canManageLinks": true,
+    "_id": "614f2f6fab9fd21a7421364a"
+  },
+  {
+    "name": "Library Admin",
+    "canViewAdmin": false,
+    "canEditUsers": false,
+    "canEditComments": true,
+    "canEditGuides": false,
+    "canManageLinks": false,
+    "_id": "614f2f6fab9fd21a7421364b"
+  }
+]
+

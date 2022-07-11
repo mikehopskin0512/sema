@@ -26,6 +26,7 @@ import {
   findByToken,
   redeemInvite,
 } from '../../invitations/invitationService';
+import { createNewOrgsFromGithub } from '../../organizations/organizationService';
 import { createUserRole } from '../../userRoles/userRoleService';
 import { getTokenData } from '../../shared/utils';
 import checkEnv from '../../middlewares/checkEnv';
@@ -144,12 +145,20 @@ export default (app) => {
           }
         }
 
+        // fetch and create orgs
+        const githubOrgs = await getGithubOrgsForAuthenticatedUser(token);
+
+        if (githubOrgs && githubOrgs.length) {
+          await createNewOrgsFromGithub(githubOrgs, user._id);
+        }
+
         if (!isWaitlist && isActive) {
           // If user is on waitlist, bypass and redirect to register page (below)
           // No need to send jwt. It will pick up the refresh token cookie on frontend
           return res.redirect(`${orgDomain}/dashboard`);
         }
       }
+
       const identityToken = await createIdentityToken(identity);
       // Build redirect based on inviteToken
       const registerRedirect = inviteToken
@@ -171,7 +180,7 @@ export default (app) => {
         token,
         perPage,
         page
-);
+      );
 
       return res.status(200).json(orgs);
     } catch (error) {
@@ -188,7 +197,7 @@ export default (app) => {
         token,
         perPage,
         page
-);
+      );
 
       return res.status(200).json(repositories);
     } catch (error) {

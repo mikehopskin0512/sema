@@ -1,0 +1,222 @@
+[
+  {
+    "_id": "60f6594718ceb37418ce3cb5",
+    "displayId": "Comment-322",
+    "title": "Use of Externally-Controlled Input to Select Classes or Code ('Unsafe Reflection')",
+    "comment": "The application uses external input with reflection to select which classes or code to use, but it does not sufficiently prevent the input from selecting improper classes or code.",
+    "author": "",
+    "source": { "name": "Mitre", "url": "https://cwe.mitre.org/index.html" },
+    "engGuides": [],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" }
+    ],
+    "isActive": true,
+    "createdAt": "2021-03-14T00:00:01.000Z",
+    "updatedAt": "2021-03-14T00:00:01.000Z",
+    "collections": [
+      {
+        "collectionId": "60f74df6b83864106f28bb0f",
+        "name": "Security - Mitre’s Common Weakness Enumeration (CWE)",
+        "type": "community"
+      }
+    ]
+  },
+  {
+    "_id": "60f6594718ceb37418ce3cb4",
+    "displayId": "Comment-321",
+    "title": "Use of Pointer Subtraction to Determine Size",
+    "comment": "The application subtracts one pointer from another in order to determine size, but this calculation can be incorrect if the pointers do not exist in the same memory chunk.",
+    "author": "",
+    "source": { "name": "Mitre", "url": "https://cwe.mitre.org/index.html" },
+    "engGuides": [],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" }
+    ],
+    "isActive": true,
+    "createdAt": "2021-03-14T00:00:01.000Z",
+    "updatedAt": "2021-03-14T00:00:01.000Z",
+    "collections": [
+      {
+        "collectionId": "60f74df6b83864106f28bb0f",
+        "name": "Security - Mitre’s Common Weakness Enumeration (CWE)",
+        "type": "community"
+      }
+    ]
+  },
+  {
+    "_id": "60f6594718ceb37418ce3d17",
+    "displayId": "Comment-420",
+    "title": "Only Filtering Special Elements at a Specified Location",
+    "comment": "The software receives data from an upstream component, but only accounts for special elements at a specified location, thereby missing remaining special elements that may exist before sending it to a downstream component.",
+    "author": "",
+    "source": { "name": "Mitre", "url": "https://cwe.mitre.org/index.html" },
+    "engGuides": [],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" }
+    ],
+    "isActive": true,
+    "createdAt": "2021-03-14T00:00:01.000Z",
+    "updatedAt": "2021-03-14T00:00:01.000Z",
+    "collections": [
+      {
+        "collectionId": "60f74df6b83864106f28bb0f",
+        "name": "Security - Mitre’s Common Weakness Enumeration (CWE)",
+        "type": "community"
+      }
+    ]
+  },
+  {
+    "_id": "60f6594718ceb37418ce3d25",
+    "displayId": "Comment-434",
+    "title": "Unlock of a Resource that is not Locked",
+    "comment": "The software attempts to unlock a resource that is not locked.",
+    "author": "",
+    "source": { "name": "Mitre", "url": "https://cwe.mitre.org/index.html" },
+    "engGuides": [],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" }
+    ],
+    "isActive": true,
+    "createdAt": "2021-03-14T00:00:01.000Z",
+    "updatedAt": "2021-03-14T00:00:01.000Z",
+    "collections": [
+      {
+        "collectionId": "60f74df6b83864106f28bb0f",
+        "name": "Security - Mitre’s Common Weakness Enumeration (CWE)",
+        "type": "community"
+      }
+    ]
+  },
+  {
+    "_id": "60f6594718ceb37418ce3d3e",
+    "displayId": "Comment-459",
+    "title": "Improper Restriction of Rendered UI Layers or Frames",
+    "comment": "The web application does not restrict or incorrectly restricts frame objects or UI layers that belong to another application or domain, which can lead to user confusion about which interface the user is interacting with.",
+    "author": "",
+    "source": { "name": "Mitre", "url": "https://cwe.mitre.org/index.html" },
+    "engGuides": [],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" }
+    ],
+    "isActive": true,
+    "createdAt": "2021-03-14T00:00:01.000Z",
+    "updatedAt": "2021-03-14T00:00:01.000Z",
+    "collections": [
+      {
+        "collectionId": "60f74df6b83864106f28bb0f",
+        "name": "Security - Mitre’s Common Weakness Enumeration (CWE)",
+        "type": "community"
+      }
+    ]
+  },
+  {
+    "_id": "60f6594718ceb37418ce3d81",
+    "displayId": "Comment-526",
+    "title": "Incomplete Documentation of Program Execution",
+    "comment": "The document does not fully define all mechanisms that are used to control or influence how product-specific programs are executed.",
+    "author": "",
+    "source": { "name": "Mitre", "url": "https://cwe.mitre.org/index.html" },
+    "engGuides": [],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" }
+    ],
+    "isActive": true,
+    "createdAt": "2021-03-14T00:00:01.000Z",
+    "updatedAt": "2021-03-14T00:00:01.000Z",
+    "collections": [
+      {
+        "collectionId": "60f74df6b83864106f28bb0f",
+        "name": "Security - Mitre’s Common Weakness Enumeration (CWE)",
+        "type": "community"
+      }
+    ]
+  },
+  {
+    "_id": "60f6594718ceb37418ce3dab",
+    "displayId": "Comment-568",
+    "title": "Missing Protection Against Voltage and Clock Glitches",
+    "comment": "The product does not contain the necessary additional circuitry or sensors to detect and mitigate voltage and clock glitches.",
+    "author": "",
+    "source": { "name": "Mitre", "url": "https://cwe.mitre.org/index.html" },
+    "engGuides": [],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" }
+    ],
+    "isActive": true,
+    "createdAt": "2021-03-14T00:00:01.000Z",
+    "updatedAt": "2021-03-14T00:00:01.000Z",
+    "collections": [
+      {
+        "collectionId": "60f74df6b83864106f28bb0f",
+        "name": "Security - Mitre’s Common Weakness Enumeration (CWE)",
+        "type": "community"
+      }
+    ]
+  },
+  {
+    "_id": "60f6594718ceb37418ce3dca",
+    "displayId": "Comment-599",
+    "title": "Path Equivalence: 'filename.' (Trailing Dot)",
+    "comment": "A software system that accepts path input in the form of trailing dot ('filedir.') without appropriate validation can lead to ambiguous path resolution and allow an attacker to traverse the file system to unintended locations or access arbitrary files.",
+    "author": "",
+    "source": { "name": "Mitre", "url": "https://cwe.mitre.org/index.html" },
+    "engGuides": [],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" }
+    ],
+    "isActive": true,
+    "createdAt": "2021-03-14T00:00:01.000Z",
+    "updatedAt": "2021-03-14T00:00:01.000Z",
+    "collections": [
+      {
+        "collectionId": "60f74df6b83864106f28bb0f",
+        "name": "Security - Mitre’s Common Weakness Enumeration (CWE)",
+        "type": "community"
+      }
+    ]
+  },
+  {
+    "_id": "60f6594718ceb37418ce3dd0",
+    "displayId": "Comment-605",
+    "title": "Path Equivalence: 'file name' (Internal Whitespace)",
+    "comment": "A software system that accepts path input in the form of internal space ('file(SPACE)name') without appropriate validation can lead to ambiguous path resolution and allow an attacker to traverse the file system to unintended locations or access arbitrary files.",
+    "author": "",
+    "source": { "name": "Mitre", "url": "https://cwe.mitre.org/index.html" },
+    "engGuides": [],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" }
+    ],
+    "isActive": true,
+    "createdAt": "2021-03-14T00:00:01.000Z",
+    "updatedAt": "2021-03-14T00:00:01.000Z",
+    "collections": [
+      {
+        "collectionId": "60f74df6b83864106f28bb0f",
+        "name": "Security - Mitre’s Common Weakness Enumeration (CWE)",
+        "type": "community"
+      }
+    ]
+  },
+  {
+    "_id": "60f6594718ceb37418ce3e0f",
+    "displayId": "Comment-668",
+    "title": "Improper Neutralization of Comment Delimiters",
+    "comment": "The software receives input from an upstream component, but it does not neutralize or incorrectly neutralizes special elements that could be interpreted as comment delimiters when they are sent to a downstream component.",
+    "author": "",
+    "source": { "name": "Mitre", "url": "https://cwe.mitre.org/index.html" },
+    "engGuides": [],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" }
+    ],
+    "isActive": true,
+    "createdAt": "2021-03-14T00:00:01.000Z",
+    "updatedAt": "2021-03-14T00:00:01.000Z",
+    "collections": [
+      {
+        "collectionId": "60f74df6b83864106f28bb0f",
+        "name": "Security - Mitre’s Common Weakness Enumeration (CWE)",
+        "type": "community"
+      }
+    ]
+  }
+]

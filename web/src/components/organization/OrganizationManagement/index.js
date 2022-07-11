@@ -51,12 +51,12 @@ const OrganizationManagement = ({ activeOrganization }) => {
   const organizationId = activeOrganization?.organization?._id;
 
   useAuthEffect(() => {
-    if (organizationId) {
+    if (organizationId && perPage && page) {
       dispatch(fetchOrganizationMembers(organizationId, { page, perPage }, token));
       dispatch(fetchRoles(token));
       dispatch(getInvitesBySender({senderId: user._id}, token))
     }
-  }, [user, dispatch, page, perPage, organizationId]);
+  }, [user, dispatch, page, perPage, organizationId, activeOrganization]);
 
   const rolesOptions = useMemo(() => roles?.map((role) => ({
     value: role._id,

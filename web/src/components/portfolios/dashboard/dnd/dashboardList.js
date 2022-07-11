@@ -9,6 +9,7 @@ import {
   reorderIndependentRow,
   replaceChildInAnotherParent,
 } from './manipulations';
+import { EmptyListPlaceholder } from '../emptyListPlaceholder';
 
 const DashboardDraggableList = ({
   pageLayout,
@@ -97,6 +98,14 @@ const DashboardDraggableList = ({
       />
     );
   };
+
+  if (!layout.length) {
+    return (
+      <div className="is-flex mt-50">
+        <EmptyListPlaceholder />
+      </div>
+    )
+  }
 
   return (
     <div>

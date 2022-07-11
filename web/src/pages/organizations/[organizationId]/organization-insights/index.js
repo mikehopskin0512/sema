@@ -64,9 +64,6 @@ const OrganizationInsights = () => {
     dateOption: ''
   });
   const [commentView, setCommentView] = useState('received');
-  const [filterUserList, setFilterUserList] = useState([]);
-  const [filterRequesterList, setFilterRequesterList] = useState([]);
-  const [filterPRList, setFilterPRList] = useState([]);
   const [filterRepoList, setFilterRepoList] = useState([]);
   const [filteredComments, setFilteredComments] = useState([]);
   const [outOfRangeComments, setOutOfRangeComments] = useState([]);
@@ -250,73 +247,6 @@ const OrganizationInsights = () => {
     }
   }, [selectedOrganization]);
 
-  const setFilterValues = (overview) => {
-    if (!overview?.smartComments?.length) {
-      return;
-    }
-    const requesters = overview.smartComments
-      .filter(item => item.githubMetadata.requester)
-      .map(({ githubMetadata }) => {
-        return {
-          label: githubMetadata.requester,
-          value: githubMetadata.requester,
-          img: githubMetadata.requesterAvatarUrl || DEFAULT_AVATAR
-        };
-      });
-    const users = overview.smartComments
-      .filter(item => item.userId)
-      .map(item => {
-        const {
-          firstName = '',
-          lastName = '',
-          _id = '',
-          avatarUrl = '',
-          username = 'User@email.com'
-        } = item.userId;
-        return {
-          label:
-            isEmpty(firstName) && isEmpty(lastName)
-              ? username.split('@')[0]
-              : `${firstName} ${lastName}`,
-          value: _id,
-          img: isEmpty(avatarUrl) ? DEFAULT_AVATAR : avatarUrl
-        };
-      });
-    const prs = overview.smartComments
-      .filter(item => item.githubMetadata)
-      .map(item => {
-        const {
-          githubMetadata: {
-            head,
-            title = '',
-            pull_number: pullNum = '',
-            updated_at
-          }
-        } = item;
-        const prName = title || head || 'Pull Request';
-        return {
-          updated_at: new Date(updated_at),
-          label: `${prName} (#${pullNum || '0'})`,
-          value: pullNum,
-          name: prName
-        };
-      });
-    let filteredPRs = [];
-    prs.forEach(item => {
-      const index = findIndex(filteredPRs, { value: item.value });
-      if (index !== -1) {
-        if (isEmpty(filteredPRs[index].prName)) {
-          filteredPRs[index] = item;
-        }
-      } else {
-        filteredPRs.push(item);
-      }
-    });
-    setFilterRequesterList(uniqBy(requesters, 'value'));
-    setFilterUserList(uniqBy(users, 'value'));
-    setFilterPRList(filteredPRs);
-  };
-
   const filterComments = overview => {
     if (overview && overview.smartComments) {
       const { startDate, endDate } = filter;
@@ -343,7 +273,6 @@ const OrganizationInsights = () => {
   useEffect(() => {
     const { overview } = organizations;
     filterComments(overview);
-    setFilterValues(overview);
   }, [JSON.stringify(filter), organizations]);
 
   const renderTopReactions = () => {
@@ -556,10 +485,6 @@ const OrganizationInsights = () => {
           filter={filter}
           individualFilter={isActive}
           commentView={commentView}
-          filterRepoList={filterRepoList}
-          filterUserList={filterUserList}
-          filterRequesterList={filterRequesterList}
-          filterPRList={filterPRList}
           handleFilter={handleFilter}
         />
         <div className={clsx("is-flex is-flex-wrap-wrap my-20", styles['line-graph-wrapper'])}>

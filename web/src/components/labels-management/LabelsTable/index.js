@@ -22,8 +22,8 @@ const LabelsTable = ({
   }, [data]);
 
   return (
-    <div className={clsx(tableStyles['table-wrapper'], styles['show-overflow-y'], className)}>
-      <table className={clsx('table is-fullwidth', tableStyles.table)}>
+     <div className={clsx("is-fullwidth", tableStyles['table-wrapper'], styles['show-overflow-y'], className)}>
+      <table className={clsx('table', tableStyles.table)}>
         <thead className={clsx('is-fullwidth', tableStyles.thead)}>
           <tr>
             { columns.map((col) => (

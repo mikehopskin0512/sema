@@ -5,14 +5,11 @@ import { Helmet } from 'react-helmet';
 import { OrganizationDashboardHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import PageHeader from '../../../../components/pageHeader';
-import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import LabelsManagement from '../../../../components/organization/LabelsManagement';
 import OrganizationManagement from '../../../../components/organization/OrganizationManagement';
 import usePermission from '../../../../hooks/usePermission';
 import {PATHS, TAB} from '../../../../utils/constants';
 import { TagIcon, TeamIcon } from '../../../../components/Icons';
-
-const { fetchOrganizationMembers } = organizationsOperations;
 
 const OrganizationSettings = () => {
   const dispatch = useDispatch();
@@ -22,18 +19,14 @@ const OrganizationSettings = () => {
     query: { organizationId, tab },
   } = router;
 
-  const { auth, organizations } = useSelector(
+  const { organizations } = useSelector(
     (state) => ({
       auth: state.authState,
       organizations: state.organizationsNewState
     }),
   );
-  const { token } = auth;
-  const [activeOrganization, setActiveOrganization] = useState({});
 
-  useEffect(() => {
-    dispatch(fetchOrganizationMembers(organizationId, {}, token));
-  }, [organizationId]);
+  const [activeOrganization, setActiveOrganization] = useState({});
 
   const setDefaultTag = () => {
     router.push({

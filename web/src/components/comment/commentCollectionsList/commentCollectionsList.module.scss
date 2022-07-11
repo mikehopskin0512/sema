@@ -5,7 +5,15 @@
 }
 
 .title {
-  width: 300px;
+  width: auto !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+.titleText {
+  max-width: 318px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
 }
 
 .description {
@@ -14,6 +22,8 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 327px;
+  width: 327px;
 }
 
 .collection-highlight {

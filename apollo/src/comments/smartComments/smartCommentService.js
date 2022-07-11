@@ -15,7 +15,11 @@ import SmartComment from './smartCommentModel';
 import Reaction from '../reaction/reactionModel';
 import User from '../../users/userModel';
 
-import { fullName, metricsStartDate } from '../../shared/utils';
+import {
+  dateRangeFilterPipeline,
+  fullName,
+  metricsStartDate,
+} from '../../shared/utils';
 import { getOrganizationRepos } from '../../organizations/organizationService';
 
 const {
@@ -74,6 +78,28 @@ export const getSmartComments = async ({ repo }) => {
   }
 };
 
+export const getCollaborativeSmartComments = async ({ repoId, githubHandle }) => {
+  try {
+    const [givenComments, receivedComments] = await Promise.all([
+      SmartComment.find({
+        'githubMetadata.repo_id': repoId,
+        'githubMetadata.user.login': githubHandle,
+        'githubMetadata.requester': { $ne: githubHandle },
+      }).lean().exec(),
+     SmartComment.find({
+      'githubMetadata.repo_id': repoId,
+      'githubMetadata.requester': githubHandle,
+      'githubMetadata.user.login': { $ne: githubHandle },
+    }).lean().exec(),
+    ]);
+    return {givenComments, receivedComments};
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
 export const filterSmartComments = async ({
   reviewer,
   author,
@@ -86,7 +112,7 @@ export const filterSmartComments = async ({
 }) => {
   try {
     let filter = {};
-    let dateFilter = { createdAt: {} };
+    let dateFilter = { source: { createdAt: {} } };
     if (reviewer) {
       filter = Object.assign(filter, { 'githubMetadata.user.login': reviewer });
     }
@@ -108,12 +134,14 @@ export const filterSmartComments = async ({
     }
     if (startDate) {
       dateFilter = Object.assign(dateFilter, {
-        createdAt: { $gte: new Date(startDate) },
+        source: { createdAt: { $gte: new Date(startDate) } },
       });
     }
     if (endDate) {
       dateFilter = Object.assign(dateFilter, {
-        createdAt: { $lt: new Date(endDate), ...dateFilter.createdAt },
+        source: {
+          createdAt: { $lt: new Date(endDate), ...dateFilter.createdAt },
+        },
       });
     }
     if (!isEmpty(dateFilter.createdAt)) {
@@ -957,6 +985,121 @@ export const deleteByGithubId = async (id) => {
     await SmartComment.deleteOne({ 'githubMetadata.commentId': id });
   } catch (err) {
     const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
+// This is for getting the unique userId in smartComments.
+export const getUniqueCommenters = async (repoIds, startDate, endDate) => {
+  try {
+    const values = await SmartComment.aggregate([
+      {
+        $match: {
+          'githubMetadata.repo_id': {
+            $in: repoIds,
+          },
+          ...dateRangeFilterPipeline('createdAt', startDate, endDate),
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      { $unwind: '$user' },
+      {
+        $group: {
+          _id: '$user._id',
+          user: { $first: '$user' },
+        },
+      },
+      {
+        $project: {
+          '_id': 0,
+          'user._id': 1,
+          'user.firstName': 1,
+          'user.lastName': 1,
+          'user.username': 1,
+          'user.avatarUrl': 1,
+        },
+      },
+    ]).exec();
+    return values;
+  } catch (err) {
+    const error = new errors.NotFound(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
+export const getUniqueRequesters = async (repoIds, startDate, endDate) => {
+  try {
+    const values = await SmartComment.aggregate([
+      {
+        $match: {
+          'githubMetadata.repo_id': {
+            $in: repoIds,
+          },
+          ...dateRangeFilterPipeline('createdAt', startDate, endDate),
+        },
+      },
+      {
+        $group: {
+          _id: '$githubMetadata.requester',
+          githubMetadata: { $first: '$githubMetadata' },
+        },
+      },
+      {
+        $project: {
+          'githubMetadata.requester': 1,
+          'githubMetadata.requesterAvatarUrl': 1,
+          '_id': 0,
+        },
+      },
+    ]).exec();
+    return values;
+  } catch (err) {
+    const error = new errors.NotFound(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
+export const getUniquePullRequests = async (repoIds, startDate, endDate) => {
+  try {
+    const values = await SmartComment.aggregate([
+      {
+        $match: {
+          'githubMetadata.repo_id': {
+            $in: repoIds,
+          },
+          ...dateRangeFilterPipeline('createdAt', startDate, endDate),
+        },
+      },
+      {
+        $group: {
+          _id: '$githubMetadata.url',
+          githubMetadata: { $first: '$githubMetadata' },
+        },
+      },
+      {
+        $project: {
+          'githubMetadata.url': 1,
+          'githubMetadata.pull_number': 1,
+          'githubMetadata.title': 1,
+          'githubMetadata.head': 1,
+          'githubMetadata.updated_at': 1,
+          '_id': 0,
+        },
+      },
+    ]).exec();
+    return values;
+  } catch (err) {
+    const error = new errors.NotFound(err);
     logger.error(error);
     throw error;
   }

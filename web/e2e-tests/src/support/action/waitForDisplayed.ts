@@ -15,7 +15,7 @@ export default async (selector: Selector, falseCase: any) => {
      * Maximum number of milliseconds to wait for
      * @type {Int}
      */
-    const ms = 50000;
+    const ms = 60000;
     // todo  change back to 10000 (temporary)
 
     /**

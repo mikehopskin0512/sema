@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { findIndex, isEmpty, uniqBy } from 'lodash';
 import SnapshotBar from '../../components/snapshots/snapshotBar';
 import { InfoOutlineIcon } from '../../components/Icons';
 import { endOfDay, isWithinInterval, startOfDay } from 'date-fns';
@@ -17,7 +16,7 @@ import {
   DEFAULT_AVATAR,
   SEMA_INTERCOM_FAQ_URL,
   SEMA_FAQ_SLUGS,
-  EMOJIS
+  EMOJIS,
 } from '../../utils/constants';
 import {
   getEmoji,
@@ -25,28 +24,26 @@ import {
   setSmartCommentsDateRange,
   getReactionTagsChartData,
   filterSmartComments,
-  getEmojiLabel
+  getEmojiLabel,
 } from '../../utils/parsing';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { gray500 } from '../../../styles/_colors.module.scss';
 import SnapshotModal, {
-  SNAPSHOT_DATA_TYPES
+  SNAPSHOT_DATA_TYPES,
 } from '../../components/snapshots/modalWindow';
 import SnapshotButton from '../../components/snapshots/snapshotButton';
 import styles from './personal-insights.module.scss';
 import Avatar from 'react-avatar';
 
-const {
-  fetchSmartCommentSummary,
-  fetchSmartCommentOverview
-} = commentsOperations;
+const { fetchSmartCommentSummary, fetchSmartCommentOverview } =
+  commentsOperations;
 
 const PersonalInsights = () => {
   const dispatch = useDispatch();
-  const { auth, comments } = useSelector(state => ({
+  const { auth, comments } = useSelector((state) => ({
     auth: state.authState,
     //
-    comments: state.commentsState
+    comments: state.commentsState,
   }));
   const { token, user } = auth;
   const githubUser = user.identities?.[0];
@@ -66,12 +63,9 @@ const PersonalInsights = () => {
     tags: [],
     pr: [],
     repo: [],
-    dateOption: ''
+    dateOption: '',
   });
   const [commentView, setCommentView] = useState('received');
-  const [filterUserList, setFilterUserList] = useState([]);
-  const [filterRequesterList, setFilterRequesterList] = useState([]);
-  const [filterPRList, setFilterPRList] = useState([]);
   const [filterRepoList, setFilterRepoList] = useState([]);
   const [filteredComments, setFilteredComments] = useState([]);
   const [outOfRangeComments, setOutOfRangeComments] = useState([]);
@@ -79,7 +73,7 @@ const PersonalInsights = () => {
     groupBy: '',
     startDate: null,
     endDate: null,
-    dateDiff: 0
+    dateDiff: 0,
   });
 
   const [openReactionsModal, setOpenReactionsModal] = useState(false);
@@ -87,7 +81,7 @@ const PersonalInsights = () => {
   const [openCommentsModal, setOpenCommentsModal] = useState(false);
   const [componentData, setComponentData] = useState({ yAxisType: 'total' });
 
-  const getUserSummary = async username => {
+  const getUserSummary = async (username) => {
     const params = {
       user: username,
       individual: true,
@@ -95,12 +89,12 @@ const PersonalInsights = () => {
     dispatch(fetchSmartCommentSummary(params, token));
   };
 
-  const getCommentsOverview = async filter => {
+  const getCommentsOverview = async (filter) => {
     const { username } = githubUser;
     const { startDate, endDate, repo } = filter;
     const params = {
       startDate: startDate ? startOfDay(new Date(startDate)) : undefined,
-      endDate: endDate ? endOfDay(new Date(endDate)) : undefined
+      endDate: endDate ? endOfDay(new Date(endDate)) : undefined,
     };
     if (commentView === 'given') {
       params.reviewer = username;
@@ -118,42 +112,42 @@ const PersonalInsights = () => {
     }
   };
 
-  const getTopReactions = reactions => {
+  const getTopReactions = (reactions) => {
     let data = [];
     if (reactions) {
-      const sorted = Object.keys(reactions).sort(function(a, b) {
+      const sorted = Object.keys(reactions).sort(function (a, b) {
         return reactions[b] - reactions[a];
       });
-      data = sorted.map(reaction => {
+      data = sorted.map((reaction) => {
         const emoji = getEmoji(reaction);
         const label = getEmojiLabel(reaction);
         return {
           emoji: emoji,
           reactions: reactions[reaction],
-          label
+          label,
         };
       });
     }
     setTopReactions(data);
   };
 
-  const getTopTags = tags => {
+  const getTopTags = (tags) => {
     let data = [];
     if (tags) {
-      const sorted = Object.keys(tags).sort(function(a, b) {
+      const sorted = Object.keys(tags).sort(function (a, b) {
         return tags[b] - tags[a];
       });
-      data = sorted.map(tag => {
+      data = sorted.map((tag) => {
         const label = getTagLabel(tag);
         return {
-          [label]: tags[tag]
+          [label]: tags[tag],
         };
       });
     }
     setTopTags(data);
   };
 
-  const handleFilter = value => {
+  const handleFilter = (value) => {
     setFilter(value);
   };
 
@@ -171,7 +165,7 @@ const PersonalInsights = () => {
         dateDiff,
         groupBy,
         startDate: new Date(startDay),
-        endDate: endDay
+        endDate: endDay,
       });
     }
   }, [comments, filter]);
@@ -181,14 +175,14 @@ const PersonalInsights = () => {
     if (startDate && endDate && groupBy) {
       const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
         ...dateData,
-        smartComments: [...filteredComments, ...outOfRangeComments]
+        smartComments: [...filteredComments, ...outOfRangeComments],
       });
       setReactionChartData(reactionsChartData);
       setTagsChartData(tagsChartData);
-      setComponentData(oldState => ({
+      setComponentData((oldState) => ({
         ...oldState,
         smartComments: [...filteredComments, ...outOfRangeComments],
-        ...dateData
+        ...dateData,
       }));
     }
   }, [dateData, filteredComments]);
@@ -199,10 +193,10 @@ const PersonalInsights = () => {
 
   useEffect(() => {
     const reposList =
-      githubUser.repositories?.map(item => ({
+      githubUser.repositories?.map((item) => ({
         name: item.fullName,
         label: item.fullName,
-        value: item.id
+        value: item.id,
       })) || [];
     setFilterRepoList([...reposList]);
   }, [githubUser]);
@@ -218,88 +212,21 @@ const PersonalInsights = () => {
     getCommentsOverview(filter);
   }, [JSON.stringify(filter), commentView]);
 
-  const setFilterValues = overview => {
-    if (!overview?.smartComments?.length) {
-      return;
-    }
-    const requesters = overview.smartComments
-      .filter(item => item.githubMetadata.requester)
-      .map(({ githubMetadata }) => {
-        return {
-          label: githubMetadata.requester,
-          value: githubMetadata.requester,
-          img: githubMetadata.requesterAvatarUrl || DEFAULT_AVATAR
-        };
-      });
-    const users = overview.smartComments
-      .filter(item => item.userId)
-      .map(item => {
-        const {
-          firstName = '',
-          lastName = '',
-          _id = '',
-          avatarUrl = '',
-          username = 'User@email.com'
-        } = item.userId;
-        return {
-          label:
-            isEmpty(firstName) && isEmpty(lastName)
-              ? username.split('@')[0]
-              : `${firstName} ${lastName}`,
-          value: _id,
-          img: isEmpty(avatarUrl) ? DEFAULT_AVATAR : avatarUrl
-        };
-      });
-    const prs = overview.smartComments
-      .filter(item => item.githubMetadata)
-      .map(item => {
-        const {
-          githubMetadata: {
-            head,
-            title = '',
-            pull_number: pullNum = '',
-            updated_at
-          }
-        } = item;
-        const prName = title || head || 'Pull Request';
-        return {
-          updated_at: new Date(updated_at),
-          label: `${prName} (#${pullNum || '0'})`,
-          value: pullNum,
-          name: prName
-        };
-      });
-    let filteredPRs = [];
-    prs.forEach(item => {
-      const index = findIndex(filteredPRs, { value: item.value });
-      if (index !== -1) {
-        if (isEmpty(filteredPRs[index].prName)) {
-          filteredPRs[index] = item;
-        }
-      } else {
-        filteredPRs.push(item);
-      }
-    });
-    setFilterRequesterList(uniqBy(requesters, 'value'));
-    setFilterUserList(uniqBy(users, 'value'));
-    setFilterPRList(filteredPRs);
-  };
-
-  const filterComments = overview => {
+  const filterComments = (overview) => {
     if (overview && overview.smartComments) {
       const { startDate, endDate } = filter;
       const filtered = filterSmartComments({
         filter,
         smartComments: overview.smartComments,
         startDate: startDate,
-        endDate: endDate
+        endDate: endDate,
       });
       const isDateRange = startDate && endDate;
       const outOfRangeCommentsFilter = isDateRange
-        ? overview.smartComments.filter(comment => {
-            return !isWithinInterval(new Date(comment.createdAt), {
+        ? overview.smartComments.filter((comment) => {
+            return !isWithinInterval(new Date(comment.source.createdAt), {
               start: startOfDay(new Date(startDate)),
-              end: endOfDay(new Date(endDate))
+              end: endOfDay(new Date(endDate)),
             });
           })
         : [];
@@ -311,12 +238,11 @@ const PersonalInsights = () => {
   useEffect(() => {
     const { overview } = comments;
     filterComments(overview);
-    setFilterValues(overview);
   }, [comments, filter]);
 
   const renderTopReactions = () => {
     const iterate = topReactions.length >= 1 ? topReactions : EMOJIS;
-    return iterate.map(reaction => {
+    return iterate.map((reaction) => {
       const { emoji, reactions = 0, label } = reaction;
       return (
         <>
@@ -334,7 +260,7 @@ const PersonalInsights = () => {
 
   const renderTopTags = () => {
     if (topTags.length >= 1) {
-      return topTags.map(tag => {
+      return topTags.map((tag) => {
         const label = Object.keys(tag);
         return (
           <>
@@ -436,9 +362,6 @@ const PersonalInsights = () => {
         </div>
         <StatsFilter
           filterRepoList={filterRepoList}
-          filterUserList={filterUserList}
-          filterRequesterList={filterRequesterList}
-          filterPRList={filterPRList}
           handleFilter={handleFilter}
         />
         <SnapshotBar text="New Feature! Save these charts and comments as Snapshots on your Portfolio." />
@@ -446,8 +369,19 @@ const PersonalInsights = () => {
           <ReactionChart
             className="ml-neg10"
             reactions={reactionChartData}
-            yAxisType="total" groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)} isLoading={isFetching} />
-          <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)} dateOption={filter.dateOption} isLoading={isFetching} />
+            yAxisType="total"
+            groupBy={dateData.groupBy}
+            onClick={() => setOpenReactionsModal(true)}
+            isLoading={isFetching}
+          />
+          <TagsChart
+            className="mr-neg10"
+            tags={tagsChartData}
+            groupBy={dateData.groupBy}
+            onClick={() => setOpenTagsModal(true)}
+            dateOption={filter.dateOption}
+            isLoading={isFetching}
+          />
         </div>
         {openReactionsModal && (
           <SnapshotModal

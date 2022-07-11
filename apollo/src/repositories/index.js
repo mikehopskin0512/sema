@@ -1,7 +1,9 @@
 import { Router } from 'express';
+import { groupBy } from 'lodash';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
+import { getCollaborativeSmartComments } from '../comments/smartComments/smartCommentService';
 
 import { version } from '../config';
 import logger from '../shared/logger';
@@ -19,6 +21,7 @@ import {
   getRepositories,
   getRepository,
   startSync,
+  getReposFilterValues,
 } from './repositoryService';
 import checkEnv from '../middlewares/checkEnv';
 
@@ -215,6 +218,54 @@ export default (app, passport) => {
       const repository = await getRepository(id);
       await startSync({ repository, user: req.user });
       res.sendStatus(200);
+    }
+  );
+
+  route.get(
+    '/filter-values',
+    passport.authenticate(['bearer'], { session: false }),
+    async (req, res) => {
+      try {
+        const { externalIds, startDate, endDate, filterFields } = req.query;
+        const values = await getReposFilterValues(
+          JSON.parse(externalIds),
+          startDate,
+          endDate,
+          { ...JSON.parse(filterFields) }
+        );
+        return res.status(200).send({
+          filter: { ...values },
+        });
+      } catch (error) {
+        logger.error(error);
+        return res.status(error.statusCode).send(error);
+      }
+    }
+  );
+
+  route.get(
+    '/collaboration',
+    passport.authenticate(['bearer'], { session: false }),
+    async (req, res) => {
+      try {
+        const githubHandle = req.user.identities[0].username;
+        const { repoId } = req.query;
+        const { givenComments, receivedComments } = await getCollaborativeSmartComments({repoId, githubHandle});
+        const totalInteractionsCount = receivedComments.length + givenComments.length;
+        const requesters = groupBy(givenComments, 'githubMetadata.requester');
+        const commentators = groupBy(receivedComments, 'githubMetadata.user.login');
+        const interactionsByUsers = {};
+        Object.keys(commentators).map(key => {
+          interactionsByUsers[key] = commentators[key].length + (interactionsByUsers[key] || 0);
+        })
+        Object.keys(requesters).map(key => {
+          interactionsByUsers[key] = requesters[key].length + (interactionsByUsers[key] || 0);
+        })
+        return res.status(201).send({totalInteractionsCount, interactionsByUsers});
+      } catch (error) {
+        logger.error(error);
+        return res.status(error.statusCode).send(error);
+      }
     }
   );
 

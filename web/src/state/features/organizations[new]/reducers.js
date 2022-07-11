@@ -13,6 +13,12 @@ const initialState = {
   overview: {},
   invalidEmails: [],
   fetchedOrganizations: false,
+  filterValues: {
+    requesters: [],
+    authors: [],
+    pullRequests: [],
+    repos: [],
+  }
 };
 
 const reducer = (state = initialState, action) => {
@@ -188,6 +194,24 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       invalidEmails: action.invalidEmails || []
     }
+  case types.REQUEST_FETCH_ORGANIZATION_REPOS_FILTERS:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_FETCH_ORGANIZATION_REPOS_FILTERS_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      filterValues: { ...state.filterValues, ...action.filters },
+      error: {},
+    };
+  case types.REQUEST_FETCH_ORGANIZATION_REPOS_FILTERS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
   default:
     return state;
   }
