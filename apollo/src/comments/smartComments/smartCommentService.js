@@ -94,7 +94,6 @@ export const getCollaborativeSmartComments = async ({ repoId, githubHandle }) =>
       'githubMetadata.user.login': { $ne: githubHandle },
     })
        .lean()
-       .populate('userId', 'avatarUrl')
        .exec(),
     ]);
     return {givenComments, receivedComments};

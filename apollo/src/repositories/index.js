@@ -8,6 +8,7 @@ import { getCollaborativeSmartComments } from '../comments/smartComments/smartCo
 import { version } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
+import { findUsersByGitHubHandle } from '../users/userService';
 
 import {
   createMany,
@@ -254,23 +255,28 @@ export default (app, passport) => {
         const totalInteractionsCount = receivedComments.length + givenComments.length;
         const requesters = groupBy(givenComments, 'githubMetadata.requester');
         const commentators = groupBy(receivedComments, 'githubMetadata.user.login');
+        const users = await findUsersByGitHubHandle([...Object.keys(commentators), ...Object.keys(requesters)]);
+        const avatarsByUsers = new Map(users.map(user => ([user.identities[0].username, user])))
         const interactionsByUsers = {};
         // TODO: could be done more accurate
-        Object.keys(commentators).map(key => {
+        Object.keys(commentators).forEach(key => {
           interactionsByUsers[key] = {
             name: key,
-            avatarUrl: commentators[key][0].userId?.avatarUrl,
             count: commentators[key].length,
+            avatarUrl: avatarsByUsers.get(key)?.identities[0].avatarUrl,
           };
         })
-        Object.keys(requesters).map(key => {
+        Object.keys(requesters).forEach(key => {
           interactionsByUsers[key] = {
             name: key,
-            avatarUrl: interactionsByUsers[key]?.avatarUrl || null,
             count: requesters[key].length + (interactionsByUsers[key]?.count || 0),
+            avatarUrl: avatarsByUsers.get(key)?.identities[0].avatarUrl,
           }
         })
-        return res.status(201).send({totalInteractionsCount, interactionsByUsers: Object.values(interactionsByUsers)});
+        return res.status(201).send({
+          totalInteractionsCount,
+          interactionsByUsers,
+        });
       } catch (error) {
         logger.error(error);
         return res.status(error.statusCode).send(error);
