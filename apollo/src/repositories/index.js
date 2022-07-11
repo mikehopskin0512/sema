@@ -275,7 +275,7 @@ export default (app, passport) => {
         })
         return res.status(201).send({
           totalInteractionsCount,
-          interactionsByUsers,
+          interactionsByUsers: Object.values(interactionsByUsers),
         });
       } catch (error) {
         logger.error(error);
