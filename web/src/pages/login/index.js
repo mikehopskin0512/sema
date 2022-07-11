@@ -31,8 +31,6 @@ const Login = () => {
 
   const [isFFOnboardingStarted, setIsFFOnboardingStarted] = useLocalStorage('is_ff_onboarding_started', false);
 
-  const [isFFOnboardingStarted, setIsFFOnboardingStarted] = useLocalStorage('is_ff_onboarding_started', false);
-
   const dispatch = useDispatch();
 
   // Import state vars
