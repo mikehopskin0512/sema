@@ -30,13 +30,7 @@ const RepoSocialCircle = ({ repoId }) => {
   if (!isRepoSynced) {
     return <div>sync in progress banner should be here</div>
   }
-
-  const socialButtons = [
-    {icon: TwitterIcon, link: "/" },
-    {icon: InstagramIcon, link: "/" },
-    {icon: FacebookIcon, link: "/" },
-    {icon: LinkedinIcon, link: "/" },
-  ]
+  const socialIcons = [TwitterIcon, InstagramIcon, FacebookIcon, LinkedinIcon];
 
   // TODO: mobile styles
   return (
@@ -56,11 +50,10 @@ const RepoSocialCircle = ({ repoId }) => {
         <div className={styles.buttons}>
           <span className="is-size-4 has-text-weight-semibold">Share:</span>
           <div className="mt-16 is-flex is-justify-content-center">
-              {socialButtons.map(button => (
-                <a className='is-flex mr-16' href={button.link} target="_blank" rel="noreferrer">
-                  {button.icon({color: blue700, size:"large" })}
-                  {/* <React.Children  color={blue700} size="large" /> */}
-                </a>
+              {socialIcons.map(icon => (
+                <div className='is-flex mr-16'>
+                  {icon({color: blue700, size:"large"})}
+                </div>
               ))}
           </div>
           <div className="mt-32">
