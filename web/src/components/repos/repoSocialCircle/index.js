@@ -1,14 +1,18 @@
-import InteractionCircleChart from '@/components/chart/InteractionCircleChart';
-import { DownloadIcon, LinkIcon } from '@/components/Icons';
+import InteractionCircleChart from '../../chart/InteractionCircleChart';
+import { DownloadIcon, FacebookIcon, InstagramIcon, LinkedinIcon, LinkIcon, TwitterIcon } from '../../Icons';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { blue700 } from '../../../../styles/_colors.module.scss';
 import { getRepoSocialGraph } from '../../../state/features/repositories/api';
 import styles from './repoSocialCircle.module.scss';
 
 const RepoSocialCircle = ({ repoId }) => {
   const [interactions, setInteractions] = useState([]);
-  const { token } = useSelector((state) => state.authState);
+  const { token, user } = useSelector((state) => state.authState);
+  const { data: { repositories } } = useSelector((state) => state.repositoriesState);
+  const repoName = repositories.find((repo) => repo.id === repoId)?.fullName;
+  const gitHubHandle = user?.identities[0]?.username;
   // TODO: add a real calculation
   const isRepoSynced = true;
   // TODO: add a real calculation
@@ -27,12 +31,19 @@ const RepoSocialCircle = ({ repoId }) => {
     return <div>sync in progress banner should be here</div>
   }
 
+  const socialButtons = [
+    {icon: TwitterIcon, link: "/" },
+    {icon: InstagramIcon, link: "/" },
+    {icon: FacebookIcon, link: "/" },
+    {icon: LinkedinIcon, link: "/" },
+  ]
+
   // TODO: mobile styles
   return (
     <div className={clsx(styles.card, 'is-flex is-justify-content-space-between')}>
-      <div className="mr-32 has-text-centered px-24">
+      <div style={{minWidth: '500px'}} className="has-text-centered px-24">
         <h3 className={styles.title}>Your GitHub Social Circle</h3>
-        <h6 className={styles.subtitle}>Username for [Repo Name]</h6>
+        <h6 className={styles.subtitle}>{gitHubHandle} for {repoName}</h6>
         <div className={styles.text}>
           <p>
             Your GitHub Social Circle is a representation of who you’ve been collaborating with most in this repo over the last year.
@@ -44,9 +55,13 @@ const RepoSocialCircle = ({ repoId }) => {
         {/* TODO: need to add svg for background */}
         <div className={styles.buttons}>
           <span className="is-size-4 has-text-weight-semibold">Share:</span>
-          <div className="mt-16">
-            {/* TODO: social buttons */}
-            social buttons
+          <div className="mt-16 is-flex is-justify-content-center">
+              {socialButtons.map(button => (
+                <a className='is-flex mr-16' href={button.link} target="_blank" rel="noreferrer">
+                  {button.icon({color: blue700, size:"large" })}
+                  {/* <React.Children  color={blue700} size="large" /> */}
+                </a>
+              ))}
           </div>
           <div className="mt-32">
             <button className="button is-primary mr-12">
@@ -62,7 +77,7 @@ const RepoSocialCircle = ({ repoId }) => {
           </div>
         </div>
       </div>
-      <div style={{minHeight: '500px', minWidth: '700px', display: 'flex', position: 'relative'}}>
+      <div style={{width: '100%', display: 'flex', position: 'relative'}}>
         <InteractionCircleChart interactions={interactions} />
       </div>
     </div>
