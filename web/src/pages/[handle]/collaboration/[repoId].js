@@ -2,32 +2,32 @@ import React, { useEffect, useMemo } from 'react';
 import styles from './styles.module.scss';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPortfolioByHandle } from '../../../state/features/portfolios/actions';
 import Loader from '../../../components/Loader';
 import { PATHS } from '../../../utils/constants';
+import { fetchRepo } from '../../../state/features/repositories/actions';
 
 const CollaborationPublicPage = () => {
   const { query, push } = useRouter();
   const dispatch = useDispatch();
   const {
-    data: portfoliosStateData,
+    data: repositoriesStateData,
     isFetching,
-  } = useSelector((state) => state.portfoliosState);
+  } = useSelector((state) => state.repositoriesState);
   const {
     handle,
-    portfolioId,
+    repoId,
   } = query;
-  const { portfolio } = portfoliosStateData;
+  const { repository } = repositoriesStateData;
 
   useEffect(() => {
-    dispatch(fetchPortfolioByHandle(handle, portfolioId));
+    dispatch(fetchRepo(repoId));
   }, []);
 
   const onStartButtonClick = async () => {
     await push(`${PATHS.LOGIN}?isFastForwardOnboarding=true`)
   };
 
-  const title = useMemo(() => `${portfolio?.firstName}'s Repo Colleagues for ${portfolio?.title}`, [query, portfolio]);
+  const title = useMemo(() => `${handle}'s Repo Colleagues for ${repository?.name}`, [query, repository]);
 
   return (
     <div className={styles['collaboration-page-wrapper']}>
