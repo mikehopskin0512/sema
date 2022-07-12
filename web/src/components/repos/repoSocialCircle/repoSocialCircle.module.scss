@@ -28,14 +28,19 @@
   font-weight: 500;
   line-height: 24px;
   letter-spacing: -0.02em;
-  max-width: 450px;
   margin-top: 40px;
   margin-bottom: 60px;
 }
 
-.buttons {
-  padding-bottom: 55px;
+.main {
+  min-width: 400px;
+  width: 100%;
+  padding: 0 24px 80px;
   background-image: url('/img/illustration-screen.svg');
+  background-position-y: 400px;
   background-size: 100%;
   background-repeat: no-repeat;
+  text-align: center;
+  margin-right: 24px;
 }
+
