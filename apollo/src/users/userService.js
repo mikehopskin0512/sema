@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import _ from 'lodash';
 import User from './userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -116,24 +115,13 @@ export const patch = async (id, fields) => {
 };
 
 export const updateIdentity = async (user, identity) => {
-  const { _id } = user;
-  const { provider } = identity;
-
   try {
-    // In order to handle both insert and update
-    // need to pull old identity and then push new one
-    const queryPull = User.updateOne(
-      { _id: new ObjectId(_id) },
-      { $pull: { identities: { provider } } }
+    const userDocument = await User.findById(user._id);
+    await userDocument.findOrCreateInArray(
+      'identities',
+      { provider: identity.provider },
+      identity
     );
-
-    const queryAdd = User.updateOne(
-      { _id: new ObjectId(_id) },
-      { $addToSet: { identities: identity } }
-    );
-
-    await queryPull.exec();
-    await queryAdd.exec();
     return true;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -464,45 +452,35 @@ export const updateLastLogin = async (user) => {
   }
 };
 
-export const updateUserRepositoryList = async (user, repos, identity) => {
-  try {
-    const identityRepo = user.identities?.[0].repositories || [];
-
-    const repositories = repos.map((el) => {
-      const { name, id, full_name: fullName, html_url: githubUrl } = el;
-      const index = _.findIndex(
-        identityRepo,
-        (o) => o.id.toString() === el.id.toString()
-      );
-      if (index === -1) {
-        return { name, id, fullName, githubUrl };
-      }
-      const repo = identityRepo[index];
-      return { name, id, fullName, githubUrl, ...repo };
-    });
-    const newIdentity = Object.assign(identity, { repositories });
-    await updateIdentity(user, newIdentity);
-  } catch (err) {
-    const error = new errors.BadRequest(err);
-    logger.error(error);
-    throw error;
-  }
-};
-
 export const addRepositoryToIdentity = async (user, repository) => {
   try {
-    const identity = user.identities?.[0];
-    if (!identity) return false;
-    const identityRepo = identity.repositories || [];
-    if (_.findIndex(identityRepo, { id: repository.id }) !== -1) {
-      return true;
-    }
-    const newIdentity = {
-      ...identity,
-      repositories: [...identityRepo, repository],
-    };
-    await updateIdentity(user, newIdentity);
-    return true;
+    const id = repository.externalId;
+
+    // This MongoDB query ensures that we don't add the same
+    // repository twice under concurrency.
+    await User.updateOne(
+      {
+        _id: user._id,
+        identities: {
+          $elemMatch: {
+            provider: 'github',
+            repositories: {
+              $not: { $elemMatch: { id } },
+            },
+          },
+        },
+      },
+      {
+        $addToSet: {
+          'identities.$.repositories': {
+            id,
+            name: repository.name,
+            fullName: repository.fullName,
+            githubUrl: repository.cloneUrl,
+          },
+        },
+      }
+    );
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(err);
