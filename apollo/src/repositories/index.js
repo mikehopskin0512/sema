@@ -250,10 +250,10 @@ export default (app, passport) => {
       try {
         const { repoId, handle } = req.params;
         const { givenComments, receivedComments } = await getCollaborativeSmartComments({repoId, handle});
-        const repoName = givenComments[0].githubMetadata.repo;
         const totalInteractionsCount = receivedComments.length + givenComments.length;
         const requesters = groupBy(givenComments, 'githubMetadata.requester');
         const commentators = groupBy(receivedComments, 'githubMetadata.user.login');
+        const repo = await findByExternalId(repoId);
         const users = await findUsersByGitHubHandle([...Object.keys(commentators), ...Object.keys(requesters), handle]);
         const avatarsByUsers = new Map(users.map(user => ([user.identities[0].username, user])))
         const interactionsByUsers = {};
@@ -273,7 +273,7 @@ export default (app, passport) => {
           }
         })
         return res.status(201).send({
-          repoName,
+          repoName: repo.fullName,
           user: {
             name: handle,
             avatarUrl: avatarsByUsers.get(handle)?.avatarUrl,
