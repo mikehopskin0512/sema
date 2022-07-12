@@ -61,7 +61,7 @@ const RepoSocialCircle = ({ repoId }) => {
             on your favorite social network.
           </p>
         </div>
-        <div>
+        <div className="pr-30">
           <span className="is-size-4 has-text-weight-semibold">Share:</span>
           <div className="mt-16 is-flex is-justify-content-center">
               {socialIcons.map(icon => (
