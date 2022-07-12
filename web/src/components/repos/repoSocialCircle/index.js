@@ -42,23 +42,26 @@ const RepoSocialCircle = ({ repoId }) => {
   if (!isRepoSynced) {
     return <NotSyncedRepoBanner />
   }
-  const socialIcons = [TwitterIcon, InstagramIcon, FacebookIcon, LinkedinIcon];
+  const socialIcons = [TwitterIcon, FacebookIcon, LinkedinIcon];
 
   // TODO: mobile styles
   return (
     <div className={clsx(styles.card, 'is-flex is-justify-content-space-between')}>
-      <div style={{minWidth: '500px'}} className="has-text-centered px-24">
-        <h3 className={styles.title}>Your GitHub Social Circle</h3>
+      <div className={styles.main}>
+        <h3 className={styles.title}>Here’s your GitHub Social Circle</h3>
         <h6 className={styles.subtitle}>{handle} for {repoName}</h6>
         <div className={styles.text}>
           <p>
-            Your GitHub Social Circle is a representation of who you’ve been collaborating with most in this repo over the last year.
+            Larger, closer circles are your tight-knit team, who you worked with the most over the last year. Smaller, distant circles are team members you don’t spend as much time working with.
           </p>
           <p className="mt-24">
-            Larger, closer circles to your avatar indicate more collaboration, while smaller, more distant circles indicate less interactions.
+            Surprised by who your closest collaborators are? <br/>
+            Want to work more closely with those in your outer cirlce? <br/>
+            Let them know by sharing and tagging them <br/>
+            on your favorite social network.
           </p>
         </div>
-        <div className={styles.buttons}>
+        <div>
           <span className="is-size-4 has-text-weight-semibold">Share:</span>
           <div className="mt-16 is-flex is-justify-content-center">
               {socialIcons.map(icon => (
@@ -81,7 +84,7 @@ const RepoSocialCircle = ({ repoId }) => {
           </div>
         </div>
       </div>
-      <div style={{width: '100%', display: 'flex', position: 'relative'}}>
+      <div style={{width: '100%', minWidth: '700px', display: 'flex', position: 'relative'}}>
         <InteractionCircleChart interactions={interactions} user={user} />
       </div>
     </div>
