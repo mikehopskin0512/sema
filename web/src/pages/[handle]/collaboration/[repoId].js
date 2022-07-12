@@ -1,5 +1,5 @@
 import InteractionCircleChart from '../../../components/chart/InteractionCircleChart';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getRepoSocialGraph } from '../../../state/features/repositories/api';
 import styles from './styles.module.scss';
 import { useRouter } from 'next/router';
@@ -7,7 +7,10 @@ import Loader from '../../../components/Loader';
 import { PATHS } from '../../../utils/constants';
 
 const CollaborationPublicPage = () => {
-  const { query, push } = useRouter();
+  const {
+    query,
+    push,
+  } = useRouter();
   const [interactions, setInteractions] = useState([]);
   const {
     handle,
@@ -18,16 +21,19 @@ const CollaborationPublicPage = () => {
 
   // TODO: should be extracted to a hook or a component
   useEffect(() => {
-    getRepoSocialGraph({handle, repoId})
+    getRepoSocialGraph({
+      handle,
+      repoId,
+    })
       .then((res) => {
         setInteractions(res?.data?.interactionsByUsers);
         setRepoName(res?.data?.repoName);
         setUser(res?.data?.user);
       });
-  }, [repoId])
+  }, [repoId]);
 
   const onStartButtonClick = async () => {
-    await push(`${PATHS.LOGIN}?isFastForwardOnboarding=true`)
+    await push(`${PATHS.LOGIN}?isFastForwardOnboarding=true`);
   };
 
   return (
@@ -48,8 +54,10 @@ const CollaborationPublicPage = () => {
             <InteractionCircleChart interactions={interactions} user={user} />
           )}
         </div>
-        <span className={styles['collaboration-page-title']}>Let’s create your GitHub Social Circle.</span>
-        <button className='button is-primary my-25' onClick={onStartButtonClick}>Get Started!</button>
+        <div className={styles['collaboration-control-block']}>
+          <span className={styles['collaboration-page-title']}>Let’s create your GitHub Social Circle.</span>
+          <button className='button is-primary my-25' onClick={onStartButtonClick}>Get Started!</button>
+        </div>
       </div>
     </div>
   );
