@@ -1,5 +1,5 @@
 import InteractionCircleChart from '../../chart/InteractionCircleChart';
-import { DownloadIcon, FacebookIcon, InstagramIcon, LinkedinIcon, LinkIcon, TwitterIcon } from '../../Icons';
+import { DownloadIcon, FacebookIcon, LinkedinIcon, LinkIcon, TwitterIcon } from '../../Icons';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -13,8 +13,7 @@ import { SyncInProgressRepoBanner } from '../../repos/repoSocialCircle/banners/s
 const RepoSocialCircle = ({ repoId }) => {
   const [interactions, setInteractions] = useState([]);
   const { user } = useSelector((state) => state.authState);
-  const { data: { repositories } } = useSelector((state) => state.repositoriesState);
-  const repoName = repositories.find((repo) => repo.id === repoId)?.fullName;
+  const [repoName, setRepoName] = useState('');
   const handle = user?.identities[0]?.username;
   // TODO: add a real calculation
   const isRepoSynced = true;
@@ -27,7 +26,8 @@ const RepoSocialCircle = ({ repoId }) => {
   useEffect(() => {
     getRepoSocialGraph({handle, repoId})
       .then((res) => {
-        setInteractions(res?.data?.interactionsByUsers)
+        setInteractions(res?.data?.interactionsByUsers);
+        setRepoName(res?.data?.repoName);
       });
   }, [repoId])
 
