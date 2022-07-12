@@ -125,25 +125,31 @@ export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
   let tagsByWeek = createTags(tagsArr);
   // Separate comments within and outside the date range
   const filteredComments = smartcomments.filter((comment) =>
-    isWithinInterval(new Date(comment.source.createdAt), {
+    isWithinInterval(new Date(comment.source?.createdAt || comment.createdAt), {
       start: startOfDay(new Date(startDate)),
       end: endOfDay(new Date(endDate)),
     })
   );
   const outOfRangeComments = smartcomments.filter(
     (comment) =>
-      !isWithinInterval(new Date(comment.source.createdAt), {
-        start: startOfDay(new Date(startDate)),
-        end: endOfDay(new Date(endDate)),
-      })
+      !isWithinInterval(
+        new Date(comment.source?.createdAt || comment.createdAt),
+        {
+          start: startOfDay(new Date(startDate)),
+          end: endOfDay(new Date(endDate)),
+        }
+      )
   );
   // Count reactions and tags within time range
   filteredComments.forEach((comment) => {
     const itemRange = findIndex(weekRange, (item) =>
-      isWithinInterval(new Date(comment.source.createdAt), {
-        start: item.startDay,
-        end: item.endDay,
-      })
+      isWithinInterval(
+        new Date(comment.source?.createdAt || comment.createdAt),
+        {
+          start: item.startDay,
+          end: item.endDay,
+        }
+      )
     );
     const reactionIndex = findIndex(reactionsByWeek, {
       date: weekRange[itemRange]?.date,
@@ -167,7 +173,10 @@ export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
   });
   // Count reactions outside the time range (will be saved to previous)
   outOfRangeComments.forEach((comment) => {
-    const dayAfterAMonth = addMonths(new Date(comment.source.createdAt), 1);
+    const dayAfterAMonth = addMonths(
+      new Date(comment.source?.createdAt || comment.createdAt),
+      1
+    );
     const startWeek = format(startOfWeek(new Date(dayAfterAMonth)), 'MM/dd');
     const endWeek = format(endOfWeek(new Date(dayAfterAMonth)), 'MM/dd');
     const index = findIndex(reactionsByWeek, {
@@ -324,22 +333,25 @@ const parseTagsAndReactions = (
   const tags = { ...tagsData };
   // Separate comments within and outside the time range
   const filteredComments = smartComments.filter((comment) =>
-    isWithinInterval(new Date(comment.source.createdAt), {
+    isWithinInterval(new Date(comment.source?.createdAt || comment.createdAt), {
       start: startOfDay(new Date(startDate)),
       end: endOfDay(new Date(endDate)),
     })
   );
   const outOfRangeComments = smartComments.filter(
     (comment) =>
-      !isWithinInterval(new Date(comment.source.createdAt), {
-        start: startOfDay(new Date(startDate)),
-        end: endOfDay(new Date(endDate)),
-      })
+      !isWithinInterval(
+        new Date(comment.source?.createdAt || comment.createdAt),
+        {
+          start: startOfDay(new Date(startDate)),
+          end: endOfDay(new Date(endDate)),
+        }
+      )
   );
   // Count reactions and tags within the time range
   filteredComments.forEach((comment) => {
     const formattedDate = format(
-      new Date(comment.source.createdAt),
+      new Date(comment.source?.createdAt || comment.createdAt),
       dateFormat
     );
     const reactionIndex = findIndex(reactionsArr, { date: formattedDate });
@@ -365,7 +377,7 @@ const parseTagsAndReactions = (
     switch (dateFormat) {
       case 'MM/dd':
         formatDate = format(
-          addWeeks(new Date(comment.source.createdAt), 1),
+          addWeeks(new Date(comment.source?.createdAt || comment.createdAt), 1),
           dateFormat
         );
         index = findIndex(reactionsArr, { date: formatDate });
@@ -375,7 +387,7 @@ const parseTagsAndReactions = (
         return;
       case 'MMM':
         formatDate = format(
-          addYears(new Date(comment.source.createdAt), 1),
+          addYears(new Date(comment.source?.createdAt || comment.createdAt), 1),
           dateFormat
         );
         index = findIndex(reactionsArr, { date: formatDate });
@@ -385,7 +397,10 @@ const parseTagsAndReactions = (
         return;
       case 'yyyy':
         formatDate = format(
-          addYears(new Date(comment.source.createdAt), 10),
+          addYears(
+            new Date(comment.source?.createdAt || comment.createdAt),
+            10
+          ),
           dateFormat
         );
         index = findIndex(reactionsArr, { date: formatDate });
@@ -557,7 +572,12 @@ export const getCommentsCountLastMonth = (repository) => {
   const monthBefore = subDays(now, 30);
   const dateRange = { start: monthBefore, end: now };
   return repository.repoStats.reactions.reduce((prev, curr) => {
-    if (isWithinInterval(new Date(curr.comment.source.createdAt), dateRange)) {
+    if (
+      isWithinInterval(
+        new Date(curr.comment.source?.createdAt || comment.createdAt),
+        dateRange
+      )
+    ) {
       return prev + 1;
     }
     return prev;

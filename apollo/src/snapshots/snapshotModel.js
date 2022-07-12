@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
@@ -29,6 +29,22 @@ const smartCommentSchema = new Schema({
   reaction: { type: Schema.Types.ObjectId, ref: 'Reaction' },
   tags: [{ type: Schema.Types.ObjectId, ref: 'Tags' }],
   githubMetadata: githubMetadataSchema,
+  source: {
+    origin: {
+      type: String,
+      enum: ['extension', 'sync'],
+      default: 'extension',
+    },
+    provider: {
+      type: String,
+      enum: ['github'],
+      default: 'github',
+    },
+    // Unique identifier in the context of this provider.
+    id: String,
+    // Date of creation in the source.
+    createdAt: Date,
+  },
   createdAt: Date,
 }, { _id: false });
 

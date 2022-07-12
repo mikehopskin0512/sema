@@ -15,7 +15,7 @@ import ReposView from '../../components/repos/reposView';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { isExtensionInstalled } from '../../utils/extension';
 import { ON_INPUT_DEBOUNCE_INTERVAL_MS, PATHS, PROFILE_VIEW_MODE } from '../../utils/constants';
-import FFOnboardingModal from '@/components/onboarding/fastOnboardingModal';
+import FFOnboardingModal from '../../components/onboarding/fastOnboardingModal';
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor } = collectionsOperations;

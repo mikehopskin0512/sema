@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import RepoSocialCircle from '../../../components/repos/repoSocialCircle';
 import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -178,7 +179,11 @@ function RepoPage() {
     >
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
 
+
       <div className={styles.wrapper}>
+        <div className="mb-32 px-8">
+          <RepoSocialCircle repoId={repoId} />
+        </div>
         <FilterBar
           filter={filter}
           startDate={startDate}
@@ -193,11 +198,13 @@ function RepoPage() {
 
         <div className={clsx(styles.divider, 'my-20 mx-10')} />
 
-        <Metrics
-          isLastThirtyDays
-          metrics={overview.metrics}
-          totalMetrics={totalMetrics}
-        />
+        <div className="px-8">
+          <Metrics
+            isLastThirtyDays
+            metrics={overview.metrics}
+            totalMetrics={totalMetrics}
+          />
+        </div>
       </div>
       {selectedTab === 'activity' && (
         <ActivityPage startDate={startDate} endDate={endDate} filter={filter} />

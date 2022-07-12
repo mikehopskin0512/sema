@@ -27,7 +27,7 @@ const Header = () => {
   const router = useRouter();
   const [supportForm, setSupportForm] = useState(false);
   const [signOutModal, setSignOutModal] = useState(false);
-  const { checkAccess, isSemaAdmin } = usePermission();
+  const { isSemaAdmin } = usePermission();
 
   // Create REFs for menus
   const burger = useRef(null);
@@ -42,7 +42,6 @@ const Header = () => {
     isVerified = false,
     organizations = [],
     isWaitlist = Boolean(parseInt(process.env.NEXT_PUBLIC_WAITLIST_ENABLED)),
-    inviteCount = 0,
     roles = [],
     avatarUrl,
     firstName = '',
@@ -54,7 +53,6 @@ const Header = () => {
   // Use 1st org (for now) and get isAdmin
   // const [currentOrg = { isAdmin: false }] = organizations;
 
-  const openSupportForm = () => setSupportForm(true);
   const closeSupportForm = () => setSupportForm(false);
 
   const handleClick = () => {
@@ -63,12 +61,6 @@ const Header = () => {
     }
     return router.push(`${PATHS.DASHBOARD}`);
   }
-
-  const orgMenuList = organizations.map((org) => (
-    <Link href="/">
-      <a className="navbar-item">{org.orgName}</a>
-    </Link>
-  ));
 
   useAuthEffect(() => {
     dispatch(fetchOrganizationsOfUser(token));
@@ -157,7 +149,6 @@ const Header = () => {
                   toggleHamburger={toggleHamburger}
                   isSemaAdmin={isSemaAdmin}
                   type='desktop'
-                  inviteCount={inviteCount}
                   selectedOrganization={selectedOrganization}
                 />
               </div>
@@ -167,7 +158,6 @@ const Header = () => {
                   toggleHamburger={toggleHamburger}
                   isSemaAdmin={isSemaAdmin}
                   type='mobile'
-                  inviteCount={inviteCount}
                   selectedOrganization
                 />
                 <hr className="navbar-divider" />
