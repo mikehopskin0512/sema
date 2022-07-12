@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './banners.module.scss';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
-import { Spinner } from '@/components/Loader/spinner';
+import { Spinner } from '../../../Loader/spinner';
 
 export const SyncInProgressRepoBanner = () => {
   const { user } = useSelector(state => state.authState);
