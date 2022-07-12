@@ -78,19 +78,23 @@ export const getSmartComments = async ({ repo }) => {
   }
 };
 
-export const getCollaborativeSmartComments = async ({ repoId, githubHandle }) => {
+export const getCollaborativeSmartComments = async ({ repoId, handle }) => {
   try {
     const [givenComments, receivedComments] = await Promise.all([
       SmartComment.find({
         'githubMetadata.repo_id': repoId,
-        'githubMetadata.user.login': githubHandle,
-        'githubMetadata.requester': { $ne: githubHandle },
-      }).lean().exec(),
+        'githubMetadata.user.login': handle,
+        'githubMetadata.requester': { $ne: handle },
+      })
+        .lean()
+        .exec(),
      SmartComment.find({
       'githubMetadata.repo_id': repoId,
-      'githubMetadata.requester': githubHandle,
-      'githubMetadata.user.login': { $ne: githubHandle },
-    }).lean().exec(),
+      'githubMetadata.requester': handle,
+      'githubMetadata.user.login': { $ne: handle },
+    })
+       .lean()
+       .exec(),
     ]);
     return {givenComments, receivedComments};
   } catch (err) {

@@ -1,0 +1,54 @@
+@import "../../../../styles/colors.module";
+
+.collaboration-page-wrapper {
+  background: $gray-200;
+  height: 100vh;
+  width: 100vw;
+}
+
+.collaboration-page-title {
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.collaboration-page-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  padding-left: 80px;
+  padding-right: 80px;
+  padding-top: 40px;
+}
+
+.collaboration-page-logo {
+  width: 143px;
+  height: 48px;
+}
+
+.collaboration-page-logo-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.interactions-graph-wrapper {
+  width: 100%;
+  height: 720px;
+
+  @media screen and (max-width: 700px) {
+    overflow: scroll;
+  }
+}
+
+.collaboration-control-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 50px;
+  margin-right: auto;
+  margin-left: auto;
+}
