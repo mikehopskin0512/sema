@@ -8,7 +8,7 @@ import { PATHS, TAB } from '../../../utils/constants';
 
 const MAX_REPOS = 6;
 
-const OrganizationDashboard = ({ organization }) => {
+function OrganizationDashboard({ organization, selectedOrganization }) {
   const { metrics, members, repos, membersCount } = organization;
   const router = useRouter();
   const { checkAccess } = usePermission();
@@ -38,7 +38,7 @@ const OrganizationDashboard = ({ organization }) => {
           </div>
           <div className="is-flex is-flex-wrap-wrap is-align-content-stretch">
             {repos.slice(0, MAX_REPOS).map((child, i) => (
-              <RepoCard {...child} isOrganizationView key={`card-${i}`} column={2} />
+              <RepoCard {...child} isOrganizationView key={`card-${i}`} column={2} selectedOrganization={selectedOrganization} />
             ))}
           </div>
         </div>

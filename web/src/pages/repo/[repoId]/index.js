@@ -16,7 +16,6 @@ import useAuthEffect from '../../../hooks/useAuthEffect';
 import FilterBar from '../../../components/repos/repoPageLayout/components/FilterBar';
 import Metrics from '../../../components/metrics';
 import styles from './styles.module.scss';
-import * as api from '../../../state/utils/api';
 
 const { fetchRepositoryOverview, fetchReposByIds, fetchRepoFilters } =
   repositoriesOperations;
@@ -25,7 +24,6 @@ const { fetchOrganizationRepos } = organizationsOperations;
 const tabTitle = {
   activity: 'Activity Log',
   stats: 'Code Stats',
-  sync: 'Sync',
 };
 
 function RepoPage() {
@@ -176,6 +174,7 @@ function RepoPage() {
       dates={dates}
       onDateChange={onDateChange}
       isOrganizationRepo={isOrganizationRepo}
+      refresh={refresh}
     >
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
 
@@ -219,101 +218,7 @@ function RepoPage() {
           />
         </div>
       )}
-      {selectedTab === 'sync' && (
-        <div className={styles.wrapper}>
-          <SyncPage refresh={refresh} />
-        </div>
-      )}
     </RepoPageLayout>
-  );
-}
-
-function SyncPage({ refresh }) {
-  const { token } = useSelector((state) => state.authState);
-  const { repositories } = useSelector((state) => ({
-    repositories: state.repositoriesState,
-  }));
-
-  const {
-    data: { overview },
-  } = repositories;
-
-  const { _id } = overview;
-  const sync = overview.sync || {};
-
-  async function onClick() {
-    await api.create(`/api/proxy/repositories/${_id}/sync`, {}, token);
-  }
-
-  useEffect(() => {
-    const id = setInterval(refresh, 5000);
-    return () => {
-      clearInterval(id);
-    };
-  }, [refresh]);
-
-  return (
-    <div className="my-20">
-      <h2 className="has-text-black-950 has-text-weight-semibold is-size-4">
-        Sync
-      </h2>
-      <div className="my-10">
-        Status: {sync.status || 'not requested'}
-        {sync.startedAt && (
-          <>
-            <br />
-            Started: {format(new Date(sync.startedAt), 'MMM dd h:mm a')}
-          </>
-        )}
-        {sync.completedAt && (
-          <>
-            <br />
-            Completed: {format(new Date(sync.completedAt), 'MMM dd h:mm a')}
-          </>
-        )}
-        {sync.erroredAt && (
-          <>
-            <br />
-            Errored: {format(new Date(sync.erroredAt), 'MMM dd h:mm a')}
-            <br />
-            Error Message: {sync.error || 'N/A'}
-          </>
-        )}
-        {sync.status === 'unauthorized' && (
-          <div className="my-10">
-            <a
-              type="button"
-              className="button is-primary"
-              href={`https://github.com/apps/${process.env.NEXT_PUBLIC_GITHUB_APP_NAME}/installations/new`}
-            >
-              Install the Sema app
-            </a>
-          </div>
-        )}
-      </div>
-      <div className="my-10">
-        <h3 className="is-size-5">Progress</h3>
-        Conversation comments (issue comments):{' '}
-        {sync.progress?.issueComment?.currentPage ?? 0}/
-        {sync.progress?.issueComment?.lastPage ?? 0} pages
-        <br />
-        Inline comments (pull request comments):{' '}
-        {sync.progress?.pullRequestComment?.currentPage ?? 0}/
-        {sync.progress?.pullRequestComment?.lastPage ?? 0} pages
-        <br />
-        Review comments (pull request reviews):{' '}
-        {sync.progress?.pullRequestReview?.currentPage ?? 0}/
-        {sync.progress?.pullRequestReview?.lastPage ?? 0} pages
-      </div>
-      <div className="my-20">
-        <div className="my-10">
-          <button className="button is-primary" onClick={onClick}>
-            Start Sync
-          </button>
-        </div>
-        Starting sync after complete will re-sync.
-      </div>
-    </div>
   );
 }
 

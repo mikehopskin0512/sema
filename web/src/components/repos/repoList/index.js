@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { range } from 'lodash';
 import usePermission from '../../../hooks/usePermission';
 import RepoCard from '../repoCard';
-import OrganizationReposList from '../../../components/organizationReposList';
+import OrganizationReposList from "../../organizationReposList";
 import RepoTable from '../repoTable';
 import styles from './repoList.module.scss';
 import repoStyles from '../repoCard/repoCard.module.scss';
@@ -13,12 +13,12 @@ import { FilterBarsIcon, GridIcon, ListIcon, PlusIcon, SearchIcon } from '../../
 import { triggerAlert } from '../../../state/features/alerts/actions';
 import { fetchOrganizationRepos } from '../../../state/features/organizations[new]/actions';
 import { updateOrganizationRepositories } from '../../../state/features/organizations[new]/operations';
-import DropDownMenu from '../../../components/dropDownMenu';
+import DropDownMenu from "../../dropDownMenu";
 import { getCommentsCountLastMonth } from '../../../utils/codeStats';
-import InputField from '../../../components/inputs/InputField';
+import InputField from "../../inputs/InputField";
 import { blue700 } from '../../../../styles/_colors.module.scss';
 import { alertOperations } from '../../../state/features/alerts';
-import RepoSkeleton from '../../../components/skeletons/repoSkeleton';
+import RepoSkeleton from "../../skeletons/repoSkeleton";
 
 const LIST_TYPE = {
   FAVORITES: 'Favorite Repos',
@@ -34,14 +34,14 @@ const filterOptions = [
   { value: 'mostActive', label: 'Most Active', placeholder: 'Most Active' },
 ]
 
-const RepoList = ({
+function RepoList({
   type,
   repos = [],
   onSearchChange,
   search,
   withSearch,
   isLoaded
-}) => {
+}) {
   const dispatch = useDispatch();
   const { token, selectedOrganization } = useSelector((state) => state.authState);
 
@@ -102,11 +102,17 @@ const RepoList = ({
     setFilteredRepos(sortedRepos)
   };
 
-  const renderCards = (repos) => {
-    return repos.map((child, i) => (
-      <RepoCard {...child} isOrganizationView={type !== 'MY_REPOS'} isFavorite={type === 'FAVORITES'} key={i} onRemoveRepo={removeRepo} />
-    ))
-  }
+  const renderCards = (repos) => repos.map((child, i) => (
+      <RepoCard 
+        {...child}
+        isOrganizationView={type !== 'MY_REPOS'}
+        isFavorite={type === 'FAVORITES'}
+        key={i}
+        onRemoveRepo={removeRepo}
+        idx={i}
+        reposLength={repos.length}
+        selectedOrganization={selectedOrganization}
+      />))
 
   const handleOnClose = () => {
     dispatch(clearAlert());
@@ -161,16 +167,14 @@ const RepoList = ({
           <div className='column is-2'>
             <div className='is-flex is-justify-content-flex-end mb-10'>
               <DropDownMenu
-                className={'is-primary'}
-                isActiveClassName={'is-black'}
+                className="is-primary"
+                isActiveClassName="is-black"
                 isRight
                 options={
-                  filterOptions.map((filter) => {
-                    return {
+                  filterOptions.map((filter) => ({
                       ...filter,
                       onClick: () => setSort(filter)
-                    }
-                  })
+                    }))
                 }
                 trigger={(
                   <button className="button is-primary is-outlined" aria-haspopup="true" aria-controls="dropdown-menu2">

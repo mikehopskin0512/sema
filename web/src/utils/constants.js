@@ -444,3 +444,35 @@ export const renderMenuItems = (personalDashboard, isEmpty, selectedOrganization
     path: PATHS.SUPPORT
   },
 ]};
+export const SYNC_STATUS = {
+  started: {
+    status: 'started',
+    tooltip: 'Syncing from GitHub in progress',
+    label: 'Syncing',
+  },
+  completed: {
+    status: 'completed',
+    tooltip: 'Syncing is complete',
+    label: 'Synced',
+  },
+  errored: {
+    status: 'errored',
+    tooltip: 'An error occurred - please <u>retry activating GitHub Sync for this repo.</u>',
+    label: 'Sync Error',
+  },
+  unauthorized: {
+    status: 'unauthorized',
+    tooltip: 'You are not authorized. Please authorize in GitHub first',
+    label: 'Sync Error',
+  },
+  queued: {
+    status: 'queued',
+    tooltip: 'This repo is queued and will begin syncing from GitHub.',
+    label: 'Queued for sync',
+  },
+  notsynced: {
+    status: 'notsynced',
+    tooltip: '<u>Activate GitHub Sync</u> to unlock the full power of Sema for this repo.',
+    label: 'Sync Inactive',
+  }
+}
