@@ -11,7 +11,7 @@ import DropDownMenu from '../../dropDownMenu';
 import usePermission from '../../../hooks/usePermission';
 import DeleteRepoModal from '../repoCard/deleteRepoModal';
 
-const RepoRow = (props) => {
+function RepoRow(props) {
   const titleRef = useRef(null);
   const {
     externalId = '', name = '', body = '', repoStats, users = [], language = '', _id: repoId, removeRepo, isOrganizationView = false,
@@ -23,30 +23,6 @@ const RepoRow = (props) => {
     e.stopPropagation();
     await removeRepo(repoId);
     toggleDeleteModal(false);
-  };
-
-  const ActionColumn = () => {
-    if (isOrganizationAdmin()) {
-      return (
-        <td className={clsx('py-15 has-background-white px-10')}>
-          <DropDownMenu
-            isRight
-            options={[
-              {
-                label: 'Remove from Organization',
-                onClick: () => toggleDeleteModal(true),
-              },
-            ]}
-            trigger={
-              <div className="is-clickable is-flex">
-                <OptionsIcon />
-              </div>
-            }
-          />
-        </td>
-      )
-    }
-    return '';
   };
 
   return (
@@ -86,7 +62,6 @@ const RepoRow = (props) => {
           <td className={clsx('py-15 has-background-white px-10')}>
             <RepoUsers users={isOrganizationView ? repoStats.userIds : users} />
           </td>
-          {ActionColumn()}
         </tr>
       </Link>
       {isOrganizationAdmin() && (
@@ -98,7 +73,7 @@ const RepoRow = (props) => {
       )}
     </>
   );
-};
+}
 
 RepoRow.propTypes = {
   externalId: PropTypes.string.isRequired,

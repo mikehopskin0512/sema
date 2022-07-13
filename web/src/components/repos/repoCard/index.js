@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import usePermission from '../../../hooks/usePermission';
-import DeleteRepoModal from '../repoCard/deleteRepoModal';
+import DeleteRepoModal from "./deleteRepoModal";
 import { OptionsIcon } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
 import styles from './repoCard.module.scss';
@@ -17,7 +17,7 @@ const statLabels = {
   semaUsers: 'Sema User',
 };
 
-const RepoCard = (props) => {
+function RepoCard(props) {
   const titleRef = useRef(null);
   const {
     name, externalId, _id: repoId, repoStats, users = [], column = 3, isOrganizationView = false, onRemoveRepo
@@ -65,18 +65,6 @@ const RepoCard = (props) => {
             ))}
           </div>
         </div>
-        {isOrganizationAdmin() && (
-          <div className="has-background-gray-300 is-flex py-8 pr-12">
-            <DropDownMenu
-              options={[{ label: 'Remove from Organization', onClick: () => setDeleteRepoModalOpen(true) }]}
-              trigger={(
-                <div className="is-clickable is-flex">
-                  <OptionsIcon />
-                </div>
-              )}
-            />
-          </div>
-        )}
       </div>
       {isOrganizationAdmin() && (
         <DeleteRepoModal
@@ -88,7 +76,7 @@ const RepoCard = (props) => {
     </div>
   </Link>
   );
-};
+}
 
 // Repos model isn't currently updated in RepoType
 // RepoCard.propTypes = RepoType;
