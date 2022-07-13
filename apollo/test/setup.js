@@ -6,6 +6,7 @@ import nock from 'nock';
 import timekeeper from 'timekeeper';
 import app from '../src/app';
 import resetNocks from './nocks';
+import { loadQueues } from '../src/queues';
 import { baseSeed } from './seed';
 
 nock.disableNetConnect();
@@ -13,8 +14,11 @@ nock.enableNetConnect('localhost');
 
 jest.mock('../src/notifications/notificationService');
 
+const loadQueuesPromise = loadQueues();
+
 beforeAll(async () => {
   timekeeper.travel(new Date('2022-06-01T01:15:00.000Z'));
+  await loadQueuesPromise;
   resetNocks();
   await Promise.all([clearMongoDB(), Ironium.purgeQueues()]);
 });

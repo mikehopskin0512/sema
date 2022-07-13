@@ -396,6 +396,19 @@ describe('Import Repository Queue', () => {
         it('should have sync completed at timestamp', () => {
           expect(repository.sync.completedAt).toBeCloseToDate(new Date());
         });
+
+        it('should have last updated timestamp for polling', () => {
+          const { progress } = repository.sync;
+          expect(progress.issueComment.lastUpdatedAt).toEqual(
+            new Date('2022-05-18T13:21:37.000Z')
+          );
+          expect(progress.pullRequestComment.lastUpdatedAt).toEqual(
+            new Date('2020-12-17T20:30:14.000Z')
+          );
+          expect(progress.pullRequestReview.lastUpdatedAt).toEqual(
+            new Date('2020-03-04T16:51:57.000Z')
+          );
+        });
       });
     });
 

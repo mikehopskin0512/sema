@@ -31,15 +31,28 @@ Ironium.onerror = logger.error;
 
 async function loadQueues() {
   const srcRoot = __dirname;
-  const files = glob.sync(`${srcRoot}/**/*Queue.js`);
-  await Promise.all(files.map(loadQueueFile));
+  const queueFiles = glob.sync(`${srcRoot}/**/*Queue.js`);
+  await Promise.all(queueFiles.map(loadQueueFile));
+  const scheduleFiles = glob.sync(`${srcRoot}/**/*Schedule.js`);
+  await Promise.all(scheduleFiles.map(loadScheduleFile));
 }
 
 async function loadQueueFile(filename) {
   const queueName = getQueueNameFromFile(filename);
   const { default: handler } = await import(filename);
   Ironium.queue(queueName).eachJob(handler);
-  logger.info(`Registered ${filename} to handle ${queueName}`);
+  logger.info(
+    `Registered ${path.relative(__dirname, filename)} to handle ${queueName}`
+  );
+}
+
+async function loadScheduleFile(filename) {
+  const scheduleName = getQueueNameFromFile(filename);
+  const { default: handler, schedule } = await import(filename);
+  Ironium.scheduleJob(scheduleName, schedule, handler);
+  logger.info(
+    `Registered ${path.relative(__dirname, filename)} to handle ${scheduleName}`
+  );
 }
 
 const queues = {
@@ -71,7 +84,7 @@ function getQueueNameFromFile(filename) {
   const prefix = 'apollo';
   const suffix = path
     .basename(filename)
-    .replace(/Queue\.js$/, '')
+    .replace(/(Queue|Schedule)\.js$/, '')
     .split(/(?=[A-Z])/)
     .join('-')
     .toLowerCase();
