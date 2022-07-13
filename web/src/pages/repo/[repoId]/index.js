@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { findIndex, isEmpty, uniqBy } from 'lodash';
+import { isEmpty, uniqBy } from 'lodash';
 import ActivityPage from '../../../components/activity/page';
 import RepoPageLayout from '../../../components/repos/repoPageLayout';
 import StatsPage from '../../../components/stats';
