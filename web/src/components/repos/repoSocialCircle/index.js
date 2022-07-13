@@ -63,8 +63,8 @@ const RepoSocialCircle = ({ repoId }) => {
   const socialCircleUrl = `${window.location.origin}/${handle}/collaboration/${repoName}?${repoId}`
   const socials = [
     { name: 'twitter', icon: TwitterIcon, onClick: () => shareWithTwitter({ text: 'Check out my Github Social Circle!', url: socialCircleUrl })},
-    { name: 'facebook', icon: FacebookIcon, onClick: () => {}},
-    { name: 'linkedin', icon: LinkedinIcon, onClick: () => {}},
+    // { name: 'facebook', icon: FacebookIcon, onClick: () => {}},
+    // { name: 'linkedin', icon: LinkedinIcon, onClick: () => {}},
   ]
 
   const onCopy = () => {
@@ -85,9 +85,9 @@ const RepoSocialCircle = ({ repoId }) => {
           </p>
           <p className="mt-24">
             Surprised by who your closest collaborators are? <br/>
-            Want to work more closely with those in your outer cirlce? <br/>
+            Want to work more closely with those in your outer circle? <br/>
             Let them know by sharing and tagging them <br/>
-            on your favorite social network.
+            on your social network.
           </p>
         </div>
         <div className="pr-30">
