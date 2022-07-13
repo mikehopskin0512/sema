@@ -5,7 +5,7 @@ import styles from './repoTable.module.scss';
 import RepoRow from '../repoRow';
 import usePermission from '../../../hooks/usePermission';
 
-const RepoTable = ({ data, removeRepo, isOrganizationView }) => {
+function RepoTable({ data, removeRepo, isOrganizationView }) {
   const { isOrganizationAdmin } = usePermission();
 
   return (
@@ -19,7 +19,6 @@ const RepoTable = ({ data, removeRepo, isOrganizationView }) => {
             <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema comments</th>
             <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema commenters</th>
             <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema Users</th>
-            {isOrganizationAdmin() && <th aria-label="action-header" />}
           </tr>
         </thead>
         <tbody className="is-fullwidth">
@@ -28,7 +27,7 @@ const RepoTable = ({ data, removeRepo, isOrganizationView }) => {
       </table>
     </div>
   );
-};
+}
 
 RepoTable.defaultProps = {
   data: [],
