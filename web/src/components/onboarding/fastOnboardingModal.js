@@ -5,7 +5,7 @@ import { CloseIcon } from '../../components/Icons';
 import { black900 } from '../../../styles/_colors.module.scss';
 import useOutsideClick from '../../utils/useOutsideClick';
 import { useDispatch, useSelector } from 'react-redux';
-import Loader from '@/components/Loader';
+import Loader from '../../components/Loader';
 import { fetchRepoDashboard } from '../../state/features/repositories/actions';
 import { capitalize } from 'lodash';
 import { useRouter } from 'next/router';

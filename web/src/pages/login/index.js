@@ -29,8 +29,6 @@ const Login = () => {
     query: { token: inviteToken, organization: organizationId, isFastForwardOnboarding },
   } = router;
 
-  const [isFFOnboardingStarted, setIsFFOnboardingStarted] = useLocalStorage('is_ff_onboarding_started', false);
-
   const dispatch = useDispatch();
 
   // Import state vars
@@ -101,7 +99,7 @@ const Login = () => {
         trackOrganizationInviteAccepted(organizationId, {});
       }
     }
-  }, [])
+  }, []);
 
 if (!isAuthenticated || user.isWaitlist) {
   return (

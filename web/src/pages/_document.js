@@ -20,7 +20,21 @@ export default class MyDocument extends Document {
     return { ...initialProps };
   }
 
+  // static async getServerSideProps({ req, res }) {
+  //   const { repoId, handle, repo } = this.props?.__NEXT_DATA__?.query;
+  //   if (!handle || !repoId) return;
+  //   try {
+  //     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/proxy/collaboration/${handle}${repoId}`);
+  //     const data = await response.json();
+  //     return { props: { data } };
+  //   } catch (e) {
+  //     console.log(e);
+  //     return { props: { data: {} } };
+  //   }
+  // }
+
   render() {
+    const { repoId, handle, repo } = this.props?.__NEXT_DATA__?.query;
     return (
       <Html>
         <Head>
@@ -54,6 +68,16 @@ export default class MyDocument extends Document {
             }}
           />
           <script dangerouslySetInnerHTML={{ __html: this.renderSnippet() }} />
+          <meta name="Content-Type" content="text/html;charset=UTF-8"></meta>
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:image:src" content="https://qa-scr-infographics.s3.amazonaws.com/avatar-1657550864017.jpeg"></meta>
+          <meta name="twitter:title" content={`My GitHub interactions in ${repo}`} />
+          <meta property="og:title" content={`My GitHub interactions in ${repo}`} />
+          <meta property="og:url" content="https://qa-scr-infographics.s3.amazonaws.com/avatar-1657550864017.jpeg"/>
+          <meta property="og:image" content="https://qa-scr-infographics.s3.amazonaws.com/avatar-1657550864017.jpeg"/>
+          <meta property="og:image:secure_url" content="https://qa-scr-infographics.s3.amazonaws.com/avatar-1657550864017.jpeg" />
+          <meta property="og:image:width" content="1000" />
+          <meta property="og:image:height" content="500" />
         </Head>
         <body>
           <Main />

@@ -16,18 +16,14 @@ const CollaborationPublicPage = () => {
   const {
     handle,
     repoId,
+    repo,
   } = query;
-  const { repository } = repositoriesStateData;
-
-  useEffect(() => {
-    dispatch(fetchRepo(repoId));
-  }, []);
 
   const onStartButtonClick = async () => {
     await push(`${PATHS.LOGIN}?isFastForwardOnboarding=true`)
   };
 
-  const title = useMemo(() => `${handle}'s Repo Colleagues for ${repository?.name}`, [query, repository]);
+  const title = useMemo(() => `${handle}'s Repo Colleagues for ${repo}`, [query]);
 
   return (
     <div className={styles['collaboration-page-wrapper']}>

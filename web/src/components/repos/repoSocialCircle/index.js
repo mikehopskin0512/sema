@@ -36,7 +36,8 @@ const RepoSocialCircle = ({ repoId }) => {
   // TODO: add a real calculation
   const isRepoPrivate = false;
 
-  // TODO: should be extracted to a hook or a component
+  const [isCopied, changeIsCopied] = useState(false);
+
   useEffect(() => {
     getRepoSocialGraph({handle, repoId})
       .then((res) => {
@@ -66,6 +67,12 @@ const RepoSocialCircle = ({ repoId }) => {
     { name: 'linkedin', icon: LinkedinIcon, onClick: () => {}},
   ]
 
+  const onCopy = () => {
+    navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}/${handle}/collaboration/${repoId}?repo=${repoName}`);
+    changeIsCopied(true);
+    setTimeout(() => changeIsCopied(false), 3000);
+  };
+
   // TODO: mobile styles
   return (
     <div className={clsx(styles.card, 'is-flex is-justify-content-space-between')}>
@@ -92,15 +99,15 @@ const RepoSocialCircle = ({ repoId }) => {
                 </div>
               ))}
           </div>
-          <div className="mt-32">
+          <div className="mt-32 is-relative">
             <button className="button is-primary mr-12">
               <DownloadIcon size="small" />
               {/* TODO: save as a picture */}
               <span className="ml-8 has-text-weight-semibold">Download</span>
             </button>
-            <button className="button is-primary is-outlined">
+            {isCopied && <div className={styles.tooltip}>{'Share link copied'}</div>}
+            <button className="button is-primary is-outlined" onClick={onCopy}>
               <LinkIcon size="small"/>
-              {/* TODO: copy sharable link */}
               <span className="ml-8 has-text-weight-semibold">Copy Link</span>
             </button>
           </div>
