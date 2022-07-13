@@ -1,10 +1,9 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import RepoSocialCircle from '../../../components/repos/repoSocialCircle';
-import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { isEmpty, uniqBy } from 'lodash';
+import RepoSocialCircle from '../../../components/repos/repoSocialCircle';
 import ActivityPage from '../../../components/activity/page';
 import RepoPageLayout from '../../../components/repos/repoPageLayout';
 import StatsPage from '../../../components/stats';
@@ -177,7 +176,6 @@ function RepoPage() {
       refresh={refresh}
     >
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
-
 
       <div className={styles.wrapper}>
         <div className="mb-32 px-8">

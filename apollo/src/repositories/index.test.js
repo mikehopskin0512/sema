@@ -1,5 +1,6 @@
 import apollo from '../../test/apolloClient';
 import { create as createRepository } from './repositoryService';
+import Repository from './repositoryModel';
 import { create as createSmartComment } from '../comments/smartComments/smartCommentService';
 import { createAuthToken } from '../auth/authService';
 import createUser from '../../test/helpers/userHelper';
@@ -80,6 +81,50 @@ describe('GET /repositories/overview', () => {
       expect(data.smartcomments.length).toBe(2);
       expect(data.smartcomments[0].comment).toBe('The later comment');
       expect(data.smartcomments[1].comment).toBe('The earlier comment');
+    });
+  });
+
+  describe('partially-synced repository', () => {
+    let data;
+
+    beforeAll(async () => {
+      token = await createAuthToken(user);
+    });
+
+    beforeAll(async () => {
+      const repository = await Repository.findOne({ externalId: '123456' });
+      repository.sync = {
+        progress: {
+          pullRequestComment: {
+            currentPage: 1,
+            lastPage: 1,
+          },
+          pullRequestReview: {
+            currentPage: 2,
+            lastPage: 3,
+          },
+          issueComment: {
+            currentPage: 1,
+            lastPage: 7,
+          },
+        },
+      };
+      await repository.save();
+    });
+
+    beforeAll(async () => {
+      ({ data } = await apollo.get('/v1/repositories/overview', {
+        params: { externalId: '123456' },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }));
+    });
+
+    it.todo('should respond with 200 OK');
+
+    it('should include progress', () => {
+      expect(data.sync.progress.overall).toBe('0.36');
     });
   });
 });

@@ -233,7 +233,8 @@ async function* resumablePaginate({
 //
 // Adapted from https://gist.github.com/niallo/3109252.
 function parseLinkHeader(header) {
-  if (!header) return {};
+  // GitHub API doesn't return a Link header when there is only one page.
+  if (!header) return { last: 1 };
 
   const parts = header.split(',');
   const object = parts.reduce((accum, part) => {

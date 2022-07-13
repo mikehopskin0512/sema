@@ -57,26 +57,22 @@ export default (app, passport) => {
     }
   );
 
-  route.get(
-    '/search/:id',
-    validateToken(),
-    async (req, res) => {
-      const { id: repoId } = req.params;
-      try {
-        const repository = await findByExternalId(repoId);
-        if (!repository) {
-          throw new errors.NotFound('No repository found');
-        }
-
-        return res.status(201).send({
-          repository,
-        });
-      } catch (error) {
-        logger.error(error);
-        return res.status(error.statusCode).send(error);
+  route.get('/search/:id', validateToken(), async (req, res) => {
+    const { id: repoId } = req.params;
+    try {
+      const repository = await findByExternalId(repoId);
+      if (!repository) {
+        throw new errors.NotFound('No repository found');
       }
+
+      return res.status(201).send({
+        repository,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
     }
-  );
+  });
 
   route.get(
     '/',
@@ -245,49 +241,58 @@ export default (app, passport) => {
     }
   );
 
-  route.get(
-    '/collaboration/:handle/:repoId',
-    async (req, res) => {
-      try {
-        const { repoId, handle } = req.params;
-        const { givenComments, receivedComments } = await getCollaborativeSmartComments({repoId, handle});
-        const totalInteractionsCount = receivedComments.length + givenComments.length;
-        const requesters = groupBy(givenComments, 'githubMetadata.requester');
-        const commentators = groupBy(receivedComments, 'githubMetadata.user.login');
-        const repo = await findByExternalId(repoId);
-        const users = await findUsersByGitHubHandle([...Object.keys(commentators), ...Object.keys(requesters), handle]);
-        const avatarsByUsers = new Map(users.map(user => ([user.identities[0].username, user])))
-        const interactionsByUsers = {};
-        // TODO: could be done more accurate
-        Object.keys(commentators).forEach(key => {
-          interactionsByUsers[key] = {
-            name: key,
-            count: commentators[key].length,
-            avatarUrl: avatarsByUsers.get(key)?.identities[0].avatarUrl,
-          };
-        })
-        Object.keys(requesters).forEach(key => {
-          interactionsByUsers[key] = {
-            name: key,
-            count: requesters[key].length + (interactionsByUsers[key]?.count || 0),
-            avatarUrl: avatarsByUsers.get(key)?.identities[0].avatarUrl,
-          }
-        })
-        return res.status(201).send({
-          repoName: repo.fullName,
-          user: {
-            name: handle,
-            avatarUrl: avatarsByUsers.get(handle)?.avatarUrl,
-          },
-          totalInteractionsCount,
-          interactionsByUsers: Object.values(interactionsByUsers),
-        });
-      } catch (error) {
-        logger.error(error);
-        return res.status(error.statusCode).send(error);
-      }
+  route.get('/collaboration/:handle/:repoId', async (req, res) => {
+    try {
+      const { repoId, handle } = req.params;
+      const { givenComments, receivedComments } =
+        await getCollaborativeSmartComments({ repoId, handle });
+      const totalInteractionsCount =
+        receivedComments.length + givenComments.length;
+      const requesters = groupBy(givenComments, 'githubMetadata.requester');
+      const commentators = groupBy(
+        receivedComments,
+        'githubMetadata.user.login'
+      );
+      const repo = await findByExternalId(repoId);
+      const users = await findUsersByGitHubHandle([
+        ...Object.keys(commentators),
+        ...Object.keys(requesters),
+        handle,
+      ]);
+      const avatarsByUsers = new Map(
+        users.map((user) => [user.identities[0].username, user])
+      );
+      const interactionsByUsers = {};
+      // TODO: could be done more accurate
+      Object.keys(commentators).forEach((key) => {
+        interactionsByUsers[key] = {
+          name: key,
+          count: commentators[key].length,
+          avatarUrl: avatarsByUsers.get(key)?.identities[0].avatarUrl,
+        };
+      });
+      Object.keys(requesters).forEach((key) => {
+        interactionsByUsers[key] = {
+          name: key,
+          count:
+            requesters[key].length + (interactionsByUsers[key]?.count || 0),
+          avatarUrl: avatarsByUsers.get(key)?.identities[0].avatarUrl,
+        };
+      });
+      return res.status(201).send({
+        repoName: repo.fullName,
+        user: {
+          name: handle,
+          avatarUrl: avatarsByUsers.get(handle)?.avatarUrl,
+        },
+        totalInteractionsCount,
+        interactionsByUsers: Object.values(interactionsByUsers),
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
     }
-  );
+  });
 
   // Swagger route
   app.use(
