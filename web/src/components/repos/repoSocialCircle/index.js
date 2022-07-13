@@ -1,7 +1,7 @@
 import InteractionCircleChart from '../../chart/InteractionCircleChart';
 import { DownloadIcon, FacebookIcon, LinkedinIcon, LinkIcon, TwitterIcon } from '../../Icons';
 import clsx from 'clsx';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { blue700 } from '../../../../styles/_colors.module.scss';
 import { getRepoSocialGraph } from '../../../state/features/repositories/api';
@@ -9,9 +9,8 @@ import styles from './repoSocialCircle.module.scss';
 import { PrivateRepoBanner } from '../../repos/repoSocialCircle/banners/privateRepoBanner';
 import { NotSyncedRepoBanner } from '../../repos/repoSocialCircle/banners/notSyncedRepoBanner';
 import { SyncInProgressRepoBanner } from '../../repos/repoSocialCircle/banners/syncInProgressBanner';
-import { shareWithTwitter, shareWithLinkedIn } from '../../../utils/socialMedia'
-import { SEMA_APP_URL } from 'src/utils/constants';
-import { useRouter } from 'next/router';
+import { onDownloadImage } from '../../../utils/imageHelpers';
+import { shareWithTwitter, shareWithLinkedIn } from '../../../utils/socialMedia';
 
 export const SYNC_STATUSES = {
   EMPTY: null,
@@ -23,6 +22,7 @@ export const SYNC_STATUSES = {
 }
 
 const RepoSocialCircle = ({ repoId }) => {
+  const containerRef = useRef(null);
   const [interactions, setInteractions] = useState([]);
   const { user } = useSelector((state) => state.authState);
   const { data: repoData, isFetching } = useSelector((state) => state.repositoriesState);
@@ -100,7 +100,7 @@ const RepoSocialCircle = ({ repoId }) => {
               ))}
           </div>
           <div className="mt-32 is-relative">
-            <button className="button is-primary mr-12">
+            <button className="button is-primary mr-12" onClick={() => onDownloadImage(containerRef)}>
               <DownloadIcon size="small" />
               {/* TODO: save as a picture */}
               <span className="ml-8 has-text-weight-semibold">Download</span>
@@ -113,7 +113,7 @@ const RepoSocialCircle = ({ repoId }) => {
           </div>
         </div>
       </div>
-      <div style={{width: '100%', minWidth: '700px', display: 'flex', position: 'relative'}}>
+      <div style={{width: '100%', minWidth: '700px', display: 'flex', position: 'relative', background: '#FAFAFC'}} ref={containerRef}>
         <InteractionCircleChart interactions={interactions} user={user} />
       </div>
     </div>

@@ -54,3 +54,14 @@
   top: -25px;
   right: 88px;
 }
+
+.tooltip {
+  position: absolute;
+  border-radius: 4px;
+  z-index: 100;
+  white-space: nowrap;
+  color: $white-50;
+  background: $black-900;
+  top: -25px;
+  right: 88px;
+}

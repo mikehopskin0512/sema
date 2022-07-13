@@ -1,16 +1,13 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import styles from './styles.module.scss';
 import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Loader from '../../../components/Loader';
 import { PATHS } from '../../../utils/constants';
-import { fetchRepo } from '../../../state/features/repositories/actions';
 
 const CollaborationPublicPage = () => {
   const { query, push } = useRouter();
-  const dispatch = useDispatch();
   const {
-    data: repositoriesStateData,
     isFetching,
   } = useSelector((state) => state.repositoriesState);
   const {
