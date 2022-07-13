@@ -1,64 +1,55 @@
-import InteractionCircleChart from '../../../components/chart/InteractionCircleChart';
-import React, { useEffect, useState } from 'react';
-import { getRepoSocialGraph } from '../../../state/features/repositories/api';
+import React, { useEffect, useMemo } from 'react';
 import styles from './styles.module.scss';
 import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../../components/Loader';
 import { PATHS } from '../../../utils/constants';
+import { fetchRepo } from '../../../state/features/repositories/actions';
 
 const CollaborationPublicPage = () => {
+  const { query, push } = useRouter();
+  const dispatch = useDispatch();
   const {
-    query,
-    push,
-  } = useRouter();
-  const [interactions, setInteractions] = useState([]);
+    data: repositoriesStateData,
+    isFetching,
+  } = useSelector((state) => state.repositoriesState);
   const {
     handle,
     repoId,
   } = query;
-  const [repoName, setRepoName] = useState('');
-  const [user, setUser] = useState('');
+  const { repository } = repositoriesStateData;
 
-  // TODO: should be extracted to a hook or a component
   useEffect(() => {
-    getRepoSocialGraph({
-      handle,
-      repoId,
-    })
-      .then((res) => {
-        setInteractions(res?.data?.interactionsByUsers);
-        setRepoName(res?.data?.repoName);
-        setUser(res?.data?.user);
-      });
-  }, [repoId]);
+    dispatch(fetchRepo(repoId));
+  }, []);
 
   const onStartButtonClick = async () => {
-    await push(`${PATHS.LOGIN}?isFastForwardOnboarding=true`);
+    await push(`${PATHS.LOGIN}?isFastForwardOnboarding=true`)
   };
+
+  const title = useMemo(() => `${handle}'s Repo Colleagues for ${repository?.name}`, [query, repository]);
 
   return (
     <div className={styles['collaboration-page-wrapper']}>
-      <div className={styles['collaboration-page-header']}>
-        <p className={styles['collaboration-page-title']}>
-          {handle}'s Repo Colleagues for {repoName}
-        </p>
-        <img className={styles['collaboration-page-logo']} alt='Sema logo' src='/img/logo-full.png' />
-      </div>
-      <div className={styles['collaboration-page-logo-content']}>
-        <div className={styles['interactions-graph-wrapper']}>
-          {!interactions.length ? (
-            <div className='is-flex is-align-items-center is-justify-content-center' style={{ height: '50vh' }}>
-              <Loader customText='Loading' />
-            </div>
-          ) : (
-            <InteractionCircleChart interactions={interactions} user={user} />
-          )}
+      {isFetching && (
+        <div className='is-flex is-align-items-center is-justify-content-center' style={{ height: '50vh' }}>
+          <Loader customText='Loading...' />
         </div>
-        <div className={styles['collaboration-control-block']}>
-          <span className={styles['collaboration-page-title']}>Let’s create your GitHub Social Circle.</span>
-          <button className='button is-primary my-25' onClick={onStartButtonClick}>Get Started!</button>
-        </div>
-      </div>
+      )}
+
+      {!isFetching && (
+        <>
+          <div className={styles['collaboration-page-header']}>
+            <p className={styles['collaboration-page-title']}>{title}</p>
+            <img className={styles['collaboration-page-logo']} alt='Sema logo' src='/img/logo-full.png' />
+          </div>
+          <div className={styles['collaboration-page-logo-content']}>
+            <div className={styles['collaboration-page-fake-graph']} />
+            <span className={styles['collaboration-page-title']}>Let’s create your GitHub Social Circle.</span>
+            <button className='button is-primary my-25' onClick={onStartButtonClick}>Get Started!</button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

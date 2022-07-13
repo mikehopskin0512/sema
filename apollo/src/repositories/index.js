@@ -25,6 +25,7 @@ import {
   getReposFilterValues,
 } from './repositoryService';
 import checkEnv from '../middlewares/checkEnv';
+import validateToken from '../middlewares/validateToken';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
@@ -58,7 +59,7 @@ export default (app, passport) => {
 
   route.get(
     '/search/:id',
-    passport.authenticate(['bearer'], { session: false }),
+    validateToken(),
     async (req, res) => {
       const { id: repoId } = req.params;
       try {
