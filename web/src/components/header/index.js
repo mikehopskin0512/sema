@@ -22,7 +22,7 @@ import UserHeaderNav from './UserHeaderNav';
 const { fetchOrganizationsOfUser } = organizationsOperations;
 const { fetchPortfoliosOfUser } = portfoliosOperations;
 
-const Header = () => {
+function Header() {
   const dispatch = useDispatch();
   const router = useRouter();
   const [supportForm, setSupportForm] = useState(false);
@@ -114,14 +114,15 @@ const Header = () => {
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <SignOutModal active={signOutModal} onClose={onCloseSignOutModal} />
       <nav
-        className="navbar is-transparent container pt-16"
+        className="navbar container py-16"
         role="navigation"
         aria-label="main navigation"
       >
         <div className="navbar-brand">
           <a className="is-flex is-align-items-center" onClick={handleClick}>
-            <Logo shape="horizontal" width={100} height={34} />
+            <Logo shape="symbol" width={32} height={32} />
           </a>
+          <div className={clsx(styles.separator, 'has-background-gray-400 mx-16')} />
           {token && isVerified && !isWaitlist && (
             <button
               onClick={toggleHamburger}
@@ -143,7 +144,7 @@ const Header = () => {
             <div className="navbar-menu" ref={menu}>
               {/* Desktop menu */}
               <div
-                className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 mx-30"
+                className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 is-align-items-center"
               >
                 <UserHeaderNav
                   toggleHamburger={toggleHamburger}
@@ -259,6 +260,6 @@ const Header = () => {
       </nav>
     </header>
   );
-};
+}
 
 export default Header;

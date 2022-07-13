@@ -397,3 +397,50 @@ export const DROPDOWN_SORTING_TYPES = {
   ALPHABETICAL_USER_PRIORIY_SORT: 'alphabetical_user_priority',
   CHRONOLOGICAL_SORT: 'chronological_sort'
 };
+
+export const renderMenuItems = (personalDashboard, isEmpty, selectedOrganization) => {
+  const standardClass = 'navbar-item menu-item has-text-black-950 mr-10 has-text-weight-semibold border-radius-4';
+
+  return [
+  ... personalDashboard && isEmpty(selectedOrganization) ? [{
+    title: 'Dashboard Hidden',
+    className : standardClass,
+    path: PATHS.PERSONAL,
+  }] : [],
+  ... !isEmpty(selectedOrganization) ? [{
+    title: 'Dashboard',
+    className : standardClass,
+    path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`,
+    stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.DASHBOARD}`,
+  }] : [],
+  ... !isEmpty(selectedOrganization) ? [{
+    title: 'Repos',
+    className : standardClass,
+    path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.REPOS}`,
+    stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.REPOS}`,
+  }] : [{
+    title: 'Repos',
+    className : standardClass,
+    path: PATHS.DASHBOARD
+  }],
+  ... !isEmpty(selectedOrganization) ? [{
+    title: 'Organization Insights',
+    className : standardClass,
+    path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.ORGANIZATION_INSIGHTS}`,
+    stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.ORGANIZATION_INSIGHTS}`,
+  }] : [{
+    title: 'Personal Insights',
+    className : standardClass,
+    path: PATHS.PERSONAL_INSIGHTS
+  }],
+  {
+    title: 'Snippets',
+    className : standardClass,
+    path: PATHS.SNIPPETS._
+  },
+  {
+    title: 'Support',
+    className : standardClass,
+    path: PATHS.SUPPORT
+  },
+]};

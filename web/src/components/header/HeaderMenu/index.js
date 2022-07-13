@@ -71,12 +71,7 @@ const HeaderMenu = ({
 
   useOutsideClick(userMenu, onClickOutside);
 
-  const avatarUrl = useMemo(() => {
-    if (selectedOrganization?.organization) {
-      return selectedOrganization?.organization?.avatarUrl;
-    }
-    return user.avatarUrl;
-  }, [selectedOrganization, user]);
+  const avatarUrl = useMemo(() => user.avatarUrl, [user]);
 
   const onSwitchPersonalAccount = () => {
     dispatch(setSelectedOrganization({}));
@@ -84,33 +79,6 @@ const HeaderMenu = ({
     toggleUserMenu(false);
     router.push(PATHS.DASHBOARD);
   };
-
-  const getAvatarName = useMemo(() => {
-    let name = fullName
-    if (selectedOrganization?.organization?.name) {
-      name = selectedOrganization?.organization.name;
-    }
-    return name;
-  }, [selectedOrganization, user])
-
-  const renderMenuItems = useMemo(() => {
-    // Sort organizations, first one should be the selected organization.
-    const selectedOrganizationIndex = orderedOrganizations.splice(orderedOrganizations.findIndex(organization => organization.organization?._id === selectedOrganization?.organization?._id), 1)[0];
-    selectedOrganizationIndex && orderedOrganizations.unshift(selectedOrganizationIndex);
-
-    const menuItems = orderedOrganizations.map((organization, index) => (
-      <OrganizationMenuItem role={organization} toggleUserMenu={toggleUserMenu} key={`organization-${organization._id}`} index={index} isSelected={organization.organization?._id === selectedOrganization?.organization?._id}/>
-    ))
-
-    const userMenu =
-      <>
-        <UserMenuItem user={user} onSwitchPersonalAccount={onSwitchPersonalAccount} isSelected={Object.keys(selectedOrganization).length === 0} />
-        <hr className="navbar-divider m-0 has-background-gray-300" />
-      </>
-
-    Object.keys(selectedOrganization).length ? menuItems.push(userMenu) : menuItems.unshift(userMenu);
-    return menuItems;
-  }, [orderedOrganizations]);
 
   const portfolioRedirect = () => {
     router.push(`${PATHS.PORTFOLIO.PORTFOLIOS}`);
@@ -132,7 +100,7 @@ const HeaderMenu = ({
 
   return (
     <>
-      <Tooltip text={'Here is your Developer Portfolio'}>
+      <Tooltip text="Here is your Developer Portfolio">
         <div onClick={() => portfolioRedirect()} className={clsx('is-flex is-align-items-center is-justify-content-center border-radius-24px mx-12', styles['portfolio-container'])}>
           <TrophyIcon />
         </div>
@@ -146,20 +114,6 @@ const HeaderMenu = ({
       <div className={clsx('navbar-item has-dropdown', styles.organization)} ref={userMenu}>
         {/* Menu Items */}
         <div className={clsx(styles['menu-item-container'], "navbar-dropdown is-right p-0 border-radius-8px")}>
-          {renderMenuItems}
-          <Link href={PATHS.ORGANIZATION_CREATE}>
-          <a
-            aria-hidden="true"
-            type="button"
-            className="navbar-item px-15 py-20 is-flex"
-            onClick={toggleUserMenu}
-          >
-            <div>
-              <span>{isNoOrganizations ? 'Create an Organization' : 'Add an Organization'}</span>
-              <span className="is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>
-            </div>
-          </a>
-          </Link>
           <hr className="navbar-divider m-0 has-background-gray-300" />
 
           {
@@ -214,13 +168,13 @@ const HeaderMenu = ({
         <a aria-hidden="true" className="navbar-link is-arrowless mx-24 px-0" onClick={toggleUserMenu} ref={userMenu}>
           <div className="is-flex is-align-items-center">
             <Avatar
-              name={getAvatarName}
+              name={fullName}
               src={avatarUrl || null}
               size="30"
               round
               textSizeRatio={2.5}
             />
-            <span className={clsx("is-size-7 has-text-weight-semibold mx-3", styles['avatar-name-wrapper'])}>{getAvatarName}</span>
+            <span className={clsx("is-size-7 has-text-weight-semibold mx-3", styles['avatar-name-wrapper'])}>{fullName}</span>
             <FontAwesomeIcon icon={faSortDown} size="lg" className="mt-neg8 ml-8" />
           </div>
         </a>

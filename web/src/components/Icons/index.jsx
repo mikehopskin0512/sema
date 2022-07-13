@@ -7,6 +7,7 @@ import { ReactComponent as ArrowAscSvg } from './img/arrow-ascending.svg';
 import { ReactComponent as ArrowDescSvg } from './img/arrow-descending.svg';
 import { ReactComponent as ArrowDownSvg } from './img/arrow-down.svg';
 import { ReactComponent as ArrowDrowdownSvg } from './img/arrow-drowdown.svg';
+import { ReactComponent as ArrowDropupSvg } from './img/arrow-dropup.svg';
 import { ReactComponent as ArrowLeftSvg } from './img/arrow-left.svg';
 import { ReactComponent as ArrowRightSvg } from './img/arrow-right.svg';
 import { ReactComponent as ArrowUpSvg } from './img/arrow-up.svg';
@@ -179,6 +180,12 @@ export function ArrowDownIcon(props) {
 export function ArrowDropdownIcon(props) {
   return <Icon {...props}>
     <ArrowDrowdownSvg />
+  </Icon>
+}
+
+export function ArrowDropupIcon(props) {
+  return <Icon {...props}>
+    <ArrowDropupSvg />
   </Icon>
 }
 
@@ -730,11 +737,11 @@ export function DragTriggerIcon(props) {
   </Icon>
 }
 
-export const CopyButtonIcon = (props) => (
-  <Icon {...props}>
+export function CopyButtonIcon(props) {
+  return <Icon {...props}>
     <CopyIcon />
   </Icon>
-);
+}
 
 export function ReplayArrowIcon(props) {
   return <Icon {...props}>
