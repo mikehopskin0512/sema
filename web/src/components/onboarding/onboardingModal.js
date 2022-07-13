@@ -24,32 +24,30 @@ const OnboardingModal = ({
   onSubmit,
   isPluginInstalled,
 }) => {
-
   const [isQueryFinished, setQueryFinished] = useState(false);
 
   const renderModalContent = (currentPage) => {
     switch (currentPage) {
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-      return (
-        <ContentPage
-          page={page}
-          nextPage={() => nextPage(currentPage)}
-          previousPage={() => previousPage(currentPage)}
-          isPluginInstalled={isPluginInstalled}
-          closeModal={() => toggleModalActive(false)}
-        />
-      );
-    default:
-      return '';
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+        return (
+          <ContentPage
+            page={page}
+            nextPage={() => nextPage(currentPage)}
+            previousPage={() => previousPage(currentPage)}
+            isPluginInstalled={isPluginInstalled}
+            closeModal={() => toggleModalActive(false)}
+          />
+        );
+      default:
+        return '';
     }
   };
 
   useEffect(() => {
-    const collection = {...collectionState};
+    const collection = { ...collectionState };
     for (const [key, value] of Object.entries(semaCollections)) {
       const field = value._id;
       collection[field] = true;
