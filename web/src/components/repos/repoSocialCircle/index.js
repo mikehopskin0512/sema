@@ -10,17 +10,28 @@ import { PrivateRepoBanner } from '../../repos/repoSocialCircle/banners/privateR
 import { NotSyncedRepoBanner } from '../../repos/repoSocialCircle/banners/notSyncedRepoBanner';
 import { SyncInProgressRepoBanner } from '../../repos/repoSocialCircle/banners/syncInProgressBanner';
 
+export const SYNC_STATUSES = {
+  EMPTY: null,
+  QUEUED: 'queued',
+  STARTED: 'started',
+  COMPLETED: 'completed',
+  ERRORED: 'errored',
+  UNAUTHORIZED: 'unauthorized',
+}
+
 const RepoSocialCircle = ({ repoId }) => {
   const [interactions, setInteractions] = useState([]);
   const { user } = useSelector((state) => state.authState);
+  const { data: repoData, isFetching } = useSelector((state) => state.repositoriesState);
   const [repoName, setRepoName] = useState('');
   const handle = user?.identities[0]?.username;
-  // TODO: add a real calculation
-  const isRepoSynced = true;
+  const { overview } = repoData;
+  const syncStatus = overview?.sync?.status;
+
+  const isRepoSynced = syncStatus === SYNC_STATUSES.COMPLETED;
+  const isSyncingNow = syncStatus ===  SYNC_STATUSES.QUEUED || syncStatus === SYNC_STATUSES.STARTED;
   // TODO: add a real calculation
   const isRepoPrivate = false;
-  // TODO: add a real calculation
-  const isSyncingNow = false;
 
   // TODO: should be extracted to a hook or a component
   useEffect(() => {
@@ -30,6 +41,8 @@ const RepoSocialCircle = ({ repoId }) => {
         setRepoName(res?.data?.repoName);
       });
   }, [repoId])
+
+  if (isFetching) return null;
 
   if (isRepoPrivate) {
     return <PrivateRepoBanner />
