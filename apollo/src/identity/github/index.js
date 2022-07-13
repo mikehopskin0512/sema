@@ -4,6 +4,7 @@ import { createOAuthAppAuth } from '@octokit/auth';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
+import { validateGitHubToken, ValidationError } from 'validate-github-token';
 import logger from '../../shared/logger';
 import { github, isWaitListEnabled, orgDomain, version } from '../../config';
 import {
@@ -27,6 +28,8 @@ import {
   findByToken,
   redeemInvite,
 } from '../../invitations/invitationService';
+import { createNewOrgsFromGithub } from '../../organizations/organizationService';
+import { createAndSyncReposFromGithub } from '../../repositories/repositoryService';
 import { createUserRole } from '../../userRoles/userRoleService';
 import { getTokenData } from '../../shared/utils';
 import checkEnv from '../../middlewares/checkEnv';
@@ -34,7 +37,7 @@ import checkEnv from '../../middlewares/checkEnv';
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
-export default (app) => {
+export default (app, passport) => {
   app.use(`/${version}/identities/github`, route);
 
   route.get('/', async (req, res) => {
@@ -105,6 +108,7 @@ export default (app) => {
         profileUrl: profile.url,
         avatarUrl: profile.avatar_url,
         emails,
+        accessToken: token,
       };
 
       const user = await findByUsernameOrIdentity(email, identity);
@@ -195,6 +199,48 @@ export default (app) => {
       );
 
       return res.status(200).json(repositories);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+  
+  route.post('/connect-orgs', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const { identities } = req.user;
+      const [ identity ] = identities;
+      
+      // check if there is valid github auth token
+      if (!identity || !identity.accessToken) {
+        return res.status(400).json({ reason: 'invalid_token' });
+      }
+      
+      try {
+        // check if the token is still valid
+        const validated = await validateGitHubToken(identity.accessToken);
+        if (!validated || validated?.scope?.length === 0) {
+          return res.status(400).json({ reason: 'invalid_token' });
+        }
+      } catch (err) {
+        logger.error(err);
+        return res.status(400).json({ reason: 'invalid_token' });
+      }
+  
+      // fetch user orgs
+      const orgs = await getGithubOrgsForAuthenticatedUser(identity.accessToken);
+      if (orgs && orgs.length) {
+        await createNewOrgsFromGithub(orgs, req.user._id);
+      }
+  
+      // fetch user repos
+      const repositories = await getRepositoriesForAuthenticatedUser(identity.accessToken);
+      if (repositories && repositories.length) {
+        await createAndSyncReposFromGithub(repositories, req.user._id);
+        return res.status(200).json('Connected Orgs');
+      }
+  
+      // return success
+      return res.status(400).json({ reason: 'installation' });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

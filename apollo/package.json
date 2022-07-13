@@ -68,6 +68,7 @@
     "swagger-ui-express": "^4.3.0",
     "text-clipper": "^2.1.0",
     "uuid": "^8.1.0",
+    "validate-github-token": "^1.1.1",
     "xlsx": "^0.15.5",
     "yamljs": "^0.3.0"
   },

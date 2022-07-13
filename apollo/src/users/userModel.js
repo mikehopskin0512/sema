@@ -47,6 +47,7 @@ const identitySchema = mongoose.Schema(
     profileUrl: String,
     avatarUrl: String,
     repositories: [repositoryScheme],
+    accessToken: String,
   },
   { _id: false }
 );

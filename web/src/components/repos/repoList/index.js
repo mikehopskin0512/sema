@@ -9,7 +9,7 @@ import OrganizationReposList from "../../organizationReposList";
 import RepoTable from '../repoTable';
 import styles from './repoList.module.scss';
 import repoStyles from '../repoCard/repoCard.module.scss';
-import { FilterBarsIcon, GridIcon, ListIcon, PlusIcon, SearchIcon } from '../../Icons';
+import { FilterBarsIcon, GridIcon, ListIcon, LoadingBlackIcon, PlusIcon, SearchIcon } from '../../Icons';
 import { triggerAlert } from '../../../state/features/alerts/actions';
 import { fetchOrganizationRepos } from '../../../state/features/organizations[new]/actions';
 import { updateOrganizationRepositories } from '../../../state/features/organizations[new]/operations';
@@ -18,7 +18,12 @@ import { getCommentsCountLastMonth } from '../../../utils/codeStats';
 import InputField from "../../inputs/InputField";
 import { blue700 } from '../../../../styles/_colors.module.scss';
 import { alertOperations } from '../../../state/features/alerts';
-import RepoSkeleton from "../../skeletons/repoSkeleton";
+import RepoSkeleton from '../../../components/skeletons/repoSkeleton';
+import useLocalStorage from '../../../hooks/useLocalStorage';
+import { identitiesOperations } from '../../../state/features/identities';
+import { useRouter } from "next/router";
+import { PATHS } from "../../../utils/constants";
+const githubAppName = process.env.NEXT_PUBLIC_GITHUB_APP_NAME;
 
 const LIST_TYPE = {
   FAVORITES: 'Favorite Repos',
@@ -44,12 +49,16 @@ function RepoList({
 }) {
   const dispatch = useDispatch();
   const { token, selectedOrganization } = useSelector((state) => state.authState);
+  const { isLoading } = useSelector((state) => state.identitiesState);
+  const [redirectUser, setRedirectUser] = useLocalStorage('redirect_user', false);
 
   const [view, setView] = useState('grid');
   const [sort, setSort] = useState({});
   const [filteredRepos, setFilteredRepos] = useState([]);
   const { isOrganizationAdmin } = usePermission();
   const { clearAlert } = alertOperations;
+  const { connectOrg } = identitiesOperations;
+  const router = useRouter();
 
   const removeRepo = async (repoId) => {
     try {
@@ -122,6 +131,21 @@ function RepoList({
   useEffect(() => {
     sortRepos();
   }, [sort, repos]);
+  
+  const githubLogin = async () => {
+    try {
+      await dispatch(connectOrg(token));
+      dispatch(triggerAlert('Connected Organizations!', 'success'));
+      router.push(PATHS.DASHBOARD);
+    } catch (error) {
+      const { reason } = { ...error }
+      if (reason === 'invalid_token') {
+        router.push('/api/identities/github')
+      } else if (reason === 'installation') {
+        window.location.href = `https://github.com/apps/${githubAppName}/installations/new`;
+      }
+    }
+  };
 
   const [isRepoListOpen, setRepoListOpen] = useState(false);
   return (
@@ -154,6 +178,26 @@ function RepoList({
                 <span className="ml-8">Add a Repo</span>
               </button>
             )}
+  
+            <button
+              type="button"
+              className={clsx("ml-16 button is-primary", styles['add-repo-button'])}
+              onClick={() => githubLogin()}
+            >
+              {
+                isLoading ? (
+                  <>
+                    <LoadingBlackIcon />
+                    <span className="ml-8">Connecting Orgs...</span>
+                  </>
+                ) : (
+                  <>
+                    <PlusIcon size="small" />
+                    <span className="ml-8">Connect an Org</span>
+                  </>
+                )
+              }
+            </button>
           </div>
         </div>
         <div className='columns'>
