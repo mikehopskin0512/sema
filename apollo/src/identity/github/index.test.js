@@ -166,7 +166,7 @@ describe('GET /identities/github/cb', () => {
 
     it('should set the refresh token in a cookie', () => {
       const cookies = getCookies(headers['set-cookie']);
-      const jwt = decode(cookies.get('_phoenix'));
+      const jwt = decode(cookies.get('_sema'));
       expect(jwt._id).toEqualID(user._id);
     });
 
@@ -297,7 +297,7 @@ describe('GET /identities/github/cb', () => {
 
     it('should set the refresh token in a cookie', () => {
       const cookies = getCookies(headers['set-cookie']);
-      const jwt = decode(cookies.get('_phoenix'));
+      const jwt = decode(cookies.get('_sema'));
       expect(jwt._id).toEqualID(user._id);
     });
   });
