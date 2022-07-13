@@ -9,6 +9,9 @@ import styles from './repoSocialCircle.module.scss';
 import { PrivateRepoBanner } from '../../repos/repoSocialCircle/banners/privateRepoBanner';
 import { NotSyncedRepoBanner } from '../../repos/repoSocialCircle/banners/notSyncedRepoBanner';
 import { SyncInProgressRepoBanner } from '../../repos/repoSocialCircle/banners/syncInProgressBanner';
+import { shareWithTwitter, shareWithLinkedIn } from '../../../utils/socialMedia'
+import { SEMA_APP_URL } from 'src/utils/constants';
+import { useRouter } from 'next/router';
 
 export const SYNC_STATUSES = {
   EMPTY: null,
@@ -55,7 +58,13 @@ const RepoSocialCircle = ({ repoId }) => {
   if (!isRepoSynced) {
     return <NotSyncedRepoBanner />
   }
-  const socialIcons = [TwitterIcon, FacebookIcon, LinkedinIcon];
+
+  const socialCircleUrl = `${window.location.origin}/${handle}/collaboration/${repoName}?${repoId}`
+  const socials = [
+    { name: 'twitter', icon: TwitterIcon, onClick: () => shareWithTwitter({ text: 'Check out my Github Social Circle!', url: socialCircleUrl })},
+    { name: 'facebook', icon: FacebookIcon, onClick: () => {}},
+    { name: 'linkedin', icon: LinkedinIcon, onClick: () => {}},
+  ]
 
   // TODO: mobile styles
   return (
@@ -77,8 +86,8 @@ const RepoSocialCircle = ({ repoId }) => {
         <div className="pr-30">
           <span className="is-size-4 has-text-weight-semibold">Share:</span>
           <div className="mt-16 is-flex is-justify-content-center">
-              {socialIcons.map(icon => (
-                <div className='is-flex mr-16'>
+              {socials.map(({onClick, icon}) => (
+                <div className='is-flex mr-16 is-clickable' onClick={onClick}>
                   {icon({color: blue700, size:"large"})}
                 </div>
               ))}
