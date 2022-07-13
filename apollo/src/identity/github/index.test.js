@@ -4,8 +4,10 @@ import path from 'path';
 import fs from 'fs';
 import apollo from '../../../test/apolloClient';
 import User from '../../users/userModel';
-import Organization from '../../organizations/organizationModel';
 import { createGhostUser } from '../../users/userService';
+import { getRepoByUserIds } from '../../repositories/repositoryService';
+import { queue as importRepositoryQueue } from '../../repoSync/importRepositoryQueue';
+import { getOrganizationsByUser } from '../../organizations/organizationService';
 import createUser from '../../../test/helpers/userHelper';
 
 const justin = JSON.parse(
@@ -47,25 +49,39 @@ describe('GET /identities/github/cb', () => {
         },
       ])
       .get('/user/repos')
-      .query({ per_page: 100, page: 1 })
+      .query({
+        per_page: 100,
+        sort: 'pushed',
+        visibility: 'public',
+        affiliation: 'owner,collaborator',
+      })
       .reply(200, [
         {
+          id: 175071530,
+          name: 'reactivesearch',
+          clone_url: 'https://github.com/jrock17/reactivesearch.git',
           owner: {
-            id: '3456',
+            id: 1270524,
             login: 'jrock17',
             type: 'User',
           },
         },
         {
+          id: 237888452,
+          name: 'phoenix',
+          clone_url: 'https://github.com/Semalab/phoenix.git',
           owner: {
-            id: '1234',
+            id: 31629704,
             login: 'Semalab',
             type: 'Organization',
           },
         },
         {
+          id: 391620249,
+          name: 'astrobee',
+          clone_url: 'https://github.com/SemaSandbox/astrobee.git',
           owner: {
-            id: '2345',
+            id: 80909084,
             login: 'SemaSandbox',
             type: 'Organization',
           },
@@ -100,6 +116,21 @@ describe('GET /identities/github/cb', () => {
 
   describe('existing user on waitlist', () => {
     let user;
+
+    beforeAll(async () => {
+      // Just entroy
+      await createUser({
+        handle: 'pangeaware',
+        identities: [
+          {
+            provider: 'github',
+            username: 'pangeaware',
+            id: 1045023,
+          },
+        ],
+        isWaitlist: true,
+      });
+    });
 
     beforeAll(async () => {
       user = await createUser({
@@ -140,9 +171,57 @@ describe('GET /identities/github/cb', () => {
     });
 
     it('should sync organizations', async () => {
-      const organizations = await Organization.find({});
-      const organizationLogins = organizations.map((o) => o.name).sort();
+      const organizations = await getOrganizationsByUser(user._id);
+      const organizationLogins = organizations
+        .map((o) => o.organization.name)
+        .sort();
       expect(organizationLogins).toEqual(['SemaSandbox', 'Semalab']);
+    });
+
+    describe('repositories', () => {
+      let repositories;
+
+      beforeAll(async () => {
+        repositories = await getRepoByUserIds([user._id]);
+        user = await User.findById(user._id);
+      });
+
+      it('should exist in the database', () => {
+        const names = repositories.map((r) => r.fullName).sort();
+        expect(names).toEqual([
+          'SemaSandbox/astrobee',
+          'Semalab/phoenix',
+          'jrock17/reactivesearch',
+        ]);
+      });
+
+      it('should be queued for sync', () => {
+        const jobs = importRepositoryQueue.jobs.map((job) => job.id).sort();
+        expect(jobs).toEqual(repositories.map((r) => r.id).sort());
+      });
+
+      it('should be added to the identity', () => {
+        const ids = user.identities[0].repositories.map((r) => r.id).sort();
+        expect([...ids]).toEqual(['175071530', '237888452', '391620249']);
+      });
+    });
+
+    describe('log in again', () => {
+      beforeAll(async () => {
+        await importRepositoryQueue.purgeQueue();
+      });
+
+      beforeAll(async () => {
+        ({ status, headers } = await apollo.get(
+          '/v1/identities/github/cb?code=629e18f54c8605'
+        ));
+      });
+
+      describe('repositories', () => {
+        it('should not be queued for sync', () => {
+          expect(importRepositoryQueue.jobs).toHaveLength(0);
+        });
+      });
     });
   });
 

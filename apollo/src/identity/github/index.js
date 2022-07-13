@@ -11,6 +11,7 @@ import {
   getUserEmails,
   getRepositoriesForAuthenticatedUser,
   getGithubOrgsForAuthenticatedUser,
+  syncUser,
 } from './utils';
 import {
   findByUsernameOrIdentity,
@@ -26,7 +27,6 @@ import {
   findByToken,
   redeemInvite,
 } from '../../invitations/invitationService';
-import { createNewOrgsFromGithub } from '../../organizations/organizationService';
 import { createUserRole } from '../../userRoles/userRoleService';
 import { getTokenData } from '../../shared/utils';
 import checkEnv from '../../middlewares/checkEnv';
@@ -145,12 +145,7 @@ export default (app) => {
           }
         }
 
-        // fetch and create orgs
-        const githubOrgs = await getGithubOrgsForAuthenticatedUser(token);
-
-        if (githubOrgs && githubOrgs.length) {
-          await createNewOrgsFromGithub(githubOrgs, user._id);
-        }
+        await syncUser({ user, token });
 
         if (!isWaitlist && isActive) {
           // If user is on waitlist, bypass and redirect to register page (below)
