@@ -65,6 +65,10 @@ function ActivityItem(props) {
       prUrl = prUrl.replace(`#${slug}`, '');
     }
 
+    if (!prUrl.includes('/pull/')) {
+      prUrl += `/pull/${pullNumber}`;
+    }
+
     if (!isEmpty(commentId)) {
       if (/^r/i.test(commentId)) {
         prUrl += `#discussion_${commentId}`;
@@ -107,7 +111,12 @@ function ActivityItem(props) {
         alt="user_icon"
       />
       <div className="is-flex-grow-1">
-        <div className={clsx('is-flex is-justify-content-space-between is-flex-wrap-wrap is-full-width', styles['comment-meta'])}>
+        <div
+          className={clsx(
+            'is-flex is-justify-content-space-between is-flex-wrap-wrap is-full-width',
+            styles['comment-meta']
+          )}
+        >
           <div className="is-flex is-flex-wrap-no-wrap is-align-items-center">
             <img
               className={clsx(
