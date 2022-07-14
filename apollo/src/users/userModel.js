@@ -31,6 +31,7 @@ const repositoryScheme = mongoose.Schema(
     fullName: String,
     githubUrl: String,
     isFavorite: { type: Boolean, default: false },
+    previewImgLink: { type: String, default: ''},
   },
   { _id: false }
 );

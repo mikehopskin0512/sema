@@ -9,7 +9,9 @@ import styles from './repoSocialCircle.module.scss';
 import { PrivateRepoBanner } from '../../repos/repoSocialCircle/banners/privateRepoBanner';
 import { NotSyncedRepoBanner } from '../../repos/repoSocialCircle/banners/notSyncedRepoBanner';
 import { SyncInProgressRepoBanner } from '../../repos/repoSocialCircle/banners/syncInProgressBanner';
-import { onDownloadImage } from '../../../utils/imageHelpers';
+import { createDataUrl, onDownloadImage } from '../../../utils/imageHelpers';
+import { uploadInfographicsImage } from '../../../state/features/auth/api';
+import { isEmpty } from 'lodash';
 import { shareWithTwitter, shareWithLinkedIn } from '../../../utils/socialMedia';
 
 export const SYNC_STATUSES = {
@@ -24,7 +26,7 @@ export const SYNC_STATUSES = {
 const RepoSocialCircle = ({ repoId }) => {
   const containerRef = useRef(null);
   const [interactions, setInteractions] = useState([]);
-  const { user } = useSelector((state) => state.authState);
+  const { user, token } = useSelector((state) => state.authState);
   const { data: repoData, isFetching } = useSelector((state) => state.repositoriesState);
   const [repoName, setRepoName] = useState('');
   const handle = user?.identities[0]?.username;
@@ -39,12 +41,23 @@ const RepoSocialCircle = ({ repoId }) => {
   const [isCopied, changeIsCopied] = useState(false);
 
   useEffect(() => {
-    getRepoSocialGraph({handle, repoId})
+    getRepoSocialGraph({ handle, repoId })
       .then((res) => {
         setInteractions(res?.data?.interactionsByUsers);
         setRepoName(res?.data?.repoName);
       });
-  }, [repoId])
+  }, [repoId]);
+
+
+  useEffect(() => {
+    if (!isEmpty(interactions) && !isEmpty(containerRef.current)) {
+      createDataUrl(containerRef).then(dataUrl => {
+        const formData = new FormData();
+        formData.append('previewImgLink', dataUrl);
+        uploadInfographicsImage({ userId: user?._id, repoId }, formData, token);
+      });
+    }
+  }, [interactions, containerRef.current]);
 
   if (isFetching) return null;
 
@@ -60,7 +73,7 @@ const RepoSocialCircle = ({ repoId }) => {
     return <NotSyncedRepoBanner />
   }
 
-  const socialCircleUrl = `${window.location.origin}/${handle}/collaboration/${repoName}?${repoId}`
+  const socialCircleUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${handle}/collaboration/${repoName}?repoId=${repoId}`
   const socials = [
     { name: 'twitter', icon: TwitterIcon, onClick: () => shareWithTwitter({ text: 'Check out my Github Social Circle!', url: socialCircleUrl })},
     // { name: 'facebook', icon: FacebookIcon, onClick: () => {}},
@@ -68,7 +81,7 @@ const RepoSocialCircle = ({ repoId }) => {
   ]
 
   const onCopy = () => {
-    navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}/${handle}/collaboration/${repoId}?repo=${repoName}`);
+    navigator.clipboard.writeText(socialCircleUrl);
     changeIsCopied(true);
     setTimeout(() => changeIsCopied(false), 3000);
   };

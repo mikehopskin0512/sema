@@ -2018,10 +2018,6 @@ describe('Import Repository Queue', () => {
       });
 
       describe('ghost user', () => {
-        it('should have username', () => {
-          expect(user.username).toBe('jrock17');
-        });
-
         it('should have handle', () => {
           expect(user.handle).toBe('jrock17');
         });
@@ -2135,10 +2131,6 @@ describe('Import Repository Queue', () => {
       });
 
       describe('ghost user', () => {
-        it('should have username', () => {
-          expect(user.username).toBe('jrock17');
-        });
-
         it('should have handle', () => {
           expect(user.handle).toBe('jrock17');
         });

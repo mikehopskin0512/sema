@@ -9,3 +9,8 @@ export const onDownloadImage = (ref) => {
       link.click();
     });
 };
+
+export const createDataUrl = async (ref) => {
+  const dataUrl = await domtoimage.toBlob(ref.current, {quality: 0.95});
+  return dataUrl;
+}

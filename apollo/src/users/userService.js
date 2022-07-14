@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import _ from 'lodash';
 import User from './userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -451,6 +452,46 @@ export const updateLastLogin = async (user) => {
     throw error;
   }
 };
+
+export const updateUserRepositoryList = async (user, repos, identity) => {
+  try {
+    const identityRepo = user.identities?.[0].repositories || [];
+
+    const repositories = repos.map((el) => {
+      const { name, id, full_name: fullName, html_url: githubUrl } = el;
+      const index = _.findIndex(
+        identityRepo,
+        (o) => o.id.toString() === el.id.toString()
+      );
+      if (index === -1) {
+        return { name, id, fullName, githubUrl };
+      }
+      const repo = identityRepo[index];
+      return { name, id, fullName, githubUrl, ...repo };
+    });
+    const newIdentity = Object.assign(identity, { repositories });
+    await updateIdentity(user, newIdentity);
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
+export const updatePreviewImgLink = async (userId, repoId, imgUrl) => {
+  try {
+    const user = await findById(userId);
+    const identityRepos = user.identities[0].repositories || [];
+    const updatedRepo = identityRepos.find((repo) => repo.id === repoId);
+    updatedRepo.previewImgLink = imgUrl;
+    const newIdentity = Object.assign(user.identities[0], { repositories: identityRepos });
+    await updateIdentity(user, newIdentity);
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+}
 
 export const addRepositoryToIdentity = async (user, repository) => {
   try {
