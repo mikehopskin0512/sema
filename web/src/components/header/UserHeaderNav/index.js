@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
@@ -25,7 +25,6 @@ function UserHeaderNav({
   const { pathname } = router;
   const dispatch = useDispatch();
   const [isInviteModal, setInviteModal] = useState(false);
-  const orgMenu = useRef(null);
 
   const {
     auth: { user: userData, token },
