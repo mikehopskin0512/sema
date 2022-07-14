@@ -64,7 +64,7 @@ export default function createGitHubImporter(octokit) {
     if (!existingUser.length) {
       await createGhostUser({
         handle: user.login,
-        username: user.email,
+        username: user.login,
         identities: [
           {
             provider: 'github',
@@ -334,7 +334,7 @@ async function findOrCreateGitHubUser({ id, username, userCache }) {
   const githubUser = await userCache.get(username);
   return await createGhostUser({
     handle: githubUser.login,
-    username: githubUser.email,
+    username: githubUser.login,
     identities: [
       {
         provider: 'github',
