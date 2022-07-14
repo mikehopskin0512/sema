@@ -146,5 +146,5 @@ module "auto_restore_backup_lambda" {
   vpc_id      = data.aws_vpc.this.id
   subnet_ids  = data.aws_subnet_ids.private.ids
   timeout     = 900
-  memory_size = 1024
+  memory_size = 2048
 }
