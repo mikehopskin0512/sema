@@ -10,6 +10,9 @@ const initialState = {
   userVoiceToken: null,
   selectedOrganization: {},
   profileViewMode: PROFILE_VIEW_MODE.INDIVIDUAL_VIEW,
+  ffOnboarding: {
+    isModalOpen: false
+  }
 };
 
 const reducer = (state = initialState, action) => {
@@ -199,6 +202,14 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       profileViewMode: action.profileViewMode,
+    };
+  case types.TOGGLE_FF_ONBOARDING_MODAL:
+    return {
+      ...state,
+      ffOnboarding: {
+        ...state.ffOnboarding,
+        isModalOpen: action.payload
+      },
     };
   default:
     return state;

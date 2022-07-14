@@ -12,11 +12,10 @@ import withLayout from '../../components/layout';
 import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
 import OnboardingModal from '../../components/onboarding/onboardingModal';
 import ReposView from '../../components/repos/reposView';
-
-import Loader from '../../components/Loader';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { isExtensionInstalled } from '../../utils/extension';
 import { ON_INPUT_DEBOUNCE_INTERVAL_MS, PATHS, PROFILE_VIEW_MODE } from '../../utils/constants';
+import FFOnboardingModal from '../../components/onboarding/fastOnboardingModal';
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
@@ -26,8 +25,6 @@ const {
   updateUserHasExtension,
 } = authOperations;
 const {
-  inviteOrganizationUser,
-  fetchOrganizationsOfUser,
 } = organizationsOperations;
 const {
   setSelectedOrganization,
@@ -70,6 +67,7 @@ const Dashboard = () => {
     token,
     user,
     selectedOrganization,
+    ffOnboarding
   } = auth;
   const {
     identities,
@@ -80,6 +78,7 @@ const Dashboard = () => {
   const { roles } = rolesState;
   const { organizations: organizations } = organizationsState;
   const { inviteOrganizationId } = router.query;
+  const [isFFModalOpened, setIsFFModalOpened] = useState(false);
   const userRepos = identities?.length ? identities[0].repositories : [];
   // Now we should show the UI in cases when we receive an empty arrays
   const isLoaded = !userRepos || (userRepos && repositories.data.repositories);
@@ -239,10 +238,19 @@ const Dashboard = () => {
     }
   }, [page]);
   useEffect(() => {
-    if (!_.isEmpty(user) && isOnboarded === null) {
+    const isFFOnboardingStarted = JSON.parse(localStorage?.getItem('is_ff_onboarding_started'));
+
+    if (!_.isEmpty(user) && isOnboarded === null && !isFFOnboardingStarted) {
       toggleOnboardingModalActive(true);
     }
-  }, [isOnboarded]);
+
+    if (isFFOnboardingStarted && !isOnboarded) {
+      setIsFFModalOpened(true);
+      const updatedUser = { ...user, ...{ isFastForwardOnboarding: true, isOnboarded: new Date() } };
+      dispatch(updateUser(updatedUser, token));
+      localStorage?.removeItem('is_ff_onboarding_started');
+    }
+  }, [isOnboarded, user]);
 
   const isSkeletonHidden = isLoaded && !auth.isFetching && !repositories.isFetching;
 
@@ -271,6 +279,8 @@ const Dashboard = () => {
         onSubmit={onboardUser}
         isPluginInstalled={isPluginInstalled}
       />
+
+      <FFOnboardingModal isModalActive={isFFModalOpened} onClose={() => setIsFFModalOpened(false)}/>
     </>
   );
 };

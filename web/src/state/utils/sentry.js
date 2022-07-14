@@ -45,7 +45,8 @@ const initialize = async (ctx) => {
     !ctx.pathname.includes(PATHS.ONBOARDING) &&
     !ctx.pathname.includes(PATHS.GUIDES) &&
     !ctx.pathname.includes(PATHS.REGISTER) &&
-    !ctx.pathname.includes(PATHS.PASSWORD_RESET)
+    !ctx.pathname.includes(PATHS.PASSWORD_RESET) &&
+    !ctx.pathname.includes(PATHS.COLLABORATION)
   ) {
     if (!jwt) {
       redirect(ctx, PATHS.LOGIN);

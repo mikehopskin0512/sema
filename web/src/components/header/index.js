@@ -22,12 +22,12 @@ import UserHeaderNav from './UserHeaderNav';
 const { fetchOrganizationsOfUser } = organizationsOperations;
 const { fetchPortfoliosOfUser } = portfoliosOperations;
 
-const Header = () => {
+function Header() {
   const dispatch = useDispatch();
   const router = useRouter();
   const [supportForm, setSupportForm] = useState(false);
   const [signOutModal, setSignOutModal] = useState(false);
-  const { checkAccess, isSemaAdmin } = usePermission();
+  const { isSemaAdmin } = usePermission();
 
   // Create REFs for menus
   const burger = useRef(null);
@@ -42,7 +42,6 @@ const Header = () => {
     isVerified = false,
     organizations = [],
     isWaitlist = Boolean(parseInt(process.env.NEXT_PUBLIC_WAITLIST_ENABLED)),
-    inviteCount = 0,
     roles = [],
     avatarUrl,
     firstName = '',
@@ -54,7 +53,6 @@ const Header = () => {
   // Use 1st org (for now) and get isAdmin
   // const [currentOrg = { isAdmin: false }] = organizations;
 
-  const openSupportForm = () => setSupportForm(true);
   const closeSupportForm = () => setSupportForm(false);
 
   const handleClick = () => {
@@ -63,12 +61,6 @@ const Header = () => {
     }
     return router.push(`${PATHS.DASHBOARD}`);
   }
-
-  const orgMenuList = organizations.map((org) => (
-    <Link href="/">
-      <a className="navbar-item">{org.orgName}</a>
-    </Link>
-  ));
 
   useAuthEffect(() => {
     dispatch(fetchOrganizationsOfUser(token));
@@ -122,14 +114,15 @@ const Header = () => {
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <SignOutModal active={signOutModal} onClose={onCloseSignOutModal} />
       <nav
-        className="navbar is-transparent container pt-16"
+        className="navbar container py-16"
         role="navigation"
         aria-label="main navigation"
       >
         <div className="navbar-brand">
           <a className="is-flex is-align-items-center" onClick={handleClick}>
-            <Logo shape="horizontal" width={100} height={34} />
+            <Logo shape="symbol" width={32} height={32} />
           </a>
+          <div className={clsx(styles.separator, 'has-background-gray-400 mx-16')} />
           {token && isVerified && !isWaitlist && (
             <button
               onClick={toggleHamburger}
@@ -151,13 +144,12 @@ const Header = () => {
             <div className="navbar-menu" ref={menu}>
               {/* Desktop menu */}
               <div
-                className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 mx-30"
+                className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 is-align-items-center"
               >
                 <UserHeaderNav
                   toggleHamburger={toggleHamburger}
                   isSemaAdmin={isSemaAdmin}
                   type='desktop'
-                  inviteCount={inviteCount}
                   selectedOrganization={selectedOrganization}
                 />
               </div>
@@ -167,7 +159,6 @@ const Header = () => {
                   toggleHamburger={toggleHamburger}
                   isSemaAdmin={isSemaAdmin}
                   type='mobile'
-                  inviteCount={inviteCount}
                   selectedOrganization
                 />
                 <hr className="navbar-divider" />
@@ -269,6 +260,6 @@ const Header = () => {
       </nav>
     </header>
   );
-};
+}
 
 export default Header;

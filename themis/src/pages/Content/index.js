@@ -60,9 +60,11 @@ import {
   updateSelectedEmoji,
   toggleSnippetForSave,
   updateProfile,
+  changeIsSnippetSaved,
 } from './modules/redux/action';
 import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
 import LogOutToaster from './components/LogOutToaster';
+import SaveSnippetButton from './components/SaveSnippetButton';
 
 const SEMA_ICON_LABEL = 'Sema Comments enabled';
 
@@ -192,6 +194,10 @@ const onLoginChecked = () => {
   }
 
   const getDebouncedInput = () => debounce(async () => {
+    const isSnippetSaved = store.getState().snippetSaved.isSaved;
+    if (isSnippetSaved) {
+      store.dispatch(changeIsSnippetSaved({ isSaved: false, semabarContainerId: null }));
+    }
     store.dispatch(
       updateTextareaState({
         isTyping: true,
@@ -308,18 +314,9 @@ const onLoginChecked = () => {
       });
       $(controlSection).append('<div id="add-snippet-check" style="margin-right: auto"/>');
       const checkboxRoot = $(controlSection).find('#add-snippet-check')[0];
-      const isForSave = store.getState().semabars[semabarContainerId].isSnippetForSave;
       ReactDOM.render(
         <Provider store={store}>
-          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-          <label className="sema-is-flex sema-is-align-items-center">
-            <input
-              type="checkbox"
-              value={isForSave}
-              onChange={() => store.dispatch(toggleSnippetForSave({ semabarContainerId }))}
-            />
-            <span className="sema-ml-1 sema-has-text-weight-normal">Save to My Snippets collection</span>
-          </label>
+          <SaveSnippetButton semabarContainerId={semabarContainerId} />
         </Provider>,
         checkboxRoot,
       );
@@ -327,7 +324,7 @@ const onLoginChecked = () => {
       const snippetModal = document.getElementById('sema-snippet-modal');
       ReactDOM.render(
         <Provider store={store}>
-          <CreateSnippetModal />
+          <CreateSnippetModal semabarContainerId={semabarContainerId} />
         </Provider>,
         snippetModal,
       );

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import EmptyRepo from '../../../components/repos/emptyRepo';
-import RepoList from '../../../components/repos/repoList';
 import { remove } from 'lodash';
 import { useSelector } from 'react-redux';
+import EmptyRepo from "../emptyRepo";
+import RepoList from "../repoList";
 import styles from './reposView.module.scss';
 
 const NUM_PER_PAGE = 9;
@@ -13,13 +13,13 @@ const REPO_TYPES = {
   ORGANIZATION: 'organization'
 }
 
-const ReposView = ({
+function ReposView({
   type = 'user',
   onSearchChange,
   searchQuery,
   withSearch,
   isLoaded
-}) => {
+}) {
   const { githubUser, repositories, organizations } = useSelector((state) => ({
     githubUser: state.authState.user.identities?.[0],
     repositories: state.repositoriesState.data.repositories,
@@ -48,7 +48,7 @@ const ReposView = ({
 
   useEffect(() => {
     if (organizations && type === 'organization') {
-      const repos = organizations.repos;
+      const {repos} = organizations;
       setRepos({
         favorites: [],
         other: repos
@@ -82,6 +82,6 @@ const ReposView = ({
       </div>
     </>
   )
-};
+}
 
 export default ReposView;

@@ -5,20 +5,25 @@ import PropTypes from 'prop-types';
 import { range } from 'lodash';
 import usePermission from '../../../hooks/usePermission';
 import RepoCard from '../repoCard';
-import OrganizationReposList from '../../../components/organizationReposList';
+import OrganizationReposList from "../../organizationReposList";
 import RepoTable from '../repoTable';
 import styles from './repoList.module.scss';
 import repoStyles from '../repoCard/repoCard.module.scss';
-import { FilterBarsIcon, GridIcon, ListIcon, PlusIcon, SearchIcon } from '../../Icons';
+import { FilterBarsIcon, GridIcon, ListIcon, LoadingBlackIcon, PlusIcon, SearchIcon } from '../../Icons';
 import { triggerAlert } from '../../../state/features/alerts/actions';
 import { fetchOrganizationRepos } from '../../../state/features/organizations[new]/actions';
 import { updateOrganizationRepositories } from '../../../state/features/organizations[new]/operations';
-import DropDownMenu from '../../../components/dropDownMenu';
+import DropDownMenu from "../../dropDownMenu";
 import { getCommentsCountLastMonth } from '../../../utils/codeStats';
-import InputField from '../../../components/inputs/InputField';
+import InputField from "../../inputs/InputField";
 import { blue700 } from '../../../../styles/_colors.module.scss';
 import { alertOperations } from '../../../state/features/alerts';
 import RepoSkeleton from '../../../components/skeletons/repoSkeleton';
+import useLocalStorage from '../../../hooks/useLocalStorage';
+import { identitiesOperations } from '../../../state/features/identities';
+import { useRouter } from "next/router";
+import { PATHS } from "../../../utils/constants";
+const githubAppName = process.env.NEXT_PUBLIC_GITHUB_APP_NAME;
 
 const LIST_TYPE = {
   FAVORITES: 'Favorite Repos',
@@ -34,22 +39,26 @@ const filterOptions = [
   { value: 'mostActive', label: 'Most Active', placeholder: 'Most Active' },
 ]
 
-const RepoList = ({
+function RepoList({
   type,
   repos = [],
   onSearchChange,
   search,
   withSearch,
   isLoaded
-}) => {
+}) {
   const dispatch = useDispatch();
   const { token, selectedOrganization } = useSelector((state) => state.authState);
+  const { isLoading } = useSelector((state) => state.identitiesState);
+  const [redirectUser, setRedirectUser] = useLocalStorage('redirect_user', false);
 
   const [view, setView] = useState('grid');
   const [sort, setSort] = useState({});
   const [filteredRepos, setFilteredRepos] = useState([]);
   const { isOrganizationAdmin } = usePermission();
   const { clearAlert } = alertOperations;
+  const { connectOrg } = identitiesOperations;
+  const router = useRouter();
 
   const removeRepo = async (repoId) => {
     try {
@@ -102,11 +111,17 @@ const RepoList = ({
     setFilteredRepos(sortedRepos)
   };
 
-  const renderCards = (repos) => {
-    return repos.map((child, i) => (
-      <RepoCard {...child} isOrganizationView={type !== 'MY_REPOS'} isFavorite={type === 'FAVORITES'} key={i} onRemoveRepo={removeRepo} />
-    ))
-  }
+  const renderCards = (repos) => repos.map((child, i) => (
+      <RepoCard 
+        {...child}
+        isOrganizationView={type !== 'MY_REPOS'}
+        isFavorite={type === 'FAVORITES'}
+        key={i}
+        onRemoveRepo={removeRepo}
+        idx={i}
+        reposLength={repos.length}
+        selectedOrganization={selectedOrganization}
+      />))
 
   const handleOnClose = () => {
     dispatch(clearAlert());
@@ -116,6 +131,21 @@ const RepoList = ({
   useEffect(() => {
     sortRepos();
   }, [sort, repos]);
+  
+  const githubLogin = async () => {
+    try {
+      await dispatch(connectOrg(token));
+      dispatch(triggerAlert('Connected Organizations!', 'success'));
+      router.push(PATHS.DASHBOARD);
+    } catch (error) {
+      const { reason } = { ...error }
+      if (reason === 'invalid_token') {
+        router.push('/api/identities/github')
+      } else if (reason === 'installation') {
+        window.location.href = `https://github.com/apps/${githubAppName}/installations/new`;
+      }
+    }
+  };
 
   const [isRepoListOpen, setRepoListOpen] = useState(false);
   return (
@@ -148,6 +178,26 @@ const RepoList = ({
                 <span className="ml-8">Add a Repo</span>
               </button>
             )}
+  
+            <button
+              type="button"
+              className={clsx("ml-16 button is-primary", styles['add-repo-button'])}
+              onClick={() => githubLogin()}
+            >
+              {
+                isLoading ? (
+                  <>
+                    <LoadingBlackIcon />
+                    <span className="ml-8">Connecting Orgs...</span>
+                  </>
+                ) : (
+                  <>
+                    <PlusIcon size="small" />
+                    <span className="ml-8">Connect an Org</span>
+                  </>
+                )
+              }
+            </button>
           </div>
         </div>
         <div className='columns'>
@@ -161,16 +211,14 @@ const RepoList = ({
           <div className='column is-2'>
             <div className='is-flex is-justify-content-flex-end mb-10'>
               <DropDownMenu
-                className={'is-primary'}
-                isActiveClassName={'is-black'}
+                className="is-primary"
+                isActiveClassName="is-black"
                 isRight
                 options={
-                  filterOptions.map((filter) => {
-                    return {
+                  filterOptions.map((filter) => ({
                       ...filter,
                       onClick: () => setSort(filter)
-                    }
-                  })
+                    }))
                 }
                 trigger={(
                   <button className="button is-primary is-outlined" aria-haspopup="true" aria-controls="dropdown-menu2">

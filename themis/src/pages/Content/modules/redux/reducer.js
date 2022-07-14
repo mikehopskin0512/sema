@@ -31,6 +31,7 @@ import {
   FETCH_CURRENT_USER_SUCCESS,
   FETCH_CURRENT_USER_ERROR,
   UPDATE_CURRENT_USER,
+  CHANGE_IS_SNIPPET_SAVED,
 } from './actionConstants';
 
 // TODO: good if we can break cyclic dependencies
@@ -507,6 +508,14 @@ function rootReducer(state = initialState, action) {
         ...state,
         user,
       };
+    }
+    case CHANGE_IS_SNIPPET_SAVED: {
+      return {
+        ...state,
+        snippetSaved: {
+          ...action.payload,
+        },
+      }
     }
     default: {
       return state;

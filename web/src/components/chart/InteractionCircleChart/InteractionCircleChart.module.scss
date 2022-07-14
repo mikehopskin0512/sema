@@ -1,0 +1,319 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  width: 500px;
+}
+
+.img {
+  width: inherit;
+  height: inherit;
+  border-radius: 100px;
+}
+
+.circle-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.circle {
+  border-radius: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.user-0 {
+  height: 150px;
+  width: 150px;
+  transform: translate(-50%, -50%);
+}
+
+/* 1st Layer */
+.user-1 {
+  height: 100px;
+  width: 100px;
+  transform: translate(-120%, -170%);
+}
+
+.user-2 {
+  height: 100px;
+  width: 100px;
+  transform: translate(20%, -170%);
+}
+
+.user-3 {
+  height: 100px;
+  width: 100px;
+  transform: translate(90%, -60%);
+}
+
+.user-4 {
+  height: 100px;
+  width: 100px;
+  transform: translate(60%, 50%);
+}
+
+.user-5 {
+  height: 100px;
+  width: 100px;
+  transform: translate(-50%, 90%);
+}
+
+.user-6 {
+  height: 100px;
+  width: 100px;
+  transform: translate(-160%, 50%);
+}
+
+.user-7 {
+  height: 100px;
+  width: 100px;
+  transform: translate(-190%, -60%);
+}
+
+/* 2nd Layer */
+.user-8 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-400%, -80%);
+}
+
+.user-9 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-330%, -210%);
+}
+
+.user-10 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-220%, -340%);
+}
+
+.user-11 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-40%, -390%);
+}
+
+.user-12 {
+  height: 70px;
+  width: 70px;
+  transform: translate(130%, -350%);
+}
+
+.user-13 {
+  height: 70px;
+  width: 70px;
+  transform: translate(230%, -210%);
+}
+
+.user-14 {
+  height: 70px;
+  width: 70px;
+  transform: translate(300%, -50%);
+}
+
+.user-15 {
+  height: 70px;
+  width: 70px;
+  transform: translate(280%, 90%);
+}
+
+.user-16 {
+  height: 70px;
+  width: 70px;
+  transform: translate(220%, 220%);
+}
+
+.user-17 {
+  height: 70px;
+  width: 70px;
+  transform: translate(90%, 290%);
+}
+
+.user-18 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-60%, 310%);
+}
+
+
+.user-19 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-200%, 270%);
+}
+
+.user-20 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-330%, 190%);
+}
+
+.user-21 {
+  height: 70px;
+  width: 70px;
+  transform: translate(-380%, 60%);
+}
+
+/* =============== 3rd Layer ============== */
+
+/* 1st circle */
+.user-22 {
+  height: 50px;
+  width: 50px;
+  transform: translate(-680%, 40%);
+}
+
+.user-23 {
+  height: 50px;
+  width: 50px;
+  transform: translate(-690%, -110%);
+}
+
+.user-24 {
+  height: 50px;
+  width: 50px;
+  transform: translate(-650%, -260%);
+}
+
+/* 4th circle */
+.user-25 {
+  height: 50px;
+  width: 50px;
+  transform: translate(-570%, -400%);
+}
+
+.user-26 {
+  height: 50px;
+  width: 50px;
+  transform: translate(-450%, -520%);
+}
+
+.user-27 {
+  height: 50px;
+  width: 50px;
+  transform: translate(-300%, -610%);
+}
+
+.user-28 {
+  height: 50px;
+  width: 50px;
+  transform: translate(-150%, -670%);
+}
+
+.user-29 {
+  height: 50px;
+  width: 50px;
+  transform: translate(10%, -670%);
+}
+
+.user-30 {
+  height: 50px;
+  width: 50px;
+  transform: translate(150%, -650%);
+}
+
+.user-31 {
+  height: 50px;
+  width: 50px;
+  transform: translate(290%, -610%);
+}
+
+.user-32 {
+  height: 50px;
+  width: 50px;
+  transform: translate(410%, -500%);
+}
+
+.user-33 {
+  height: 50px;
+  width: 50px;
+  transform: translate(500%, -370%);
+}
+
+.user-34 {
+  height: 50px;
+  width: 50px;
+  transform: translate(570%, -200%);
+}
+
+.user-35 {
+  height: 50px;
+  width: 50px;
+  transform: translate(590%, -40%);
+}
+
+.user-36 {
+  height: 50px;
+  width: 50px;
+  transform: translate(580%, 120%);
+}
+
+.user-37 {
+  height: 50px;
+  width: 50px;
+  transform: translate(540%, 280%);
+}
+
+.user-38 {
+  height: 50px;
+  width: 50px;
+  transform: translate(450%, 420%);
+}
+
+.user-39 {
+  height: 50px;
+  width: 50px;
+  transform: translate(300%, 520%);
+}
+
+.user-40 {
+  height: 50px;
+  width: 50px;
+  transform: translate(140%, 590%);
+}
+
+.user-41 {
+  height: 50px;
+  width: 50px;
+  transform: translate(-60%, 610%);
+}
+
+/* 21st circle */
+.user-42 {
+  height: 50px;
+  width: 50px;
+  transform: translate(-230%, 590%);
+}
+
+.user-43 {
+  height: 50px;
+  width: 50px;
+  transform: translate(-380%, 520%);
+}
+
+/* 23rd circle */
+.user-44 {
+  height: 50px;
+  width: 50px;
+  transform: translate(-520%, 440%);
+}
+
+/* 24th circle */
+.user-45 {
+  height: 50px;
+  width: 50px;
+  transform: translate(-610%, 310%);
+}
+
+/* 25th circle */
+.user-46 {
+  height: 50px;
+  width: 50px;
+  transform: translate(-650%, 180%);
+}

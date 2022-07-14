@@ -1,4 +1,5 @@
 import { createAppAuth } from '@octokit/auth-app';
+import Bluebird from 'bluebird';
 import { Octokit } from '@octokit/rest';
 import { github } from '../config';
 
@@ -62,7 +63,7 @@ const appOctokit = new Octokit({
   },
 });
 
-async function findInstallationIdForRepository(repository) {
+export async function findInstallationIdForRepository(repository) {
   try {
     const { owner, repo } = getOwnerAndRepo(repository);
     const { data: installation } = await appOctokit.apps.getRepoInstallation({
@@ -89,3 +90,58 @@ export const getOwnerAndRepo = (repository) => {
     repo: repo.replace(/\.git$/, ''),
   };
 };
+
+export async function importReviewsFromPullRequest({
+  octokit,
+  pullRequest,
+  importComment,
+}) {
+  const { data: reviews } = await octokit.pulls.listReviews({
+    owner: pullRequest.base.repo.owner.login,
+    repo: pullRequest.base.repo.name,
+    pull_number: pullRequest.number,
+  });
+
+  await Bluebird.resolve(reviews.filter((r) => r.body.trim())).map(
+    importComment,
+    { concurrency: 10 }
+  );
+}
+
+export async function setSyncStarted(repository) {
+  repository.set({
+    'sync.status': 'started',
+    'sync.startedAt': new Date(),
+    'sync.erroredAt': null,
+    'sync.error': null,
+  });
+  await repository.save();
+}
+
+export async function setSyncCompleted(repository) {
+  repository.set({
+    'sync.status': 'completed',
+    'sync.completedAt': new Date(),
+    'sync.erroredAt': null,
+    'sync.error': null,
+  });
+  await repository.save();
+}
+
+export async function setSyncErrored(repository, error) {
+  repository.set({
+    'sync.status': 'errored',
+    'sync.erroredAt': new Date(),
+    'sync.error': error.message || error.toString().split('\n')[0],
+  });
+  await repository.save();
+}
+
+export async function setSyncUnauthorized(repository) {
+  repository.set({
+    'sync.status': 'unauthorized',
+    'sync.erroredAt': new Date(),
+    'sync.error': null,
+  });
+  await repository.save();
+}

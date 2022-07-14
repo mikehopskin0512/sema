@@ -119,3 +119,17 @@
     transform: rotate(360deg);
   }
 }
+
+.spinner-loader {
+  animation: rotate 1.25s infinite linear;
+  max-width: 15px;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}

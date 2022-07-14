@@ -150,7 +150,7 @@ const Dashboard = () => {
     <>
       <Helmet title={OrganizationDashboardHelmet.title} />
       <div className="sema-wide-container">
-        <OrganizationDashboard organization={organizations} />
+        <OrganizationDashboard organization={organizations} selectedOrganization={auth.selectedOrganization} />
         <div className="is-flex is-align-items-center is-justify-content-space-between py-40 px-35 mb-50 has-background-blue-50">
           <div>
             <p className="is-size-4 has-text-weight-semibold">

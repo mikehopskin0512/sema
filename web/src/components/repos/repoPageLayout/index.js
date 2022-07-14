@@ -10,6 +10,8 @@ import styles from './repoPageLayout.module.scss';
 import { repositoriesOperations } from '../../../state/features/repositories';
 import HoverSelect from '../../select/hoverSelect';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import RepoSyncButton from '../../repoSync/repoSyncButton';
+import { useFlags } from '../../launchDarkly';
 
 const { getUserRepositories, fetchReposByIds } = repositoriesOperations;
 
@@ -17,10 +19,12 @@ function RepoPageLayout({
   children,
   dates,
   isOrganizationRepo,
+  refresh,
   ...sidebarProps
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { repoSyncTab } = useFlags();
   const { auth, repositories, organizations } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
@@ -129,6 +133,9 @@ function RepoPageLayout({
                 </p>
               )}
             </div>
+            {repoSyncTab && <div>
+              <RepoSyncButton refresh={refresh} />
+            </div>}
           </div>
           <div className="container mt-10">
             <Sidebar {...sidebarProps} />

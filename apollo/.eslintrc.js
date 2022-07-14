@@ -13,6 +13,7 @@ module.exports = {
           'webpack.config.js',
           '.eslintrc.js',
           '**/*.test.js',
+          'scripts/generate-test-seed',
           'test/**/*.js',
         ],
       },

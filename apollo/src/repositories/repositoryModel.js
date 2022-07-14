@@ -83,14 +83,17 @@ const repositoriesSchema = new mongoose.Schema(
         pullRequestComment: {
           currentPage: Number,
           lastPage: Number,
+          lastUpdatedAt: Date,
         },
         pullRequestReview: {
           currentPage: Number,
           lastPage: Number,
+          lastUpdatedAt: Date,
         },
         issueComment: {
           currentPage: Number,
           lastPage: Number,
+          lastUpdatedAt: Date,
         },
       },
     },

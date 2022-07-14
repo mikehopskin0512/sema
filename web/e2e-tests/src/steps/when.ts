@@ -26,6 +26,8 @@ import setGlobalArrayByIndexToInputField from "../support/action/setGlobalArrayB
 import removeElementsWhileExist from '../support/action/removeElementsWhileExist';
 import clickElementIfDisplayed from "../support/action/clickElementIfDisplayed";
 import refreshThePage from "../support/action/refreshThePage";
+import hoverOverElement from '../support/action/hoverOverElement';
+import pasteCopiedData from '../support/action/pasteCopiedData';
 
 /**
  * Abstracting some steps by functionality. 
@@ -167,4 +169,14 @@ When(
 When(
     /^I refresh the page$/,
     refreshThePage
+)
+
+When(
+    /^I hover over element "([^"]*)?"$/,
+    hoverOverElement
+)
+
+When(
+    /^I paste copied to clipboard value into url$/,
+    pasteCopiedData
 )

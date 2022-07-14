@@ -2,8 +2,17 @@ import Bluebird from 'bluebird';
 import logger from '../shared/logger';
 import { queues } from '../queues';
 import Repository from '../repositories/repositoryModel';
+import SmartComment from '../comments/smartComments/smartCommentModel';
 import createGitHubImporter from './github';
-import { getOctokit, getOwnerAndRepo } from './repoSyncService';
+import {
+  getOctokit,
+  getOwnerAndRepo,
+  importReviewsFromPullRequest,
+  setSyncErrored,
+  setSyncUnauthorized,
+  setSyncStarted,
+  setSyncCompleted,
+} from './repoSyncService';
 
 const queue = queues.self(module);
 
@@ -94,6 +103,8 @@ async function importComments({
   for await (const data of pages) {
     await Bluebird.resolve(data).map(importComment, { concurrency: 10 });
   }
+
+  await updateLastUpdatedTimestamp({ repository, type });
 }
 
 // Imports comments from pull request reviews.
@@ -118,61 +129,8 @@ async function importReviews({ octokit, endpoint, repository, importComment }) {
       { concurrency: 10 }
     );
   }
-}
 
-async function importReviewsFromPullRequest({
-  octokit,
-  pullRequest,
-  importComment,
-}) {
-  const { data: reviews } = await octokit.pulls.listReviews({
-    owner: pullRequest.base.repo.owner.login,
-    repo: pullRequest.base.repo.name,
-    pull_number: pullRequest.number,
-  });
-
-  await Bluebird.resolve(reviews.filter((r) => r.body.trim())).map(
-    importComment,
-    { concurrency: 10 }
-  );
-}
-
-async function setSyncStarted(repository) {
-  repository.set({
-    'sync.status': 'started',
-    'sync.startedAt': new Date(),
-    'sync.erroredAt': null,
-    'sync.error': null,
-  });
-  await repository.save();
-}
-
-async function setSyncCompleted(repository) {
-  repository.set({
-    'sync.status': 'completed',
-    'sync.completedAt': new Date(),
-    'sync.erroredAt': null,
-    'sync.error': null,
-  });
-  await repository.save();
-}
-
-async function setSyncErrored(repository, error) {
-  repository.set({
-    'sync.status': 'errored',
-    'sync.erroredAt': new Date(),
-    'sync.error': error.message || error.toString().split('\n')[0],
-  });
-  await repository.save();
-}
-
-async function setSyncUnauthorized(repository) {
-  repository.set({
-    'sync.status': 'unauthorized',
-    'sync.erroredAt': new Date(),
-    'sync.error': null,
-  });
-  await repository.save();
+  await updateLastUpdatedTimestamp({ repository, type: 'pullRequestReview' });
 }
 
 // Async iterator that paginates through GitHub resources
@@ -233,7 +191,8 @@ async function* resumablePaginate({
 //
 // Adapted from https://gist.github.com/niallo/3109252.
 function parseLinkHeader(header) {
-  if (!header) return {};
+  // GitHub API doesn't return a Link header when there is only one page.
+  if (!header) return { last: 1 };
 
   const parts = header.split(',');
   const object = parts.reduce((accum, part) => {
@@ -247,6 +206,26 @@ function parseLinkHeader(header) {
     };
   }, {});
   return object;
+}
+
+// If we do polling for a keeping a repository up to date
+// (no webhooks), we need to know the maximum updated at timestamp
+// for each type of comment.
+async function updateLastUpdatedTimestamp({ repository, type }) {
+  const lastUpdatedAt = (
+    await SmartComment.findOne({
+      'repositoryId': repository._id,
+      'githubMetadata.type': type,
+    }).sort({
+      'githubMetadata.updated_at': -1,
+    })
+  )?.githubMetadata.updated_at;
+
+  if (lastUpdatedAt) {
+    await repository.updateOne({
+      $max: { [`sync.progress.${type}.lastUpdatedAt`]: lastUpdatedAt },
+    });
+  }
 }
 
 export { queue };

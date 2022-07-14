@@ -115,7 +115,14 @@ const Application = ({ Component, pageProps, store }) => {
 
 Application.getInitialProps = async ({ Component, ctx }) => {
   await initialize(ctx);
-  const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
+  let pageProps;
+  if (Component.getInitialProps) {
+    pageProps = await Component.getInitialProps(ctx);
+  } else if (Component.getServerSideProps) {
+    pageProps = await Component.getServerSideProps(ctx);
+  } else {
+    return {};
+  }
   return { pageProps };
 };
 

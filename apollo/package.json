@@ -68,6 +68,7 @@
     "swagger-ui-express": "^4.3.0",
     "text-clipper": "^2.1.0",
     "uuid": "^8.1.0",
+    "validate-github-token": "^1.1.1",
     "xlsx": "^0.15.5",
     "yamljs": "^0.3.0"
   },
@@ -83,6 +84,8 @@
     "eslint-plugin-jest": "^26.1.5",
     "jest": "^27.5.1",
     "nock": "^13.2.4",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "prettier": "^2.7.1",
+    "timekeeper": "^2.2.0"
   }
 }

@@ -76,6 +76,13 @@
   --color-suggestion-tag-container-border: #{v.$color-light-tag-container-border};
   --color-suggestion-tag-container-bg:  #{v.$color-light-tag-container-bg};
 
+  --color-add-snippet-button-bg: #{v.$color-light-background-add-snippet-button};
+  --color-add-snippet-button-border: #{v.$color-light-border-add-snippet-button};
+  --color-add-snippet-button-text: #{v.$color-light-font-create-snippet-modal};
+  --color-add-snippet-button-text-disabled: #{v.$color-light-text-add-snippet-button-disabled};
+  --color-add-snippet-button-border-disabled: #{v.$color-light-border-add-snippet-button};
+  --color-success-add-snippet-button-text: #{v.$color-light-success-add-snippet};
+
   --сolor-logout-modal-bg: #{v.$color-light-logout-bg};
 }
 
@@ -155,6 +162,13 @@
   --color-suggestion-tag-container-bg:  #{v.$color-light-high-contrast-tag-container-bg};
 
   --сolor-logout-modal-bg: #{v.$color-light-high-contrast-logout-bg};
+
+  --color-add-snippet-button-bg: #{v.$color-light-background-add-snippet-button};
+  --color-add-snippet-button-border: #{v.$color-light-border-add-snippet-button};
+  --color-add-snippet-button-text: #{v.$color-light-font-create-snippet-modal};
+  --color-add-snippet-button-text-disabled: #{v.$color-light-text-add-snippet-button-disabled};
+  --color-add-snippet-button-border-disabled: #{v.$color-light-border-add-snippet-button};
+  --color-success-add-snippet-button-text: #{v.$color-light-success-add-snippet};
 }
 
 .theme--dark {
@@ -234,6 +248,13 @@
   --color-suggestion-tag-container-bg:  #{v.$color-dark-tag-container-bg};
 
   --сolor-logout-modal-bg: #{v.$color-dark-logout-bg};
+
+  --color-add-snippet-button-bg: #{v.$color-dark-background-add-snippet-button};
+  --color-add-snippet-button-border: #{v.$color-dark-add-snippet-button-main};
+  --color-add-snippet-button-text: #{v.$color-dark-add-snippet-button-main};
+  --color-add-snippet-button-text-disabled: #{v.$color-dark-text-add-snippet-button-disabled};
+  --color-add-snippet-button-border-disabled: #{v.$color-dark-border-add-snippet-button-disabled};
+  --color-success-add-snippet-button-text: #{v.$color-dark-success-add-snippet};
 }
 
 .theme--dark-dimmed {
@@ -313,6 +334,13 @@
   --color-suggestion-tag-container-bg:  #{v.$color-dark-dim-tag-container-bg};
 
   --сolor-logout-modal-bg: #{v.$color-dark-dim-logout-bg};
+
+  --color-add-snippet-button-bg: #{v.$color-dark-dimmed-background-add-snippet-button};
+  --color-add-snippet-button-border: #{v.$color-dark-add-snippet-button-main};
+  --color-add-snippet-button-text: #{v.$color-dark-add-snippet-button-main};
+  --color-add-snippet-button-text-disabled: #{v.$color-dark-text-add-snippet-button-disabled};
+  --color-add-snippet-button-border-disabled: #{v.$color-dark-border-add-snippet-button-disabled};
+  --color-success-add-snippet-button-text: #{v.$color-dark-success-add-snippet};
 }
 
 .theme--dark-high-contrast {
@@ -393,6 +421,13 @@
   --color-suggestion-tag-container-bg:  #{v.$color-dark-high-contrast-tag-container-bg};
 
   --сolor-logout-modal-bg: #{v.$color-dark-high-contrast-logout-bg};
+
+  --color-add-snippet-button-bg: #{v.$color-dark-contrast-background-add-snippet-button};
+  --color-add-snippet-button-border: #{v.$color-dark-add-snippet-button-main};
+  --color-add-snippet-button-text: #{v.$color-dark-add-snippet-button-main};
+  --color-add-snippet-button-text-disabled: #{v.$color-dark-text-add-snippet-button-disabled};
+  --color-add-snippet-button-border-disabled: #{v.$color-dark-border-add-snippet-button-disabled};
+  --color-success-add-snippet-button-text: #{v.$color-dark-success-add-snippet};
 }
 
 .sema {

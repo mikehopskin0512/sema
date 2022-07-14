@@ -62,7 +62,7 @@ const PortfolioList = () => {
   };
 
   const copyToClipboard = (id) => {
-    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(user.handle, id)}`);
+    navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}${PATHS.PORTFOLIO.VIEW(user.handle, id)}`);
     setCopiedToClipboard(id);
   };
 

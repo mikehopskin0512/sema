@@ -34,7 +34,7 @@ export default function attachRoutes(app, passport) {
   suggestedComments(app, passport);
   tags(app, passport);
   credentials(app, passport);
-  github(app);
+  github(app, passport);
   health(app);
   invitations(app, passport);
   notifications(app, passport);

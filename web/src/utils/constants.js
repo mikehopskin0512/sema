@@ -207,6 +207,7 @@ export const PATHS = {
   ONBOARDING: '/onboarding',
   REGISTER: '/register',
   PASSWORD_RESET: '/password-reset',
+  COLLABORATION: '/collaboration',
   REPORTS: '/reports',
   SETTINGS: '/settings',
   ORGANIZATION_CREATE: '/organizations/add',
@@ -396,3 +397,82 @@ export const DROPDOWN_SORTING_TYPES = {
   ALPHABETICAL_USER_PRIORIY_SORT: 'alphabetical_user_priority',
   CHRONOLOGICAL_SORT: 'chronological_sort'
 };
+
+export const renderMenuItems = (personalDashboard, isEmpty, selectedOrganization) => {
+  const standardClass = 'navbar-item menu-item has-text-black-950 mr-10 has-text-weight-semibold border-radius-4';
+
+  return [
+  ... personalDashboard && isEmpty(selectedOrganization) ? [{
+    title: 'Dashboard Hidden',
+    className : standardClass,
+    path: PATHS.PERSONAL,
+  }] : [],
+  ... !isEmpty(selectedOrganization) ? [{
+    title: 'Dashboard',
+    className : standardClass,
+    path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`,
+    stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.DASHBOARD}`,
+  }] : [],
+  ... !isEmpty(selectedOrganization) ? [{
+    title: 'Repos',
+    className : standardClass,
+    path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.REPOS}`,
+    stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.REPOS}`,
+  }] : [{
+    title: 'Repos',
+    className : standardClass,
+    path: PATHS.DASHBOARD
+  }],
+  ... !isEmpty(selectedOrganization) ? [{
+    title: 'Organization Insights',
+    className : standardClass,
+    path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.ORGANIZATION_INSIGHTS}`,
+    stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.ORGANIZATION_INSIGHTS}`,
+  }] : [{
+    title: 'Personal Insights',
+    className : standardClass,
+    path: PATHS.PERSONAL_INSIGHTS
+  }],
+  {
+    title: 'Snippets',
+    className : standardClass,
+    path: PATHS.SNIPPETS._
+  },
+  {
+    title: 'Support',
+    className : standardClass,
+    path: PATHS.SUPPORT
+  },
+]};
+export const SYNC_STATUS = {
+  started: {
+    status: 'started',
+    tooltip: 'Syncing from GitHub in progress',
+    label: 'Syncing',
+  },
+  completed: {
+    status: 'completed',
+    tooltip: 'Syncing is complete',
+    label: 'Synced',
+  },
+  errored: {
+    status: 'errored',
+    tooltip: 'An error occurred - please <u>retry activating GitHub Sync for this repo.</u>',
+    label: 'Sync Error',
+  },
+  unauthorized: {
+    status: 'unauthorized',
+    tooltip: 'You are not authorized. Please authorize in GitHub first',
+    label: 'Sync Error',
+  },
+  queued: {
+    status: 'queued',
+    tooltip: 'This repo is queued and will begin syncing from GitHub.',
+    label: 'Queued for sync',
+  },
+  notsynced: {
+    status: 'notsynced',
+    tooltip: '<u>Activate GitHub Sync</u> to unlock the full power of Sema for this repo.',
+    label: 'Sync Inactive',
+  }
+}
