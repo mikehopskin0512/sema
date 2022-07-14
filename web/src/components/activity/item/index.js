@@ -26,6 +26,7 @@ function ActivityItem(props) {
       commentId = '',
       requester = 'Github User',
       repo,
+      created_at = ''
     },
     isSnapshot = false,
   } = props;
@@ -38,8 +39,8 @@ function ActivityItem(props) {
   } = user || {};
 
   const [dateCreated] = useState(
-    !isEmpty(createdAt)
-      ? format(new Date(createdAt), 'MMM dd, yyyy hh:mm aa')
+    !isEmpty(created_at)
+      ? format(new Date(created_at), 'MMM dd, yyyy hh:mm aa')
       : ''
   );
 
