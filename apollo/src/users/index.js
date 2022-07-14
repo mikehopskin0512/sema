@@ -15,13 +15,15 @@ import {
   create, update, patch, findByUsername, findById,
   verifyUser, resetVerification,
   joinOrg,
-  initiatePasswordReset, validatePasswordReset, resetPassword,
+  initiatePasswordReset, validatePasswordReset, resetPassword, updatePreviewImgLink, findByHandle,
 } from './userService';
 import { setRefreshToken, createRefreshToken, createAuthToken } from '../auth/authService';
 import { redeemInvite, checkIsInvitationValid } from '../invitations/invitationService';
 import { sendEmail } from '../shared/emailService';
 import { getPortfoliosByUser } from '../portfolios/portfolioService';
 import checkEnv from '../middlewares/checkEnv';
+import multer from '../multer';
+import { uploadImage } from '../utils';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
@@ -341,6 +343,32 @@ export default (app, passport) => {
     try {
       const snapshots = await getSnapshotsByUserId(id);
       return res.status(200).send(snapshots);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.post('/infoPreview/:userId/:repoId', passport.authenticate(['bearer'], { session: false }), multer.single('previewImgLink'), async (req, res) => {
+    try {
+      const { userId, repoId } = req.params;
+      const uploadedImage = await uploadImage(req.file, 'infographics');
+
+      if(uploadedImage) await updatePreviewImgLink(userId, repoId, uploadedImage.Location);
+
+      return res.status(200).send({});
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/infoPreview/:handle/:repoId', async (req, res) => {
+    try {
+      const { handle, repoId } = req.params;
+      const user = await findByHandle(handle);
+      const previewImgLink = user?.identities[0]?.repositories?.find((repo) => repo.id === repoId)?.previewImgLink;
+      return res.status(200).send({ previewImgLink });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

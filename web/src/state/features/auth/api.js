@@ -1,4 +1,4 @@
-import { get, getAll, create, update, updateItem, patch } from '../../utils/api';
+import { get, getAll, create, update, updateItem, patch, upload } from '../../utils/api';
 
 export const auth = (params) => create('/api/proxy/auth/token', params);
 export const exchangeToken = (params) => create('/api/proxy/auth/refresh-token', params);
@@ -9,3 +9,4 @@ export const patchUser = (id, params, token) => patch(`/api/proxy/users/${id}`, 
 export const verifyUser = (params, token) => getAll(`/api/proxy/users/verification/${token}`, params);
 export const resetVerification = (params) => create('/api/proxy/users/verification', params);
 export const postUserOrg = (userId, params, token) => create(`/api/proxy/users/${userId}/organizations`, params, token);
+export const uploadInfographicsImage = ({ userId, repoId }, body, token) => upload(`/api/proxy/users/infoPreview/${userId}/${repoId}`, body, token);

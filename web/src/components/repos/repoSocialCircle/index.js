@@ -9,7 +9,9 @@ import styles from './repoSocialCircle.module.scss';
 import { PrivateRepoBanner } from '../../repos/repoSocialCircle/banners/privateRepoBanner';
 import { NotSyncedRepoBanner } from '../../repos/repoSocialCircle/banners/notSyncedRepoBanner';
 import { SyncInProgressRepoBanner } from '../../repos/repoSocialCircle/banners/syncInProgressBanner';
-import { onDownloadImage } from '../../../utils/imageHelpers';
+import { createDataUrl, onDownloadImage } from '../../../utils/imageHelpers';
+import { uploadInfographicsImage } from '../../../state/features/auth/api';
+import { isEmpty } from 'lodash';
 import { shareWithTwitter, shareWithLinkedIn } from '../../../utils/socialMedia';
 
 export const SYNC_STATUSES = {
@@ -39,12 +41,23 @@ const RepoSocialCircle = ({ repoId }) => {
   const [isCopied, changeIsCopied] = useState(false);
 
   useEffect(() => {
-    getRepoSocialGraph({handle, repoId})
+    getRepoSocialGraph({ handle, repoId })
       .then((res) => {
         setInteractions(res?.data?.interactionsByUsers);
         setRepoName(res?.data?.repoName);
       });
-  }, [repoId])
+  }, [repoId]);
+
+
+  useEffect(() => {
+    if (!isEmpty(interactions) && !isEmpty(containerRef.current)) {
+      createDataUrl(containerRef).then(dataUrl => {
+        const formData = new FormData();
+        formData.append('previewImgLink', dataUrl);
+        uploadInfographicsImage({ userId: user?._id, repoId }, formData, token);
+      });
+    }
+  }, [interactions, containerRef.current]);
 
   if (isFetching) return null;
 

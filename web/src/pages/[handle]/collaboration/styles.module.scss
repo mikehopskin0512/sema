@@ -52,3 +52,14 @@
   margin-right: auto;
   margin-left: auto;
 }
+
+.collaboration-control-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 50px;
+  margin-right: auto;
+  margin-left: auto;
+}
