@@ -26,7 +26,7 @@ export const SYNC_STATUSES = {
 const RepoSocialCircle = ({ repoId }) => {
   const containerRef = useRef(null);
   const [interactions, setInteractions] = useState([]);
-  const { user } = useSelector((state) => state.authState);
+  const { user, token } = useSelector((state) => state.authState);
   const { data: repoData, isFetching } = useSelector((state) => state.repositoriesState);
   const [repoName, setRepoName] = useState('');
   const handle = user?.identities[0]?.username;
