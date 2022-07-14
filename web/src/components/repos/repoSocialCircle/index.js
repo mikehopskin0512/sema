@@ -73,7 +73,7 @@ const RepoSocialCircle = ({ repoId }) => {
     return <NotSyncedRepoBanner />
   }
 
-  const socialCircleUrl = `${window.location.origin}/${handle}/collaboration/${repoName}?${repoId}`
+  const socialCircleUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${handle}/collaboration/${repoName}?repoId=${repoId}`
   const socials = [
     { name: 'twitter', icon: TwitterIcon, onClick: () => shareWithTwitter({ text: 'Check out my Github Social Circle!', url: socialCircleUrl })},
     // { name: 'facebook', icon: FacebookIcon, onClick: () => {}},
@@ -81,7 +81,7 @@ const RepoSocialCircle = ({ repoId }) => {
   ]
 
   const onCopy = () => {
-    navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}/${handle}/collaboration/${repoId}?repo=${repoName}`);
+    navigator.clipboard.writeText(socialCircleUrl);
     changeIsCopied(true);
     setTimeout(() => changeIsCopied(false), 3000);
   };
