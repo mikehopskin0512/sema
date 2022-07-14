@@ -73,7 +73,7 @@ const RepoSocialCircle = ({ repoId }) => {
     return <NotSyncedRepoBanner />
   }
 
-  const socialCircleUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${handle}/collaboration/${repoName}?repoId=${repoId}`
+  const socialCircleUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${handle}/collaboration/${repoId}?repo=${repoName}`
   const socials = [
     { name: 'twitter', icon: TwitterIcon, onClick: () => shareWithTwitter({ text: 'Check out my Github Social Circle!', url: socialCircleUrl })},
     // { name: 'facebook', icon: FacebookIcon, onClick: () => {}},
