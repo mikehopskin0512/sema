@@ -127,6 +127,34 @@ describe('GET /repositories/overview', () => {
       expect(data.sync.progress.overall).toBe('0.36');
     });
   });
+
+  describe('repository with no sync', () => {
+    let data;
+
+    beforeAll(async () => {
+      token = await createAuthToken(user);
+    });
+
+    beforeAll(async () => {
+      const repository = await Repository.findOne({ externalId: '123456' });
+      await repository.updateOne({ sync: null });
+    });
+
+    beforeAll(async () => {
+      ({ data } = await apollo.get('/v1/repositories/overview', {
+        params: { externalId: '123456' },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }));
+    });
+
+    it.todo('should respond with 200 OK');
+
+    it('should not have sync attribute', () => {
+      expect(data.sync).toBeFalsy();
+    });
+  });
 });
 
 describe('POST /repositories/:id/sync', () => {
