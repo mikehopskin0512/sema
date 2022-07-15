@@ -10,7 +10,7 @@ import Table from '../table';
 import { alertOperations } from '../../state/features/alerts';
 import { CloseIcon, SearchIcon } from "../Icons";
 import useDebounce from '../../hooks/useDebounce';
-import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants';
+import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants/date';
 
 function OrganizationReposList({ isActive, onClose }) {
   const { triggerAlert } = alertOperations;
