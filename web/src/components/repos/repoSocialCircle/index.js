@@ -26,7 +26,7 @@ export const SYNC_STATUSES = {
 const RepoSocialCircle = ({ repoId }) => {
   const containerRef = useRef(null);
   const [interactions, setInteractions] = useState([]);
-  const { user } = useSelector((state) => state.authState);
+  const { user, token } = useSelector((state) => state.authState);
   const { data: repoData, isFetching } = useSelector((state) => state.repositoriesState);
   const [repoName, setRepoName] = useState('');
   const handle = user?.identities[0]?.username;
@@ -73,7 +73,7 @@ const RepoSocialCircle = ({ repoId }) => {
     return <NotSyncedRepoBanner />
   }
 
-  const socialCircleUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${handle}/collaboration/${repoName}?repoId=${repoId}`
+  const socialCircleUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${handle}/collaboration/${repoId}?repo=${repoName}`
   const socials = [
     { name: 'twitter', icon: TwitterIcon, onClick: () => shareWithTwitter({ text: 'Check out my Github Social Circle!', url: socialCircleUrl })},
     // { name: 'facebook', icon: FacebookIcon, onClick: () => {}},

@@ -86,28 +86,35 @@ export const createMany = async (repositories) => {
   }
 };
 
-export const createAndSyncReposFromGithub = async (reposFroGithub, createdBy) => {
+export const createAndSyncReposFromGithub = async (
+  reposFroGithub,
+  createdBy
+) => {
   try {
-    await Promise.all(reposFroGithub.map(async (repoFromGithub) => {
-      const existingRepo = await Repositories.findOne({ externalId: repoFromGithub.repoId });
-      if (!existingRepo) {
-        // create and add to sync queue
-        return create({
-          id: repoFromGithub.repoId,
-          name: repoFromGithub.repoName,
-          description: repoFromGithub.description,
-          addedBy: createdBy,
-          type: 'github'
+    await Promise.all(
+      reposFroGithub.map(async (repoFromGithub) => {
+        const existingRepo = await Repositories.findOne({
+          externalId: repoFromGithub.repoId,
         });
-      }
-      return false;
-    }));
+        if (!existingRepo) {
+          // create and add to sync queue
+          return create({
+            id: repoFromGithub.repoId,
+            name: repoFromGithub.repoName,
+            description: repoFromGithub.description,
+            addedBy: createdBy,
+            type: 'github',
+          });
+        }
+        return false;
+      })
+    );
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
     throw error;
   }
-}
+};
 
 export const get = async (_id) => {
   try {
@@ -592,9 +599,9 @@ export const getReposFilterValues = async (
 };
 
 function getSyncResponse(sync) {
-  const { progress } = sync;
+  if (!sync?.progress) return sync;
 
-  if (!progress) return sync;
+  const { progress } = sync;
 
   const current = Object.keys(progress)
     .map((key) => progress[key].currentPage || 0)

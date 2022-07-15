@@ -130,77 +130,8 @@ const Login = () => {
               <div className={clsx(styles['neon-logo'], 'is-hidden-mobile')}>
                 <img src="/img/logo-neon.png" />
               </div>
-              <div className="is-flex is-flex-wrap-wrap is-justify-content-space-around">
-                <div className="is-flex is-flex-direction-column is-align-items-center is-justify-content-center">
-                  <div style={{ maxWidth: 500 }}>
-                    <h1 className={clsx('my-40', styles.title)}>
-                      Write more meaningful code reviews.
-                    </h1>
-                    <div className="feature-list mt-20">
-                      <ul>
-                        <li className="mb-25">
-                          <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                            <div
-                              className={clsx('mr-15', styles['fa-container'])}
-                            >
-                              <img src="/img/icons/like_vector.png" />
-                            </div>
-                            <span
-                              className={clsx(styles.subtitles, 'is-size-1r')}
-                            >
-                              <span className="has-text-weight-bold">
-                                Snippets:{' '}
-                              </span>
-                              Leave better reviews by inserting pre-written
-                              snippets based on best practices.
-                            </span>
-                          </div>
-                        </li>
-                        <li className="mb-25">
-                          <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                            <div
-                              className={clsx('mr-15', styles['fa-container'])}
-                            >
-                              <img src="/img/icons/comment_vector.png" />
-                            </div>
-                            <span
-                              className={clsx(styles.subtitles, 'is-size-1r')}
-                            >
-                              <span className="has-text-weight-bold">
-                                Comment Summaries:{' '}
-                              </span>
-                              Quickly summarize your review by choosing from a
-                              list of summaries.
-                            </span>
-                          </div>
-                        </li>
-                        <li className="mb-25">
-                          <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                            <div
-                              className={clsx('mr-15', styles['fa-container'])}
-                            >
-                              <img src="/img/icons/tag_vector.png" />
-                            </div>
-                            <span
-                              className={clsx(styles.subtitles, 'is-size-1r')}
-                            >
-                              <span className="has-text-weight-bold">
-                                Comment Tags:{' '}
-                              </span>
-                              Automatically categorize your comments with clear,
-                              mutually exclusive tags.
-                            </span>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only"
-                  style={{ minWidth: 50 }}
-                />
-                <div>
+              <div className="is-flex is-flex-wrap-wrap is-justify-content-center">
+                <div className="mt-35">
                   {/** Show on WideScreens */}
                   <div
                     className={clsx(

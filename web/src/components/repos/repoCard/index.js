@@ -5,8 +5,6 @@ import Avatar from 'react-avatar';
 import { useSelector } from 'react-redux';
 import usePermission from '../../../hooks/usePermission';
 import DeleteRepoModal from "./deleteRepoModal";
-import { OptionsIcon } from '../../Icons';
-import DropDownMenu from '../../dropDownMenu';
 import styles from './repoCard.module.scss';
 import { PATHS } from '../../../utils/constants';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
@@ -56,7 +54,7 @@ function RepoCard(props) {
   return (
   <Link href={`${PATHS.REPO}/${externalId}`}>
     <div
-      className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', column === 3 && styles['card-width-3c'], column === 2 && styles['card-width-2c'])}
+      className={clsx('p-10 is-flex is-clickable', column === 3 && styles['card-width-3c'], column === 2 && styles['card-width-2c'])}
       aria-hidden
       style={{zIndex: reposLength - idx}}
     >

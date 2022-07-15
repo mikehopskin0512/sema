@@ -15,6 +15,7 @@ import useAuthEffect from '../../../hooks/useAuthEffect';
 import FilterBar from '../../../components/repos/repoPageLayout/components/FilterBar';
 import Metrics from '../../../components/metrics';
 import styles from './styles.module.scss';
+import { useFlags } from '../../../components/launchDarkly';
 
 const { fetchRepositoryOverview, fetchReposByIds, fetchRepoFilters } =
   repositoriesOperations;
@@ -166,6 +167,8 @@ function RepoPage() {
     });
   };
 
+  const { socialCircles } = useFlags();
+
   return (
     <RepoPageLayout
       setSelectedTab={setSelectedTab}
@@ -178,9 +181,11 @@ function RepoPage() {
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
 
       <div className={styles.wrapper}>
-        <div className="mb-32 px-8">
-          <RepoSocialCircle repoId={repoId} />
-        </div>
+        {socialCircles && (
+          <div className="mb-32 px-8">
+            <RepoSocialCircle repoId={repoId} />
+          </div>
+        )}
         <FilterBar
           filter={filter}
           startDate={startDate}
