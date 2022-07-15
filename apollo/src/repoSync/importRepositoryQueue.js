@@ -191,6 +191,7 @@ async function* resumablePaginate({
     sort: 'created',
     direction: 'desc',
     page: currentPage + 1,
+    per_page: 100,
     ...query,
   });
 
