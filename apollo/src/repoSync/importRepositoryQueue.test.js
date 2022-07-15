@@ -70,36 +70,48 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfPullRequestComments(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="last"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&per_page=100&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&per_page=100&direction=desc>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 2 })
+          .query({ sort: 'created', direction: 'desc', page: 2, per_page: 100 })
           .reply(200, getSecondPageOfPullRequestComments());
       });
 
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfIssueComments(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&direction=desc>; rel="last"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&per_page=100&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&per_page=100&direction=desc>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 2 })
+          .query({ sort: 'created', direction: 'desc', page: 2, per_page: 100 })
           .reply(200, getSecondPageOfIssueComments());
       });
 
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls')
-          .query({ sort: 'created', direction: 'desc', page: 1, state: 'all' })
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 1,
+            state: 'all',
+            per_page: 100,
+          })
           .reply(200, getFirstPageOfPullRequests(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc&state=all>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc&state=all>; rel="last"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc&per_page=100&state=all>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc&per_page=100&state=all>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/pulls')
-          .query({ sort: 'created', direction: 'desc', page: 2, state: 'all' })
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 2,
+            state: 'all',
+            per_page: 100,
+          })
           .reply(200, getSecondPageOfPullRequests())
           .get('/repos/Semalab/phoenix/pulls/3/reviews')
           .reply(200, getPullRequestReviewsForPR3())
@@ -421,36 +433,48 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfPullRequestComments(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="last"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&per_page=100&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&per_page=100&direction=desc>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 2 })
+          .query({ sort: 'created', direction: 'desc', page: 2, per_page: 100 })
           .reply(200, getSecondPageOfPullRequestComments());
       });
 
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfIssueComments(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&direction=desc>; rel="last"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&per_page=100&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&per_page=100&direction=desc>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 2 })
+          .query({ sort: 'created', direction: 'desc', page: 2, per_page: 100 })
           .reply(200, getSecondPageOfIssueComments());
       });
 
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls')
-          .query({ sort: 'created', direction: 'desc', page: 1, state: 'all' })
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 1,
+            state: 'all',
+            per_page: 100,
+          })
           .reply(200, getFirstPageOfPullRequests(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc&state=all>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc&state=all>; rel="last"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc&per_page=100&state=all>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc&per_page=100&state=all>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/pulls')
-          .query({ sort: 'created', direction: 'desc', page: 2, state: 'all' })
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 2,
+            state: 'all',
+            per_page: 100,
+          })
           .reply(200, getSecondPageOfPullRequests())
           .get('/repos/Semalab/phoenix/pulls/3/reviews')
           .reply(200, getPullRequestReviewsForPR3())
@@ -494,12 +518,12 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfPullRequestComments(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="last"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&per_page=100&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&per_page=100&direction=desc>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 2 })
+          .query({ sort: 'created', direction: 'desc', page: 2, per_page: 100 })
           .reply(500, 'GitHub error');
       });
 
@@ -507,10 +531,16 @@ describe('Import Repository Queue', () => {
         // Only test resuming of pull request comments.
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, [])
           .get('/repos/Semalab/phoenix/pulls')
-          .query({ sort: 'created', direction: 'desc', page: 1, state: 'all' })
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 1,
+            state: 'all',
+            per_page: 100,
+          })
           .reply(200, []);
       });
 
@@ -566,10 +596,20 @@ describe('Import Repository Queue', () => {
           // where it left off.
           nock('https://api.github.com')
             .get('/repos/Semalab/phoenix/pulls/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .query({
+              sort: 'created',
+              direction: 'desc',
+              page: 1,
+              per_page: 100,
+            })
             .reply(500, 'GitHub error')
             .get('/repos/Semalab/phoenix/pulls/comments')
-            .query({ sort: 'created', direction: 'desc', page: 2 })
+            .query({
+              sort: 'created',
+              direction: 'desc',
+              page: 2,
+              per_page: 100,
+            })
             .reply(200, () => getSecondPageOfPullRequestComments());
         });
 
@@ -577,7 +617,12 @@ describe('Import Repository Queue', () => {
           // Only test resuming of pull request comments.
           nock('https://api.github.com')
             .get('/repos/Semalab/phoenix/issues/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .query({
+              sort: 'created',
+              direction: 'desc',
+              page: 1,
+              per_page: 100,
+            })
             .reply(200, [])
             .get('/repos/Semalab/phoenix/pulls')
             .query({
@@ -585,6 +630,7 @@ describe('Import Repository Queue', () => {
               direction: 'desc',
               page: 1,
               state: 'all',
+              per_page: 100,
             })
             .reply(200, []);
         });
@@ -643,12 +689,12 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfIssueComments(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?sort=created&direction=desc&page=2>; rel="next", <https://api.github.com/repos/Semalab/phoenix/issues/comments?sort=created&direction=desc&page=2>; rel="last"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?sort=created&direction=desc&page=2&per_page=100>; rel="next", <https://api.github.com/repos/Semalab/phoenix/issues/comments?sort=created&direction=desc&page=2&per_page=100>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 2 })
+          .query({ sort: 'created', direction: 'desc', page: 2, per_page: 100 })
           .reply(500, 'GitHub Error');
       });
 
@@ -656,10 +702,16 @@ describe('Import Repository Queue', () => {
         // Only test resuming of issue comments.
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, [])
           .get('/repos/Semalab/phoenix/pulls')
-          .query({ sort: 'created', direction: 'desc', page: 1, state: 'all' })
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 1,
+            state: 'all',
+            per_page: 100,
+          })
           .reply(200, []);
       });
 
@@ -710,10 +762,20 @@ describe('Import Repository Queue', () => {
           // where it left off.
           nock('https://api.github.com')
             .get('/repos/Semalab/phoenix/issues/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .query({
+              sort: 'created',
+              direction: 'desc',
+              page: 1,
+              per_page: 100,
+            })
             .reply(500, 'GitHub error')
             .get('/repos/Semalab/phoenix/issues/comments')
-            .query({ sort: 'created', direction: 'desc', page: 2 })
+            .query({
+              sort: 'created',
+              direction: 'desc',
+              page: 2,
+              per_page: 100,
+            })
             .reply(200, getSecondPageOfIssueComments());
         });
 
@@ -721,7 +783,12 @@ describe('Import Repository Queue', () => {
           // Only test resuming of issue comments.
           nock('https://api.github.com')
             .get('/repos/Semalab/phoenix/pulls/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .query({
+              sort: 'created',
+              direction: 'desc',
+              page: 1,
+              per_page: 100,
+            })
             .reply(200, [])
             .get('/repos/Semalab/phoenix/pulls')
             .query({
@@ -729,6 +796,7 @@ describe('Import Repository Queue', () => {
               direction: 'desc',
               page: 1,
               state: 'all',
+              per_page: 100,
             })
             .reply(200, []);
         });
@@ -787,7 +855,12 @@ describe('Import Repository Queue', () => {
           // Only test resuming of issue comments.
           nock('https://api.github.com')
             .get('/repos/Semalab/phoenix/pulls/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .query({
+              sort: 'created',
+              direction: 'desc',
+              page: 1,
+              per_page: 100,
+            })
             .reply(200, [])
             .get('/repos/Semalab/phoenix/pulls')
             .query({
@@ -795,6 +868,7 @@ describe('Import Repository Queue', () => {
               direction: 'desc',
               page: 1,
               state: 'all',
+              per_page: 100,
             })
             .reply(200, []);
         });
@@ -826,12 +900,24 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls')
-          .query({ sort: 'created', direction: 'desc', page: 1, state: 'all' })
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 1,
+            state: 'all',
+            per_page: 100,
+          })
           .reply(200, getFirstPageOfPullRequests(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc&state=all>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc&state=all>; rel="last"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc&per_page=100&state=all>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc&per_page=100&state=all>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/pulls')
-          .query({ sort: 'created', direction: 'desc', page: 2, state: 'all' })
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 2,
+            state: 'all',
+            per_page: 100,
+          })
           .reply(500, 'GitHub Error')
           .get('/repos/Semalab/phoenix/pulls/3/reviews')
           .reply(200, getPullRequestReviewsForPR3())
@@ -843,10 +929,10 @@ describe('Import Repository Queue', () => {
         // Only test resuming of pull request reviews.
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, [])
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, []);
       });
 
@@ -904,6 +990,7 @@ describe('Import Repository Queue', () => {
               direction: 'desc',
               page: 1,
               state: 'all',
+              per_page: 100,
             })
             .reply(500, 'GitHub error')
             .get('/repos/Semalab/phoenix/pulls')
@@ -912,6 +999,7 @@ describe('Import Repository Queue', () => {
               direction: 'desc',
               page: 2,
               state: 'all',
+              per_page: 100,
             })
             .reply(200, getSecondPageOfPullRequests())
             .get('/repos/Semalab/phoenix/pulls/3/reviews')
@@ -924,10 +1012,20 @@ describe('Import Repository Queue', () => {
           // Only test resuming of pull request reviews.
           nock('https://api.github.com')
             .get('/repos/Semalab/phoenix/pulls/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .query({
+              sort: 'created',
+              direction: 'desc',
+              page: 1,
+              per_page: 100,
+            })
             .reply(200, [])
             .get('/repos/Semalab/phoenix/issues/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .query({
+              sort: 'created',
+              direction: 'desc',
+              page: 1,
+              per_page: 100,
+            })
             .reply(200, []);
         });
 
@@ -987,10 +1085,20 @@ describe('Import Repository Queue', () => {
           // Only test resuming of issue comments.
           nock('https://api.github.com')
             .get('/repos/Semalab/phoenix/issues/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .query({
+              sort: 'created',
+              direction: 'desc',
+              page: 1,
+              per_page: 100,
+            })
             .reply(200, [])
             .get('/repos/Semalab/phoenix/pulls/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .query({
+              sort: 'created',
+              direction: 'desc',
+              page: 1,
+              per_page: 100,
+            })
             .reply(200, []);
         });
 
@@ -1117,7 +1225,7 @@ describe('Import Repository Queue', () => {
         const firstComment = getFirstPageOfPullRequestComments()[0];
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, [
             {
               ...firstComment,
@@ -1269,13 +1377,19 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfPullRequestComments().slice(0, 1))
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, [])
           .get('/repos/Semalab/phoenix/pulls')
-          .query({ sort: 'created', direction: 'desc', page: 1, state: 'all' })
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 1,
+            state: 'all',
+            per_page: 100,
+          })
           .reply(200, []);
       });
 
@@ -1363,13 +1477,19 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfPullRequestComments().slice(0, 1))
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, [])
           .get('/repos/Semalab/phoenix/pulls')
-          .query({ sort: 'created', direction: 'desc', page: 1, state: 'all' })
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 1,
+            state: 'all',
+            per_page: 100,
+          })
           .reply(200, []);
       });
 
@@ -1485,13 +1605,19 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfPullRequestComments().slice(0, 1))
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, [])
           .get('/repos/Semalab/phoenix/pulls')
-          .query({ sort: 'created', direction: 'desc', page: 1, state: 'all' })
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 1,
+            state: 'all',
+            per_page: 100,
+          })
           .reply(200, []);
       });
 
@@ -1522,10 +1648,20 @@ describe('Import Repository Queue', () => {
         beforeAll(() => {
           nock('https://api.github.com')
             .get('/repos/Semalab/phoenix/pulls/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .query({
+              sort: 'created',
+              direction: 'desc',
+              page: 1,
+              per_page: 100,
+            })
             .reply(200, getFirstPageOfPullRequestComments().slice(0, 1))
             .get('/repos/Semalab/phoenix/issues/comments')
-            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .query({
+              sort: 'created',
+              direction: 'desc',
+              page: 1,
+              per_page: 100,
+            })
             .reply(200, [])
             .get('/repos/Semalab/phoenix/pulls')
             .query({
@@ -1533,6 +1669,7 @@ describe('Import Repository Queue', () => {
               direction: 'desc',
               page: 1,
               state: 'all',
+              per_page: 100,
             })
             .reply(200, []);
         });
@@ -1650,13 +1787,19 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfPullRequestComments().slice(0, 1))
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, [])
           .get('/repos/Semalab/phoenix/pulls')
-          .query({ sort: 'created', direction: 'desc', page: 1, state: 'all' })
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 1,
+            state: 'all',
+            per_page: 100,
+          })
           .reply(200, []);
       });
 
@@ -1764,13 +1907,19 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfPullRequestComments().slice(0, 1))
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, [])
           .get('/repos/Semalab/phoenix/pulls')
-          .query({ sort: 'created', direction: 'desc', page: 1, state: 'all' })
+          .query({
+            sort: 'created',
+            direction: 'desc',
+            page: 1,
+            state: 'all',
+            per_page: 100,
+          })
           .reply(200, []);
       });
 
@@ -1843,10 +1992,10 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfPullRequestComments().slice(0, 1))
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, [])
           .get('/repos/Semalab/phoenix/pulls')
           .query({
@@ -1854,6 +2003,7 @@ describe('Import Repository Queue', () => {
             direction: 'desc',
             page: 1,
             state: 'all',
+            per_page: 100,
           })
           .reply(200, []);
       });
@@ -1927,10 +2077,10 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfPullRequestComments().slice(0, 1))
           .get('/repos/Semalab/phoenix/issues/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, [])
           .get('/repos/Semalab/phoenix/pulls')
           .query({
@@ -1938,6 +2088,7 @@ describe('Import Repository Queue', () => {
             direction: 'desc',
             page: 1,
             state: 'all',
+            per_page: 100,
           })
           .reply(200, []);
       });
@@ -1995,7 +2146,7 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfPullRequestComments().slice(1, 2))
           .get('/repos/Semalab/phoenix/issues/comments')
           .query(() => true)
@@ -2106,7 +2257,7 @@ describe('Import Repository Queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
           .reply(200, getFirstPageOfPullRequestComments().slice(1, 2))
           .get('/repos/Semalab/phoenix/issues/comments')
           .query(() => true)
@@ -2197,7 +2348,7 @@ describe('Import Repository Queue', () => {
       const firstComment = getFirstPageOfPullRequestComments()[0];
       nock('https://api.github.com')
         .get('/repos/Semalab/phoenix/pulls/comments')
-        .query({ sort: 'created', direction: 'desc', page: 1 })
+        .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
         .reply(200, [
           {
             ...firstComment,
@@ -2284,7 +2435,7 @@ describe('Import Repository Queue', () => {
 
       nock('https://api.github.com')
         .get('/repos/Semalab/phoenix/pulls/comments')
-        .query({ sort: 'created', direction: 'desc', page: 1 })
+        .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
         .reply(200, [firstComment]);
     });
 
@@ -2342,21 +2493,28 @@ describe('Import Repository Queue', () => {
 
     describe('processing queue', () => {
       let defaultInstallationNock;
+      let tokenUsedForGitHubAPI;
+      const limitRemaining = new Map();
 
       beforeAll(() => {
         nock('https://api.github.com')
+          .persist()
           .get('/repos/Semalab/phoenix/installation')
           .reply(404)
           .get('/repositories/237888452')
-          .reply(200, {
-            id: '237888452',
-            name: 'phoenix',
+          .reply(200, function recordTokenAndReply() {
+            [, tokenUsedForGitHubAPI] =
+              this.req.headers.authorization[0].split(' ');
+            return {
+              id: '237888452',
+              name: 'phoenix',
+            };
           });
 
         defaultInstallationNock = nock('https://api.github.com')
           .persist()
           .get('/app/installations')
-          .reply(200, [{ id: 35676598 }])
+          .reply(200, [{ id: 45676599 }, { id: 35676598 }])
           .post('/app/installations/35676598/access_tokens', {})
           .reply(201, {
             token: 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
@@ -2377,32 +2535,56 @@ describe('Import Repository Queue', () => {
               vulnerability_alerts: 'read',
             },
             repository_selection: 'selected',
+          })
+          .post('/app/installations/45676599/access_tokens', {})
+          .reply(201, {
+            token: 'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a',
+            expires_at: addDays(new Date(), 1).toISOString(),
+            permissions: {
+              members: 'read',
+              organization_administration: 'read',
+              organization_projects: 'read',
+              actions: 'read',
+              administration: 'read',
+              contents: 'read',
+              discussions: 'write',
+              issues: 'write',
+              metadata: 'read',
+              pull_requests: 'write',
+              repository_hooks: 'write',
+              repository_projects: 'read',
+              vulnerability_alerts: 'read',
+            },
+            repository_selection: 'selected',
+          })
+          .get('/rate_limit')
+          .reply(function rateLimit() {
+            const authorization = this.req.headers.authorization[0];
+            const [, token] = authorization.split(' ');
+            if (limitRemaining.has(token)) {
+              const remaining = limitRemaining.get(token);
+              return [200, { resources: { core: { remaining } } }];
+            }
+            return [404];
           });
+      });
+
+      beforeAll(() => {
+        limitRemaining.set('ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z', 1000);
+        limitRemaining.set('ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a', 999);
       });
 
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1 })
-          .reply(200, getFirstPageOfPullRequestComments());
-      });
-
-      beforeAll(() => {
-        nock('https://api.github.com')
+          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
+          .reply(200, getFirstPageOfPullRequestComments())
           .get('/repos/Semalab/phoenix/issues/comments')
           .query(() => true)
-          .reply(200, []);
-      });
-
-      beforeAll(() => {
-        nock('https://api.github.com')
+          .reply(200, [])
           .get('/repos/Semalab/phoenix/pulls')
           .query(() => true)
-          .reply(200, []);
-      });
-
-      beforeAll(() => {
-        nock('https://api.github.com')
+          .reply(200, [])
           .get('/repos/Semalab/phoenix/pulls/3')
           .reply(200, getPullRequestDetailPR3());
       });
@@ -2421,6 +2603,85 @@ describe('Import Repository Queue', () => {
 
       it('should use any installation ID', () => {
         expect(defaultInstallationNock.isDone()).toBe(true);
+      });
+
+      it('should use the token with the most quota available', () => {
+        expect(tokenUsedForGitHubAPI).toBe(
+          'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z'
+        );
+      });
+
+      describe('when token runs out of quota', () => {
+        beforeAll(async () => {
+          await SmartComment.deleteMany({});
+          repository.sync = {};
+          await repository.save();
+        });
+
+        beforeAll(() => {
+          limitRemaining.set('ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z', 1000);
+          limitRemaining.set('ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a', 999);
+        });
+
+        beforeAll(() => {
+          nock('https://api.github.com')
+            .persist()
+            .get('/repos/Semalab/phoenix/pulls/comments')
+            .query({
+              sort: 'created',
+              direction: 'desc',
+              page: 1,
+              per_page: 100,
+            })
+            .reply(function reply() {
+              const authorization = this.req.headers.authorization[0];
+              const [, token] = authorization.split(' ');
+              if (token === 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z') {
+                limitRemaining.set(
+                  'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
+                  0
+                );
+                return [
+                  403,
+                  {
+                    message:
+                      'API rate limit exceeded for installation ID 26434743.',
+                  },
+                  { 'x-ratelimit-remaining': 0 },
+                ];
+              }
+              if (token === 'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a') {
+                return [200, getFirstPageOfPullRequestComments()];
+              }
+              return [500];
+            })
+            .get('/repos/Semalab/phoenix/issues/comments')
+            .query(() => true)
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls')
+            .query(() => true)
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls/3')
+            .reply(200, getPullRequestDetailPR3());
+        });
+
+        beforeAll(async () => {
+          await handler({ id: repository.id });
+        });
+
+        beforeAll(async () => {
+          comments = await findSmartCommentsByExternalId(repository.externalId);
+        });
+
+        it('should import comments', () => {
+          expect(comments.length).toBe(2);
+        });
+
+        it('should retry using another token', () => {
+          expect(tokenUsedForGitHubAPI).toBe(
+            'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a'
+          );
+        });
       });
     });
   });
@@ -2446,7 +2707,7 @@ describe('Import Repository Queue', () => {
     beforeAll(() => {
       nock('https://api.github.com')
         .get('/repos/Semalab/phoenix/pulls/comments')
-        .query({ sort: 'created', direction: 'desc', page: 1 })
+        .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
         .reply(200, [
           {
             ...getFirstPageOfPullRequestComments()[0],
@@ -2454,10 +2715,16 @@ describe('Import Repository Queue', () => {
           },
         ])
         .get('/repos/Semalab/phoenix/issues/comments')
-        .query({ sort: 'created', direction: 'desc', page: 1 })
+        .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
         .reply(200, [])
         .get('/repos/Semalab/phoenix/pulls')
-        .query({ sort: 'created', direction: 'desc', page: 1, state: 'all' })
+        .query({
+          sort: 'created',
+          direction: 'desc',
+          page: 1,
+          state: 'all',
+          per_page: 100,
+        })
         .reply(200, []);
     });
 
@@ -2564,6 +2831,23 @@ describe('Import Repository Queue', () => {
               vulnerability_alerts: 'read',
             },
             repository_selection: 'selected',
+          })
+          .get('/rate_limit')
+          .reply(function rateLimit() {
+            const authorization = this.req.headers.authorization[0];
+            if (
+              authorization === 'token ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z'
+            ) {
+              return [
+                200,
+                {
+                  resources: {
+                    core: { remaining: 1000 },
+                  },
+                },
+              ];
+            }
+            return [404];
           })
           .get('/repositories/237888452')
           .reply(404);
