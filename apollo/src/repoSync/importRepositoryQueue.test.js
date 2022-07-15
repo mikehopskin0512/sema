@@ -2342,21 +2342,26 @@ describe('Import Repository Queue', () => {
 
     describe('processing queue', () => {
       let defaultInstallationNock;
+      let tokenUsedForGitHubAPI;
 
       beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/installation')
           .reply(404)
           .get('/repositories/237888452')
-          .reply(200, {
-            id: '237888452',
-            name: 'phoenix',
+          .reply(200, function recordTokenAndReply() {
+            [, tokenUsedForGitHubAPI] =
+              this.req.headers.authorization[0].split(' ');
+            return {
+              id: '237888452',
+              name: 'phoenix',
+            };
           });
 
         defaultInstallationNock = nock('https://api.github.com')
           .persist()
           .get('/app/installations')
-          .reply(200, [{ id: 35676598 }])
+          .reply(200, [{ id: 45676599 }, { id: 35676598 }])
           .post('/app/installations/35676598/access_tokens', {})
           .reply(201, {
             token: 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
@@ -2377,6 +2382,56 @@ describe('Import Repository Queue', () => {
               vulnerability_alerts: 'read',
             },
             repository_selection: 'selected',
+          })
+          .post('/app/installations/45676599/access_tokens', {})
+          .reply(201, {
+            token: 'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a',
+            expires_at: addDays(new Date(), 1).toISOString(),
+            permissions: {
+              members: 'read',
+              organization_administration: 'read',
+              organization_projects: 'read',
+              actions: 'read',
+              administration: 'read',
+              contents: 'read',
+              discussions: 'write',
+              issues: 'write',
+              metadata: 'read',
+              pull_requests: 'write',
+              repository_hooks: 'write',
+              repository_projects: 'read',
+              vulnerability_alerts: 'read',
+            },
+            repository_selection: 'selected',
+          })
+          .get('/rate_limit')
+          .reply(function rateLimit() {
+            const authorization = this.req.headers.authorization[0];
+            if (
+              authorization === 'token ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z'
+            ) {
+              return [
+                200,
+                {
+                  resources: {
+                    core: { remaining: 1000 },
+                  },
+                },
+              ];
+            }
+            if (
+              authorization === 'token ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a'
+            ) {
+              return [
+                200,
+                {
+                  resources: {
+                    core: { remaining: 999 },
+                  },
+                },
+              ];
+            }
+            return [404];
           });
       });
 
@@ -2421,6 +2476,12 @@ describe('Import Repository Queue', () => {
 
       it('should use any installation ID', () => {
         expect(defaultInstallationNock.isDone()).toBe(true);
+      });
+
+      it('should use the token with the most quota available', () => {
+        expect(tokenUsedForGitHubAPI).toBe(
+          'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z'
+        );
       });
     });
   });
@@ -2564,6 +2625,23 @@ describe('Import Repository Queue', () => {
               vulnerability_alerts: 'read',
             },
             repository_selection: 'selected',
+          })
+          .get('/rate_limit')
+          .reply(function rateLimit() {
+            const authorization = this.req.headers.authorization[0];
+            if (
+              authorization === 'token ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z'
+            ) {
+              return [
+                200,
+                {
+                  resources: {
+                    core: { remaining: 1000 },
+                  },
+                },
+              ];
+            }
+            return [404];
           })
           .get('/repositories/237888452')
           .reply(404);
