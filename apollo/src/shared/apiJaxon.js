@@ -1,7 +1,8 @@
 import axios from 'axios';
+import axiosRetry from 'axios-retry';
+import axiosThrottle from 'axios-request-throttle';
 import http from 'http';
 import https from 'https';
-import axiosThrottle from 'axios-request-throttle';
 import { jaxon } from '../config';
 
 const tagsEndpoint = `${jaxon.tagsApi}/tags`;
@@ -14,7 +15,9 @@ const client = axios.create({
 
 // Don't overwhelm Jaxon, except in tests.
 if (process.env.NODE_ENV !== 'test')
-  axiosThrottle.use(client, { requestsPerSecond: 20 });
+  axiosThrottle.use(client, { requestsPerSecond: 100 });
+
+axiosRetry(client, { retries: 2, retryDelay: axiosRetry.exponentialDelay });
 
 export async function getTags(text) {
   const data = await getTagsRaw(text);

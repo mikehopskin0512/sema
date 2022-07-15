@@ -27,6 +27,7 @@
     "aws-sdk": "^2.796.0",
     "axios": "^0.21.1",
     "axios-request-throttle": "^1.0.0",
+    "axios-retry": "^3.3.1",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
