@@ -20,6 +20,7 @@ import {
   generateChartDataByYears,
   generateChartDataByWeeks,
 } from './codeStats';
+import { MONTH_DAY_YEAR_FORMAT } from './constants/date';
 
 export const getEmoji = (id) => {
   const { emoji } = find(EMOJIS, { _id: id });
@@ -84,13 +85,13 @@ export const setSmartCommentsDateRange = (
 
 export const getDateSub = (startDate, endDate) => {
   const dateGroup = getDateRangeGroup(startDate, endDate);
-  const end = format(new Date(endDate), 'MMM dd, yyyy');
+  const end = format(new Date(endDate), MONTH_DAY_YEAR_FORMAT);
   switch (dateGroup) {
     case 'day':
       return {
         startDate: format(
           new Date(subWeeks(new Date(startDate), 1)),
-          'MMM dd, yyyy'
+          MONTH_DAY_YEAR_FORMAT
         ),
         endDate: end,
       };
@@ -98,7 +99,7 @@ export const getDateSub = (startDate, endDate) => {
       return {
         startDate: format(
           new Date(subMonths(new Date(startDate), 1)),
-          'MMM dd, yyyy'
+          MONTH_DAY_YEAR_FORMAT
         ),
         endDate: end,
       };
@@ -106,7 +107,7 @@ export const getDateSub = (startDate, endDate) => {
       return {
         startDate: format(
           new Date(subYears(new Date(startDate), 1)),
-          'MMM dd, yyyy'
+          MONTH_DAY_YEAR_FORMAT
         ),
         endDate: end,
       };
@@ -114,7 +115,7 @@ export const getDateSub = (startDate, endDate) => {
       return {
         startDate: format(
           new Date(subYears(new Date(startDate), 10)),
-          'MMM dd, yyyy'
+          MONTH_DAY_YEAR_FORMAT
         ),
         endDate: end,
       };

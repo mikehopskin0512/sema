@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { format, parseISO, subDays } from 'date-fns';
 import DatePicker from 'react-datepicker';
-import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants';
+import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants/date';
 
 const today = new Date();
 const weekAgo = subDays(today, 7);

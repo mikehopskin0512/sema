@@ -14,6 +14,7 @@ import SnapshotModal from '../../../../components/snapshots/modalWindow';
 import { snapshotsOperations } from '../../../../state/features/snapshots';
 import { deleteUserSnapshot } from '../../../../state/features/snapshots/actions';
 import styles from '../../portfolios.module.scss';
+import { MONTH_DAY_YEAR_FORMAT } from '../../../../utils/constants/date';
 
 const { duplicateSnapshot } = snapshotsOperations;
 
@@ -82,7 +83,7 @@ const snapshotList = () => {
     id: snapshot._id,
     // TODO: will be fixed in portfolio name ticket
     title: snapshot.title,
-    updatedAt: format(new Date(snapshot.updatedAt), 'MMM dd, yyyy'),
+    updatedAt: format(new Date(snapshot.updatedAt), MONTH_DAY_YEAR_FORMAT),
     snapshotId: snapshot._id,
     portfoliosAmount: snapshot.portfolios?.length,
   }));

@@ -126,10 +126,6 @@ export const COLLECTION_TYPE = {
   ORGANIZATION: 'organization'
 };
 
-export const DAYS_IN_WEEK = 7;
-export const DAYS_IN_MONTH = 30;
-export const DAYS_IN_YEAR = 365;
-export const YEAR_MONTH_DAY_FORMAT = `yyyy-MM-dd`;
 
 export const DEFAULT_AVATAR = '/img/default-avatar.jpg';
 
