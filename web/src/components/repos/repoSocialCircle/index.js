@@ -12,7 +12,7 @@ import { SyncInProgressRepoBanner } from '../../repos/repoSocialCircle/banners/s
 import { createDataUrl, onDownloadImage } from '../../../utils/imageHelpers';
 import { uploadInfographicsImage } from '../../../state/features/auth/api';
 import { isEmpty } from 'lodash';
-import { shareWithTwitter, shareWithLinkedIn } from '../../../utils/socialMedia';
+import { shareWithTwitter } from '../../../utils/socialMedia';
 
 export const SYNC_STATUSES = {
   EMPTY: null,
@@ -59,19 +59,6 @@ const RepoSocialCircle = ({ repoId }) => {
     }
   }, [interactions, containerRef.current]);
 
-  if (isFetching) return null;
-
-  if (isRepoPrivate) {
-    return <PrivateRepoBanner />
-  }
-
-  if (isSyncingNow) {
-    return <SyncInProgressRepoBanner />
-  }
-
-  if (!isRepoSynced) {
-    return <NotSyncedRepoBanner />
-  }
 
   const socialCircleUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${handle}/collaboration/${repoId}?repo=${repoName}`
   const socials = [
@@ -85,6 +72,18 @@ const RepoSocialCircle = ({ repoId }) => {
     changeIsCopied(true);
     setTimeout(() => changeIsCopied(false), 3000);
   };
+
+  if (isRepoPrivate) {
+    return <PrivateRepoBanner />
+  }
+
+  if (isSyncingNow) {
+    return <SyncInProgressRepoBanner />
+  }
+
+  if (!isRepoSynced) {
+    return <NotSyncedRepoBanner />
+  }
 
   // TODO: mobile styles
   return (
