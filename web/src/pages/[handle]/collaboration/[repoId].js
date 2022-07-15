@@ -32,7 +32,6 @@ const CollaborationPublicPage = () => {
   }, [repoId]);
 
   const onStartButtonClick = async () => {
-    await push(`${PATHS.LOGIN}?isFastForwardOnboarding=true`)
     await push(`${PATHS.LOGIN}?isFastForwardOnboarding=true`);
   };
 
