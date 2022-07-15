@@ -2343,9 +2343,11 @@ describe('Import Repository Queue', () => {
     describe('processing queue', () => {
       let defaultInstallationNock;
       let tokenUsedForGitHubAPI;
+      const limitRemaining = new Map();
 
       beforeAll(() => {
         nock('https://api.github.com')
+          .persist()
           .get('/repos/Semalab/phoenix/installation')
           .reply(404)
           .get('/repositories/237888452')
@@ -2407,57 +2409,31 @@ describe('Import Repository Queue', () => {
           .get('/rate_limit')
           .reply(function rateLimit() {
             const authorization = this.req.headers.authorization[0];
-            if (
-              authorization === 'token ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z'
-            ) {
-              return [
-                200,
-                {
-                  resources: {
-                    core: { remaining: 1000 },
-                  },
-                },
-              ];
-            }
-            if (
-              authorization === 'token ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a'
-            ) {
-              return [
-                200,
-                {
-                  resources: {
-                    core: { remaining: 999 },
-                  },
-                },
-              ];
+            const [, token] = authorization.split(' ');
+            if (limitRemaining.has(token)) {
+              const remaining = limitRemaining.get(token);
+              return [200, { resources: { core: { remaining } } }];
             }
             return [404];
           });
       });
 
       beforeAll(() => {
+        limitRemaining.set('ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z', 1000);
+        limitRemaining.set('ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a', 999);
+      });
+
+      beforeAll(() => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
-          .reply(200, getFirstPageOfPullRequestComments());
-      });
-
-      beforeAll(() => {
-        nock('https://api.github.com')
+          .reply(200, getFirstPageOfPullRequestComments())
           .get('/repos/Semalab/phoenix/issues/comments')
           .query(() => true)
-          .reply(200, []);
-      });
-
-      beforeAll(() => {
-        nock('https://api.github.com')
+          .reply(200, [])
           .get('/repos/Semalab/phoenix/pulls')
           .query(() => true)
-          .reply(200, []);
-      });
-
-      beforeAll(() => {
-        nock('https://api.github.com')
+          .reply(200, [])
           .get('/repos/Semalab/phoenix/pulls/3')
           .reply(200, getPullRequestDetailPR3());
       });
@@ -2482,6 +2458,74 @@ describe('Import Repository Queue', () => {
         expect(tokenUsedForGitHubAPI).toBe(
           'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z'
         );
+      });
+
+      describe('when token runs out of quota', () => {
+        beforeAll(async () => {
+          await SmartComment.deleteMany({});
+          repository.sync = {};
+          await repository.save();
+        });
+
+        beforeAll(() => {
+          limitRemaining.set('ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z', 1000);
+          limitRemaining.set('ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a', 999);
+        });
+
+        beforeAll(() => {
+          nock('https://api.github.com')
+            .persist()
+            .get('/repos/Semalab/phoenix/pulls/comments')
+            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .reply(function reply() {
+              const authorization = this.req.headers.authorization[0];
+              const [, token] = authorization.split(' ');
+              if (token === 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z') {
+                limitRemaining.set(
+                  'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
+                  0
+                );
+                return [
+                  403,
+                  {
+                    message:
+                      'API rate limit exceeded for installation ID 26434743.',
+                  },
+                  { 'x-ratelimit-remaining': 0 },
+                ];
+              }
+              if (token === 'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a') {
+                return [200, getFirstPageOfPullRequestComments()];
+              }
+              return [500];
+            })
+            .get('/repos/Semalab/phoenix/issues/comments')
+            .query(() => true)
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls')
+            .query(() => true)
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls/3')
+            .reply(200, getPullRequestDetailPR3());
+        });
+
+        beforeAll(async () => {
+          await handler({ id: repository.id });
+        });
+
+        beforeAll(async () => {
+          comments = await findSmartCommentsByExternalId(repository.externalId);
+        });
+
+        it('should import comments', () => {
+          expect(comments.length).toBe(2);
+        });
+
+        it('should retry using another token', () => {
+          expect(tokenUsedForGitHubAPI).toBe(
+            'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a'
+          );
+        });
       });
     });
   });
