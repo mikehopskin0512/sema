@@ -1,11 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import { capitalize, find, isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import Markdown from 'markdown-to-jsx';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
+import { DATE_TIME_FORMAT } from '../../../utils/constants/date';
 import { EMOJIS } from './constants';
 import styles from './item.module.scss';
 import { DotIcon } from '../../Icons';
@@ -18,6 +19,9 @@ function ActivityItem(props) {
     tags = [],
     createdAt = '',
     userId: user,
+    source: {
+      createdAt: sourceCreatedAt = '',
+    },
     githubMetadata: {
       title = '',
       url = '#',
@@ -38,11 +42,13 @@ function ActivityItem(props) {
     avatarUrl = DEFAULT_AVATAR,
   } = user || {};
 
-  const [dateCreated] = useState(
-    !isEmpty(created_at)
-      ? format(new Date(created_at), 'MMM dd, yyyy hh:mm aa')
-      : ''
-  );
+  const dateCreated = useMemo(() => {
+    const date = isEmpty(created_at) ? sourceCreatedAt : created_at;
+    if (!isEmpty(date)) {
+      return format(new Date(date), DATE_TIME_FORMAT)
+    }
+    return ''
+  }, [created_at, sourceCreatedAt])
 
   const getPRName = (number, name) => {
     let prName = '';

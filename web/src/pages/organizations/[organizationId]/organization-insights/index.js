@@ -259,7 +259,7 @@ const OrganizationInsights = () => {
       const isDateRange = startDate && endDate;
       const outOfRangeCommentsFilter = isDateRange
         ? overview.smartComments.filter(comment => {
-            return !isWithinInterval(new Date(comment.githubMetadata.created_at), {
+            return !isWithinInterval(new Date(comment.source.createdAt), {
               start: startOfDay(new Date(startDate)),
               end: endOfDay(new Date(endDate))
             });
