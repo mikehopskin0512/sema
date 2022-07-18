@@ -18,19 +18,26 @@ export const InviteModal = ({
   const [isSuccessScreen, setSuccessScreen] = useState(false);
 
   const sendInvites = useCallback(async () => {
+    if (!emails.length) return;
+    if (emails.some(i => !/(.+)@(.+){2,}\.(.+){2,}/.test(i))) {
+      notify('Invalid email format')
+      return;
+    }
+
     let invites = 0;
     await Promise.all(emails.map(async (email) => {
       const success = await onSubmit(email);
       if (!success) {
         return notify(`Failed to send email to ${email} `, { type: 'error' });
       } else {
-        invites++
+        invites++;
       }
-    })).then(() => {
-      if (emails.length === invites) {
-        setSuccessScreen(true);
-      }
-    });
+    }))
+      .then(() => {
+        if (emails.length === invites) {
+          setSuccessScreen(true);
+        }
+      });
   }, [emails]);
 
   const closePopup = () => {
@@ -71,7 +78,8 @@ export const InviteModal = ({
                 <button className='button is-outlined font-weight-600 mr-16' aria-haspopup='true' aria-controls='dropdown-menu2' onClick={closePopup}>
                   Cancel
                 </button>
-                <button className='button is-primary font-weight-600' aria-haspopup='true' aria-controls='dropdown-menu2' onClick={sendInvites}>
+                <button className='button is-primary font-weight-600' aria-haspopup='true' aria-controls='dropdown-menu2' onClick={sendInvites}
+                        disabled={!Boolean(emails.length)}>
                   Send
                 </button>
               </div>
