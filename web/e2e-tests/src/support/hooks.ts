@@ -89,31 +89,40 @@ export const hooks = {
    * @param {Array.<String>} specs List of spec file paths that are to be run
    */
   before: async function (capabilities, specs) {
-    // This secret should be changed once we have defined which device to use
-    // const SECRET_KEY = 'AXISDW77DODT233C';
-    const SECRET_KEY = "CFUL2XGHWAMAVAQS";
-    const otp = generateToken(SECRET_KEY);
+    try {
+      // This secret should be changed once we have defined which device to use
+      // const SECRET_KEY = 'AXISDW77DODT233C';
+      const SECRET_KEY = 'CFUL2XGHWAMAVAQS';
+      const otp = generateToken(SECRET_KEY);
 
-    console.log(otp);
+      console.log(otp);
 
-    await browser.maximizeWindow();
+      await browser.maximizeWindow();
 
-    await browser.url("https://app-release.semasoftware.com/login");
-    await $("span=Sign in with GitHub").click();
+      await browser.url('/login');
+      const signupBtn = await browser
+        .$$("//button/span[contains(text(), 'Sign in with GitHub')]")
+        .find((el) => el.isClickable());
+      await signupBtn.click();
 
-    await $("#login_field").setValue("qateam+automationadmin@semasoftware.com");
-    await $("#password").setValue("Automation1Tester2#");
-    await $(".js-sign-in-button").click();
-    await $("#otp").setValue(otp);
-    await $("button*=Verify");
+      await $('#login_field').setValue(
+        'qateam+automationadmin@semasoftware.com'
+      );
+      await $('#password').setValue('Automation1Tester2#');
+      await $('.js-sign-in-button').click();
+      await $('#otp').setValue(otp);
+      await $('button*=Verify');
 
-    if ((await $$("button*=Authorize Sema").length) > 0) {
-      console.log(`Authorizing Smart Code Reviews...`);
+      if ((await $$('button*=Authorize Sema').length) > 0) {
+        console.log(`Authorizing Smart Code Reviews...`);
+        await browser.pause(2000);
+        await $('button*=Authorize Sema').click();
+        await browser.pause(2000);
+      }
       await browser.pause(2000);
-      await $("button*=Authorize Sema").click();
-      await browser.pause(2000);
+    } catch (e) {
+      throw new Error(`Failed to log in in #before# hook. Url: ${await browser.getUrl()} Details: ${e}`);
     }
-    await browser.pause(2000);
   },
   /**
    * Gets executed before the suite starts.
