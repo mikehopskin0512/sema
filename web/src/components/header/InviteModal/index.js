@@ -25,6 +25,7 @@ export const InviteModal = ({
     }
 
     let invites = 0;
+    const isAllInvitesSent = emails.length === invites;
     await Promise.all(emails.map(async (email) => {
       const success = await onSubmit(email);
       if (!success) {
@@ -34,7 +35,7 @@ export const InviteModal = ({
       }
     }))
       .then(() => {
-        if (emails.length === invites) {
+        if (isAllInvitesSent) {
           setSuccessScreen(true);
         }
       });
