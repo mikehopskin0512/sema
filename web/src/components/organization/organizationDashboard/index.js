@@ -11,7 +11,6 @@ const MAX_REPOS = 6;
 
 function OrganizationDashboard({ organization, selectedOrganization }) {
   const { metrics, members, repos, membersCount } = organization;
-  const { selectedOrganization } = useSelector((state) => state.authState);
   const router = useRouter();
   const { checkAccess } = usePermission();
   const {

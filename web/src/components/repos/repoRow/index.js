@@ -24,7 +24,6 @@ const RepoRow = (props) => {
   const { token, user, selectedOrganization } = useSelector((state) => state.authState);
   const titleRef = useRef(null);
   const { repoSyncTab } = useFlags();
-  const dispatch = useDispatch();
   const {
     externalId = '', name = '', body = '', repoStats, users = [], language = '', _id: repoId, removeRepo, isOrganizationView = false,
     sync = {}, isPinned = false,
