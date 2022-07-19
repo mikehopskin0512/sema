@@ -71,17 +71,9 @@ export async function getOctokitForRepository(repository) {
 
 // Use any installation ID, hopefully importing a public repository.
 export async function getOctokitFromPool() {
-  const { data: installations } = await appOctokit.apps.listInstallations();
-  const withRateLimits = await Bluebird.resolve(installations)
-    .map(
-      async (installation) => {
-        const octokit = createOctokit(installation.id);
-        const { data: rateLimit } = await octokit.rateLimit.get();
-        return { octokit, rateLimit };
-      },
-      { concurrency: 30 }
-    )
-    .filter(({ rateLimit }) => rateLimit.resources.core.remaining > 500);
+  const withRateLimits = await Bluebird.resolve(getOctokitsWithLimits()).filter(
+    ({ rateLimit }) => rateLimit.resources.core.remaining > 500
+  );
 
   if (withRateLimits.length === 0) {
     logger.warn('Could not find any installation with rate limit remaining');
@@ -93,6 +85,21 @@ export async function getOctokitFromPool() {
     'rateLimit.resources.core.remaining'
   );
   return octokit;
+}
+
+export async function getOctokitsWithLimits() {
+  const { data: installations } = await appOctokit.apps.listInstallations({
+    per_page: 100,
+  });
+  const withRateLimits = await Bluebird.resolve(installations).map(
+    async (installation) => {
+      const octokit = createOctokit(installation.id);
+      const { data: rateLimit } = await octokit.rateLimit.get();
+      return { octokit, installation, rateLimit };
+    },
+    { concurrency: 30 }
+  );
+  return withRateLimits;
 }
 
 function createOctokit(installationId) {
