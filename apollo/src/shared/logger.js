@@ -1,10 +1,12 @@
 import bunyan from 'bunyan';
 import { Transform } from 'stream';
+import BunyanRollbarStream from 'bunyan-rollbar-stream';
 import { loggerEnabled } from '../config';
+import rollbar from './rollbar';
 
 export default bunyan.createLogger({
   name: 'apollo',
-  streams: [getOutputStream()].filter(Boolean),
+  streams: [getOutputStream(), getRollbarStream()].filter(Boolean),
 });
 
 function getOutputStream() {
@@ -34,5 +36,15 @@ function getOutputStream() {
   return {
     stream: humanReadable,
     level: 'info',
+  };
+}
+
+function getRollbarStream() {
+  return {
+    name: 'rollbar',
+    stream: new BunyanRollbarStream({
+      rollbar,
+    }),
+    level: 'error',
   };
 }
