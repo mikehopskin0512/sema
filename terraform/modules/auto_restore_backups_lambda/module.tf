@@ -9,6 +9,7 @@ module "this" {
   timeout            = var.timeout
   publish            = var.publish
   cloudwatch_kms_key = var.cloudwatch_kms_key
+  layer_enabled      = true
 
   lambda_function_src   = "${path.module}/function/lambda_function.py"
   lambda_handler        = "lambda_function.lambda_handler"

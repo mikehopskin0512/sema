@@ -178,8 +178,8 @@ function RepoList({
                 <span className="ml-8">Add a Repo</span>
               </button>
             )}
-  
-            <button
+            {/** Return functionality of connection Org when it will be ready */}
+            {/* <button
               type="button"
               className={clsx("ml-16 button is-primary", styles['add-repo-button'])}
               onClick={() => githubLogin()}
@@ -197,7 +197,7 @@ function RepoList({
                   </>
                 )
               }
-            </button>
+            </button> */}
           </div>
         </div>
         <div className='columns'>

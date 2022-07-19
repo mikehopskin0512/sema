@@ -1,5 +1,15 @@
 import * as types from './types';
 
+export const DEFAULT_REPO_OVERVIEW = {
+  name: '',
+  stats: {
+    totalPullRequests: 0,
+    totalSemaUsers: 0,
+    totalSmartCommenters: 0,
+    totalSmartComments: 0
+  }
+}
+
 const initialState = {
   isFetching: false,
   data: {
@@ -7,15 +17,7 @@ const initialState = {
     repositories: [],
     reactions: [],
     tags: {},
-    overview: {
-      name: '',
-      stats: {
-        totalPullRequests: 0,
-        totalSemaUsers: 0,
-        totalSmartCommenters: 0,
-        totalSmartComments: 0
-      }
-    },
+    overview: DEFAULT_REPO_OVERVIEW,
     filterValues: {
       requesters: [],
       authors: [],
