@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
@@ -16,9 +16,15 @@ import FilterBar from '../../../components/repos/repoPageLayout/components/Filte
 import Metrics from '../../../components/metrics';
 import styles from './styles.module.scss';
 import { useFlags } from '../../../components/launchDarkly';
+import { DEFAULT_REPO_OVERVIEW } from '../../../state/features/repositories/reducers';
+import { requestFetchRepositoryOverviewSuccess } from '../../../state/features/repositories/actions';
 
-const { fetchRepositoryOverview, fetchReposByIds, fetchRepoFilters } =
-  repositoriesOperations;
+const {
+  fetchRepositoryOverview,
+  fetchReposByIds,
+  fetchRepoFilters,
+} = repositoriesOperations;
+
 const { fetchOrganizationRepos } = organizationsOperations;
 
 const tabTitle = {
@@ -29,13 +35,22 @@ const tabTitle = {
 function RepoPage() {
   const dispatch = useDispatch();
 
-  const { auth, repositories } = useSelector((state) => ({
+  const {
+    auth,
+    repositories,
+  } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
   }));
-  const { token, selectedOrganization } = auth;
   const {
-    data: { overview, filterValues },
+    token,
+    selectedOrganization,
+  } = auth;
+  const {
+    data: {
+      overview,
+      filterValues,
+    },
   } = repositories;
   const totalMetrics = {
     pullRequests: overview?.repoStats?.smartCodeReviews ?? 0,
@@ -76,6 +91,10 @@ function RepoPage() {
 
   useEffect(() => {
     setIsOrganizationRepo(!isEmpty(selectedOrganization));
+
+    return () => {
+      dispatch(requestFetchRepositoryOverviewSuccess(DEFAULT_REPO_OVERVIEW));
+    };
   }, [selectedOrganization]);
 
   useAuthEffect(() => {
@@ -113,8 +132,8 @@ function RepoPage() {
             token,
             dates.startDate && dates.endDate
               ? getDateSub(dates.startDate, dates.endDate)
-              : null
-          )
+              : null,
+          ),
         );
       }
     } finally {
@@ -134,7 +153,10 @@ function RepoPage() {
     }
 
     if (startDate && endDate) {
-      setDates({ startDate, endDate });
+      setDates({
+        startDate,
+        endDate,
+      });
     }
     if (!startDate && !endDate) {
       setDates({
@@ -148,14 +170,21 @@ function RepoPage() {
     if (!overview?.smartcomments?.length) {
       return;
     }
-    const { pullRequests, requesters, authors } = filterValues;
+    const {
+      pullRequests,
+      requesters,
+      authors,
+    } = filterValues;
     setFilterRequesterList(uniqBy(requesters, 'value'));
     setFilterUserList(uniqBy(authors, 'value'));
     setFilterPRList(pullRequests);
     setIsLoading(false);
   }, [overview, filterValues]);
 
-  const onDateChange = ({ startDate: newStartDate, endDate: newEndDate }) => {
+  const onDateChange = ({
+    startDate: newStartDate,
+    endDate: newEndDate,
+  }) => {
     setStartDate(newStartDate);
     setEndDate(newEndDate);
   };
