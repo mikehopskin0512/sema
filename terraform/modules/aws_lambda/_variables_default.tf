@@ -17,7 +17,7 @@ variable "runtime" {
   description = "The runtime used in the lambda function."
   default     = "python3.8"
   validation {
-    condition     = can(index(["nodejs10.x", "nodejs12.x", "java8", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "dotnetcore2.1", "dotnetcore3.1", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2"], var.runtime))
+    condition     = can(index(["nodejs10.x", "nodejs12.x", "java8", "python3.9", "java8.al2", "java11", "python2.7", "python3.6", "python3.7", "python3.8", "dotnetcore2.1", "dotnetcore3.1", "go1.x", "ruby2.5", "ruby2.7", "provided", "provided.al2"], var.runtime))
     error_message = "Only ['nodejs10.x', 'nodejs12.x', 'java8', 'java8.al2', 'java11', 'python2.7', 'python3.6', 'python3.7', 'python3.8', 'dotnetcore2.1', 'dotnetcore3.1', 'go1.x', 'ruby2.5', 'ruby2.7', 'provided', 'provided.al2'] values are allowed for runtime variable."
   }
 }
@@ -74,6 +74,11 @@ variable "packages_s3_key" {
   default     = "lambda_layer_payload.zip"
 }
 
+variable "layer_enabled" {
+  type        = bool
+  description = "is layer enabled?"
+  default     = false
+}
 ###################
 # CloudWatch Logs #
 ###################
