@@ -210,7 +210,7 @@ function RepoPage() {
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
 
       <div className={styles.wrapper}>
-        {socialCircles && (
+        {socialCircles && !isLoading && !repositories.isFetching && (
           <div className="mb-32 px-8">
             <RepoSocialCircle repoId={repoId} />
           </div>
