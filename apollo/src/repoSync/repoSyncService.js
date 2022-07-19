@@ -71,17 +71,20 @@ export async function getOctokitForRepository(repository) {
 
 // Use any installation ID, hopefully importing a public repository.
 export async function getOctokitFromPool() {
-  const withRateLimits = await Bluebird.resolve(getOctokitsWithLimits()).filter(
+  const octokits = await getOctokitsWithLimits();
+
+  if (octokits.length === 0)
+    throw new Error('Sema app not installed on any account');
+
+  const withRemainingLimit = octokits.filter(
     ({ rateLimit }) => rateLimit.resources.core.remaining > 500
   );
 
-  if (withRateLimits.length === 0) {
-    logger.warn('Could not find any installation with rate limit remaining');
-    return null;
-  }
+  if (withRemainingLimit.length === 0)
+    throw new Error('Ran out of GitHub API quota');
 
   const { octokit } = maxBy(
-    withRateLimits,
+    withRemainingLimit,
     'rateLimit.resources.core.remaining'
   );
   return octokit;

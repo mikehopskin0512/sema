@@ -2514,6 +2514,7 @@ describe('Import Repository Queue', () => {
         defaultInstallationNock = nock('https://api.github.com')
           .persist()
           .get('/app/installations')
+          .query(() => true)
           .reply(200, [{ id: 45676599 }, { id: 35676598 }])
           .post('/app/installations/35676598/access_tokens', {})
           .reply(201, {
@@ -2683,6 +2684,47 @@ describe('Import Repository Queue', () => {
           );
         });
       });
+
+      describe('when all tokens run out of quota', () => {
+        beforeAll(async () => {
+          await SmartComment.deleteMany({});
+          repository.sync = {};
+          await repository.save();
+        });
+
+        beforeAll(() => {
+          limitRemaining.set('ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z', 0);
+          limitRemaining.set('ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a', 0);
+        });
+
+        beforeAll(() => {
+          nock('https://api.github.com')
+            .persist()
+            .get('/repos/Semalab/phoenix/pulls/comments')
+            .query(() => true)
+            .reply(200, getFirstPageOfPullRequestComments())
+            .get('/repos/Semalab/phoenix/issues/comments')
+            .query(() => true)
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls')
+            .query(() => true)
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls/3')
+            .reply(200, getPullRequestDetailPR3());
+        });
+
+        it('should throw an error', async () => {
+          await expect(handler({ id: repository.id })).rejects.toThrow(
+            'Ran out of GitHub API quota'
+          );
+        });
+
+        describe('repository', () => {
+          it('should not change sync status', () => {
+            expect(repository.sync.status).toBeFalsy();
+          });
+        });
+      });
     });
   });
 
@@ -2767,21 +2809,14 @@ describe('Import Repository Queue', () => {
           .get('/repos/Semalab/phoenix/installation')
           .reply(404)
           .get('/app/installations')
+          .query(() => true)
           .reply(200, []);
       });
 
-      beforeAll(async () => {
-        await handler({ id: repository.id });
-      });
-
-      describe('repository', () => {
-        beforeAll(async () => {
-          repository = await Repository.findById(repository._id);
-        });
-
-        it('should have sync status unauthorized', () => {
-          expect(repository.sync.status).toBe('unauthorized');
-        });
+      it('should throw an error', async () => {
+        await expect(handler({ id: repository.id })).rejects.toThrow(
+          'Sema app not installed on any account'
+        );
       });
     });
   });
@@ -2810,6 +2845,7 @@ describe('Import Repository Queue', () => {
           .get('/repos/Semalab/phoenix/installation')
           .reply(404)
           .get('/app/installations')
+          .query(() => true)
           .reply(200, [{ id: 35676598 }])
           .post('/app/installations/35676598/access_tokens', () => true)
           .reply(201, {
