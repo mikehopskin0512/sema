@@ -116,24 +116,13 @@ export const patch = async (id, fields) => {
 };
 
 export const updateIdentity = async (user, identity) => {
-  const { _id } = user;
-  const { provider } = identity;
-
   try {
-    // In order to handle both insert and update
-    // need to pull old identity and then push new one
-    const queryPull = User.updateOne(
-      { _id: new ObjectId(_id) },
-      { $pull: { identities: { provider } } }
+    const userDocument = await User.findById(user._id);
+    await userDocument.findOrCreateInArray(
+      'identities',
+      { provider: identity.provider },
+      identity
     );
-
-    const queryAdd = User.updateOne(
-      { _id: new ObjectId(_id) },
-      { $addToSet: { identities: identity } }
-    );
-
-    await queryPull.exec();
-    await queryAdd.exec();
     return true;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -489,20 +478,50 @@ export const updateUserRepositoryList = async (user, repos, identity) => {
   }
 };
 
+export const updatePreviewImgLink = async (userId, repoId, imgUrl) => {
+  try {
+    const user = await findById(userId);
+    const identityRepos = user.identities[0].repositories || [];
+    const updatedRepo = identityRepos.find((repo) => repo.id === repoId);
+    updatedRepo.previewImgLink = imgUrl;
+    const newIdentity = Object.assign(user.identities[0], { repositories: identityRepos });
+    await updateIdentity(user, newIdentity);
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+}
+
 export const addRepositoryToIdentity = async (user, repository) => {
   try {
-    const identity = user.identities?.[0];
-    if (!identity) return false;
-    const identityRepo = identity.repositories || [];
-    if (_.findIndex(identityRepo, { id: repository.id }) !== -1) {
-      return true;
-    }
-    const newIdentity = {
-      ...identity,
-      repositories: [...identityRepo, repository],
-    };
-    await updateIdentity(user, newIdentity);
-    return true;
+    const id = repository.externalId;
+
+    // This MongoDB query ensures that we don't add the same
+    // repository twice under concurrency.
+    await User.updateOne(
+      {
+        _id: user._id,
+        identities: {
+          $elemMatch: {
+            provider: 'github',
+            repositories: {
+              $not: { $elemMatch: { id } },
+            },
+          },
+        },
+      },
+      {
+        $addToSet: {
+          'identities.$.repositories': {
+            id,
+            name: repository.name,
+            fullName: repository.fullName,
+            githubUrl: repository.cloneUrl,
+          },
+        },
+      }
+    );
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(err);
@@ -688,6 +707,16 @@ export async function getOrganizationUsersMetrics(organizationId) {
   ]);
   return doc;
 }
+
+export const findUsersByGitHubHandle = async (handles) => {
+  try {
+    return User.find({ identities: { $elemMatch: { username: { $in: handles } } } }).lean().exec()
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
 
 export const findByHandle = async (handle) => {
   try {

@@ -15,7 +15,11 @@ import SmartComment from './smartCommentModel';
 import Reaction from '../reaction/reactionModel';
 import User from '../../users/userModel';
 
-import { dateRangeFilterPipeline, fullName, metricsStartDate } from '../../shared/utils';
+import {
+  dateRangeFilterPipeline,
+  fullName,
+  metricsStartDate,
+} from '../../shared/utils';
 import { getOrganizationRepos } from '../../organizations/organizationService';
 
 const {
@@ -74,6 +78,32 @@ export const getSmartComments = async ({ repo }) => {
   }
 };
 
+export const getCollaborativeSmartComments = async ({ repoId, handle }) => {
+  try {
+    const [givenComments, receivedComments] = await Promise.all([
+      SmartComment.find({
+        'githubMetadata.repo_id': repoId,
+        'githubMetadata.user.login': handle,
+        'githubMetadata.requester': { $ne: handle },
+      })
+        .lean()
+        .exec(),
+     SmartComment.find({
+      'githubMetadata.repo_id': repoId,
+      'githubMetadata.requester': handle,
+      'githubMetadata.user.login': { $ne: handle },
+    })
+       .lean()
+       .exec(),
+    ]);
+    return {givenComments, receivedComments};
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
 export const filterSmartComments = async ({
   reviewer,
   author,
@@ -86,7 +116,7 @@ export const filterSmartComments = async ({
 }) => {
   try {
     let filter = {};
-    let dateFilter = { createdAt: {} };
+    let dateFilter = { source: { createdAt: {} } };
     if (reviewer) {
       filter = Object.assign(filter, { 'githubMetadata.user.login': reviewer });
     }
@@ -108,12 +138,14 @@ export const filterSmartComments = async ({
     }
     if (startDate) {
       dateFilter = Object.assign(dateFilter, {
-        createdAt: { $gte: new Date(startDate) },
+        source: { createdAt: { $gte: new Date(startDate) } },
       });
     }
     if (endDate) {
       dateFilter = Object.assign(dateFilter, {
-        createdAt: { $lt: new Date(endDate), ...dateFilter.createdAt },
+        source: {
+          createdAt: { $lt: new Date(endDate), ...dateFilter.createdAt },
+        },
       });
     }
     if (!isEmpty(dateFilter.createdAt)) {
@@ -971,7 +1003,7 @@ export const getUniqueCommenters = async (repoIds, startDate, endDate) => {
           'githubMetadata.repo_id': {
             $in: repoIds,
           },
-          ...dateRangeFilterPipeline('createdAt', startDate, endDate)
+          ...dateRangeFilterPipeline('createdAt', startDate, endDate),
         },
       },
       {
@@ -980,7 +1012,7 @@ export const getUniqueCommenters = async (repoIds, startDate, endDate) => {
           localField: 'userId',
           foreignField: '_id',
           as: 'user',
-        }
+        },
       },
       { $unwind: '$user' },
       {
@@ -991,17 +1023,16 @@ export const getUniqueCommenters = async (repoIds, startDate, endDate) => {
       },
       {
         $project: {
-          _id: 0,
-          "user._id": 1,
-          "user.firstName": 1,
-          "user.lastName": 1,
-          "user.username": 1,
-          "user.avatarUrl": 1,
-        }
-      }
-      
+          '_id': 0,
+          'user._id': 1,
+          'user.firstName': 1,
+          'user.lastName': 1,
+          'user.username': 1,
+          'user.avatarUrl': 1,
+        },
+      },
     ]).exec();
-    return values
+    return values;
   } catch (err) {
     const error = new errors.NotFound(err);
     logger.error(error);
@@ -1017,7 +1048,7 @@ export const getUniqueRequesters = async (repoIds, startDate, endDate) => {
           'githubMetadata.repo_id': {
             $in: repoIds,
           },
-          ...dateRangeFilterPipeline('createdAt', startDate, endDate)
+          ...dateRangeFilterPipeline('createdAt', startDate, endDate),
         },
       },
       {
@@ -1028,14 +1059,13 @@ export const getUniqueRequesters = async (repoIds, startDate, endDate) => {
       },
       {
         $project: {
-          "githubMetadata.requester": 1,
-          "githubMetadata.requesterAvatarUrl": 1,
-          "_id": 0
-        }
-      }
-      
+          'githubMetadata.requester': 1,
+          'githubMetadata.requesterAvatarUrl': 1,
+          '_id': 0,
+        },
+      },
     ]).exec();
-    return values
+    return values;
   } catch (err) {
     const error = new errors.NotFound(err);
     logger.error(error);
@@ -1051,7 +1081,7 @@ export const getUniquePullRequests = async (repoIds, startDate, endDate) => {
           'githubMetadata.repo_id': {
             $in: repoIds,
           },
-          ...dateRangeFilterPipeline('createdAt', startDate, endDate)
+          ...dateRangeFilterPipeline('createdAt', startDate, endDate),
         },
       },
       {
@@ -1062,16 +1092,16 @@ export const getUniquePullRequests = async (repoIds, startDate, endDate) => {
       },
       {
         $project: {
-          "githubMetadata.url": 1,
-          "githubMetadata.pull_number": 1,
-          "githubMetadata.title": 1,
-          "githubMetadata.head": 1,
-          "githubMetadata.updated_at": 1,
-          "_id": 0,
-        }
-      }
+          'githubMetadata.url': 1,
+          'githubMetadata.pull_number': 1,
+          'githubMetadata.title': 1,
+          'githubMetadata.head': 1,
+          'githubMetadata.updated_at': 1,
+          '_id': 0,
+        },
+      },
     ]).exec();
-    return values
+    return values;
   } catch (err) {
     const error = new errors.NotFound(err);
     logger.error(error);

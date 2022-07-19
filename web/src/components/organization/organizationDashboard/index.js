@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 
 const MAX_REPOS = 6;
 
-const OrganizationDashboard = ({ organization }) => {
+function OrganizationDashboard({ organization, selectedOrganization }) {
   const { metrics, members, repos, membersCount } = organization;
   const { selectedOrganization } = useSelector((state) => state.authState);
   const router = useRouter();
@@ -44,7 +44,7 @@ const OrganizationDashboard = ({ organization }) => {
               if (selectedOrganization.organization.pinnedRepos?.includes(child._id.toString())) {
                 isPinned = true;
               }
-              return (<RepoCard {...child} isOrganizationView key={`card-${i}`} column={2} isPinned={isPinned} />);
+              return (<RepoCard {...child} isOrganizationView key={`card-${i}`} column={2} isPinned={isPinned} selectedOrganization={selectedOrganization}/>);
             })}
           </div>
         </div>

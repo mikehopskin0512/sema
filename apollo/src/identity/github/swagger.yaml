@@ -127,3 +127,21 @@ paths:
                 $ref: '#/components/schemas/Repository'
         400:
           description: bad input parameter
+
+  /v1/identities/github/connect-orgs:
+    post:
+      summary: fetch and connect new orgs and repos for the logged user
+      responses:
+        200:
+          content:
+            application/json:
+        400:
+          description: bad input parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: string
+                    description: Reason for next action

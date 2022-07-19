@@ -17,10 +17,20 @@ export default class MyDocument extends Document {
 
   static async getInitialProps(ctx) {
     const initialProps = await Document.getInitialProps(ctx);
+    if (ctx.query.handle && ctx.query.repoId) {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/proxy/users/infoPreview/${ctx.query.handle}/${ctx.query.repoId}`);
+        const data = await response.json();
+        return { ...initialProps, ...data };
+      } catch (e) {
+        console.log(e);
+      }
+    }
     return { ...initialProps };
   }
 
   render() {
+    const { repo } = this.props?.__NEXT_DATA__?.query;
     return (
       <Html>
         <Head>
@@ -54,6 +64,15 @@ export default class MyDocument extends Document {
             }}
           />
           <script dangerouslySetInnerHTML={{ __html: this.renderSnippet() }} />
+          <meta name="Content-Type" content="text/html;charset=UTF-8"></meta>
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:image:src" content={`${this.props.previewImgLink}`}></meta>
+          <meta name="twitter:title" content={`My GitHub interactions in ${repo}`} />
+          <meta property="og:title" content={`My GitHub interactions in ${repo}`} />
+          <meta property="og:image" content={`${this.props.previewImgLink}`}/>
+          <meta property="og:image:secure_url" content={`${this.props.previewImgLink}`} />
+          <meta property="og:image:width" content="1000" />
+          <meta property="og:image:height" content="500" />
         </Head>
         <body>
           <Main />

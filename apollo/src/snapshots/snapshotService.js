@@ -7,7 +7,7 @@ import { findManyById } from '../comments/smartComments/smartCommentService';
 const { Types: { ObjectId } } = mongoose;
 
 const structureSmartComment = ({
-  _id = null, smartCommentId = null, userId = null, comment = null, reaction = null, tags = null, githubMetadata = {}, createdAt = null,
+  _id = null, userId = null, comment = null, reaction = null, tags = null, githubMetadata = {}, createdAt = null, source = {},
 }) => ({
   smartCommentId: new ObjectId(_id),
   userId: new ObjectId(userId),
@@ -16,6 +16,7 @@ const structureSmartComment = ({
   tags,
   githubMetadata,
   createdAt,
+  source,
 });
 
 const structureComponentData = ({

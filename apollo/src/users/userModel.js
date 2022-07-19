@@ -31,6 +31,7 @@ const repositoryScheme = mongoose.Schema(
     fullName: String,
     githubUrl: String,
     isFavorite: { type: Boolean, default: false },
+    previewImgLink: { type: String, default: ''},
   },
   { _id: false }
 );
@@ -47,6 +48,7 @@ const identitySchema = mongoose.Schema(
     profileUrl: String,
     avatarUrl: String,
     repositories: [repositoryScheme],
+    accessToken: String,
   },
   { _id: false }
 );
@@ -68,6 +70,7 @@ const userSchema = mongoose.Schema(
     isActive: { type: Boolean, default: true },
     isVerified: { type: Boolean, default: false },
     isWaitlist: { type: Boolean, default: false },
+    isFastForwardOnboarding: { type: Boolean, default: false },
     isOnboarded: { type: Date, default: null },
     banners: {
       organizationCreate: { type: Boolean, default: true },

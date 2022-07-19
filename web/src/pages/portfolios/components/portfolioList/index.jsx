@@ -12,6 +12,7 @@ import DeleteModal from '../../../../components/snapshots/deleteModal';
 import { alertOperations } from '../../../../state/features/alerts';
 import { portfoliosOperations } from '../../../../state/features/portfolios';
 import Toaster, { notify } from '../../../../components/toaster/index';
+import { MONTH_DAY_YEAR_FORMAT } from '../../../../utils/constants/date';
 
 const { triggerAlert, clearAlert } = alertOperations;
 const { removePortfolio, createNewPortfolio, copyExistingPortfolio } = portfoliosOperations;
@@ -62,7 +63,7 @@ const PortfolioList = () => {
   };
 
   const copyToClipboard = (id) => {
-    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(user.handle, id)}`);
+    navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BASE_URL}${PATHS.PORTFOLIO.VIEW(user.handle, id)}`);
     setCopiedToClipboard(id);
   };
 
@@ -85,7 +86,7 @@ const PortfolioList = () => {
   const tableData = portfolios.map((portfolio, i) => ({
     title: portfolio.title,
     id: portfolio._id,
-    updatedAt: format(new Date(portfolio.updatedAt), 'MMM dd, yyyy'),
+    updatedAt: format(new Date(portfolio.updatedAt), MONTH_DAY_YEAR_FORMAT),
     type: portfolio.type,
   }));
 

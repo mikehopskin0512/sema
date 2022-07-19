@@ -1,0 +1,9 @@
+@import "../../../../styles/colors.module";
+
+.completed, .started, .queued {
+    color: $green-300
+}
+
+.errored, .unauthorized {
+    color: $red-500
+}

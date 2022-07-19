@@ -7,6 +7,7 @@ import { ReactComponent as ArrowAscSvg } from './img/arrow-ascending.svg';
 import { ReactComponent as ArrowDescSvg } from './img/arrow-descending.svg';
 import { ReactComponent as ArrowDownSvg } from './img/arrow-down.svg';
 import { ReactComponent as ArrowDrowdownSvg } from './img/arrow-drowdown.svg';
+import { ReactComponent as ArrowDropupSvg } from './img/arrow-dropup.svg';
 import { ReactComponent as ArrowLeftSvg } from './img/arrow-left.svg';
 import { ReactComponent as ArrowRightSvg } from './img/arrow-right.svg';
 import { ReactComponent as ArrowUpSvg } from './img/arrow-up.svg';
@@ -63,6 +64,7 @@ import { ReactComponent as PhotoSvg } from './img/photo.svg';
 import { ReactComponent as PlaySvg } from './img/play.svg';
 import { ReactComponent as PlusSvg } from './img/plus.svg';
 import { ReactComponent as ProductSvg } from './img/product.svg';
+import { ReactComponent as QueuedSvg } from './img/queued.svg';
 import { ReactComponent as RefreshSvg } from './img/refresh.svg';
 import { ReactComponent as ResendSvg } from './img/resend.svg';
 import { ReactComponent as SaveSvg } from './img/save.svg';
@@ -77,6 +79,8 @@ import { ReactComponent as SourceSvg } from './img/source.svg';
 import { ReactComponent as StarFilledSvg } from './img/star-filled.svg';
 import { ReactComponent as StarOutlineSvg } from './img/star-outline.svg';
 import { ReactComponent as SwipeSvg } from './img/swipe.svg';
+import { ReactComponent as SyncCompletedSvg } from './img/sync-completed.svg';
+import { ReactComponent as SyncInactiveSvg } from './img/sync-inactive.svg';
 import { ReactComponent as TrashSvg } from './img/trash.svg';
 import { ReactComponent as TwitterSvg } from './img/twitter.svg';
 import { ReactComponent as UndoSvg } from './img/undo.svg';
@@ -95,6 +99,7 @@ import { ReactComponent as FilterBarsSvg } from './img/filter-bars.svg';
 import { ReactComponent as DragTrigger } from './img/drag-icon.svg';
 import { ReactComponent as CopyIcon } from './img/copy.svg';
 import { ReactComponent as ReplayIcon } from './img/replay.svg';
+import { ReactComponent as UndoNewIcon } from './img/undo-icon.svg';
 
 const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
 
@@ -178,6 +183,12 @@ export function ArrowDownIcon(props) {
 export function ArrowDropdownIcon(props) {
   return <Icon {...props}>
     <ArrowDrowdownSvg />
+  </Icon>
+}
+
+export function ArrowDropupIcon(props) {
+  return <Icon {...props}>
+    <ArrowDropupSvg />
   </Icon>
 }
 
@@ -543,7 +554,11 @@ export function QuestionIcon(props) {
     <img src={getIconUrl('question')} alt='question icon' />
   </Icon>
 }
-
+export function QueuedIcon(props) {
+  return <Icon {...props}>
+    <QueuedSvg />
+  </Icon>
+}
 export function ResendIcon(props) {
   return <Icon {...props}>
     <ResendSvg />
@@ -624,6 +639,18 @@ export function SupportHeroBackIcon(props) {
 export function SwipeIcon(props) {
   return <Icon {...props}>
     <SwipeSvg />
+  </Icon>
+}
+
+export function SyncCompletedIcon(props) {
+  return <Icon {...props}>
+    <SyncCompletedSvg />
+  </Icon>
+}
+
+export function SyncInactiveIcon(props) {
+  return <Icon {...props}>
+    <SyncInactiveSvg />
   </Icon>
 }
 
@@ -729,14 +756,20 @@ export function DragTriggerIcon(props) {
   </Icon>
 }
 
-export const CopyButtonIcon = (props) => (
-  <Icon {...props}>
+export function CopyButtonIcon(props) {
+  return <Icon {...props}>
     <CopyIcon />
   </Icon>
-);
+}
 
 export function ReplayArrowIcon(props) {
   return <Icon {...props}>
     <ReplayIcon />
+  </Icon>
+}
+
+export function UndoIconNew(props) {
+  return <Icon {...props}>
+    <UndoNewIcon />
   </Icon>
 }

@@ -1085,7 +1085,7 @@ Feature: Portfolios
     Then I expect that element "portfolioListShareTooltip" becomes displayed
     And  I expect that element "portfolioListShareTooltip" matches the text "Copied to clipboard"
 
-  @PTA115
+  @PTA115 @smoke
   Scenario: Portfolios can be renamed
     When I open the site "/dashboard"
     Then I expect that element "trophyBtn" becomes displayed
@@ -1120,6 +1120,63 @@ Feature: Portfolios
     When I click on the element "trophyBtn"
     Then I expect that element "portfolioListNames" becomes displayed
     And  I expect that element "portfolioListNames" matches the text "portfolio changed"
+
+  @PTA98
+  Scenario: Snapshot can be updated in snapshot library
+    When I open the site "/dashboard"
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+    Then I expect that element "snapshotLibraryTab" becomes displayed
+    When I click on the element "snapshotLibraryTab"
+    And  I pause for 3000ms
+    When I remove all elements "snapshotListTitles" with button "snapshotListDeleteBtn" under "snapshotListThreeDotsBtns" with confirmation "snapshotConfirmationDeleteBtn" till "0"
+    And  I expect that element "snapshotListTitles" becomes not displayed
+
+    When I click on the element "reposTab"
+    And  I pause for 3000ms
+    Then I expect that element "reposContainer" becomes displayed
+    And  I expect that element "1stReposCard" becomes displayed
+    When I click on the element "1stReposCard"
+    And  I pause for 2000ms
+    And  I click on the element "1stReposCard" if visible
+    Then I expect that element "dateRangeFilter" becomes displayed
+    When I click on the element "dateRangeFilter"
+    Then I expect that element "last30DaysDateRange" becomes displayed
+    When I click on the element "last30DaysDateRange"
+    And  I pause for 1000ms
+    And  I click on the element "dateRangeFilter"
+    Then I expect that element "snapshotBtn" becomes displayed
+
+    When I click on the element "snapshotBtn"
+    Then I expect that element "saveSnapshotTitleInput" becomes displayed
+
+    When I set "activity logs" with timestamp to the inputfield "saveSnapshotTitleInput"
+    And  I click on the element "saveSnapshotDescriptionInput"
+    And  I add "activity logs - snapshot description" to the inputfield "saveSnapshotDescriptionInput"
+    And  I pause for 1000ms
+    Then I expect that element "saveSnapshotAddToPortfolio" matches the text "None"
+    And  I expect that element "saveSnapshotSaveBtn" becomes displayed
+    When I click on the element "saveSnapshotSaveBtn"
+
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+    Then I expect that element "snapshotLibraryTab" becomes displayed
+    When I click on the element "snapshotLibraryTab"
+    Then I expect that element "snapshotListTitles" becomes displayed
+    And  I expect that element "snapshotListThreeDotsBtns" becomes displayed
+    
+    When I click on the element "snapshotListThreeDotsBtns"
+    Then I expect that element "snapshotListEditBtn" becomes displayed
+    When I click on the element "snapshotListEditBtn"
+    Then I expect that element "saveSnapshotTitleInput" becomes displayed
+
+    When I clear the inputfield "saveSnapshotTitleInput"
+    And  I set "snapshot name updated" to the inputfield "saveSnapshotTitleInput"
+    And  I click on the element "editSnapshotSaveBtn"
+
+    Then I expect that element "saveSnapshotTitleInput" becomes not displayed
+    And  I expect that element "snapshotListTitles" matches the text "snapshot name updated"
+    And  I expect that element "snapshotListTitles" does appear exactly "1" times
 
   @PTA71 @smoke
   Scenario: Portfolios elements are displayed correctly for portfolio without snapshots
@@ -1164,3 +1221,56 @@ Feature: Portfolios
     And  I pause for 3000ms
     And  I switch to opened tab "https://github.com/SemaQAAutomationAdmin"
     Then I expect that the absolute url is "github.com/SemaQAAutomationAdmin"
+
+  @PTA99
+  Scenario: Snapshot can be duplicated in snapshot library
+    When I open the site "/dashboard"
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+    Then I expect that element "snapshotLibraryTab" becomes displayed
+    When I click on the element "snapshotLibraryTab"
+    And  I pause for 3000ms
+    When I remove all elements "snapshotListTitles" with button "snapshotListDeleteBtn" under "snapshotListThreeDotsBtns" with confirmation "snapshotConfirmationDeleteBtn" till "0"
+    And  I expect that element "snapshotListTitles" becomes not displayed
+
+    When I click on the element "reposTab"
+    And  I pause for 3000ms
+    Then I expect that element "reposContainer" becomes displayed
+    And  I expect that element "1stReposCard" becomes displayed
+    When I click on the element "1stReposCard"
+    And  I pause for 2000ms
+    And  I click on the element "1stReposCard" if visible
+    Then I expect that element "dateRangeFilter" becomes displayed
+    When I click on the element "dateRangeFilter"
+    Then I expect that element "last30DaysDateRange" becomes displayed
+    When I click on the element "last30DaysDateRange"
+    And  I pause for 1000ms
+    And  I click on the element "dateRangeFilter"
+    Then I expect that element "snapshotBtn" becomes displayed
+
+    When I click on the element "snapshotBtn"
+    Then I expect that element "saveSnapshotTitleInput" becomes displayed
+
+    When I set "activity logs" with timestamp to the inputfield "saveSnapshotTitleInput"
+    And  I click on the element "saveSnapshotDescriptionInput"
+    And  I add "activity logs - snapshot description" to the inputfield "saveSnapshotDescriptionInput"
+    And  I pause for 1000ms
+    Then I expect that element "saveSnapshotAddToPortfolio" matches the text "None"
+    And  I expect that element "saveSnapshotSaveBtn" becomes displayed
+    When I click on the element "saveSnapshotSaveBtn"
+    Then I expect that element "saveSnapshotToPortfolioNotificationText" becomes not displayed
+
+    Then I expect that element "trophyBtn" becomes displayed
+    When I click on the element "trophyBtn"
+    Then I expect that element "snapshotLibraryTab" becomes displayed
+    When I click on the element "snapshotLibraryTab"
+    Then I expect that element "snapshotListTitles" becomes displayed
+    And  I expect that element "snapshotListTitles" does appear exactly "1" times
+    And  I expect that element "snapshotListThreeDotsBtns" becomes displayed
+
+    When I click on the element "snapshotListThreeDotsBtns"
+    Then I expect that element "snapshotListDuplicateBtn" becomes displayed
+    When I click on the element "snapshotListDuplicateBtn"
+    Then I expect that element "saveSnapshotToPortfolioNotificationText" becomes displayed
+    And  I expect that element "saveSnapshotToPortfolioNotificationText" matches the text "Snapshot was successfully duplicated"
+    And  I expect that element "snapshotListTitles" does appear exactly "2" times

@@ -403,7 +403,7 @@ const getGithubId = (elementId) => {
   return githubId;
 };
 
-export async function writeSemaToGithub(activeElement) {
+export async function writeSemaToGithub(activeElement, clickSaveSnippet = false) {
   const { _id: userId, isLoggedIn } = store.getState().user;
 
   if (!userId) {
@@ -411,7 +411,7 @@ export async function writeSemaToGithub(activeElement) {
     return;
   }
 
-  if (!isLoggedIn || !activeElement) {
+  if (!isLoggedIn || !activeElement || (!activeElement?.value && clickSaveSnippet)) {
     return;
   }
 
@@ -498,10 +498,12 @@ export async function writeSemaToGithub(activeElement) {
     // On edit, do not add extra line breaks
     // eslint-disable-next-line no-param-reassign
     activeElement.value = `${textboxValue}${semaString}`;
-  } else {
+  } else if(!clickSaveSnippet) {
     // On initial submit, 2 line breaks break up the markdown correctly
     // eslint-disable-next-line no-param-reassign
     activeElement.value = `${textboxValue}\n\n${semaString}`;
+  } else {
+    activeElement.value = `${textboxValue}${semaString}`;
   }
 
   const { githubMetadata, lastUserSmartComment } = store.getState();
@@ -536,6 +538,11 @@ export async function writeSemaToGithub(activeElement) {
     tags,
   };
 
+  if (clickSaveSnippet) {
+    store.dispatch(changeSnippetComment(comment));
+    return;
+  }
+
   if (isPullRequestReview) {
     store.dispatch(removeMutationObserver());
     const pullRequestReviewId = activeElement?.id.split('_').pop();
@@ -562,9 +569,7 @@ export async function writeSemaToGithub(activeElement) {
         localStorage.removeItem('smart_comment_id');
       }
       store.dispatch(addSmartComment(smartComment));
-      if (isSnippetForSave) {
-        store.dispatch(changeSnippetComment(comment));
-      }
+      store.dispatch(changeSnippetComment(comment));
     });
   }
 
@@ -635,6 +640,15 @@ function onGithubSubmitClicked(event) {
 
     writeSemaToGithub(textarea);
   }
+}
+
+export const onClickSaveSnippet = ({ target }) => {
+  const formParent = $(target).parents('form')?.[0];
+  const textarea = $(formParent).find(
+    'file-attachment div text-expander textarea',
+  )?.[0];
+
+  writeSemaToGithub(textarea, true);
 }
 
 function onReviewChangesClicked(event) {

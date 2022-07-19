@@ -14,7 +14,13 @@ import {
   subDays,
 } from 'date-fns';
 import { EMOJIS, TAGS } from './constants';
-import { generateChartDataByDays, generateChartDataByMonths, generateChartDataByYears, generateChartDataByWeeks } from './codeStats';
+import {
+  generateChartDataByDays,
+  generateChartDataByMonths,
+  generateChartDataByYears,
+  generateChartDataByWeeks,
+} from './codeStats';
+import { MONTH_DAY_YEAR_FORMAT } from './constants/date';
 
 export const getEmoji = (id) => {
   const { emoji } = find(EMOJIS, { _id: id });
@@ -31,8 +37,14 @@ export const getTagLabel = (id) => {
   return label;
 };
 
-export const setSmartCommentsDateRange = (smartcomments, startDate, endDate) => {
-  let startDay = smartcomments[smartcomments.length - 1]?.createdAt || subDays(new Date(), 6);
+export const setSmartCommentsDateRange = (
+  smartcomments,
+  startDate,
+  endDate
+) => {
+  let startDay =
+    smartcomments[smartcomments.length - 1]?.source.createdAt ||
+    subDays(new Date(), 6);
   let endDay = new Date();
   if (startDate && endDate) {
     startDay = startDate;
@@ -43,8 +55,8 @@ export const setSmartCommentsDateRange = (smartcomments, startDate, endDate) => 
   let dates = {
     startDay,
     endDay,
-    dateDiff: days
-  }
+    dateDiff: days,
+  };
   switch (dateRange) {
     case 'day':
       return {
@@ -73,32 +85,44 @@ export const setSmartCommentsDateRange = (smartcomments, startDate, endDate) => 
 
 export const getDateSub = (startDate, endDate) => {
   const dateGroup = getDateRangeGroup(startDate, endDate);
-  const end = format(new Date(endDate), 'MMM dd, yyyy');
+  const end = format(new Date(endDate), MONTH_DAY_YEAR_FORMAT);
   switch (dateGroup) {
     case 'day':
       return {
-        startDate: format(new Date(subWeeks(new Date(startDate), 1)), 'MMM dd, yyyy'),
+        startDate: format(
+          new Date(subWeeks(new Date(startDate), 1)),
+          MONTH_DAY_YEAR_FORMAT
+        ),
         endDate: end,
       };
     case 'week':
       return {
-        startDate: format(new Date(subMonths(new Date(startDate), 1)), 'MMM dd, yyyy'),
+        startDate: format(
+          new Date(subMonths(new Date(startDate), 1)),
+          MONTH_DAY_YEAR_FORMAT
+        ),
         endDate: end,
       };
     case 'month':
       return {
-        startDate: format(new Date(subYears(new Date(startDate), 1)), 'MMM dd, yyyy'),
+        startDate: format(
+          new Date(subYears(new Date(startDate), 1)),
+          MONTH_DAY_YEAR_FORMAT
+        ),
         endDate: end,
       };
     case 'year':
       return {
-        startDate: format(new Date(subYears(new Date(startDate), 10)), 'MMM dd, yyyy'),
+        startDate: format(
+          new Date(subYears(new Date(startDate), 10)),
+          MONTH_DAY_YEAR_FORMAT
+        ),
         endDate: end,
       };
     default:
       return;
   }
-}
+};
 
 export const getDateRangeGroup = (startDate, endDate) => {
   const startDay = new Date(startDate);
@@ -107,7 +131,7 @@ export const getDateRangeGroup = (startDate, endDate) => {
   const weeks = differenceInCalendarWeeks(endDay, startDay);
   const months = differenceInCalendarMonths(endDay, startDay);
   const years = differenceInCalendarYears(endDay, startDay);
-  if (days < 7 || days < 15 && weeks <= 2) {
+  if (days < 7 || (days < 15 && weeks <= 2)) {
     return 'day';
   }
   if (days >= 15 && weeks >= 2 && months <= 3) {
@@ -119,40 +143,68 @@ export const getDateRangeGroup = (startDate, endDate) => {
   if (years >= 1) {
     return 'year';
   }
-}
+};
 
-export const getReactionTagsChartData = ({ smartComments, groupBy, dateDiff, startDate, endDate }) => {
+export const getReactionTagsChartData = ({
+  smartComments,
+  groupBy,
+  dateDiff,
+  startDate,
+  endDate,
+}) => {
   switch (groupBy) {
     case 'day':
-      const { reactionsByDay, tagsByDay } = generateChartDataByDays(smartComments, dateDiff, startDate, endDate);
+      const { reactionsByDay, tagsByDay } = generateChartDataByDays(
+        smartComments,
+        dateDiff,
+        startDate,
+        endDate
+      );
       return {
         reactionsChartData: reactionsByDay,
-        tagsChartData: tagsByDay
+        tagsChartData: tagsByDay,
       };
     case 'week':
-      const { reactionsByWeek, tagsByWeek } = generateChartDataByWeeks(smartComments, startDate, endDate);
+      const { reactionsByWeek, tagsByWeek } = generateChartDataByWeeks(
+        smartComments,
+        startDate,
+        endDate
+      );
       return {
         reactionsChartData: reactionsByWeek,
-        tagsChartData: tagsByWeek
+        tagsChartData: tagsByWeek,
       };
     case 'month':
-      const { reactionsByMonth, tagsByMonth } = generateChartDataByMonths(smartComments, startDate, endDate);
+      const { reactionsByMonth, tagsByMonth } = generateChartDataByMonths(
+        smartComments,
+        startDate,
+        endDate
+      );
       return {
         reactionsChartData: reactionsByMonth,
-        tagsChartData: tagsByMonth
+        tagsChartData: tagsByMonth,
       };
     case 'year':
-      const { reactionsByYear, tagsByYear } = generateChartDataByYears(smartComments, startDate, endDate);
+      const { reactionsByYear, tagsByYear } = generateChartDataByYears(
+        smartComments,
+        startDate,
+        endDate
+      );
       return {
         reactionsChartData: reactionsByYear,
-        tagsChartData: tagsByYear
+        tagsChartData: tagsByYear,
       };
     default:
       return;
   }
-}
+};
 
-export const filterSmartComments = ({ filter, smartComments = [], startDate, endDate }) => {
+export const filterSmartComments = ({
+  filter,
+  smartComments = [],
+  startDate,
+  endDate,
+}) => {
   let filtered = smartComments;
   if (
     !isEmpty(filter.from) ||
@@ -164,16 +216,38 @@ export const filterSmartComments = ({ filter, smartComments = [], startDate, end
     (startDate && endDate)
   ) {
     filtered = smartComments.filter((item) => {
-      const isWithinDateRange = startDate && endDate ? isWithinInterval(new Date(item.createdAt), {
-        start: startOfDay(new Date(startDate)),
-        end: endOfDay(new Date(endDate)),
-      }) : false;
-      const fromIndex = item?.userId ? findIndex(filter.from, { value: item.userId._id }) : -1;
-      const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item?.githubMetadata?.requester }) : -1;
-      const prIndex = item?.githubMetadata ? findIndex(filter.pr, { value: item?.githubMetadata?.pull_number }) : -1;
-      const reactionIndex = findIndex(filter.reactions, { value: item?.reaction });
-      const tagsIndex = item?.tags ? findIndex(filter.tags, (tag) => findIndex(item.tags, (commentTag) => commentTag._id === tag.value) !== -1) : -1;
-      const searchBool = item?.comment?.toLowerCase().includes(filter.search.toLowerCase());
+      const isWithinDateRange =
+        startDate && endDate
+          ? isWithinInterval(new Date(item.source.createdAt), {
+              start: startOfDay(new Date(startDate)),
+              end: endOfDay(new Date(endDate)),
+            })
+          : false;
+      const fromIndex = item?.userId
+        ? findIndex(filter.from, { value: item.userId._id })
+        : -1;
+      const toIndex = item?.githubMetadata
+        ? findIndex(filter.to, { value: item?.githubMetadata?.requester })
+        : -1;
+      const prIndex = item?.githubMetadata
+        ? findIndex(filter.pr, { value: item?.githubMetadata?.pull_number })
+        : -1;
+      const reactionIndex = findIndex(filter.reactions, {
+        value: item?.reaction,
+      });
+      const tagsIndex = item?.tags
+        ? findIndex(
+            filter.tags,
+            (tag) =>
+              findIndex(
+                item.tags,
+                (commentTag) => commentTag._id === tag.value
+              ) !== -1
+          )
+        : -1;
+      const searchBool = item?.comment
+        ?.toLowerCase()
+        .includes(filter.search.toLowerCase());
       let filterBool = true;
       if (!isEmpty(filter.from)) {
         filterBool = filterBool && fromIndex !== -1;
@@ -200,9 +274,11 @@ export const filterSmartComments = ({ filter, smartComments = [], startDate, end
     });
   }
   return filtered;
-}
+};
 
 export const parseSnapshotData = (snapshotData) => {
   const result = [...snapshotData];
-  return result.map(smartComment => ({ smartCommentId: smartComment._id || smartComment.smartCommentId }));
-}
+  return result.map((smartComment) => ({
+    smartCommentId: smartComment._id || smartComment.smartCommentId,
+  }));
+};

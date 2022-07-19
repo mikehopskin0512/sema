@@ -131,14 +131,7 @@ smartCommentSchema.post('save', async function addRepositoryToUser() {
   if (!user) return;
 
   const repository = await Repository.findById(this.repositoryId);
-
-  const repoData = {
-    name: repository.name,
-    id: repository.externalId,
-    fullName: repository.fullName,
-    githubUrl: repository.cloneUrl,
-  };
-  await addRepositoryToIdentity(user, repoData);
+  await addRepositoryToIdentity(user, repository);
   await repository.updateOne({ $addToSet: { 'repoStats.userIds': user._id } });
 });
 

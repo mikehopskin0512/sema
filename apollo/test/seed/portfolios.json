@@ -1,0 +1,356 @@
+[
+  {
+    "_id": "620bdfd679bf1a0020e99a8b",
+    "userId": "60b20ec1ad927f001e3f4f7e",
+    "firstName": "Matt",
+    "lastName": "Van Itallie",
+    "headline": "Matt Van Itallie",
+    "imageUrl": "https://prod-scr-avatars.s3.amazonaws.com/avatar-1652992424957.png",
+    "identities": [
+      {
+        "emails": [
+          "31629621+mattvanitallie@users.noreply.github.com",
+          "mattvanitallie@gmail.com"
+        ],
+        "provider": "github",
+        "id": "31629621",
+        "username": "mattvanitallie",
+        "email": "mattvanitallie@gmail.com",
+        "firstName": "",
+        "lastName": "",
+        "profileUrl": "https://api.github.com/users/mattvanitallie",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/31629621?v=4"
+      }
+    ],
+    "overview": "{\"blocks\":[{\"key\":\"fn1ri\",\"text\":\"WELCOME\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[{\"offset\":0,\"length\":7,\"style\":\"BOLD\"}],\"entityRanges\":[],\"data\":{}},{\"key\":\"efv0v\",\"text\":\"1. Welcome to Project Phoenix, the monorepo that powers Sema's code review tool.\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"ebnuj\",\"text\":\"\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"7e9p6\",\"text\":\"GETTING STARTED\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[{\"offset\":0,\"length\":15,\"style\":\"BOLD\"}],\"entityRanges\":[],\"data\":{}},{\"key\":\"8ast\",\"text\":\"1. Readme file: here \",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[{\"offset\":16,\"length\":4,\"key\":0}],\"data\":{}},{\"key\":\"ck21b\",\"text\":\"2. Linting: we use ESLint. As of April 2022 we are piloting Prettier-- stay tuned.\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"6o6o3\",\"text\":\"\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"1qrd9\",\"text\":\"LEARNING THE CODEBASE\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[{\"offset\":0,\"length\":21,\"style\":\"BOLD\"}],\"entityRanges\":[],\"data\":{}},{\"key\":\"4flm4\",\"text\":\"1. Below are specific examples of strong code and code that needs work. \",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"94u89\",\"text\":\"2. Art, Guillermo, Damien, Justin, and Radomir are our most senior Engineers, pay particular attention to their reviews.\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"ah58q\",\"text\":\"3. In each example, you can click in and read the specific section of the code it references.\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"6q72k\",\"text\":\"4. Please read this thoroughly before you contribute.\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"388b3\",\"text\":\"5. Go get 'em.\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{\"0\":{\"type\":\"LINK\",\"mutability\":\"MUTABLE\",\"data\":{\"url\":\"https://github.com/Semalab/phoenix/blob/develop/README.md\",\"targetOption\":\"_blank\"}}}}",
+    "type": "public",
+    "snapshots": [
+      { "id": "62854b5d22803b0350464cff", "sort": 0 },
+      { "id": "6285468e850740001fc5e950", "sort": 1 },
+      { "id": "627e6132584adb005e0f183c", "sort": 2 },
+      { "id": "62741a4ee1c7d0002094b6e1", "sort": 5 },
+      { "id": "62694d07cd1610001d6b3511", "sort": 11 },
+      { "id": "6267ed0314af990021ef6ab8", "sort": 12 },
+      { "id": "6267ea3adf35b6002306d8ed", "sort": 13 },
+      { "id": "6266a78b630b9b0021f27777", "sort": 15 },
+      { "id": "625eb730b2d9e90020b12586", "sort": 20 },
+      { "id": "624c87c5599c70001dac2ff1", "sort": 42 }
+    ],
+    "createdAt": "2022-02-15T17:16:06.504Z",
+    "updatedAt": "2022-06-15T00:08:20.770Z",
+    "__v": 0,
+    "title": "Welcome to Phoenix ",
+    "layout": [
+      {
+        "children": [
+          {
+            "type": "column",
+            "componentToRender": "comments",
+            "id": "62741a4ee1c7d0002094b6e1",
+            "_id": "62741a4ee1c7d0002094b6e1",
+            "portfolios": ["620bdfd679bf1a0020e99a8b"],
+            "userId": "60b20ec1ad927f001e3f4f7e",
+            "title": "1654- my best PR yet",
+            "description": "I was working on the web application dashboard, it was particularly challenging for me because we were using a new library. \n\nArt, our team lead, gave me some feedback. I incorporated his changes and then it was merged. i was so proud!!!",
+            "componentType": "comments",
+            "createdAt": "2022-05-05T18:41:18.610Z",
+            "updatedAt": "2022-05-16T12:59:00.036Z",
+            "__v": 0,
+            "isHorizontal": false,
+            "componentProps": { "portfolioId": "620bdfd679bf1a0020e99a8b" }
+          },
+          {
+            "id": "9491ad9a-52a6-49a3-ae29-8fbf68b25664",
+            "isEmpty": true,
+            "componentToRender": "empty",
+            "componentProps": {}
+          }
+        ],
+        "data": null,
+        "id": "d6760dc7-4c8a-4109-8ff3-550c0165b15f",
+        "type": "row"
+      },
+      {
+        "type": "row",
+        "id": "a26d8bf0-5b9a-43b7-8939-1aa9ec56c41b",
+        "isIndependent": false,
+        "children": [
+          {
+            "type": "column",
+            "componentToRender": "comments",
+            "id": "62694d07cd1610001d6b3511",
+            "_id": "62694d07cd1610001d6b3511",
+            "portfolios": ["620bdfd679bf1a0020e99a8b"],
+            "userId": "60b20ec1ad927f001e3f4f7e",
+            "title": "PR 1407-- Art says awesome",
+            "description": "this is a PR about XX\n\nalways listen to art ;0",
+            "componentType": "comments",
+            "createdAt": "2022-04-27T14:02:47.832Z",
+            "updatedAt": "2022-04-27T14:02:47.832Z",
+            "__v": 0,
+            "isHorizontal": true,
+            "componentProps": { "portfolioId": "620bdfd679bf1a0020e99a8b" }
+          }
+        ],
+        "data": null
+      },
+      {
+        "type": "row",
+        "id": "ee7c70c1-8537-4c6d-90e7-4c069c1dcfc2",
+        "isIndependent": false,
+        "children": [
+          {
+            "type": "column",
+            "componentToRender": "comments",
+            "id": "6267ed0314af990021ef6ab8",
+            "_id": "6267ed0314af990021ef6ab8",
+            "portfolios": ["620bdfd679bf1a0020e99a8b"],
+            "userId": "60b20ec1ad927f001e3f4f7e",
+            "title": "Good example of fixing code quality before a release",
+            "description": "Denis reviewed PR 1394 which was about the list of Portfolios. He found two potential issues with the code -- at 6 am New York Time.\n\nThen Art went back and fixed them later that day.\n\nAt 630 am New York time, Denis reviewed again, and confirmed that the issues were fixed and his questions resolved.\n\nThen Art made another set of changes later that day, that Denis approved.\n\nWhy this matters: this is a good example of communication and speed. At Sema we prioritize code reviews over coding- because doing a code review helps unblock someone else. And we prioritize responding to code reviews-- \"context switching\" -- having to think about different things frequently-- is a total pain for effective development. So we try to review and respond as fast as possible, while the code is on the mind of Author and Reviewer.   ",
+            "componentType": "comments",
+            "createdAt": "2022-04-26T13:00:51.512Z",
+            "updatedAt": "2022-04-26T13:03:13.990Z",
+            "__v": 0,
+            "isHorizontal": true,
+            "componentProps": { "portfolioId": "620bdfd679bf1a0020e99a8b" }
+          }
+        ],
+        "data": null
+      },
+      {
+        "type": "row",
+        "id": "f077c052-27b4-4d6b-97a9-51f7b396a484",
+        "isIndependent": false,
+        "children": [
+          {
+            "type": "column",
+            "componentToRender": "comments",
+            "id": "6267ea3adf35b6002306d8ed",
+            "_id": "6267ea3adf35b6002306d8ed",
+            "portfolios": ["620bdfd679bf1a0020e99a8b"],
+            "userId": "60b20ec1ad927f001e3f4f7e",
+            "title": "A particularly good refactoring -- related to Developer Portfolio ",
+            "description": "Developer Portfolio: https://intercom.help/sema-software/en/articles/6147276-what-s-a-developer-portfolio\n\nThe problem with the previous implementation was that it was ineffecient and hard to understand-- there were different methods for each field.\n\nNow there is only one method for each field. ",
+            "componentType": "comments",
+            "createdAt": "2022-04-26T12:48:58.285Z",
+            "updatedAt": "2022-04-26T14:55:37.876Z",
+            "__v": 0,
+            "isHorizontal": true,
+            "componentProps": { "portfolioId": "620bdfd679bf1a0020e99a8b" }
+          }
+        ],
+        "data": null
+      },
+      {
+        "type": "row",
+        "id": "f20a7f03-6272-419d-8460-cd9952e52cf0",
+        "isIndependent": false,
+        "children": [
+          {
+            "type": "column",
+            "componentToRender": "comments",
+            "id": "6266a78b630b9b0021f27777",
+            "_id": "6266a78b630b9b0021f27777",
+            "portfolios": ["620bdfd679bf1a0020e99a8b"],
+            "userId": "60b20ec1ad927f001e3f4f7e",
+            "title": "Phoenix-- API code -- examples",
+            "description": "\"Fix\" and includes API",
+            "componentType": "comments",
+            "createdAt": "2022-04-25T13:52:11.944Z",
+            "updatedAt": "2022-04-26T14:57:25.333Z",
+            "__v": 0,
+            "isHorizontal": true,
+            "componentProps": { "portfolioId": "620bdfd679bf1a0020e99a8b" }
+          }
+        ],
+        "data": null
+      },
+      {
+        "type": "row",
+        "id": "eaaa6b09-5b03-4256-b069-f41657557f98",
+        "isIndependent": false,
+        "children": [
+          {
+            "type": "column",
+            "componentToRender": "comments",
+            "id": "625eb730b2d9e90020b12586",
+            "_id": "625eb730b2d9e90020b12586",
+            "portfolios": ["620bdfd679bf1a0020e99a8b"],
+            "userId": "60b20ec1ad927f001e3f4f7e",
+            "title": "PR 1433-- A pull request that could be better ",
+            "description": "Art is one of our Team Leads and is particularly skilled at assessing Elegant code.\nHis feedback on 1433 is a good example of a PR that was a bit too large -- try to make it require 1-3 comments, not 4 or more -- and where were opportunities to improve code elegance.",
+            "componentType": "comments",
+            "createdAt": "2022-04-19T13:20:48.695Z",
+            "updatedAt": "2022-04-19T13:20:48.695Z",
+            "__v": 0,
+            "isHorizontal": true,
+            "componentProps": { "portfolioId": "620bdfd679bf1a0020e99a8b" }
+          }
+        ],
+        "data": null
+      },
+      {
+        "type": "row",
+        "id": "39613f94-bb39-4b1b-b9f7-dfc5b573c4d1",
+        "isIndependent": false,
+        "children": [
+          {
+            "type": "column",
+            "componentToRender": "comments",
+            "id": "624c87c5599c70001dac2ff1",
+            "_id": "624c87c5599c70001dac2ff1",
+            "portfolios": ["620bdfd679bf1a0020e99a8b"],
+            "userId": "60b20ec1ad927f001e3f4f7e",
+            "title": "Guillermo's awesomes",
+            "description": "when Guillermo has said the code is great",
+            "componentType": "comments",
+            "createdAt": "2022-04-05T18:17:41.570Z",
+            "updatedAt": "2022-04-05T18:17:41.570Z",
+            "__v": 0,
+            "isHorizontal": true,
+            "componentProps": { "portfolioId": "620bdfd679bf1a0020e99a8b" }
+          }
+        ],
+        "data": null
+      },
+      {
+        "type": "row",
+        "id": "885934ff-9339-4752-b51f-a3d116c3a17a",
+        "isIndependent": false,
+        "children": [
+          {
+            "type": "column",
+            "componentToRender": "chart",
+            "id": "62854b5d22803b0350464cff",
+            "_id": "62854b5d22803b0350464cff",
+            "portfolios": ["620bdfd679bf1a0020e99a8b"],
+            "userId": "60b20ec1ad927f001e3f4f7e",
+            "title": "my awesomes in the last 2 weeks ",
+            "description": "{\"blocks\":[{\"key\":\"bgnrq\",\"text\":\"really crushed it on the dashboard\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
+            "componentType": "summaries",
+            "isHorizontal": false,
+            "createdAt": "2022-05-18T19:39:09.694Z",
+            "updatedAt": "2022-05-18T19:39:09.694Z",
+            "__v": 0,
+            "componentProps": { "portfolioId": "620bdfd679bf1a0020e99a8b" }
+          },
+          {
+            "type": "column",
+            "componentToRender": "chart",
+            "id": "6285468e850740001fc5e950",
+            "_id": "6285468e850740001fc5e950",
+            "portfolios": ["620bdfd679bf1a0020e99a8b"],
+            "userId": "60b20ec1ad927f001e3f4f7e",
+            "title": "me coaching Josh",
+            "description": "{\"blocks\":[{\"key\":\"8t7r6\",\"text\":\"I started working on coaching him in April\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
+            "componentType": "summaries",
+            "isHorizontal": false,
+            "createdAt": "2022-05-18T19:18:38.160Z",
+            "updatedAt": "2022-05-18T19:18:38.160Z",
+            "__v": 0,
+            "componentProps": { "portfolioId": "620bdfd679bf1a0020e99a8b" }
+          }
+        ],
+        "data": null
+      },
+      {
+        "type": "row",
+        "id": "644a2f96-5abe-4c07-adf6-59de4426b00d",
+        "isIndependent": false,
+        "children": [
+          {
+            "type": "column",
+            "componentToRender": "chart",
+            "id": "627e6132584adb005e0f183c",
+            "_id": "627e6132584adb005e0f183c",
+            "portfolios": ["620bdfd679bf1a0020e99a8b"],
+            "userId": "60b20ec1ad927f001e3f4f7e",
+            "title": "my awesomes",
+            "description": "{\"blocks\":[{\"key\":\"49kdh\",\"text\":\"my awesomes\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
+            "componentType": "summaries",
+            "isHorizontal": false,
+            "createdAt": "2022-05-13T13:46:27.257Z",
+            "updatedAt": "2022-05-13T13:46:27.257Z",
+            "__v": 0,
+            "componentProps": { "portfolioId": "620bdfd679bf1a0020e99a8b" }
+          },
+          {
+            "id": "7acd98ec-4c95-4f55-b80d-7b86af61dc74",
+            "isEmpty": true,
+            "componentToRender": "empty",
+            "componentProps": {}
+          }
+        ],
+        "data": null
+      }
+    ]
+  },
+  {
+    "_id": "620d7a3ee4aacd001dd67bd6",
+    "userId": "61041e153e90570022942e58",
+    "firstName": "Brendan",
+    "lastName": "Cody-Kenny",
+    "headline": "Brendan Cody-Kenny",
+    "imageUrl": "https://avatars.githubusercontent.com/u/6106595?v=4",
+    "identities": [
+      {
+        "emails": ["codykenny@gmail.com"],
+        "provider": "github",
+        "id": "6106595",
+        "username": "codykenb",
+        "email": "codykenny@gmail.com",
+        "firstName": "Brendan",
+        "lastName": "Cody-Kenny",
+        "profileUrl": "https://api.github.com/users/codykenb",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/6106595?v=4"
+      }
+    ],
+    "overview": "This is to help understanding and become familiar with how and why SCQP works the way it does. ",
+    "type": "public",
+    "snapshots": [
+      { "id": "6267fb0abcf59000249ec03c", "sort": 0 },
+      { "id": "625ec6b8a52318001f0e392d", "sort": 1 },
+      { "id": "625ec677f74ff1001dfe1e9f", "sort": 2 },
+      { "id": "6256c17cbc92b500255a8ac5", "sort": 4 },
+      { "id": "62177abb34e61c001f48d58a", "sort": 7 }
+    ],
+    "createdAt": "2022-02-16T22:27:10.675Z",
+    "updatedAt": "2022-04-26T14:00:42.706Z",
+    "__v": 0,
+    "title": "SCQP onboarding",
+    "layout": []
+  },
+  {
+    "_id": "6274f205fdac63001e7f3c6f",
+    "layout": [],
+    "userId": "60b20ec1ad927f001e3f4f7e",
+    "firstName": "Matt",
+    "lastName": "Van Itallie",
+    "headline": "Matt Van Itallie",
+    "imageUrl": "https://prod-scr-avatars.s3.amazonaws.com/avatar-1652992442121.jpeg",
+    "identities": [
+      {
+        "emails": [
+          "31629621+mattvanitallie@users.noreply.github.com",
+          "mattvanitallie@gmail.com"
+        ],
+        "provider": "github",
+        "id": "31629621",
+        "username": "mattvanitallie",
+        "email": "mattvanitallie@gmail.com",
+        "firstName": "",
+        "lastName": "",
+        "profileUrl": "https://api.github.com/users/mattvanitallie",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/31629621?v=4"
+      }
+    ],
+    "overview": "",
+    "type": "private",
+    "title": "New Portfolio",
+    "snapshots": [],
+    "createdAt": "2022-05-06T10:01:41.196Z",
+    "updatedAt": "2022-05-19T20:34:03.061Z",
+    "__v": 0
+  }
+]

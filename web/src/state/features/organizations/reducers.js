@@ -1,5 +1,5 @@
 import { format, subDays } from 'date-fns';
-import { YEAR_MONTH_DAY_FORMAT } from '../../../utils/constants';
+import { YEAR_MONTH_DAY_FORMAT } from '../../../utils/constants/date';
 import * as types from './types';
 
 // Dates for default filters

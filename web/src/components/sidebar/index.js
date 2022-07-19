@@ -1,8 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { ActivityLogIcon, CodeStatsIcon, RefreshIcon } from '../Icons';
-import { useFlags } from '../launchDarkly';
+import { ActivityLogIcon, CodeStatsIcon } from '../Icons';
 
 import styles from './sidebar.module.scss';
 
@@ -31,8 +30,6 @@ MenuItem.propTypes = {
 };
 
 function Sidebar({ children, ...menuItemProps }) {
-  const { repoSyncTab } = useFlags();
-
   return (
     <div className="px-20 is-flex">
       <div className="is-flex is-justify-content-space-between mt-10 is-flex-wrap-wrap">
@@ -49,15 +46,6 @@ function Sidebar({ children, ...menuItemProps }) {
           icon={<CodeStatsIcon />}
           {...menuItemProps}
         />
-
-        {repoSyncTab && (
-          <MenuItem
-            pathName="sync"
-            name="Sync"
-            icon={<RefreshIcon />}
-            {...menuItemProps}
-          />
-        )}
       </div>
     </div>
   );

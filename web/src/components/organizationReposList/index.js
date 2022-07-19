@@ -2,17 +2,17 @@ import clsx from 'clsx';
 import React, { useEffect, useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
-import Checkbox from '../../components/checkbox';
-import { editOrganizationRepos, fetchOrganizationRepos } from '../../state/features/organizations[new]/actions';
-import Loader from '../../components/Loader';
+import { InputField } from 'adonis';
+import Checkbox from "../checkbox";
+import { editOrganizationRepos, fetchOrganizationRepos, fetchOrganizationsOfUser } from '../../state/features/organizations[new]/actions';
+import Loader from "../Loader";
 import Table from '../table';
 import { alertOperations } from '../../state/features/alerts';
-import { CloseIcon, SearchIcon } from '../../components/Icons';
-import { InputField } from 'adonis';
+import { CloseIcon, SearchIcon } from "../Icons";
 import useDebounce from '../../hooks/useDebounce';
-import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants';
+import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants/date';
 
-const OrganizationReposList = ({ isActive, onClose }) => {
+function OrganizationReposList({ isActive, onClose }) {
   const { triggerAlert } = alertOperations;
   const dispatch = useDispatch();
   const { selectedOrganization, user, token } = useSelector((state) => state.authState);
@@ -98,6 +98,7 @@ const OrganizationReposList = ({ isActive, onClose }) => {
     try {
       await dispatch(editOrganizationRepos(organization._id, { repos: Array(...activeRepos) }, token));
       dispatch(fetchOrganizationRepos({ organizationId: organization._id }, token));
+      dispatch(fetchOrganizationsOfUser(token));
       dispatch(triggerAlert('Repos were added', 'success'));
       onClose();
     } catch (e) {

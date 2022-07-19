@@ -1,4 +1,6 @@
+@use 'sass:list';
 @import "./_colors.module.scss";
+@import "../src/components/header/UserHeaderNav/UserHeaderNav.module.scss";
 
 .shadow {
   box-shadow: 0 0em 1em #0a0a0a1a, 0 0px 0 1px #0a0a0a05;
@@ -230,4 +232,18 @@ $radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px", "35px";
 
 .shadow-none {
   box-shadow: none !important;
+}
+
+.noHover{
+  pointer-events: none;
+}
+
+@for $i from 1 through list.length($bgcolors) {
+  .org-colour-#{$i - 1} {
+    background-color: list.nth($bgcolors, $i) !important;
+  }
+}
+
+.org-colour-personal {
+  background-color: #87B9E7 !important;
 }

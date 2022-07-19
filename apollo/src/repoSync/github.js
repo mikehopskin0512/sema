@@ -9,6 +9,7 @@ import {
 } from '../comments/reaction/reactionService';
 import { findOneByLabel as findTagByLabel } from '../comments/tags/tagService';
 import SmartComment from '../comments/smartComments/smartCommentModel';
+import User from '../users/userModel';
 import Repository from '../repositories/repositoryModel';
 import {
   findByUsernameOrIdentity,
@@ -44,7 +45,7 @@ export default function createGitHubImporter(octokit) {
     // e.g. https://api.github.com/repos/SemaSandbox/astrobee/pulls/comments/702432867
     if (!pullRequest) return null;
 
-    const { repo } = pullRequest.base;
+    const { repo, user } = pullRequest.base;
     const repositoryId = await repositoryIdCache.get(repo.id);
     const otherComments = await unmatchedComments.get(repositoryId);
     const existingComment = await findDuplicate(githubComment, otherComments);
@@ -54,6 +55,25 @@ export default function createGitHubImporter(octokit) {
         githubComment,
         existingComment,
         userCache,
+      });
+    }
+    const existingUser = await User.find({
+      'identities.id': user.id,
+      'identities.provider': 'github',
+    });
+    if (!existingUser.length) {
+      await createGhostUser({
+        handle: user.login,
+        username: user.login,
+        identities: [
+          {
+            provider: 'github',
+            id: user.id.toString(),
+            username: user.login,
+            avatarUrl: user.avatar_url,
+          },
+        ],
+        avatarUrl: user.avatar_url,
       });
     }
 

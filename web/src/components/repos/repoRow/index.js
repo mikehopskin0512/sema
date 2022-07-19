@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
+import { alertOperations } from '../../../state/features/alerts';
 import styles from './repoRow.module.scss';
 import RepoUsers from '../repoUsers';
 import { PATHS } from '../../../utils/constants';
@@ -15,16 +16,22 @@ import DeleteRepoModal from '../repoCard/deleteRepoModal';
 import { black900, orange400 } from '../../../../styles/_colors.module.scss';
 import { toggleUserRepoPinned } from '../../../state/features/auth/actions';
 import { toggleOrgRepoPinned } from '../../../state/features/organizations[new]/actions';
+import RepoSyncText from '../../repoSync/repoSyncText';
+import { useFlags } from '../../launchDarkly';
 
 const RepoRow = (props) => {
   const dispatch = useDispatch();
   const { token, user, selectedOrganization } = useSelector((state) => state.authState);
   const titleRef = useRef(null);
+  const { repoSyncTab } = useFlags();
+  const dispatch = useDispatch();
   const {
-    externalId = '', name = '', body = '', repoStats, users = [], language = '', _id: repoId, removeRepo, isOrganizationView = false, isPinned = false,
+    externalId = '', name = '', body = '', repoStats, users = [], language = '', _id: repoId, removeRepo, isOrganizationView = false,
+    sync = {}, isPinned = false,
   } = props;
   const { isOrganizationAdmin } = usePermission();
   const [isDeleteRepoModalOpen, toggleDeleteModal] = useState(false);
+  const [repoStatus] = useState(sync?.status || 'notsynced');
   const [hovered, setHovered] = useState(false);
 
   const onRemoveRepo = async (e) => {
@@ -113,7 +120,12 @@ const RepoRow = (props) => {
           <td className={clsx('py-15 has-background-white px-10')}>
             <RepoUsers users={isOrganizationView ? repoStats.userIds : users} />
           </td>
-            {ActionColumn()}
+            {/* {ActionColumn()} */}
+          {repoSyncTab && <td className={clsx('py-15 has-background-white px-10')}>
+            <div className='is-flex is-align-items-center'>
+              <RepoSyncText repoStatus={repoStatus} />
+            </div>
+          </td>}
         </tr>
       </Link>
       {isOrganizationAdmin() && (
@@ -125,7 +137,7 @@ const RepoRow = (props) => {
         )}
     </>
   );
-};
+}
 
 RepoRow.propTypes = {
   externalId: PropTypes.string.isRequired,
