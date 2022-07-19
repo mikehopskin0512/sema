@@ -3,7 +3,6 @@ import Bluebird from 'bluebird';
 import { Octokit } from '@octokit/rest';
 import { maxBy } from 'lodash';
 import { github } from '../config';
-import logger from '../shared/logger';
 
 export const getOctokit = async (repository) => {
   const isValidCloneURL = repository.cloneUrl?.startsWith('https://');
