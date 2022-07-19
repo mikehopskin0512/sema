@@ -71,12 +71,22 @@ const FFOnboardingModal = ({
   const correctModalTexts = useMemo(() => {
     return repositories.length ?
       {
-        title: 'Choose your most often used repos:',
-        text: 'This will help us to organize your repos, collegues, and pull requests.',
+        title: 'Choose a repo to get started',
+        text: (
+          <div>Pick your favorite or your most important repo so you can <br /> get the most out of Sema.</div>
+        ),
       } :
       {
-        title: 'It looks like you don\'t have any public repos',
-        text: 'For now, Sema can only import and visualize public repo data. We\'re currently working on expanding to private repos, stay tuned!',
+        title: 'Wait, it seems you don’t have a public repo.',
+        text: (
+          <>
+            <div>For now, Sema can only work with public repo data. Don’t worry, we’re working on extending this to private repos too.</div>
+            <br />
+            <div className='mt-5'>
+              In the meantime, you can use Sema to write more meaningful code reviews or create a Developer Portfolio. <br /> Enjoy!
+            </div>
+          </>
+        ),
       };
   }, [repositories]);
 

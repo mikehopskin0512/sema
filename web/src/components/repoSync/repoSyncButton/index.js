@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import ReactTooltip from 'react-tooltip';
 import { SYNC_STATUS } from '../../../utils/constants';
 import { ResendIcon } from '../../Icons';
 import * as api from '../../../state/utils/api';
 import RepoSyncText from '../repoSyncText';
-import Tooltip from '../../Tooltip';
 
 function RepoSyncButton({refresh}) {
 	const { token } = useSelector((state) => state.authState);
@@ -36,6 +36,7 @@ function RepoSyncButton({refresh}) {
       type="button"
       onClick={handleOnClick}
       disabled={isStatusStartedOrQueued()}
+      data-tip={SYNC_STATUS[sync.status]?.tooltip}
     >
       <ResendIcon size="small" />
       <span className="ml-10">Sync Repo</span>
@@ -51,16 +52,17 @@ function RepoSyncButton({refresh}) {
     }
   }, [sync, triggeredRepoSync]);
 
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  });
+
   return Object.getOwnPropertyDescriptor(overview, 'repoStats') ? (
     <div className='is-flex'>
       <div className='is-flex is-align-items-center mr-24'>
         <RepoSyncText repoStatus={sync.status} isRepoPage completedAt={sync.completedAt} />
       </div>
-      {isStatusStartedOrQueued() &&
-        <Tooltip text={SYNC_STATUS[sync.status]?.tooltip}>
-          {renderSyncButton()}
-        </Tooltip>}
-        {!isStatusStartedOrQueued() && sync.status !== SYNC_STATUS.completed.status && renderSyncButton()}
+      {isStatusStartedOrQueued() && renderSyncButton()}
+      {!isStatusStartedOrQueued() && sync.status !== SYNC_STATUS.completed.status && renderSyncButton()}
     </div>
   ) : null;
 }
