@@ -57,7 +57,7 @@ function RepoCard(props) {
     <ReactTooltip html place="top" type="dark" effect="float"/>
     <Link href={`${PATHS.REPO}/${externalId}`}>
       <div
-        className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', column === 3 && styles['card-width-3c'], column === 2 && styles['card-width-2c'])}
+        className={clsx('p-10 is-flex is-clickable', column === 3 && styles['card-width-3c'], column === 2 && styles['card-width-2c'])}
         aria-hidden
         style={{zIndex: reposLength - idx}}
       >
