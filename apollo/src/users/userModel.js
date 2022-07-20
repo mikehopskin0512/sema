@@ -102,6 +102,7 @@ const userSchema = mongoose.Schema(
     cohort: String,
     notes: String,
     hasExtension: { type: Boolean, default: false },
+    pinnedRepos: { type: [String], default: [] },
   },
   { timestamps: true }
 );

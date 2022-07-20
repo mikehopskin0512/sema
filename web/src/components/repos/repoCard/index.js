@@ -1,14 +1,20 @@
 import React, { useRef, useState } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
-import Avatar from 'react-avatar';
-import { useSelector } from 'react-redux';
-import ReactTooltip from 'react-tooltip';
+import { useDispatch, useSelector } from 'react-redux';
 import usePermission from '../../../hooks/usePermission';
+import { OptionsIcon, StarFilledIcon, StarOutlineScg } from '../../Icons';
+import DropDownMenu from '../../dropDownMenu';
+import Avatar from 'react-avatar';
+import ReactTooltip from 'react-tooltip';
 import DeleteRepoModal from "./deleteRepoModal";
 import styles from './repoCard.module.scss';
 import { PATHS } from '../../../utils/constants';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
+import { black900, orange400 } from '../../../../styles/_colors.module.scss';
+import Tooltip from '../../Tooltip';
+import { toggleOrgRepoPinned } from '../../../state/features/organizations[new]/actions';
+import { toggleUserRepoPinned } from '../../../state/features/auth/actions';
 import RepoSyncText from '../../repoSync/repoSyncText';
 import { useFlags } from '../../launchDarkly';
 
@@ -18,13 +24,14 @@ const statLabels = {
   smartCommenters: 'Sema Commenters',
 };
 
-function RepoCard(props) {
+const RepoCard = (props) => {
+  const dispatch = useDispatch();
+  const { token, user } = useSelector((state) => state.authState);
   const titleRef = useRef(null);
   const { repoSyncTab } = useFlags();
-  const { authState: { user } } = useSelector(state => state);
   const {
     name, externalId, _id: repoId, repoStats, users = [], column = 3, isOrganizationView = false, onRemoveRepo,
-    sync, idx, reposLength, selectedOrganization
+    sync, idx, reposLength, selectedOrganization, isPinned = false,
   } = props;
   const { isOrganizationAdmin } = usePermission();
   const [repoStatus] = useState(sync?.status || 'notsynced');
@@ -39,12 +46,26 @@ function RepoCard(props) {
       <p className={clsx('has-text-weight-semibold has-text-gray-700 is-uppercase', styles['stat-title'])}>{label}</p>
     </div>
   );
-
+  const [hovered, setHovered] = useState(false);
   const removeRepo = async (e) => {
     e.stopPropagation();
     await onRemoveRepo(repoId);
     setDeleteRepoModalOpen(false);
   };
+
+  const onToggleIsPinned = async (e) => {
+    e.stopPropagation();
+    selectedOrganization?.organization ? await dispatch(toggleOrgRepoPinned({
+      orgId: selectedOrganization.organization._id,
+      repoId,
+      token
+    })) : 
+      await dispatch(toggleUserRepoPinned({
+        userId: user._id,
+        repoId,
+        token
+      }));
+  }
 
   const hasSelectedOrganization = () => Object.getOwnPropertyDescriptor(selectedOrganization, 'organization');
 
@@ -64,6 +85,11 @@ function RepoCard(props) {
         <div className={clsx('box has-background-white is-full-width p-0 border-radius-8px is-flex is-flex-direction-column', styles['card-wrapper'])}>
           <div className={clsx("is-flex is-justify-content-space-between is-align-items-center px-16", styles[repoStatus], styles['repo-card-header'])}>
             <div className='is-flex is-justify-content-space-between is-full-width'>
+              <Tooltip direction='top-right' text={isPinned ? 'Remove from Pinned Repos' : 'Pin this Repo'} isActive={true} showDelay={0}>
+                <div onClick={onToggleIsPinned} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+                  {isPinned ? <StarFilledIcon color={orange400} /> : <StarOutlineScg color={hovered ? orange400 : black900} />}
+                </div>
+              </Tooltip>
               <div className={`${styles['tooltip-wrapper']} is-flex`}>
                 <OverflowTooltip ref={titleRef} text={name}>
                   <p ref={titleRef} className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>

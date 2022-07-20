@@ -1,4 +1,4 @@
-import { get, create, getAll, update, upload } from '../../utils/api';
+import { get, create, getAll, update, upload, patch } from '../../utils/api';
 
 export const getOrganizations = (token) => getAll('/api/proxy/organizations', {}, token);
 export const addOrganization = (body, token) => create('/api/proxy/organizations', body, token);
@@ -12,3 +12,4 @@ export const updateOrganizationRepos = (organizationId, body, token) => update(`
 export const getAllOrganizationCollections = (organizationId, token) => getAll(`/api/proxy/comments/collections/all?organizationId=${organizationId}`, {}, token);
 export const inviteToOrganization = (organizationId, token) => get('/api/proxy/organizations/invite', organizationId, token);
 export const uploadAvatar = (organizationId, body, token) => upload(`/api/proxy/organizations/${organizationId}/upload`, body, token);
+export const togglePinnedOrgRepo = (organizationId, body, token) => patch(`/api/proxy/organizations/${organizationId}/pinned-repos`, body, token);
