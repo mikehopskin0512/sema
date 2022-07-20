@@ -1,12 +1,11 @@
 import Bluebird from 'bluebird';
-import retry from 'async-retry';
 import logger from '../shared/logger';
 import { queues } from '../queues';
 import Repository from '../repositories/repositoryModel';
 import SmartComment from '../comments/smartComments/smartCommentModel';
 import createGitHubImporter from './github';
 import {
-  getOctokit,
+  withOctokit,
   getOwnerAndRepo,
   importReviewsFromPullRequest,
   setSyncErrored,
@@ -92,30 +91,6 @@ export default async function importRepository({ id }) {
       throw error;
     }
   });
-}
-
-// Runs the given function with a suitable Octokit instance.
-// Rate limit errors are retried with a new Octokit instance
-// from our pool (see getOctokitFromPool()).
-async function withOctokit(repository, fn) {
-  await retry(
-    async (bail) => {
-      try {
-        const octokit = await getOctokit(repository);
-        await fn(octokit);
-      } catch (error) {
-        const isRateLimitError =
-          error.status === 403 &&
-          error.response?.headers?.get('x-ratelimit-remaining') === '0';
-
-        if (isRateLimitError) throw error; // Retry on rate limit error.
-        else bail(error); // Actually throw the error.
-      }
-    },
-    {
-      retries: 3,
-    }
-  );
 }
 
 // Imports pull request and issue comments.

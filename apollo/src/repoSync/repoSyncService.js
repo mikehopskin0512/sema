@@ -1,8 +1,12 @@
 import { createAppAuth } from '@octokit/auth-app';
+import { addSeconds } from 'date-fns';
+import retry from 'async-retry';
 import Bluebird from 'bluebird';
 import { Octokit } from '@octokit/rest';
 import { maxBy } from 'lodash';
 import { github } from '../config';
+
+const rateLimitedUntil = new Map();
 
 export const getOctokit = async (repository) => {
   const isValidCloneURL = repository.cloneUrl?.startsWith('https://');
@@ -45,6 +49,38 @@ export const getOctokit = async (repository) => {
   return octokit;
 };
 
+// Runs the given function with a suitable Octokit instance.
+// Rate limit errors are retried with a new Octokit instance
+// from our pool (see getOctokitFromPool()).
+export async function withOctokit(repository, fn) {
+  await retry(
+    async (bail) => {
+      try {
+        const octokit = await getOctokit(repository);
+        await fn(octokit);
+      } catch (error) {
+        // Retry immediately if we hit the rate limit
+        // (using a different token from the pool).
+        if (isRateLimitError(error)) throw error;
+
+        // Actually throw other errors.
+        bail(error);
+      }
+    },
+    {
+      retries: 3,
+    }
+  );
+}
+
+function isRateLimitError(error) {
+  return (
+    error.status === 403 &&
+    (error.response?.headers?.['x-ratelimit-remaining'] === '0' ||
+      error.response?.headers?.['retry-after'])
+  );
+}
+
 const appOctokit = new Octokit({
   authStrategy: createAppAuth,
   auth: {
@@ -75,17 +111,43 @@ export async function getOctokitFromPool() {
   if (octokits.length === 0)
     throw new Error('Sema app not installed on any account');
 
-  const withRemainingLimit = octokits.filter(
-    ({ rateLimit }) => rateLimit.resources.core.remaining > 500
-  );
+  const now = new Date().getTime();
+  const withRemainingLimit = octokits
+    .filter(
+      ({ installation }) =>
+        !rateLimitedUntil.has(installation.id) ||
+        rateLimitedUntil.get(installation.id) < now
+    )
+    .filter(({ rateLimit }) => rateLimit.resources.core.remaining > 500);
 
   if (withRemainingLimit.length === 0)
     throw new Error('Ran out of GitHub API quota');
 
-  const { octokit } = maxBy(
+  const { installation, octokit } = maxBy(
     withRemainingLimit,
     'rateLimit.resources.core.remaining'
   );
+
+  octokit.hook.wrap('request', async (request, options) => {
+    try {
+      return await request(options);
+    } catch (error) {
+      // Secondary rate limits are not exposed as part
+      // of the rate limit API, so we must track these
+      // errors manually.
+      const isSecondaryRateLimitError =
+        error.status === 403 && error.response?.headers?.['retry-after'];
+      if (isSecondaryRateLimitError) {
+        const retryAfter = parseInt(error.response.headers['retry-after'], 10);
+        const retryAt = addSeconds(new Date(), retryAfter);
+        rateLimitedUntil.set(installation.id, retryAt);
+        // Will trigger a retry using a different token from the pool.
+        throw error;
+      }
+      throw error;
+    }
+  });
+
   return octokit;
 }
 
@@ -176,4 +238,8 @@ export async function setSyncUnauthorized(repository) {
     'sync.error': null,
   });
   await repository.save();
+}
+
+export function resetRateLimitTracking() {
+  rateLimitedUntil.clear();
 }
