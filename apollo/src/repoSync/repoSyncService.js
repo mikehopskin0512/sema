@@ -49,6 +49,10 @@ export const getOctokit = async (repository) => {
   return octokit;
 };
 
+// See https://github.com/vercel/async-retry
+const minTimeout = process.env.NODE_ENV === 'test' ? 10 : 1000;
+const maxTimeout = process.env.NODE_ENV === 'test' ? 10 : 3000;
+
 // Runs the given function with a suitable Octokit instance.
 // Rate limit errors are retried with a new Octokit instance
 // from our pool (see getOctokitFromPool()).
@@ -69,6 +73,8 @@ export async function withOctokit(repository, fn) {
     },
     {
       retries: 3,
+      minTimeout,
+      maxTimeout,
     }
   );
 }
@@ -142,7 +148,6 @@ export async function getOctokitFromPool() {
         const retryAt = addSeconds(new Date(), retryAfter);
         rateLimitedUntil.set(installation.id, retryAt);
         // Will trigger a retry using a different token from the pool.
-        throw error;
       }
       throw error;
     }
