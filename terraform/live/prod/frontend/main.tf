@@ -51,8 +51,8 @@ module "phoenix" {
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
 
-  min_capacity = 6
-  max_capacity = 12
+  min_capacity = 10
+  max_capacity = 20
 }
 
 module "apollo" {
@@ -99,8 +99,8 @@ module "apollo" {
     data.aws_iam_policy_document.this.json
   ]
 
-  min_capacity = 6
-  max_capacity = 12
+  min_capacity = 10
+  max_capacity = 20
 }
 
 module "apollo_worker" {
@@ -135,6 +135,6 @@ module "apollo_worker" {
     data.aws_iam_policy_document.this.json
   ]
 
-  min_capacity = 4
-  max_capacity = 4
+  min_capacity = 10
+  max_capacity = 20
 }

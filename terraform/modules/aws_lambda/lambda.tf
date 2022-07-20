@@ -19,13 +19,20 @@ resource "aws_lambda_function" "this" {
   }
 
   dynamic "environment" {
-    for_each = var.environment_variables
+    for_each = length(var.environment_variables) > 0 ? ["created"] : []
     content {
-      variables = environment.value
+      variables = var.environment_variables
     }
   }
 
-  layers = [aws_lambda_layer_version.packages.arn]
+  layers = var.layer_enabled ? [aws_lambda_layer_version.packages[0].arn] : []
+
+  lifecycle {
+    ignore_changes = [
+      filename,
+      source_code_hash
+    ]
+  }
 
   tags = local.tags
 }

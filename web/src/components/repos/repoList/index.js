@@ -182,12 +182,13 @@ function RepoList({
             <p className="is-inline-block has-text-black-950 has-text-weight-semibold is-size-4 mb-20 px-15">{LIST_TYPE[type]}</p>
           </div>
           <div className="is-flex">
-            <button className={clsx("button border-radius-0 is-small", view === 'list' ? 'is-primary' : '')} onClick={() => setView('list')}>
-              <ListIcon />
-            </button>
-            <button className={clsx("button border-radius-0 is-small", view === 'grid' ? 'is-primary' : '')} onClick={() => setView('grid')}>
-              <GridIcon />
-            </button>
+            {/** Return this code when design work will be finished */}
+        {/* <button className={clsx("button border-radius-0 is-small", view === 'list' ? 'is-primary' : '')} onClick={() => setView('list')}>
+          <ListIcon />
+        </button>
+        <button className={clsx("button border-radius-0 is-small", view === 'grid' ? 'is-primary' : '')} onClick={() => setView('grid')}>
+          <GridIcon />
+        </button> */}
             {isOrganizationAdmin() && (
               <button
                 type="button"
@@ -198,8 +199,8 @@ function RepoList({
                 <span className="ml-8">Add a Repo</span>
               </button>
             )}
-  
-            <button
+            {/** Return functionality of connection Org when it will be ready */}
+            {/* <button
               type="button"
               className={clsx("ml-16 button is-primary", styles['add-repo-button'])}
               onClick={() => githubLogin()}
@@ -217,7 +218,7 @@ function RepoList({
                   </>
                 )
               }
-            </button>
+            </button> */}
           </div>
         </div>
         <div className='columns'>
@@ -273,9 +274,10 @@ function RepoList({
                 </div>}
           </div>
         ) : null}
-        {view === 'list' ? (
+        {/** Return this code when design work will be finished */}
+        {/* {view === 'list' ? (
           <RepoTable search={search} otherReposCount={otherReposCount} data={filteredRepos} removeRepo={removeRepo} isOrganizationView={type !== 'MY_REPOS'} />
-        ) : null}
+        ) : null} */}
       </div>
     ) : null
   )

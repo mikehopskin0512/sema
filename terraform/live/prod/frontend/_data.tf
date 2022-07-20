@@ -42,3 +42,19 @@ data "aws_secretsmanager_secret_version" "apollo" {
   ]
 }
 
+data "aws_iam_policy_document" "this" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "sqs:ChangeMessageVisibility",
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes",
+      "sqs:GetQueueUrl",
+      "sqs:ListQueues",
+      "sqs:ReceiveMessage",
+      "sqs:SendMessage"
+    ]
+
+    resources = local.sqs_queues_arn
+  }
+}

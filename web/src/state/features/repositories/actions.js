@@ -125,7 +125,7 @@ const requestFetchRepositoryOverview = () => ({
   type: types.REQUEST_FETCH_REPOSITORY_OVERVIEW,
 });
 
-const requestFetchRepositoryOverviewSuccess = (overview) => ({
+export const requestFetchRepositoryOverviewSuccess = (overview) => ({
   type: types.REQUEST_FETCH_REPOSITORY_OVERVIEW_SUCCESS,
   overview,
 });
