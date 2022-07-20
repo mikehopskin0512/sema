@@ -100,7 +100,7 @@ pipeline {
                     }
 
                     if (env.BRANCH_NAME == 'develop'){
-                        build job: 'Smoke-End-to-end-tests', propagate: false
+                        build job: 'Smoke-End-to-end-tests', propagate: false, wait: false
                     }
                 }
             }
