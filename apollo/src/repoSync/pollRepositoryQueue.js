@@ -5,12 +5,11 @@ import { queues } from '../queues';
 import Repository from '../repositories/repositoryModel';
 import createGitHubImporter from './github';
 import {
-  getOctokit,
+  withOctokit,
   getOwnerAndRepo,
   importReviewsFromPullRequest,
   setSyncErrored,
   setSyncUnauthorized,
-  setSyncCompleted,
 } from './repoSyncService';
 
 const queue = queues.self(module);
@@ -38,48 +37,47 @@ export default async function pollRepository({ id }) {
     return;
   }
 
-  const octokit = await getOctokit(repository);
-  if (!octokit) {
-    await setSyncUnauthorized(repository);
-    return;
-  }
+  await withOctokit(repository, async (octokit) => {
+    if (!octokit) {
+      await setSyncUnauthorized(repository);
+      return;
+    }
 
-  try {
-    const importComment = createGitHubImporter(octokit);
+    try {
+      const importComment = createGitHubImporter(octokit);
 
-    await Promise.all([
-      pollComments({
-        octokit,
-        type: 'pullRequestComment',
-        endpoint: `/repos/{owner}/{repo}/pulls/comments`,
-        repository,
-        importComment,
-      }),
-      pollComments({
-        octokit,
-        type: 'issueComment',
-        endpoint: `/repos/{owner}/{repo}/issues/comments`,
-        repository,
-        importComment,
-      }),
-      pollReviews({
-        octokit,
-        endpoint: `/repos/{owner}/{repo}/pulls`,
-        repository,
-        importComment,
-      }),
-    ]);
+      await Promise.all([
+        pollComments({
+          octokit,
+          type: 'pullRequestComment',
+          endpoint: `/repos/{owner}/{repo}/pulls/comments`,
+          repository,
+          importComment,
+        }),
+        pollComments({
+          octokit,
+          type: 'issueComment',
+          endpoint: `/repos/{owner}/{repo}/issues/comments`,
+          repository,
+          importComment,
+        }),
+        pollReviews({
+          octokit,
+          endpoint: `/repos/{owner}/{repo}/pulls`,
+          repository,
+          importComment,
+        }),
+      ]);
 
-    await setSyncCompleted(repository);
-
-    logger.info(
-      `Repo sync: Completed polling repository ${repository.fullName} ${id}`
-    );
-  } catch (error) {
-    logger.error(error);
-    await setSyncErrored(repository, error);
-    throw error;
-  }
+      logger.info(
+        `Repo sync: Completed polling repository ${repository.fullName} ${id}`
+      );
+    } catch (error) {
+      logger.error(error);
+      await setSyncErrored(repository, error);
+      throw error;
+    }
+  });
 }
 
 // Imports pull request and issue comments that were updated since
