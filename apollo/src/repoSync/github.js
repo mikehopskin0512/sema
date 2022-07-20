@@ -191,11 +191,7 @@ async function getTags(text) {
 async function getReaction(text) {
   if (looksLikeSemaComment(text))
     return await extractReactionFromSemaComment(text);
-
-  // const [textReaction] = await jaxon.getSummaries(text);
-  // if (textReaction) {
-  //   return await findReactionByTitle(textReaction);
-  // }
+    
   return null;
 }
 
