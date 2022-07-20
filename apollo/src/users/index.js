@@ -15,7 +15,7 @@ import {
   create, update, patch, findByUsername, findById,
   verifyUser, resetVerification,
   joinOrg,
-  initiatePasswordReset, validatePasswordReset, resetPassword, updatePreviewImgLink, findByHandle,
+  initiatePasswordReset, validatePasswordReset, resetPassword, updatePreviewImgLink, findByHandle, toggleUserRepoPinned,
 } from './userService';
 import { setRefreshToken, createRefreshToken, createAuthToken } from '../auth/authService';
 import { redeemInvite, checkIsInvitationValid } from '../invitations/invitationService';
@@ -349,6 +349,21 @@ export default (app, passport) => {
     }
   });
 
+  route.patch('/:id/pinned-repos', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id } = req.params;
+    const { repoId } = req.body;
+
+    try {
+      await toggleUserRepoPinned(id, repoId);
+      return res.status(200).send({
+        success: 'ok',
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+  
   route.post('/infoPreview/:userId/:repoId', passport.authenticate(['bearer'], { session: false }), multer.single('previewImgLink'), async (req, res) => {
     try {
       const { userId, repoId } = req.params;

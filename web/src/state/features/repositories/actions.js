@@ -370,4 +370,4 @@ export const fetchRepoFilters = (repoIds, dateRange, token) => async (dispatch) 
     const errMessage = parseErrorMessage(error)
     dispatch(requestFetchRepoFiltersError(errMessage));
   }
-}
+};

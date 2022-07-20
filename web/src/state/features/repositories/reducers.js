@@ -285,7 +285,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       error: action.errors,
-    };
+      };
   default:
     return state;
   }

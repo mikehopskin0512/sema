@@ -43,6 +43,7 @@ const organizationSchema = new Schema(
         default: null,
       },
     ],
+    pinnedRepos: { type: [String], default: [] },
     provider: {
       name: String,
       id: String,
