@@ -3,7 +3,6 @@ import { addSeconds } from 'date-fns';
 import retry from 'async-retry';
 import Bluebird from 'bluebird';
 import { Octokit } from '@octokit/rest';
-import { maxBy } from 'lodash';
 import sample from 'lodash/sample';
 import { github } from '../config';
 
