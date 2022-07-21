@@ -69,9 +69,6 @@ export default async function pollRepository({ id }) {
         }),
       ]);
 
-      // calculate repoStats
-      await repository.updateRepoStats();
-
       logger.info(
         `Repo sync: Completed polling repository ${repository.fullName} ${id}`
       );
@@ -79,6 +76,8 @@ export default async function pollRepository({ id }) {
       logger.error(error);
       await setSyncErrored(repository, error);
       throw error;
+    } finally {
+      await repository.updateRepoStats();
     }
   });
 }
