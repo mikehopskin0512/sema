@@ -767,19 +767,25 @@ export const createGhostUser = async (attributes) => {
 };
 
 export const toggleUserRepoPinned = async (userId, repoId) => {
-  const user = await User.findById(userId);
-  const newPinnedRepos = [...user.pinnedRepos];
-
-  if (newPinnedRepos.includes(repoId)) {
-    remove(newPinnedRepos, (id) => id === repoId);
-  } else {
-    newPinnedRepos.push(repoId);
-  }
-
-  await User.findOneAndUpdate(
-    { _id: userId },
-    { $set: { pinnedRepos: newPinnedRepos } }
-  );
+  await User.updateOne({ _id: userId }, [
+    {
+      $set: {
+        pinnedRepos: {
+          $cond: [
+            { $ifNull: ['$pinnedRepos', false] },
+            {
+              $cond: [
+                { $in: [repoId, '$pinnedRepos'] },
+                { $setDifference: ['$pinnedRepos', [repoId]] },
+                { $concatArrays: ['$pinnedRepos', [repoId]] },
+              ],
+            },
+            [repoId],
+          ],
+        },
+      },
+    },
+  ]);
 
   return true;
 };
