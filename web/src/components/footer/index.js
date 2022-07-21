@@ -37,9 +37,6 @@ const Footer = () => {
       <a className='is-flex' href={socialLinks.linkedIn} target="_blank" rel="noreferrer">
         <LinkedinIcon color={black900} size="small" />
       </a>
-      <a className='is-flex' href={socialLinks.instagram} target="_blank" rel="noreferrer">
-        <InstagramIcon color={black900} size="small" />
-      </a>
       <a className='is-flex' href={socialLinks.facebook} target="_blank" rel="noreferrer">
         <FacebookIcon color={black900} size="small" />
       </a>
@@ -51,13 +48,10 @@ const Footer = () => {
 
   const renderAppLinks = () => (
     <>
-      <div className="has-text-gray-600 is-size-7 has-text-centered is-hidden-mobile is-flex is-align-items-center">
-       <SemaIcon color={gray600} size="medium" className="mr-8" /> Copyright &copy; {new Date().getFullYear()} Sema Technologies, Inc. All rights reserved.
-      </div>
-      <div className="has-text-centered">
+      <div className="has-text-centered mx-20">
         <a className="button is-ghost has-text-black-900 is-size-7 has-text-weight-semibold px-10" href={termsAndConditionsLink}>Terms & Conditions</a>
       </div>
-      <div className="has-text-centered">
+      <div className="has-text-centered mx-20">
         <div
           className="button is-ghost has-text-black-900 is-size-7 is-size-m-desktop has-text-weight-semibold px-10"
           onClick={() => openSupportForm('Feedback')}
@@ -71,12 +65,10 @@ const Footer = () => {
           <a className="button is-ghost has-text-black-900 is-size-7 has-text-weight-semibold px-10" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}>Idea Board</a>
         </div>
       )}
-      <div className="has-text-centered">
-        <a className="button is-ghost has-text-black-900 is-size-7 has-text-weight-semibold px-10" href="https://semasoftware.com/release-notes">Release Notes</a>
-      </div>
-      <div className="has-text-centered">
+      {/** ToDo: return support when it'll start working*/}
+      {/* <div className="has-text-centered">
         <a className="button is-ghost has-text-black-900 is-size-7 has-text-weight-semibold px-10" href={PATHS.SUPPORT}>Support</a>
-      </div>
+      </div> */}
     </>
   );
 
@@ -90,13 +82,18 @@ const Footer = () => {
   return (
     <>
       {renderContactUs()}
-      <footer className={clsx(styles.footer, 'px-50')}>
-        <div className='content-container is-flex is-justify-content-center px-50'>
+      <footer className={clsx(styles.footer, 'px-80')}>
+        <div className='content-container is-flex is-justify-content-center p-0 is-full-width'>
           <SupportForm active={supportForm} closeForm={closeSupportForm} type={formType} />
-          <div className={clsx("is-relative is-flex is-flex-wrap-wrap is-align-items-center is-flex is-justify-content-flex-start is-align-items-center", styles['responsive-footer'])}>
-            <div className="is-flex is-align-items-center">
-              {renderAppLinks()}
-              {renderSocialLinks()}
+          <div className={clsx("is-relative is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-flex-start is-full-width", styles['responsive-footer'])}>
+            <div className="is-flex is-align-items-center is-justify-content-space-between is-full-width">
+              <div className="has-text-gray-600 is-size-7 has-text-centered is-hidden-touch is-flex is-align-items-center">
+                <SemaIcon color={gray600} size="medium" className="mr-8" /> Copyright &copy; {new Date().getFullYear()} Sema Technologies, Inc. All rights reserved.
+              </div>
+              <div className={clsx("is-flex is-align-items-center", styles['social-container'])}>
+                {renderAppLinks()}
+                {renderSocialLinks()}
+              </div>
             </div>
           </div>
         </div>
