@@ -248,6 +248,11 @@ const reducer = (state = initialState, action) => {
         isModalOpen: action.payload
       },
     };
+  case types.TOGGLE_SYNC_PROMO_BANNER:
+    return  {
+      ...state,
+      isSyncBannerPromo: action.payload
+    }
   default:
     return state;
   }

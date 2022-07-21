@@ -80,13 +80,15 @@ export default async function importRepository({ id }) {
         }),
       ]);
 
+      // calculate repoStats
+      await repository.updateRepoStats();
       await setSyncCompleted(repository);
 
       logger.info(
         `Repo sync: Completed processing repository ${repository.fullName} ${id}`
       );
     } catch (error) {
-      logger.error(error);
+      await repository.updateRepoStats();
       await setSyncErrored(repository, error);
       throw error;
     }

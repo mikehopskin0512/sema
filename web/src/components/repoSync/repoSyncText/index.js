@@ -2,12 +2,14 @@ import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
 import ReactTooltip from 'react-tooltip';
-import { SYNC_STATUS } from '../../../utils/constants';
+import { getStatusLabels, SYNC_STATUS } from '../../../utils/constants';
 import { green600, red500 } from '../../../../styles/_colors.module.scss'
 import { AlertOutlineIcon, InfoOutlineIcon, QueuedIcon, RefreshIcon, SyncCompletedIcon, SyncInactiveIcon } from '../../Icons';
 import styles from './repoSyncText.module.scss';
 
-function RepoSyncText({repoStatus, isRepoPage = false, completedAt}) {
+function RepoSyncText({repoStatus, progress, completedAt, isRepoPage = false}) {
+
+  const STATUS_LABELS = getStatusLabels(repoStatus, progress);
   
   const renderInfoIcon = () => {
     const statusesWithIconAllowed = ['notsynced', 'errored', 'unauthorized'];
@@ -16,7 +18,7 @@ function RepoSyncText({repoStatus, isRepoPage = false, completedAt}) {
 
   const renderCompleteSyncTooltip = () => `Last synced from GitHub ${moment(completedAt).fromNow()}`;
 
-  const renderStandardTooltip = () => repoStatus !== SYNC_STATUS.completed.status ? SYNC_STATUS[repoStatus]?.tooltip : null;
+  const renderStandardTooltip = () => repoStatus !== SYNC_STATUS.completed.status ? STATUS_LABELS.tooltip : null;
 
   const syncClass = "is-flex is-align-items-center ml-12";
 
@@ -28,13 +30,13 @@ function RepoSyncText({repoStatus, isRepoPage = false, completedAt}) {
     <>
       {!isRepoPage &&
         <span className={clsx('ml-8 is-size-8 has-text-weight-semibold', styles[repoStatus])}>
-              {SYNC_STATUS[repoStatus]?.label || SYNC_STATUS.notsynced.label}
-          </span>
+          {STATUS_LABELS.label || SYNC_STATUS.notsynced.label}
+        </span>
       }
       {isRepoPage && 
         <div className={clsx(styles['tooltip-wrapper'])}>
           <span className={clsx('ml-10 is-size-7 has-text-weight-semibold', styles[repoStatus])}>
-            {SYNC_STATUS[repoStatus]?.label || SYNC_STATUS.notsynced.label}
+            {STATUS_LABELS.label || SYNC_STATUS.notsynced.label}
           </span>
           {renderInfoIcon() && 
             <InfoOutlineIcon size="small" 

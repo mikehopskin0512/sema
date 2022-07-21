@@ -1,4 +1,3 @@
-import Bluebird from 'bluebird';
 import mongoose from 'mongoose';
 import logger from '../../shared/logger';
 import { findByExternalId } from '../../repositories/repositoryService';
@@ -137,64 +136,13 @@ smartCommentSchema.post('save', async function addRepositoryToUser() {
 
 smartCommentSchema.post('save', async function updateRepoStats() {
   if (!this.repositoryId) return;
+  if (this.source?.origin === 'sync') return;
 
-  const update = await Bluebird.props({
-    'repoStats.smartCodeReviews': getPullRequestCount(this.repositoryId),
-    'repoStats.smartComments': getSmartCommentCount(this.repositoryId),
-    'repoStats.smartCommenters': getCommenterCount(this.repositoryId),
-    'repoStats.semaUsers': getCommenterCount(this.repositoryId),
-  });
-
-  await mongoose
+  const repository = await mongoose
     .model('Repository')
-    .updateOne({ _id: this.repositoryId._id }, update);
+    .findById(this.repositoryId);
+  await repository.updateRepoStats();
 });
-
-smartCommentSchema.post('save', async function updateRepoStats() {
-  if (!this.repositoryId) return;
-
-  const repository = await Repository.findById(this.repositoryId);
-  const tagsId = this.tags?.map((tag) => tag._id.toString());
-
-  await Promise.all([
-    await repository.findOrCreateInArray(
-      'repoStats.reactions',
-      { smartCommentId: this._id },
-      { createdAt: this.createdAt, reactionId: this.reaction._id }
-    ),
-    await repository.findOrCreateInArray(
-      'repoStats.tags',
-      { smartCommentId: this._id },
-      { tagsId, createdAt: this.createdAt }
-    ),
-  ]);
-});
-
-async function getSmartCommentCount(repositoryId) {
-  return await mongoose.model('SmartComment').countDocuments({ repositoryId });
-}
-
-async function getPullRequestCount(repositoryId) {
-  const [{ count } = { count: 0 }] = await mongoose
-    .model('SmartComment')
-    .aggregate([
-      { $match: { repositoryId } },
-      { $group: { _id: '$githubMetadata.pull_number' } },
-      { $count: 'count' },
-    ]);
-  return count;
-}
-
-async function getCommenterCount(repositoryId) {
-  const [{ count } = { count: 0 }] = await mongoose
-    .model('SmartComment')
-    .aggregate([
-      { $match: { repositoryId, userId: { $ne: null } } },
-      { $group: { _id: '$userId' } },
-      { $count: 'count' },
-    ]);
-  return count;
-}
 
 smartCommentSchema.index(
   { 'source.provider': 1, 'source.id': 1 },

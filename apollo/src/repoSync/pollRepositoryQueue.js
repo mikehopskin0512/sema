@@ -69,6 +69,9 @@ export default async function pollRepository({ id }) {
         }),
       ]);
 
+      // calculate repoStats
+      await repository.updateRepoStats();
+
       logger.info(
         `Repo sync: Completed polling repository ${repository.fullName} ${id}`
       );
