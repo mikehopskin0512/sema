@@ -1,7 +1,7 @@
 import Bluebird from 'bluebird';
 import Repository from '../repositories/repositoryModel';
 import { queue as pollRepositoryQueue } from './pollRepositoryQueue';
-import { findInstallationIdForRepository } from './repoSyncService';
+import { getOctokitForRepository } from './repoSyncService';
 
 export default async function pollRepositories() {
   await Bluebird.resolve(getRepositoriesWithNoInstallation()).map(
@@ -19,8 +19,7 @@ export const schedule = '15m';
 async function getRepositoriesWithNoInstallation() {
   return await Bluebird.resolve(
     Repository.find({ 'sync.status': 'completed' })
-  ).filter(
-    async (repository) => !(await findInstallationIdForRepository(repository)),
-    { concurrency: 10 }
-  );
+  ).filter(async (repository) => !(await getOctokitForRepository(repository)), {
+    concurrency: 10,
+  });
 }

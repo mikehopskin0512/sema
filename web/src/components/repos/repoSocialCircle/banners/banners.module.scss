@@ -38,6 +38,30 @@
 
 .banner-wrapper-not-synced {
   background-image: url("/img/sync/not-synced-repo-banner.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 310px;
+  justify-content: center;
+  background-color: $blue-50;
+  box-shadow: 0px 2px 3px rgba(32, 32, 32, 0.2);
+  @media only screen and (max-width: 940px) {
+    background-position: 60% center !important;
+  }
+  @media only screen and (max-width: 890px) {
+    background-image: url("/img/sync/not-synced-bg.png");
+  }
+  > div {
+    @media only screen and (min-width: 1216px) {
+      max-width: 55% !important;
+    }
+    @media only screen and (max-width: 1215px) {
+      max-width: 60% !important;
+    }
+    @media only screen and (max-width: 890px) {
+      max-width: 100% !important;
+    }
+  }
 }
 
 .banner-wrapper-sync-in-progress {
@@ -66,13 +90,21 @@
   width: 80px;
   position: absolute;
   z-index: 100;
-  right: 23.5%;
-  top: calc(50% - 35px)
+  left: 85px;
+  top: 70px;
 }
 
 .banner-loader {
   position: absolute;
   z-index: 101;
-  right: 26%;
-  top: calc(50% - 2px)
+  left: 116px;
+  top: 101px;
+}
+
+.banner-minions-circle {
+  background-image: url("/img/sync/minions-circle.png");
+  width: 250px;
+  height: 220px;
+  background-size: contain;
+  position: relative;
 }

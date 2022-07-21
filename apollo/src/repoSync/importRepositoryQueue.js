@@ -1,4 +1,5 @@
 import Bluebird from 'bluebird';
+import retry from 'async-retry';
 import logger from '../shared/logger';
 import { queues } from '../queues';
 import Repository from '../repositories/repositoryModel';
@@ -43,50 +44,78 @@ export default async function importRepository({ id }) {
     return;
   }
 
-  const octokit = await getOctokit(repository);
-  if (!octokit) {
-    await setSyncUnauthorized(repository);
-    return;
-  }
+  await withOctokit(repository, async (octokit) => {
+    if (!octokit) {
+      logger.info(
+        `Repo sync: Not authorized to access repository ${repository.fullName} ${id}`
+      );
+      await setSyncUnauthorized(repository);
+      return;
+    }
 
-  await setSyncStarted(repository);
+    await setSyncStarted(repository);
 
-  try {
-    const importComment = createGitHubImporter(octokit);
+    try {
+      const importComment = createGitHubImporter(octokit);
 
-    await Promise.all([
-      importComments({
-        octokit,
-        type: 'pullRequestComment',
-        endpoint: `/repos/{owner}/{repo}/pulls/comments`,
-        repository,
-        importComment,
-      }),
-      importComments({
-        octokit,
-        type: 'issueComment',
-        endpoint: `/repos/{owner}/{repo}/issues/comments`,
-        repository,
-        importComment,
-      }),
-      importReviews({
-        octokit,
-        endpoint: `/repos/{owner}/{repo}/pulls`,
-        repository,
-        importComment,
-      }),
-    ]);
+      await Promise.all([
+        importComments({
+          octokit,
+          type: 'pullRequestComment',
+          endpoint: `/repos/{owner}/{repo}/pulls/comments`,
+          repository,
+          importComment,
+        }),
+        importComments({
+          octokit,
+          type: 'issueComment',
+          endpoint: `/repos/{owner}/{repo}/issues/comments`,
+          repository,
+          importComment,
+        }),
+        importReviews({
+          octokit,
+          endpoint: `/repos/{owner}/{repo}/pulls`,
+          repository,
+          importComment,
+        }),
+      ]);
 
-    await setSyncCompleted(repository);
+      await setSyncCompleted(repository);
 
-    logger.info(
-      `Repo sync: Completed processing repository ${repository.fullName} ${id}`
-    );
-  } catch (error) {
-    logger.error(error);
-    await setSyncErrored(repository, error);
-    throw error;
-  }
+      logger.info(
+        `Repo sync: Completed processing repository ${repository.fullName} ${id}`
+      );
+    } catch (error) {
+      logger.error(error);
+      await setSyncErrored(repository, error);
+      throw error;
+    }
+  });
+}
+
+// Runs the given function with a suitable Octokit instance.
+// Rate limit errors are retried with a new Octokit instance
+// from our pool (see getOctokitFromPool()).
+async function withOctokit(repository, fn) {
+  await retry(
+    async (bail) => {
+      try {
+        const octokit = await getOctokit(repository);
+        await fn(octokit);
+      } catch (error) {
+        const isRateLimitError =
+          error.status === 403 &&
+          error.response?.headers?.get('x-ratelimit-remaining') === '0';
+
+        if (isRateLimitError) throw error; // Retry on rate limit error.
+        else bail(error); // Actually throw the error.
+      }
+    },
+    {
+      retries: 3,
+    }
+  );
 }
 
 // Imports pull request and issue comments.
@@ -162,6 +191,7 @@ async function* resumablePaginate({
     sort: 'created',
     direction: 'desc',
     page: currentPage + 1,
+    per_page: 100,
     ...query,
   });
 

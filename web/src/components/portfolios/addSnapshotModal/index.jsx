@@ -13,6 +13,7 @@ import Table from '../../table';
 import Checkbox from '../../checkbox';
 import CustomRadio from '../../radio';
 import { PATHS } from '../../../utils/constants';
+import { MONTH_DAY_YEAR_FORMAT } from '../../../utils/constants/date';
 import { isEmpty } from 'lodash';
 import { addSnapshotsToPortfolio } from '../../../state/features/portfolios/actions';
 
@@ -43,12 +44,12 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
   const data = isSnapshotsModalType(type) ?
     snapshots.map(snapshot => ({
       title: snapshot.title,
-      date: format(new Date(snapshot.updatedAt), 'MMM dd, yyyy'),
+      date: format(new Date(snapshot.updatedAt), MONTH_DAY_YEAR_FORMAT),
       id: snapshot._id,
     })) :
     portfolios.map(portfolio => ({
         title: portfolio.title,
-        date: format(new Date(portfolio.updatedAt), 'MMM dd, yyyy'),
+        date: format(new Date(portfolio.updatedAt), MONTH_DAY_YEAR_FORMAT),
         type: portfolio.type,
         id: portfolio._id,
       })
