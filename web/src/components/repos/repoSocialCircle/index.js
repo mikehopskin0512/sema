@@ -154,7 +154,7 @@ const RepoSocialCircle = ({ repoId }) => {
           </div>
         </div>
       </div>
-      <div style={{width: '100%', maxWidth: '100%', display: 'flex', position: 'relative', background: '#FAFAFC'}} ref={containerRef}>
+      <div ref={containerRef} className={styles['graph-wrapper']}>
         <InteractionCircleChart interactions={interactions} user={user} />
       </div>
     </div>

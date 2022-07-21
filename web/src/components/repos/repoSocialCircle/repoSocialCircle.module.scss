@@ -5,6 +5,10 @@
   box-shadow: 0 2px 3px 0 #20202033;
   padding: 24px;
   border-radius: 8px;
+
+  @media screen and (max-width: 1050px) {
+    flex-wrap: wrap;
+  }
 }
 
 .title {
@@ -44,6 +48,10 @@
   text-align: center;
   margin-right: 24px;
   position: relative;
+
+  @media screen and (max-width: 1050px) {
+    margin-right: 0;
+  }
 }
 
 .tooltip {
@@ -111,4 +119,20 @@
 
 .social-item {
   height: fit-content;
+}
+
+.graph-wrapper {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  position: relative;
+  background: #FAFAFC;
+
+  @media screen and (max-width: 1410px) {
+    transform: scale(0.75);
+  }
+
+  @media screen and (max-width: 1050px) {
+    height: 500px;
+  }
 }
