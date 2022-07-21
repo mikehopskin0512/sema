@@ -405,6 +405,15 @@ describe('Import Repository Queue', () => {
           expect(repository.sync.status).toBe('completed');
         });
 
+        it('should update repoStats', () => {
+          expect(repository.repoStats.smartCodeReviews).toBe(1);
+          expect(repository.repoStats.smartComments).toBe(7);
+          expect(repository.repoStats.smartCommenters).toBe(4);
+          expect(repository.repoStats.semaUsers).toBe(4);
+          expect(repository.repoStats.tags).toHaveLength(7);
+          expect(repository.repoStats.reactions).toHaveLength(7);
+        });
+
         it('should have sync completed at timestamp', () => {
           expect(repository.sync.completedAt).toBeCloseToDate(new Date());
         });
