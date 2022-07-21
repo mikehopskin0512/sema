@@ -41,7 +41,8 @@ const EmptyRepo = () => {
           }
         </p>
         <div className="mx-auto">
-          {isAddRepoEnable && (
+          {/** Return this code when design work will be finished */}
+          {/* {isAddRepoEnable && (
             <button
               type="button"
               className="button is-primary has-text-weight-semibold is-fullwidth"
@@ -49,7 +50,7 @@ const EmptyRepo = () => {
             >
               Add a Repo to Organization
             </button>
-          )}
+          )} */}
           {!isOrganizationView && <a href="https://github.com" target="_blank">
             <button
               type="button"
