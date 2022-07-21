@@ -2,7 +2,7 @@ import assert from 'assert';
 import Cache from 'caching-map';
 import { findBestMatch } from 'string-similarity';
 import logger from '../shared/logger';
-import * as jaxon from '../shared/apiJaxon';
+// import * as jaxon from '../shared/apiJaxon';
 import {
   findOneByTitle as findReactionByTitle,
   findById as findReactionById,
@@ -181,7 +181,7 @@ async function createNewSmartComment({
 async function getTags(text) {
   const textTags = looksLikeSemaComment(text)
     ? extractTagsFromSemaComment(text)
-    : await jaxon.getTags(text);
+    : [];
   const tags = await Promise.all(
     textTags.map((tag) => findTagByLabel(tag, 'smartComment'))
   );
@@ -191,11 +191,7 @@ async function getTags(text) {
 async function getReaction(text) {
   if (looksLikeSemaComment(text))
     return await extractReactionFromSemaComment(text);
-
-  const [textReaction] = await jaxon.getSummaries(text);
-  if (textReaction) {
-    return await findReactionByTitle(textReaction);
-  }
+    
   return null;
 }
 
