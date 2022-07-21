@@ -108,3 +108,33 @@
   background-size: contain;
   position: relative;
 }
+
+.promo-banner-wrapper {
+  padding: 24px 60px;
+  order: 1px solid $blue-100;
+  background-color: $blue-0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.promo-banner-text {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 28px;
+  color: $black-950;
+}
+
+.promo-banner-img {
+  height: 50px;
+  width: 96px;
+}
+
+.promo-banner-section {
+  gap: 12px;
+}
+
+.promo-banner-button-section {
+  gap: 45px;
+}
