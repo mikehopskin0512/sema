@@ -4,6 +4,7 @@ import retry from 'async-retry';
 import Bluebird from 'bluebird';
 import { Octokit } from '@octokit/rest';
 import { maxBy } from 'lodash';
+import sample from 'lodash/sample';
 import { github } from '../config';
 
 const rateLimitedUntil = new Map();
@@ -129,10 +130,7 @@ export async function getOctokitFromPool() {
   if (withRemainingLimit.length === 0)
     throw new Error('Ran out of GitHub API quota');
 
-  const { installation, octokit } = maxBy(
-    withRemainingLimit,
-    'rateLimit.resources.core.remaining'
-  );
+  const { installation, octokit } = sample(withRemainingLimit);
 
   octokit.hook.wrap('request', async (request, options) => {
     try {

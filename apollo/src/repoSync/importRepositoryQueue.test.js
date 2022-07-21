@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { addDays, differenceInMinutes } from 'date-fns';
+import sample from 'lodash/sample';
 import nock from 'nock';
 import mongoose from 'mongoose';
 import resetNocks from '../../test/nocks';
@@ -2565,6 +2566,11 @@ describe('Import Repository Queue', () => {
     }
 
     describe('processing queue', () => {
+      beforeAll(async () => {
+        sample.mockClear();
+        sample.mockImplementationOnce((array) => array[0]);
+      });
+
       beforeAll(() => {
         defaultInstallationNock = resetNocksForPublicRepository();
       });
@@ -2608,9 +2614,10 @@ describe('Import Repository Queue', () => {
         expect(defaultInstallationNock.isDone()).toBe(true);
       });
 
-      it('should use the token with the most quota available', () => {
+      it('should use a random token with quota available', () => {
+        expect(sample).toHaveBeenCalled();
         expect(tokenUsedForGitHubAPI).toBe(
-          'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z'
+          'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a'
         );
       });
 
@@ -2934,6 +2941,10 @@ describe('Import Repository Queue', () => {
         });
 
         afterAll(() => resetRateLimitTracking());
+      });
+
+      afterAll(() => {
+        jest.unmock('lodash/sample');
       });
     });
   });
