@@ -443,7 +443,6 @@ export const renderMenuItems = (personalDashboard, isEmpty, selectedOrganization
 export const SYNC_STATUS = {
   started: {
     status: 'started',
-    tooltip: 'Syncing from GitHub in progress',
     label: 'Syncing',
   },
   completed: {
@@ -470,5 +469,25 @@ export const SYNC_STATUS = {
     status: 'notsynced',
     tooltip: '<u>Activate GitHub Sync</u> to unlock the full power of Sema for this repo.',
     label: 'Sync Inactive',
+  }
+}
+
+export const getStatusLabels = (status, progress = null) => {
+  switch (status) {
+    case 'started':
+      return {
+        ...SYNC_STATUS.started,
+        tooltip: `${Math.round(parseFloat(progress?.overall || '0', 10) * 100)}% Synced`,
+      }
+    case 'completed':
+      return SYNC_STATUS.completed
+    case 'errored':
+      return SYNC_STATUS.errored
+    case 'unauthorized':
+      return SYNC_STATUS.unauthorized
+    case 'queued':
+      return SYNC_STATUS.queued
+    default:
+      return SYNC_STATUS.notsynced
   }
 }

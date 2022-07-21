@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
-import { SYNC_STATUS } from '../../../utils/constants';
+import { getStatusLabels, SYNC_STATUS } from '../../../utils/constants';
 import { ResendIcon } from '../../Icons';
 import * as api from '../../../state/utils/api';
 import RepoSyncText from '../repoSyncText';
@@ -20,6 +20,9 @@ function RepoSyncButton({refresh}) {
   const sync = overview.sync || {
     status: 'notsynced'
   };
+  const progress = overview.sync?.progress || {};
+  
+  const STATUS_LABELS = getStatusLabels(sync.status, progress);
 
   const [triggeredRepoSync, setTriggeredRepoSync] = useState(false);
  
@@ -28,15 +31,15 @@ function RepoSyncButton({refresh}) {
     setTriggeredRepoSync(true);
   }
 
-  const isStatusStartedOrQueued = () => [SYNC_STATUS.started.status, SYNC_STATUS.queued.status].includes(sync.status);
+  const isSyncStartedOrQueued = () => [SYNC_STATUS.started.status, SYNC_STATUS.queued.status].includes(sync.status);
 
   const renderSyncButton = () => (
     <button 
       className="button is-primary border-radius-4px"
       type="button"
       onClick={handleOnClick}
-      disabled={isStatusStartedOrQueued()}
-      data-tip={SYNC_STATUS[sync.status]?.tooltip}
+      disabled={isSyncStartedOrQueued()}
+      data-tip={STATUS_LABELS.tooltip}
     >
       <ResendIcon size="small" />
       <span className="ml-10">Sync Repo</span>
@@ -44,7 +47,7 @@ function RepoSyncButton({refresh}) {
   );
   
   useEffect(() => {
-    if(isStatusStartedOrQueued()  || triggeredRepoSync) {
+    if(isSyncStartedOrQueued()  || triggeredRepoSync) {
       const id = setInterval(refresh, 5000);
       return () => {
         clearInterval(id);
@@ -59,10 +62,15 @@ function RepoSyncButton({refresh}) {
   return Object.getOwnPropertyDescriptor(overview, 'repoStats') ? (
     <div className='is-flex'>
       <div className='is-flex is-align-items-center mr-24'>
-        <RepoSyncText repoStatus={sync.status} isRepoPage completedAt={sync.completedAt} />
+        <RepoSyncText 
+          repoStatus={sync.status}
+          progress={progress}
+          completedAt={sync.completedAt}
+          isRepoPage
+        />
       </div>
-      {isStatusStartedOrQueued() && renderSyncButton()}
-      {!isStatusStartedOrQueued() && sync.status !== SYNC_STATUS.completed.status && renderSyncButton()}
+      {isSyncStartedOrQueued() && renderSyncButton()}
+      {!isSyncStartedOrQueued() && sync.status !== SYNC_STATUS.completed.status && renderSyncButton()}
     </div>
   ) : null;
 }
