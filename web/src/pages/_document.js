@@ -64,15 +64,13 @@ export default class MyDocument extends Document {
             }}
           />
           <script dangerouslySetInnerHTML={{ __html: this.renderSnippet() }} />
-          <meta name="Content-Type" content="text/html;charset=UTF-8"></meta>
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:image:src" content={`${this.props.previewImgLink}`}></meta>
-          <meta name="twitter:title" content={`My GitHub interactions in ${repo}`} />
-          <meta property="og:title" content={`My GitHub interactions in ${repo}`} />
-          <meta property="og:image" content={`${this.props.previewImgLink}`}/>
-          <meta property="og:image:secure_url" content={`${this.props.previewImgLink}`} />
-          <meta property="og:image:width" content="1000" />
-          <meta property="og:image:height" content="500" />
+          <meta name="Content-Type" content="text/html;charset=UTF-8"/>
+          <meta name="twitter:card" content="summary_large_image"/>
+          <meta property="og:url" content="https://app.semasoftware.com" />
+          <meta name="twitter:image:alt" content={`My GitHub interactions in ${repo}`}/>
+          <meta name="twitter:title" content={`My GitHub interactions in ${repo}`}/>
+          <meta name="twitter:description" content={`My GitHub interactions in ${repo}`}/>
+          <meta property="og:image" content={this.props.previewImgLink}/>
         </Head>
         <body>
           <Main />

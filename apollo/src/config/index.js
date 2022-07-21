@@ -9,7 +9,7 @@ require('dotenv').config({ path: configPath });
 module.exports = {
   ...getMongoDBConnectionDetails(),
   port: getPort(),
-  rollbarToken: process.env.ROLLBAR_TOKEN || '92dd5e38427a4b5cafb905d5e25fd2d6',
+  rollbarToken: process.env.ROLLBAR_TOKEN || '287621bca5b04e17a889aba8a328ca10',
   version: process.env.VERSION,
   tokenLife: process.env.TOKENLIFE || 2592000,
   orgDomain: process.env.ORG_DOMAIN,
