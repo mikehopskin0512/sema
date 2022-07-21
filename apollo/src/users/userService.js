@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import _, { remove } from 'lodash';
+import _ from 'lodash';
 import User from './userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
