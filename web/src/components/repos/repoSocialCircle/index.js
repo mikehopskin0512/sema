@@ -1,7 +1,7 @@
 import InteractionCircleChart from '../../chart/InteractionCircleChart';
-import { DownloadIcon, FacebookIcon, LinkedinIcon, LinkIcon, TwitterIcon } from '../../Icons';
+import { DownloadIcon, LinkIcon, TwitterIcon } from '../../Icons';
 import clsx from 'clsx';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { blue700 } from '../../../../styles/_colors.module.scss';
 import { getRepoSocialGraph } from '../../../state/features/repositories/api';
@@ -62,6 +62,8 @@ const RepoSocialCircle = ({ repoId }) => {
 
   const socialCircleUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${handle}/collaboration/${repoId}?repo=${repoName}`
   const socials = [
+    { name: 'download', icon: DownloadIcon, onClick: () => onDownloadImage(containerRef)},
+    { name: 'copy', icon:  LinkIcon, onClick: () => onCopy()},
     { name: 'twitter', icon: TwitterIcon, onClick: () => shareWithTwitter({ text: 'Check out my Github Social Circle!', url: socialCircleUrl })},
     // { name: 'facebook', icon: FacebookIcon, onClick: () => {}},
     // { name: 'linkedin', icon: LinkedinIcon, onClick: () => {}},
@@ -89,39 +91,27 @@ const RepoSocialCircle = ({ repoId }) => {
   return (
     <div className={clsx(styles.card, 'is-flex is-justify-content-space-between')}>
       <div className={styles.main}>
-        <h3 className={styles.title}>Here’s your GitHub Social Circle</h3>
+        <h3 className={styles.title}>GitHub Social Circle</h3>
         <h6 className={styles.subtitle}>{handle} for {repoName}</h6>
         <div className={styles.text}>
           <p>
-            Larger, closer circles are your tight-knit team, who you worked with the most over the last year. Smaller, distant circles are team members you don’t spend as much time working with.
+            Larger circles toward the center represent your closest collaborators. You have worked with them most over the last 12 months. Smaller
+            circles toward the outer edge are collaborators you haven’t interacted with as much.
           </p>
           <p className="mt-24">
-            Surprised by who your closest collaborators are? <br/>
-            Want to work more closely with those in your outer circle? <br/>
-            Let them know by sharing and tagging them <br/>
-            on your social network.
+            Surprised by who your closest collaborators are? Want to work more closely with those in your outer circle? Let them know by sharing and
+            tagging them on your social network.
           </p>
         </div>
-        <div className="pr-30">
-          <span className="is-size-4 has-text-weight-semibold">Share:</span>
+        <img src='/img/illustration_screen.png' className={styles.image} alt="bg-screen"/>
+        <div className={clsx('pr-30', styles.socials)}>
+          <span className={styles['socials-title']}>Share your Circle</span>
           <div className="mt-16 is-flex is-justify-content-center">
               {socials.map(({onClick, icon}) => (
                 <div className='is-flex mr-16 is-clickable' onClick={onClick}>
-                  {icon({color: blue700, size:"large"})}
+                  {icon({color: blue700, size:"medium"})}
                 </div>
               ))}
-          </div>
-          <div className="mt-32 is-relative">
-            <button className="button is-primary mr-12" onClick={() => onDownloadImage(containerRef)}>
-              <DownloadIcon size="small" />
-              {/* TODO: save as a picture */}
-              <span className="ml-8 has-text-weight-semibold">Download</span>
-            </button>
-            {isCopied && <div className={styles.tooltip}>{'Share link copied'}</div>}
-            <button className="button is-primary is-outlined" onClick={onCopy}>
-              <LinkIcon size="small"/>
-              <span className="ml-8 has-text-weight-semibold">Copy Link</span>
-            </button>
           </div>
         </div>
       </div>

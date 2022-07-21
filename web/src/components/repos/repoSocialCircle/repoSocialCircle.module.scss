@@ -14,6 +14,7 @@
   font-weight: 600;
   margin-top: 24px;
   margin-bottom: 8px;
+  text-align: left;
 }
 
 .subtitle {
@@ -21,27 +22,28 @@
   font-size: 18px;
   font-weight: 600;
   line-height: 28px;
+  text-align: left;
 }
 
 .text {
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 24px;
   letter-spacing: -0.02em;
-  margin-top: 40px;
-  margin-bottom: 60px;
+  margin-top: 36px;
+  margin-bottom: 180px;
+  text-align: left;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
 }
 
 .main {
   min-width: 400px;
   width: 100%;
-  padding: 0 24px 80px;
-  background-image: url('/img/illustration-screen.svg');
-  background-position-y: 400px;
-  background-size: 100%;
-  background-repeat: no-repeat;
+  padding: 0 32px 80px;
+  background-color: #E3F2F8;
+  border-radius: 26px;
   text-align: center;
   margin-right: 24px;
+  position: relative;
 }
 
 .tooltip {
@@ -75,4 +77,28 @@
   background: $black-900;
   top: -25px;
   right: 88px;
+}
+
+.image {
+  position: absolute;
+  bottom: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 1;
+}
+
+.socials {
+  position: absolute;
+  left: 35px;
+  bottom: 40px;
+  z-index: 5;
+}
+
+.socials-title {
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 23px;
 }
