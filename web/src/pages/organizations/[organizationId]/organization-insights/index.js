@@ -259,7 +259,7 @@ const OrganizationInsights = () => {
       const isDateRange = startDate && endDate;
       const outOfRangeCommentsFilter = isDateRange
         ? overview.smartComments.filter(comment => {
-            return !isWithinInterval(new Date(comment.createdAt), {
+            return !isWithinInterval(new Date(comment.source.createdAt), {
               start: startOfDay(new Date(startDate)),
               end: endOfDay(new Date(endDate))
             });
@@ -307,9 +307,10 @@ const OrganizationInsights = () => {
     <div className="has-background-gray-200">
       <Helmet {...OrganizationInsightsHelmet} />
       <div className="is-divider is-hidden-mobile m-0 p-0 has-background-gray-400" />
-      <div className="pb-40 is-hidden-mobile">
-        <div >
-          <div className={clsx("is-flex is-justify-content-space-between  is-align-items-center has-background-white pb-15 pt-30", styles['organization-insights-header-wrapper'])}>
+      <div className="pb-40 is-hidden-mobile" >
+        <div className="has-background-white">
+          <div className="container">
+          <div className={clsx("is-flex is-justify-content-space-between is-align-items-center has-background-white pb-15 pt-30", styles['organization-insights-header-wrapper'])}>
             <p className="has-text-black-950 has-text-weight-semibold is-size-4 pb-20 pr-15 is-flex is-align-items-center">
               {!isActive && (
                 <Avatar
@@ -428,7 +429,7 @@ const OrganizationInsights = () => {
               </div>
             </div>
           </div>
-        </div>
+        {/* </div> */}
         <div className={clsx("column has-background-white", styles['organization-insights-header-wrapper'])}>
           <div className="columns">
             <div className="column is-2 is-flex is-flex-direction-column is-justify-content-flex-start">
@@ -478,6 +479,8 @@ const OrganizationInsights = () => {
               )}
             </div>
           </div>
+        </div>
+        </div>
         </div>
         <div className="is-divider is-hidden-mobile m-0 p-0 has-background-gray-400" />
         <div className="container">

@@ -18,11 +18,12 @@ import {
   isSameDay,
 } from 'date-fns';
 import { findIndex, isEmpty, range, reverse } from 'lodash';
-import { DAYS_IN_WEEK, EMOJIS, TAGS } from './constants';
+import { EMOJIS, TAGS } from './constants';
+import { DAYS_IN_WEEK, MONTH_DAY_FORMAT } from './constants/date';
 
 const checkifEndOfMonth = (startDay, endDay, endWeekDay) => {
   const endOfMonth = {
-    true: format(endDay, 'MMM dd'),
+    true: format(endDay, MONTH_DAY_FORMAT),
     false: endWeekDay,
   };
   return endOfMonth[format(startDay, 'MMM') !== format(endDay, 'MMM')];
@@ -80,7 +81,7 @@ export const generateChartDataByDays = (
   while (day < countedDays) {
     const thisDay = subDays(endOfDay(new Date(endDate)), day);
     const item = {
-      date: format(thisDay, 'MMM dd'),
+      date: format(thisDay, MONTH_DAY_FORMAT),
     };
     // Set Reaction Ids as object keys
     EMOJIS.forEach((reaction) => {
@@ -91,7 +92,7 @@ export const generateChartDataByDays = (
     });
     reactionsByDay.push(item);
     tagsArr.push({
-      x: format(thisDay, 'MMM dd'),
+      x: format(thisDay, MONTH_DAY_FORMAT),
       y: 0,
     });
     day += 1;
@@ -99,7 +100,7 @@ export const generateChartDataByDays = (
   const tagsByDay = createTags(tagsArr);
   let { reactions, tags } = parseTagsAndReactions(
     smartcomments,
-    'MMM dd',
+    MONTH_DAY_FORMAT,
     reactionsByDay,
     tagsByDay,
     startDate,
@@ -447,7 +448,7 @@ const getWeekRange = (weeks, startDate, endDate) => {
     if (isSameDay(startDay, endDay)) {
       return {};
     }
-    const startWeekDay = format(startDay, 'MMM dd');
+    const startWeekDay = format(startDay, MONTH_DAY_FORMAT);
     let endWeekDay = format(endDay, 'dd');
     endWeekDay = checkifEndOfMonth(startDay, endDay, endWeekDay);
     const item = {

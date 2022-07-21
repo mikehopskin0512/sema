@@ -218,7 +218,7 @@ export default (app, passport) => {
       res.sendStatus(200);
     }
   );
-
+  
   route.get(
     '/filter-values',
     passport.authenticate(['bearer'], { session: false }),

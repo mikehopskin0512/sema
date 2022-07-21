@@ -126,10 +126,6 @@ export const COLLECTION_TYPE = {
   ORGANIZATION: 'organization'
 };
 
-export const DAYS_IN_WEEK = 7;
-export const DAYS_IN_MONTH = 30;
-export const DAYS_IN_YEAR = 365;
-export const YEAR_MONTH_DAY_FORMAT = `yyyy-MM-dd`;
 
 export const DEFAULT_AVATAR = '/img/default-avatar.jpg';
 
@@ -447,7 +443,6 @@ export const renderMenuItems = (personalDashboard, isEmpty, selectedOrganization
 export const SYNC_STATUS = {
   started: {
     status: 'started',
-    tooltip: 'Syncing from GitHub in progress',
     label: 'Syncing',
   },
   completed: {
@@ -474,5 +469,25 @@ export const SYNC_STATUS = {
     status: 'notsynced',
     tooltip: '<u>Activate GitHub Sync</u> to unlock the full power of Sema for this repo.',
     label: 'Sync Inactive',
+  }
+}
+
+export const getStatusLabels = (status, progress = null) => {
+  switch (status) {
+    case 'started':
+      return {
+        ...SYNC_STATUS.started,
+        tooltip: `${Math.round(parseFloat(progress?.overall || '0', 10) * 100)}% Synced`,
+      }
+    case 'completed':
+      return SYNC_STATUS.completed
+    case 'errored':
+      return SYNC_STATUS.errored
+    case 'unauthorized':
+      return SYNC_STATUS.unauthorized
+    case 'queued':
+      return SYNC_STATUS.queued
+    default:
+      return SYNC_STATUS.notsynced
   }
 }
