@@ -614,7 +614,7 @@ export function StarFilledIcon(props) {
 
 export function StarOutlineScg(props) {
   return <Icon {...props}>
-    <StarOutlineScg />
+    <StarOutlineSvg />
   </Icon>
 }
 

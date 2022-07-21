@@ -85,18 +85,24 @@ pipeline {
             }
         }
 
-        stage('Test web') {
-            when { branch pattern: '.*release.*', comparator: 'REGEXP' }
+        stage('Validate web') {
             steps {
-                withAWS(role:'jenkins-role-to-assume', region:'us-east-1') {
-                    sh """
-                    aws ecs wait services-stable --cluster "${env.ENVIRONMENT}-frontend" --services apollo phoenix
-                    """
+                script{
+                    withAWS(role:'jenkins-role-to-assume', region:'us-east-1') {
+                        sh """
+                        aws ecs wait services-stable --cluster "${env.ENVIRONMENT}-frontend" --services apollo phoenix apollo-worker
+                        """
+                    }
+
+                    if (env.BRANCH_NAME ==~ '.*release.*'){
+                        slackSendsRelease(GIT_BRANCH, env.GIPHY_KEY)
+                        build job: 'Regression-tests', propagate: false
+                    }
+
+                    if (env.BRANCH_NAME == 'develop'){
+                        build job: 'Smoke-End-to-end-tests', propagate: false, wait: false
+                    }
                 }
-
-                slackSendsRelease(GIT_BRANCH, env.GIPHY_KEY)
-
-                build job: 'Regression-tests', propagate: false
             }
             post {
                 failure {

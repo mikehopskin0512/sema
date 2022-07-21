@@ -20,6 +20,7 @@ import {
   updateOrganization,
   updateOrganizationAvatar,
   updateOrganizationRepos,
+  toggleOrgRepoPinned,
 } from './organizationService';
 import UserRole from '../userRoles/userRoleModel';
 import { findByUsername } from '../users/userService';
@@ -327,6 +328,21 @@ export default (app, passport) => {
       }
     },
   );
+
+  route.patch('/:id/pinned-repos', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id } = req.params;
+    const { repoId } = req.body;
+
+    try {
+      await toggleOrgRepoPinned(id, repoId);
+      return res.status(200).send({
+        success: 'ok',
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
 
 
   // Swagger route
