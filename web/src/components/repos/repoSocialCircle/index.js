@@ -1,5 +1,5 @@
 import InteractionCircleChart from '../../chart/InteractionCircleChart';
-import { DownloadIcon, LinkIcon, TwitterIcon } from '../../Icons';
+import { DownloadIcon, FacebookIcon, LinkedinIcon, LinkIcon, TwitterIcon } from '../../Icons';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -12,7 +12,7 @@ import { SyncInProgressRepoBanner } from '../../repos/repoSocialCircle/banners/s
 import { createDataUrl, onDownloadImage } from '../../../utils/imageHelpers';
 import { uploadInfographicsImage } from '../../../state/features/auth/api';
 import { isEmpty } from 'lodash';
-import { shareWithTwitter } from '../../../utils/socialMedia';
+import { shareWithFacebook, shareWithLinkedIn, shareWithTwitter } from '../../../utils/socialMedia';
 
 export const SYNC_STATUSES = {
   EMPTY: null,
@@ -61,12 +61,33 @@ const RepoSocialCircle = ({ repoId }) => {
 
 
   const socialCircleUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${handle}/collaboration/${repoId}?repo=${repoName}`
+  const actions = [
+    {
+      name: 'download',
+      icon: DownloadIcon,
+      onClick: () => onDownloadImage(containerRef),
+    },
+    {
+      name: 'copy',
+      icon: LinkIcon,
+      onClick: () => onCopy(),
+    },
+  ];
+
   const socials = [
-    { name: 'download', icon: DownloadIcon, onClick: () => onDownloadImage(containerRef)},
-    { name: 'copy', icon:  LinkIcon, onClick: () => onCopy()},
     { name: 'twitter', icon: TwitterIcon, onClick: () => shareWithTwitter({ text: 'Check out my Github Social Circle!', url: socialCircleUrl })},
-    // { name: 'facebook', icon: FacebookIcon, onClick: () => {}},
-    // { name: 'linkedin', icon: LinkedinIcon, onClick: () => {}},
+    { name: 'facebook', icon: FacebookIcon, onClick: () => shareWithFacebook()},
+    {
+      name: 'linkedin',
+      icon: LinkedinIcon,
+      onClick: () => shareWithLinkedIn({
+        text: 'Check out my Github Social Circle!',
+        url: socialCircleUrl,
+        source: '',
+        title: '',
+        summary: '',
+      }),
+    },
   ]
 
   const onCopy = () => {
@@ -107,11 +128,29 @@ const RepoSocialCircle = ({ repoId }) => {
         <div className={clsx('pr-30', styles.socials)}>
           <span className={styles['socials-title']}>Share your Circle</span>
           <div className="mt-16 is-flex is-justify-content-center">
-              {socials.map(({onClick, icon}) => (
-                <div className='is-flex mr-16 is-clickable' onClick={onClick}>
-                  {icon({color: blue700, size:"medium"})}
-                </div>
-              ))}
+            {actions.map(({
+              onClick,
+              icon,
+            }) => (
+              <div className={clsx('is-flex mr-16 is-clickable', styles['social-item'])} onClick={onClick}>
+                {icon({
+                  color: blue700,
+                  size: 'medium',
+                })}
+              </div>
+            ))}
+            <div className={styles.divider} />
+            {socials.map(({
+              onClick,
+              icon,
+            }) => (
+              <div className={clsx('is-flex mr-16 is-clickable', styles['social-item'])} onClick={onClick}>
+                {icon({
+                  color: blue700,
+                  size: 'medium',
+                })}
+              </div>
+            ))}
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { TWITTER_URL, LINKEDIN_URL } from "../constants/socials"
+import { TWITTER_URL, LINKEDIN_URL, FACEBOOK_URL } from "../constants/socials"
 /*
   Redirects the user to twitter with a prepared tweet
   STRING - text - The main content
@@ -7,15 +7,16 @@ import { TWITTER_URL, LINKEDIN_URL } from "../constants/socials"
   STRING - via - A twitter user handle
 */
 export const shareWithTwitter = ({ text = '', url = '', via ='', hashtags = '' }) => {
-  let link =  `${TWITTER_URL}/intent/tweet?url=${url}&text=${text}&via=${via}&hashtags=${hashtags}`;
+  const link =  `${TWITTER_URL}/intent/tweet?url=${url}&text=${text}&via=${via}&hashtags=${hashtags}`;
   window.open(link, '_blank');
 }
 
 export const shareWithLinkedIn = ({ url = '', title = '', summary = '', source = '' }) => {
-  let link =  `${LINKEDIN_URL}/shareArticle?url=${url}&summary=${summary}&title=${title}&source=${source}`
+  const link =  `${LINKEDIN_URL}/shareArticle?url=${url}&summary=${summary}&title=${title}&source=${source}`
   window.open(link, '_blank')
 }
 
-// export const shareWithFacebook = () => {
-
-// }
+export const shareWithFacebook = () => {
+  const link = `${FACEBOOK_URL}`;
+  window.open(link, '_blank')
+}
