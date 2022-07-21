@@ -90,13 +90,21 @@
   width: 80px;
   position: absolute;
   z-index: 100;
-  right: 23.5%;
-  top: calc(50% - 35px)
+  left: 85px;
+  top: 70px;
 }
 
 .banner-loader {
   position: absolute;
   z-index: 101;
-  right: 26%;
-  top: calc(50% - 2px)
+  left: 116px;
+  top: 101px;
+}
+
+.banner-minions-circle {
+  background-image: url("/img/sync/minions-circle.png");
+  width: 250px;
+  height: 220px;
+  background-size: contain;
+  position: relative;
 }
