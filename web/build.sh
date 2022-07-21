@@ -44,4 +44,3 @@ docker push $IMAGE
 echo "Delete image..."
 docker rmi $IMAGE
 docker rmi $NAME:$VERSION
-docker rmi $(docker images -f "dangling=true" -q)
