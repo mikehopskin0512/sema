@@ -12,11 +12,11 @@ export const shareWithTwitter = ({ text = '', url = '', via ='', hashtags = '' }
 }
 
 export const shareWithLinkedIn = ({ url = '', title = '', summary = '', source = '' }) => {
-  const link =  `${LINKEDIN_URL}/shareArticle?url=${url}&summary=${summary}&title=${title}&source=${source}`
-  window.open(link, '_blank')
+  const link =  `${LINKEDIN_URL}/shareArticle?url=${url}&summary=${summary}&title=${title}&source=${source}`;
+  window.open(link, '_blank');
 }
 
-export const shareWithFacebook = () => {
-  const link = `${FACEBOOK_URL}`;
-  window.open(link, '_blank')
+export const shareWithFacebook = ({ url = '' }) => {
+  const link = `${FACEBOOK_URL}/dialog/share?href=${url}`;
+  window.open(link, '_blank');
 }
