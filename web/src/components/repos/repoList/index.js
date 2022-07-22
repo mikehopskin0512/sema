@@ -189,7 +189,7 @@ function RepoList({
         <button className={clsx("button border-radius-0 is-small", view === 'grid' ? 'is-primary' : '')} onClick={() => setView('grid')}>
           <GridIcon />
         </button> */}
-            {isOrganizationAdmin() && (
+            {/* {isOrganizationAdmin() && (
               <button
                 type="button"
                 className={clsx("ml-16 button is-primary", styles['add-repo-button'])}
@@ -198,7 +198,7 @@ function RepoList({
                 <PlusIcon size="small" />
                 <span className="ml-8">Add a Repo</span>
               </button>
-            )}
+            )} */}
             {/** Return functionality of connection Org when it will be ready */}
             {/* <button
               type="button"
