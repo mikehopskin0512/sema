@@ -70,6 +70,8 @@ export default async function pollRepository({ id }) {
       }),
     ]);
 
+    // calculate repoStats
+    await repository.updateRepoStats();
     await setSyncCompleted(repository);
 
     logger.info(

@@ -43,8 +43,8 @@ function ReposView({
       const repos = [...repositories];
       const favoriteRepos = remove(repos, (repo) => favoriteRepoIds.includes(repo.externalId));
 
-      const pinnedRepos = repos.filter(repo => user.pinnedRepos?.includes(repo._id.toString()));
-      const otherRepos = repos.filter(repo => !user.pinnedRepos?.includes(repo._id.toString()));
+      const pinnedRepos = repos.filter(repo => user?.pinnedRepos?.includes(repo._id.toString()));
+      const otherRepos = repos.filter(repo => !user?.pinnedRepos?.includes(repo._id.toString()));
       setRepos({
         favorites: favoriteRepos,
         other: otherRepos,
@@ -56,8 +56,8 @@ function ReposView({
   useEffect(() => {
     if (organizations && type === 'organization') {
       const repos = organizations.repos;
-      const pinnedRepos = repos.filter(repo => selectedOrganization.organization.pinnedRepos?.includes(repo._id.toString()));
-      const otherRepos = repos.filter(repo => !selectedOrganization.organization.pinnedRepos?.includes(repo._id.toString()));
+      const pinnedRepos = repos.filter(repo => selectedOrganization?.organization?.pinnedRepos?.includes(repo._id.toString()));
+      const otherRepos = repos.filter(repo => !selectedOrganization?.organization?.pinnedRepos?.includes(repo._id.toString()));
       setRepos({
         favorites: [],
         other: otherRepos,

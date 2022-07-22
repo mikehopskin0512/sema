@@ -157,12 +157,11 @@ describe('Import Repository Queue', () => {
         });
 
         it('should have reaction', () => {
-          expect(comment.reaction).toEqualID('607f0d1ed7f45b000ec2ed71');
+          expect(comment.reaction).toEqualID('607f0d1ed7f45b000ec2ed70');
         });
 
         it('should have a tag', () => {
-          expect(comment.tags.length).toBe(1);
-          expect(comment.tags[0]).toEqualID('607f0594ab1bc1aecbe2ce51');
+          expect(comment.tags.length).toBe(0);
         });
 
         describe('GitHub metadata', () => {
@@ -403,6 +402,15 @@ describe('Import Repository Queue', () => {
 
         it('should have sync status "completed"', () => {
           expect(repository.sync.status).toBe('completed');
+        });
+
+        it('should update repoStats', () => {
+          expect(repository.repoStats.smartCodeReviews).toBe(1);
+          expect(repository.repoStats.smartComments).toBe(7);
+          expect(repository.repoStats.smartCommenters).toBe(4);
+          expect(repository.repoStats.semaUsers).toBe(4);
+          expect(repository.repoStats.tags).toHaveLength(7);
+          expect(repository.repoStats.reactions).toHaveLength(7);
         });
 
         it('should have sync completed at timestamp', () => {

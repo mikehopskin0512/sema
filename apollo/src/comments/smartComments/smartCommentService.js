@@ -88,15 +88,15 @@ export const getCollaborativeSmartComments = async ({ repoId, handle }) => {
       })
         .lean()
         .exec(),
-     SmartComment.find({
-      'githubMetadata.repo_id': repoId,
-      'githubMetadata.requester': handle,
-      'githubMetadata.user.login': { $ne: handle },
-    })
-       .lean()
-       .exec(),
+      SmartComment.find({
+        'githubMetadata.repo_id': repoId,
+        'githubMetadata.requester': handle,
+        'githubMetadata.user.login': { $ne: handle },
+      })
+        .lean()
+        .exec(),
     ]);
-    return {givenComments, receivedComments};
+    return { givenComments, receivedComments };
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
