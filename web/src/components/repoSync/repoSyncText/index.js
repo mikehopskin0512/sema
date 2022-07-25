@@ -7,7 +7,7 @@ import { green600, red500 } from '../../../../styles/_colors.module.scss'
 import { AlertOutlineIcon, InfoOutlineIcon, QueuedIcon, RefreshIcon, SyncCompletedIcon, SyncInactiveIcon } from '../../Icons';
 import styles from './repoSyncText.module.scss';
 
-function RepoSyncText({repoStatus, progress, completedAt, isRepoPage = false}) {
+function RepoSyncText({repoStatus, progress, completedAt, isRepoPage = false, action = null}) {
 
   const STATUS_LABELS = getStatusLabels(repoStatus, progress);
   
@@ -26,6 +26,27 @@ function RepoSyncText({repoStatus, progress, completedAt, isRepoPage = false}) {
     ReactTooltip.rebuild();
   });
 
+  const renderClickableTooltip = () => (
+    <ReactTooltip id='global' clickable globalEventOff='click'>
+      <span>
+        {repoStatus === SYNC_STATUS.notsynced.status ?
+          <>
+            <a className='has-text-white is-clickable is-underlined' onClick={action}>
+              Activate Github Sync
+            </a>
+            {` to unlock the full power of Sema for this repo.`}
+          </> :
+          <>
+            {`An error occurred - please `}
+            <a className='has-text-white is-clickable is-underlined' onClick={action}>
+              retry activating Github Sync for this repo.
+            </a>
+          </>
+        }
+      </span>
+    </ReactTooltip>
+  );
+
   const syncText = () => 
     <>
       {!isRepoPage &&
@@ -38,14 +59,20 @@ function RepoSyncText({repoStatus, progress, completedAt, isRepoPage = false}) {
           <span className={clsx('ml-10 is-size-7 has-text-weight-semibold', styles[repoStatus])}>
             {STATUS_LABELS.label || SYNC_STATUS.notsynced.label}
           </span>
-          {renderInfoIcon() && 
-            <InfoOutlineIcon size="small" 
-              className={clsx(
-                'is-cursor-pointer ml-10', 
-                styles['info-icon'], 
-                repoStatus === SYNC_STATUS.errored.status && styles[repoStatus]
-              )} 
-            />
+          {renderInfoIcon() && isRepoPage &&
+            <>
+              <InfoOutlineIcon size="small" 
+                className={clsx(
+                  'is-cursor-pointer ml-10', 
+                  styles['info-icon'], 
+                  repoStatus === SYNC_STATUS.errored.status && styles[repoStatus]
+                )} 
+                data-event='click'
+                data-for='global'
+                data-tip
+              />
+              {renderClickableTooltip()}
+            </>
           }
         </div>
       }
@@ -54,14 +81,14 @@ function RepoSyncText({repoStatus, progress, completedAt, isRepoPage = false}) {
   switch (repoStatus) {
     case 'errored':
       return (
-        <div data-tip={renderStandardTooltip()}  className={syncClass}>
+        <div data-tip={!isRepoPage ? renderStandardTooltip() : null}  className={syncClass}>
           <AlertOutlineIcon color={red500} size='small' />
           {syncText()}
         </div>
       );
     case 'unauthorized':
       return (
-        <div data-tip={renderStandardTooltip()}  className={syncClass}>
+        <div data-tip={!isRepoPage ? renderStandardTooltip() : null}  className={syncClass}>
           <AlertOutlineIcon color={red500} size='small' />
           {syncText()}
         </div>
@@ -89,7 +116,7 @@ function RepoSyncText({repoStatus, progress, completedAt, isRepoPage = false}) {
       );
     default:
       return (
-        <div data-tip={renderStandardTooltip()}  className={syncClass}>
+        <div data-tip={!isRepoPage ? renderStandardTooltip() : null} className={syncClass}>
           <SyncInactiveIcon size="small" />
           {syncText()}
         </div>
