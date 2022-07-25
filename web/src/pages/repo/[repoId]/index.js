@@ -28,8 +28,18 @@ const {
 const { fetchOrganizationRepos } = organizationsOperations;
 
 const tabTitle = {
+  stats: 'Repo Insights',
   activity: 'Activity Log',
-  stats: 'Code Stats',
+};
+
+const defaultFilterState = {
+  from: [],
+  to: [],
+  reactions: [],
+  tags: [],
+  search: '',
+  pr: [],
+  dateOption: '',
 };
 
 function RepoPage() {
@@ -64,7 +74,7 @@ function RepoPage() {
   } = useRouter();
 
   const firstUpdate = useRef(true);
-  const [selectedTab, setSelectedTab] = useState('activity');
+  const [selectedTab, setSelectedTab] = useState('stats');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [dates, setDates] = useState({
@@ -73,21 +83,17 @@ function RepoPage() {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const [filter, setFilter] = useState({
-    from: [],
-    to: [],
-    reactions: [],
-    tags: [],
-    search: '',
-    pr: [],
-    dateOption: '',
-  });
+  const [filter, setFilter] = useState(defaultFilterState);
   const [filterUserList, setFilterUserList] = useState([]);
   const [filterRequesterList, setFilterRequesterList] = useState([]);
   const [filterPRList, setFilterPRList] = useState([]);
   const [isOrganizationRepo, setIsOrganizationRepo] = useState(
     !isEmpty(selectedOrganization)
   );
+
+  useEffect(() => {
+    setFilter(defaultFilterState);
+  }, [selectedTab]);
 
   useEffect(() => {
     setIsOrganizationRepo(!isEmpty(selectedOrganization));
