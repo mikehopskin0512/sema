@@ -403,12 +403,12 @@ export const renderMenuItems = (personalDashboard, isEmpty, selectedOrganization
     className : standardClass,
     path: PATHS.PERSONAL,
   }] : [],
-  ... !isEmpty(selectedOrganization) ? [{
-    title: 'Dashboard',
-    className : standardClass,
-    path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`,
-    stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.DASHBOARD}`,
-  }] : [],
+  // ... !isEmpty(selectedOrganization) ? [{
+  //   title: 'Dashboard',
+  //   className : standardClass,
+  //   path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`,
+  //   stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.DASHBOARD}`,
+  // }] : [],
   ... !isEmpty(selectedOrganization) ? [{
     title: 'Repos',
     className : standardClass,
@@ -420,7 +420,7 @@ export const renderMenuItems = (personalDashboard, isEmpty, selectedOrganization
     path: PATHS.DASHBOARD
   }],
   ... !isEmpty(selectedOrganization) ? [{
-    title: 'Organization Insights',
+    title: 'Insights',
     className : standardClass,
     path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.ORGANIZATION_INSIGHTS}`,
     stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.ORGANIZATION_INSIGHTS}`,

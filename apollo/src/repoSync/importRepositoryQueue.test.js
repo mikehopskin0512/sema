@@ -2942,10 +2942,6 @@ describe('Import Repository Queue', () => {
 
         afterAll(() => resetRateLimitTracking());
       });
-
-      afterAll(() => {
-        jest.unmock('lodash/sample');
-      });
     });
   });
 
