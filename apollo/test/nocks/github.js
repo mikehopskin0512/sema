@@ -12,7 +12,11 @@ const fixtures = glob
     return accum;
   }, new Map());
 
+export const rateLimitRemaining = new Map();
+
 export default function github() {
+  rateLimitRemaining.clear();
+
   nock('https://api.github.com')
     .persist()
     .post('/app/installations/25676597/access_tokens', {})
@@ -41,5 +45,14 @@ export default function github() {
       const [, , username] = pathname.split('/');
       if (fixtures.has(username)) return [200, fixtures.get(username)];
       return [404, { message: `User ${username} not found` }];
+    })
+    .get('/rate_limit')
+    .reply(function rateLimit() {
+      const authorization = this.req.headers.authorization[0];
+      const [, token] = authorization.split(' ');
+      const remaining = rateLimitRemaining.has(token)
+        ? rateLimitRemaining.get(token)
+        : 1000;
+      return [200, { resources: { core: { remaining } } }];
     });
 }

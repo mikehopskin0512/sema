@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+// Prints the number of remaining requests for each GitHub installation.
+
+/* eslint-disable no-console */
+
+const { sortBy } = require('lodash');
+const { getOctokitsWithLimits } = require('../src/repoSync/repoSyncService');
+
+async function main() {
+  const octokits = sortBy(
+    await getOctokitsWithLimits(),
+    'installation.created_at'
+  ).reverse();
+
+  for (const { installation, rateLimit } of octokits) {
+    const { core } = rateLimit.resources;
+    console.log(
+      `${core.remaining}/${core.limit}\t${installation.created_at}\t${installation.account.login}`
+    );
+  }
+}
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

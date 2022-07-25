@@ -16,6 +16,8 @@ import Repository from '../repositories/repositoryModel';
 import SmartComment from '../comments/smartComments/smartCommentModel';
 import User from '../users/userModel';
 import handler from './importRepositoryQueue';
+import { resetRateLimitTracking } from './repoSyncService';
+import { rateLimitRemaining } from '../../test/nocks/github';
 
 const {
   Types: { ObjectId },
@@ -407,8 +409,8 @@ describe('Import Repository Queue', () => {
         it('should update repoStats', () => {
           expect(repository.repoStats.smartCodeReviews).toBe(1);
           expect(repository.repoStats.smartComments).toBe(7);
-          expect(repository.repoStats.smartCommenters).toBe(4);
-          expect(repository.repoStats.semaUsers).toBe(4);
+          expect(repository.repoStats.smartCommenters).toBe(3);
+          expect(repository.repoStats.semaUsers).toBe(3);
           expect(repository.repoStats.tags).toHaveLength(7);
           expect(repository.repoStats.reactions).toHaveLength(7);
         });
@@ -2482,6 +2484,8 @@ describe('Import Repository Queue', () => {
 
   describe('public repository', () => {
     let comments;
+    let tokenUsedForGitHubAPI;
+    let defaultInstallationNock;
 
     beforeAll(async () => {
       resetNocks();
@@ -2499,87 +2503,78 @@ describe('Import Repository Queue', () => {
       await startSync({ repository, user });
     });
 
+    function resetNocksForPublicRepository() {
+      return nock('https://api.github.com')
+        .persist()
+        .get('/repos/Semalab/phoenix/installation')
+        .reply(404)
+        .get('/repositories/237888452')
+        .reply(200, function recordTokenAndReply() {
+          [, tokenUsedForGitHubAPI] =
+            this.req.headers.authorization[0].split(' ');
+          return {
+            id: '237888452',
+            name: 'phoenix',
+          };
+        })
+        .get('/app/installations')
+        .query(() => true)
+        .reply(200, [{ id: 45676599 }, { id: 35676598 }])
+        .post('/app/installations/35676598/access_tokens', {})
+        .reply(201, {
+          token: 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
+          expires_at: addDays(new Date(), 1).toISOString(),
+          permissions: {
+            members: 'read',
+            organization_administration: 'read',
+            organization_projects: 'read',
+            actions: 'read',
+            administration: 'read',
+            contents: 'read',
+            discussions: 'write',
+            issues: 'write',
+            metadata: 'read',
+            pull_requests: 'write',
+            repository_hooks: 'write',
+            repository_projects: 'read',
+            vulnerability_alerts: 'read',
+          },
+          repository_selection: 'selected',
+        })
+        .post('/app/installations/45676599/access_tokens', {})
+        .reply(201, {
+          token: 'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a',
+          expires_at: addDays(new Date(), 1).toISOString(),
+          permissions: {
+            members: 'read',
+            organization_administration: 'read',
+            organization_projects: 'read',
+            actions: 'read',
+            administration: 'read',
+            contents: 'read',
+            discussions: 'write',
+            issues: 'write',
+            metadata: 'read',
+            pull_requests: 'write',
+            repository_hooks: 'write',
+            repository_projects: 'read',
+            vulnerability_alerts: 'read',
+          },
+          repository_selection: 'selected',
+        });
+    }
+
     describe('processing queue', () => {
-      let defaultInstallationNock;
-      let tokenUsedForGitHubAPI;
-      const limitRemaining = new Map();
-
       beforeAll(() => {
-        nock('https://api.github.com')
-          .persist()
-          .get('/repos/Semalab/phoenix/installation')
-          .reply(404)
-          .get('/repositories/237888452')
-          .reply(200, function recordTokenAndReply() {
-            [, tokenUsedForGitHubAPI] =
-              this.req.headers.authorization[0].split(' ');
-            return {
-              id: '237888452',
-              name: 'phoenix',
-            };
-          });
-
-        defaultInstallationNock = nock('https://api.github.com')
-          .persist()
-          .get('/app/installations')
-          .reply(200, [{ id: 45676599 }, { id: 35676598 }])
-          .post('/app/installations/35676598/access_tokens', {})
-          .reply(201, {
-            token: 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
-            expires_at: addDays(new Date(), 1).toISOString(),
-            permissions: {
-              members: 'read',
-              organization_administration: 'read',
-              organization_projects: 'read',
-              actions: 'read',
-              administration: 'read',
-              contents: 'read',
-              discussions: 'write',
-              issues: 'write',
-              metadata: 'read',
-              pull_requests: 'write',
-              repository_hooks: 'write',
-              repository_projects: 'read',
-              vulnerability_alerts: 'read',
-            },
-            repository_selection: 'selected',
-          })
-          .post('/app/installations/45676599/access_tokens', {})
-          .reply(201, {
-            token: 'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a',
-            expires_at: addDays(new Date(), 1).toISOString(),
-            permissions: {
-              members: 'read',
-              organization_administration: 'read',
-              organization_projects: 'read',
-              actions: 'read',
-              administration: 'read',
-              contents: 'read',
-              discussions: 'write',
-              issues: 'write',
-              metadata: 'read',
-              pull_requests: 'write',
-              repository_hooks: 'write',
-              repository_projects: 'read',
-              vulnerability_alerts: 'read',
-            },
-            repository_selection: 'selected',
-          })
-          .get('/rate_limit')
-          .reply(function rateLimit() {
-            const authorization = this.req.headers.authorization[0];
-            const [, token] = authorization.split(' ');
-            if (limitRemaining.has(token)) {
-              const remaining = limitRemaining.get(token);
-              return [200, { resources: { core: { remaining } } }];
-            }
-            return [404];
-          });
+        defaultInstallationNock = resetNocksForPublicRepository();
       });
 
       beforeAll(() => {
-        limitRemaining.set('ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z', 1000);
-        limitRemaining.set('ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a', 999);
+        rateLimitRemaining.set(
+          'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
+          1000
+        );
+        rateLimitRemaining.set('ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a', 999);
       });
 
       beforeAll(() => {
@@ -2621,14 +2616,22 @@ describe('Import Repository Queue', () => {
 
       describe('when token runs out of quota', () => {
         beforeAll(async () => {
+          resetNocks();
+          resetNocksForPublicRepository();
           await SmartComment.deleteMany({});
           repository.sync = {};
           await repository.save();
         });
 
         beforeAll(() => {
-          limitRemaining.set('ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z', 1000);
-          limitRemaining.set('ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a', 999);
+          rateLimitRemaining.set(
+            'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
+            1000
+          );
+          rateLimitRemaining.set(
+            'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a',
+            999
+          );
         });
 
         beforeAll(() => {
@@ -2645,7 +2648,7 @@ describe('Import Repository Queue', () => {
               const authorization = this.req.headers.authorization[0];
               const [, token] = authorization.split(' ');
               if (token === 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z') {
-                limitRemaining.set(
+                rateLimitRemaining.set(
                   'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
                   0
                 );
@@ -2690,6 +2693,247 @@ describe('Import Repository Queue', () => {
             'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a'
           );
         });
+      });
+
+      describe('when all tokens run out of quota before sync starts', () => {
+        beforeAll(async () => {
+          resetNocks();
+          resetNocksForPublicRepository();
+          await SmartComment.deleteMany({});
+          repository.sync = {};
+          await repository.save();
+        });
+
+        beforeAll(() => {
+          rateLimitRemaining.set('ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z', 0);
+          rateLimitRemaining.set('ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a', 0);
+        });
+
+        beforeAll(() => {
+          nock('https://api.github.com')
+            .persist()
+            .get('/repos/Semalab/phoenix/pulls/comments')
+            .query(() => true)
+            .reply(200, getFirstPageOfPullRequestComments())
+            .get('/repos/Semalab/phoenix/issues/comments')
+            .query(() => true)
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls')
+            .query(() => true)
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls/3')
+            .reply(200, getPullRequestDetailPR3());
+        });
+
+        it('should throw an error', async () => {
+          await expect(handler({ id: repository.id })).rejects.toThrow(
+            'Ran out of GitHub API quota'
+          );
+        });
+
+        describe('repository', () => {
+          it('should not change sync status', () => {
+            expect(repository.sync.status).toBeFalsy();
+          });
+        });
+      });
+
+      describe('when all tokens run out of quota after sync starts', () => {
+        beforeAll(async () => {
+          resetNocks();
+          resetNocksForPublicRepository();
+          await SmartComment.deleteMany({});
+          repository.sync = {};
+          await repository.save();
+        });
+
+        beforeAll(() => {
+          rateLimitRemaining.set(
+            'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
+            1000
+          );
+          rateLimitRemaining.set(
+            'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a',
+            1000
+          );
+        });
+
+        beforeAll(() => {
+          nock('https://api.github.com')
+            .persist()
+            .get('/repos/Semalab/phoenix/installation')
+            .reply(404)
+            .get('/repos/Semalab/phoenix/pulls/comments')
+            .query(() => true)
+            .reply(() => {
+              rateLimitRemaining.set(
+                'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
+                0
+              );
+              rateLimitRemaining.set(
+                'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a',
+                0
+              );
+              return [
+                403,
+                {
+                  message:
+                    'API rate limit exceeded for installation ID 26434743.',
+                },
+                { 'x-ratelimit-remaining': 0 },
+              ];
+            })
+            .get('/repos/Semalab/phoenix/issues/comments')
+            .query(() => true)
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls')
+            .query(() => true)
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls/3')
+            .reply(200, getPullRequestDetailPR3());
+        });
+
+        it('should throw an error', async () => {
+          await expect(handler({ id: repository.id })).rejects.toThrow(
+            'Ran out of GitHub API quota'
+          );
+        });
+
+        describe('repository', () => {
+          it('should not change sync status', () => {
+            expect(repository.sync.status).toBeFalsy();
+          });
+        });
+      });
+
+      describe('when hitting GitHub secondary rate limit', () => {
+        beforeAll(async () => {
+          resetNocks();
+          await SmartComment.deleteMany({});
+          repository.sync = {};
+          await repository.save();
+        });
+
+        beforeAll(() => {
+          rateLimitRemaining.set(
+            'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
+            1000
+          );
+          rateLimitRemaining.set(
+            'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a',
+            999
+          );
+        });
+
+        beforeAll(() => {
+          nock('https://api.github.com')
+            .persist()
+            .get('/repos/Semalab/phoenix/installation')
+            .reply(404)
+            .get('/repositories/237888452')
+            .reply(200, {
+              id: '237888452',
+              name: 'phoenix',
+            })
+            .get('/app/installations')
+            .query(() => true)
+            .reply(200, [{ id: 45676599 }, { id: 35676598 }])
+            .post('/app/installations/35676598/access_tokens', {})
+            .reply(201, {
+              token: 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
+              expires_at: addDays(new Date(), 1).toISOString(),
+              permissions: {
+                members: 'read',
+                organization_administration: 'read',
+                organization_projects: 'read',
+                actions: 'read',
+                administration: 'read',
+                contents: 'read',
+                discussions: 'write',
+                issues: 'write',
+                metadata: 'read',
+                pull_requests: 'write',
+                repository_hooks: 'write',
+                repository_projects: 'read',
+                vulnerability_alerts: 'read',
+              },
+              repository_selection: 'selected',
+            })
+            .post('/app/installations/45676599/access_tokens', {})
+            .reply(201, {
+              token: 'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a',
+              expires_at: addDays(new Date(), 1).toISOString(),
+              permissions: {
+                members: 'read',
+                organization_administration: 'read',
+                organization_projects: 'read',
+                actions: 'read',
+                administration: 'read',
+                contents: 'read',
+                discussions: 'write',
+                issues: 'write',
+                metadata: 'read',
+                pull_requests: 'write',
+                repository_hooks: 'write',
+                repository_projects: 'read',
+                vulnerability_alerts: 'read',
+              },
+              repository_selection: 'selected',
+            });
+
+          nock('https://api.github.com')
+            .persist()
+            .get('/repos/Semalab/phoenix/pulls/comments')
+            .query(() => true)
+            .reply(function reply() {
+              const authorization = this.req.headers.authorization[0];
+              const [, token] = authorization.split(' ');
+              tokenUsedForGitHubAPI = token;
+
+              if (token === 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z') {
+                return [
+                  403,
+                  {
+                    message:
+                      'You have exceeded a secondary rate limit. Please wait a few minutes before you try again.',
+                  },
+                  { 'retry-after': '60' },
+                ];
+              }
+              if (token === 'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a') {
+                return [200, getFirstPageOfPullRequestComments()];
+              }
+              return [500];
+            })
+            .get('/repos/Semalab/phoenix/issues/comments')
+            .query(() => true)
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls')
+            .query(() => true)
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls/3')
+            .reply(200, getPullRequestDetailPR3());
+        });
+
+        beforeAll(async () => {
+          await handler({ id: repository.id });
+        });
+
+        beforeAll(async () => {
+          comments = await findSmartCommentsByExternalId(repository.externalId);
+        });
+
+        it('should import comments', () => {
+          expect(comments.length).toBe(2);
+        });
+
+        it('should retry using another token', () => {
+          expect(tokenUsedForGitHubAPI).toBe(
+            'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a'
+          );
+        });
+
+        afterAll(() => resetRateLimitTracking());
       });
     });
   });
@@ -2775,21 +3019,14 @@ describe('Import Repository Queue', () => {
           .get('/repos/Semalab/phoenix/installation')
           .reply(404)
           .get('/app/installations')
+          .query(() => true)
           .reply(200, []);
       });
 
-      beforeAll(async () => {
-        await handler({ id: repository.id });
-      });
-
-      describe('repository', () => {
-        beforeAll(async () => {
-          repository = await Repository.findById(repository._id);
-        });
-
-        it('should have sync status unauthorized', () => {
-          expect(repository.sync.status).toBe('unauthorized');
-        });
+      it('should throw an error', async () => {
+        await expect(handler({ id: repository.id })).rejects.toThrow(
+          'Sema app not installed on any account'
+        );
       });
     });
   });
@@ -2818,6 +3055,7 @@ describe('Import Repository Queue', () => {
           .get('/repos/Semalab/phoenix/installation')
           .reply(404)
           .get('/app/installations')
+          .query(() => true)
           .reply(200, [{ id: 35676598 }])
           .post('/app/installations/35676598/access_tokens', () => true)
           .reply(201, {
@@ -2839,23 +3077,6 @@ describe('Import Repository Queue', () => {
               vulnerability_alerts: 'read',
             },
             repository_selection: 'selected',
-          })
-          .get('/rate_limit')
-          .reply(function rateLimit() {
-            const authorization = this.req.headers.authorization[0];
-            if (
-              authorization === 'token ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z'
-            ) {
-              return [
-                200,
-                {
-                  resources: {
-                    core: { remaining: 1000 },
-                  },
-                },
-              ];
-            }
-            return [404];
           })
           .get('/repositories/237888452')
           .reply(404);
