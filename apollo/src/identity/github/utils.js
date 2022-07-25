@@ -148,6 +148,7 @@ async function createRepositoryForUser({ repo, user, sync = false }) {
     cloneUrl: repo.clone_url,
     repositoryCreatedAt: repo.created_at,
     repositoryUpdatedAt: repo.updated_at,
+    visibility: repo.visibility,
   });
   await repository.updateOne({ $addToSet: { 'repoStats.userIds': user._id } });
   await addRepositoryToIdentity(user, repository);

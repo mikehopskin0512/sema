@@ -1,9 +1,9 @@
 import assert from 'assert';
-import { addDays, differenceInMinutes } from 'date-fns';
+import { differenceInMinutes } from 'date-fns';
 import sample from 'lodash/sample';
 import nock from 'nock';
 import mongoose from 'mongoose';
-import resetNocks from '../../test/nocks';
+import resetNocks, { setDefaultNocks } from '../../test/nocks';
 import * as userService from '../users/userService';
 import {
   findByExternalId as findSmartCommentsByExternalId,
@@ -2486,93 +2486,60 @@ describe('Import Repository Queue', () => {
   describe('public repository', () => {
     let comments;
     let tokenUsedForGitHubAPI;
-    let defaultInstallationNock;
 
     beforeAll(async () => {
-      resetNocks();
       await Repository.deleteMany();
       await SmartComment.deleteMany();
     });
 
+    function resetNocksForPublicRepository() {
+      resetNocks();
+      nock('https://api.github.com')
+        .persist()
+        .get('/repos/SemaSandbox/astrobee/installation')
+        .reply(404);
+    }
+
+    const pullRequestComments = [
+      {
+        url: 'https://api.github.com/repos/SemaSandbox/astrobee/pulls/comments/545313646',
+        pull_request_review_id: 554880620,
+        id: 545313646,
+        node_id: 'MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDU0NTMxMzY0Ng==',
+        commit_id: '7db0665a4c0f7e496d96920f1fe0db207bb4437c',
+        original_commit_id: '43d87631f9550c05ef2786513d76b4ba49c6aadb',
+        user: {
+          login: 'pangeaware',
+          id: 1045023,
+          type: 'User',
+        },
+        body: '@jrock17 this function feels like it should live somewhere else as well with repo code.',
+        created_at: '2020-12-17T18:35:40Z',
+        updated_at: '2020-12-17T20:30:14Z',
+        pull_request_url:
+          'https://api.github.com/repos/SemaSandbox/astrobee/pulls/3',
+      },
+    ];
+
     beforeAll(async () => {
+      resetNocksForPublicRepository();
+
       repository = await createRepository({
-        name: 'phoenix',
+        name: 'astrobee',
         type: 'github',
-        id: '237888452',
-        cloneUrl: 'https://github.com/Semalab/phoenix',
+        id: '391620249',
+        cloneUrl: 'https://github.com/SemaSandbox/astrobee',
       });
       await startSync({ repository, user });
     });
 
-    function resetNocksForPublicRepository() {
-      return nock('https://api.github.com')
-        .persist()
-        .get('/repos/Semalab/phoenix/installation')
-        .reply(404)
-        .get('/repositories/237888452')
-        .reply(200, function recordTokenAndReply() {
-          [, tokenUsedForGitHubAPI] =
-            this.req.headers.authorization[0].split(' ');
-          return {
-            id: '237888452',
-            name: 'phoenix',
-          };
-        })
-        .get('/app/installations')
-        .query(() => true)
-        .reply(200, [{ id: 45676599 }, { id: 35676598 }])
-        .post('/app/installations/35676598/access_tokens', {})
-        .reply(201, {
-          token: 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
-          expires_at: addDays(new Date(), 1).toISOString(),
-          permissions: {
-            members: 'read',
-            organization_administration: 'read',
-            organization_projects: 'read',
-            actions: 'read',
-            administration: 'read',
-            contents: 'read',
-            discussions: 'write',
-            issues: 'write',
-            metadata: 'read',
-            pull_requests: 'write',
-            repository_hooks: 'write',
-            repository_projects: 'read',
-            vulnerability_alerts: 'read',
-          },
-          repository_selection: 'selected',
-        })
-        .post('/app/installations/45676599/access_tokens', {})
-        .reply(201, {
-          token: 'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a',
-          expires_at: addDays(new Date(), 1).toISOString(),
-          permissions: {
-            members: 'read',
-            organization_administration: 'read',
-            organization_projects: 'read',
-            actions: 'read',
-            administration: 'read',
-            contents: 'read',
-            discussions: 'write',
-            issues: 'write',
-            metadata: 'read',
-            pull_requests: 'write',
-            repository_hooks: 'write',
-            repository_projects: 'read',
-            vulnerability_alerts: 'read',
-          },
-          repository_selection: 'selected',
-        });
-    }
-
     describe('processing queue', () => {
-      beforeAll(async () => {
-        sample.mockClear();
-        sample.mockImplementationOnce((array) => array[0]);
-      });
+      let previousSample;
 
-      beforeAll(() => {
-        defaultInstallationNock = resetNocksForPublicRepository();
+      beforeAll(async () => {
+        previousSample = await sample.getMockImplementation();
+        sample.mockClear();
+        sample.mockImplementation((array) => array[1]);
       });
 
       beforeAll(() => {
@@ -2585,17 +2552,25 @@ describe('Import Repository Queue', () => {
 
       beforeAll(() => {
         nock('https://api.github.com')
-          .get('/repos/Semalab/phoenix/pulls/comments')
-          .query({ sort: 'created', direction: 'desc', page: 1, per_page: 100 })
-          .reply(200, getFirstPageOfPullRequestComments())
-          .get('/repos/Semalab/phoenix/issues/comments')
+          .get('/repos/SemaSandbox/astrobee/pulls/comments')
+          .query(() => true)
+          .reply(200, function recordTokenAndReply() {
+            [, tokenUsedForGitHubAPI] =
+              this.req.headers.authorization[0].split(' ');
+            return pullRequestComments;
+          });
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/SemaSandbox/astrobee/issues/comments')
           .query(() => true)
           .reply(200, [])
-          .get('/repos/Semalab/phoenix/pulls')
+          .get('/repos/SemaSandbox/astrobee/pulls')
           .query(() => true)
           .reply(200, [])
-          .get('/repos/Semalab/phoenix/pulls/3')
-          .reply(200, getPullRequestDetailPR3());
+          .get('/repos/SemaSandbox/astrobee/pulls/3')
+          .reply(200, getPullRequestDetailAstrobeePR());
       });
 
       beforeAll(async () => {
@@ -2607,11 +2582,7 @@ describe('Import Repository Queue', () => {
       });
 
       it('should import comments', () => {
-        expect(comments.length).toBe(2);
-      });
-
-      it('should use any installation ID', () => {
-        expect(defaultInstallationNock.isDone()).toBe(true);
+        expect(comments.length).toBe(1);
       });
 
       it('should use a random token with quota available', () => {
@@ -2623,7 +2594,6 @@ describe('Import Repository Queue', () => {
 
       describe('when token runs out of quota', () => {
         beforeAll(async () => {
-          resetNocks();
           resetNocksForPublicRepository();
           await SmartComment.deleteMany({});
           repository.sync = {};
@@ -2644,16 +2614,12 @@ describe('Import Repository Queue', () => {
         beforeAll(() => {
           nock('https://api.github.com')
             .persist()
-            .get('/repos/Semalab/phoenix/pulls/comments')
-            .query({
-              sort: 'created',
-              direction: 'desc',
-              page: 1,
-              per_page: 100,
-            })
+            .get('/repos/SemaSandbox/astrobee/pulls/comments')
+            .query(() => true)
             .reply(function reply() {
               const authorization = this.req.headers.authorization[0];
               const [, token] = authorization.split(' ');
+              tokenUsedForGitHubAPI = token;
               if (token === 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z') {
                 rateLimitRemaining.set(
                   'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
@@ -2669,18 +2635,18 @@ describe('Import Repository Queue', () => {
                 ];
               }
               if (token === 'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a') {
-                return [200, getFirstPageOfPullRequestComments()];
+                return [200, pullRequestComments];
               }
               return [500];
             })
-            .get('/repos/Semalab/phoenix/issues/comments')
+            .get('/repos/SemaSandbox/astrobee/issues/comments')
             .query(() => true)
             .reply(200, [])
-            .get('/repos/Semalab/phoenix/pulls')
+            .get('/repos/SemaSandbox/astrobee/pulls')
             .query(() => true)
             .reply(200, [])
-            .get('/repos/Semalab/phoenix/pulls/3')
-            .reply(200, getPullRequestDetailPR3());
+            .get('/repos/SemaSandbox/astrobee/pulls/3')
+            .reply(200, getPullRequestDetailAstrobeePR());
         });
 
         beforeAll(async () => {
@@ -2692,7 +2658,7 @@ describe('Import Repository Queue', () => {
         });
 
         it('should import comments', () => {
-          expect(comments.length).toBe(2);
+          expect(comments.length).toBe(1);
         });
 
         it('should retry using another token', () => {
@@ -2704,7 +2670,6 @@ describe('Import Repository Queue', () => {
 
       describe('when all tokens run out of quota before sync starts', () => {
         beforeAll(async () => {
-          resetNocks();
           resetNocksForPublicRepository();
           await SmartComment.deleteMany({});
           repository.sync = {};
@@ -2719,16 +2684,16 @@ describe('Import Repository Queue', () => {
         beforeAll(() => {
           nock('https://api.github.com')
             .persist()
-            .get('/repos/Semalab/phoenix/pulls/comments')
+            .get('/repos/SemaSandbox/astrobee/pulls/comments')
             .query(() => true)
             .reply(200, getFirstPageOfPullRequestComments())
-            .get('/repos/Semalab/phoenix/issues/comments')
+            .get('/repos/SemaSandbox/astrobee/issues/comments')
             .query(() => true)
             .reply(200, [])
-            .get('/repos/Semalab/phoenix/pulls')
+            .get('/repos/SemaSandbox/astrobee/pulls')
             .query(() => true)
             .reply(200, [])
-            .get('/repos/Semalab/phoenix/pulls/3')
+            .get('/repos/SemaSandbox/astrobee/pulls/3')
             .reply(200, getPullRequestDetailPR3());
         });
 
@@ -2747,7 +2712,6 @@ describe('Import Repository Queue', () => {
 
       describe('when all tokens run out of quota after sync starts', () => {
         beforeAll(async () => {
-          resetNocks();
           resetNocksForPublicRepository();
           await SmartComment.deleteMany({});
           repository.sync = {};
@@ -2768,9 +2732,9 @@ describe('Import Repository Queue', () => {
         beforeAll(() => {
           nock('https://api.github.com')
             .persist()
-            .get('/repos/Semalab/phoenix/installation')
+            .get('/repos/SemaSandbox/astrobee/installation')
             .reply(404)
-            .get('/repos/Semalab/phoenix/pulls/comments')
+            .get('/repos/SemaSandbox/astrobee/pulls/comments')
             .query(() => true)
             .reply(() => {
               rateLimitRemaining.set(
@@ -2790,13 +2754,13 @@ describe('Import Repository Queue', () => {
                 { 'x-ratelimit-remaining': 0 },
               ];
             })
-            .get('/repos/Semalab/phoenix/issues/comments')
+            .get('/repos/SemaSandbox/astrobee/issues/comments')
             .query(() => true)
             .reply(200, [])
-            .get('/repos/Semalab/phoenix/pulls')
+            .get('/repos/SemaSandbox/astrobee/pulls')
             .query(() => true)
             .reply(200, [])
-            .get('/repos/Semalab/phoenix/pulls/3')
+            .get('/repos/SemaSandbox/astrobee/pulls/3')
             .reply(200, getPullRequestDetailPR3());
         });
 
@@ -2835,62 +2799,12 @@ describe('Import Repository Queue', () => {
         beforeAll(() => {
           nock('https://api.github.com')
             .persist()
-            .get('/repos/Semalab/phoenix/installation')
-            .reply(404)
-            .get('/repositories/237888452')
-            .reply(200, {
-              id: '237888452',
-              name: 'phoenix',
-            })
-            .get('/app/installations')
-            .query(() => true)
-            .reply(200, [{ id: 45676599 }, { id: 35676598 }])
-            .post('/app/installations/35676598/access_tokens', {})
-            .reply(201, {
-              token: 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
-              expires_at: addDays(new Date(), 1).toISOString(),
-              permissions: {
-                members: 'read',
-                organization_administration: 'read',
-                organization_projects: 'read',
-                actions: 'read',
-                administration: 'read',
-                contents: 'read',
-                discussions: 'write',
-                issues: 'write',
-                metadata: 'read',
-                pull_requests: 'write',
-                repository_hooks: 'write',
-                repository_projects: 'read',
-                vulnerability_alerts: 'read',
-              },
-              repository_selection: 'selected',
-            })
-            .post('/app/installations/45676599/access_tokens', {})
-            .reply(201, {
-              token: 'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a',
-              expires_at: addDays(new Date(), 1).toISOString(),
-              permissions: {
-                members: 'read',
-                organization_administration: 'read',
-                organization_projects: 'read',
-                actions: 'read',
-                administration: 'read',
-                contents: 'read',
-                discussions: 'write',
-                issues: 'write',
-                metadata: 'read',
-                pull_requests: 'write',
-                repository_hooks: 'write',
-                repository_projects: 'read',
-                vulnerability_alerts: 'read',
-              },
-              repository_selection: 'selected',
-            });
+            .get('/repos/SemaSandbox/astrobee/installation')
+            .reply(404);
 
           nock('https://api.github.com')
             .persist()
-            .get('/repos/Semalab/phoenix/pulls/comments')
+            .get('/repos/SemaSandbox/astrobee/pulls/comments')
             .query(() => true)
             .reply(function reply() {
               const authorization = this.req.headers.authorization[0];
@@ -2908,18 +2822,18 @@ describe('Import Repository Queue', () => {
                 ];
               }
               if (token === 'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a') {
-                return [200, getFirstPageOfPullRequestComments()];
+                return [200, pullRequestComments];
               }
               return [500];
             })
-            .get('/repos/Semalab/phoenix/issues/comments')
+            .get('/repos/SemaSandbox/astrobee/issues/comments')
             .query(() => true)
             .reply(200, [])
-            .get('/repos/Semalab/phoenix/pulls')
+            .get('/repos/SemaSandbox/astrobee/pulls')
             .query(() => true)
             .reply(200, [])
-            .get('/repos/Semalab/phoenix/pulls/3')
-            .reply(200, getPullRequestDetailPR3());
+            .get('/repos/SemaSandbox/astrobee/pulls/3')
+            .reply(200, getPullRequestDetailAstrobeePR());
         });
 
         beforeAll(async () => {
@@ -2931,7 +2845,7 @@ describe('Import Repository Queue', () => {
         });
 
         it('should import comments', () => {
-          expect(comments.length).toBe(2);
+          expect(comments.length).toBe(1);
         });
 
         it('should retry using another token', () => {
@@ -2941,6 +2855,10 @@ describe('Import Repository Queue', () => {
         });
 
         afterAll(() => resetRateLimitTracking());
+      });
+
+      afterAll(() => {
+        sample.mockImplementation(previousSample);
       });
     });
   });
@@ -3005,9 +2923,19 @@ describe('Import Repository Queue', () => {
 
   describe('app not installed anywhere', () => {
     beforeAll(async () => {
-      resetNocks();
+      nock.cleanAll();
       await Repository.deleteMany();
       await SmartComment.deleteMany();
+    });
+
+    beforeAll(() => {
+      nock('https://api.github.com')
+        .persist()
+        .get('/repos/Semalab/phoenix/installation')
+        .reply(404)
+        .get('/app/installations')
+        .query(() => true)
+        .reply(200, []);
     });
 
     beforeAll(async () => {
@@ -3030,6 +2958,8 @@ describe('Import Repository Queue', () => {
           .reply(200, []);
       });
 
+      beforeAll(() => setDefaultNocks());
+
       it('should throw an error', async () => {
         await expect(handler({ id: repository.id })).rejects.toThrow(
           'Sema app not installed on any account'
@@ -3040,10 +2970,21 @@ describe('Import Repository Queue', () => {
 
   describe('private repository, app not installed', () => {
     beforeAll(async () => {
-      resetNocks();
+      nock.cleanAll();
       await Repository.deleteMany();
       await SmartComment.deleteMany();
     });
+
+    beforeAll(() => {
+      nock('https://api.github.com')
+        .persist()
+        .get('/repos/Semalab/phoenix/installation')
+        .reply(404)
+        .get('/repositories/237888452')
+        .reply(404);
+    });
+
+    beforeAll(() => setDefaultNocks());
 
     beforeAll(async () => {
       repository = await createRepository({
@@ -3061,30 +3002,6 @@ describe('Import Repository Queue', () => {
           .persist()
           .get('/repos/Semalab/phoenix/installation')
           .reply(404)
-          .get('/app/installations')
-          .query(() => true)
-          .reply(200, [{ id: 35676598 }])
-          .post('/app/installations/35676598/access_tokens', () => true)
-          .reply(201, {
-            token: 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
-            expires_at: addDays(new Date(), 1).toISOString(),
-            permissions: {
-              members: 'read',
-              organization_administration: 'read',
-              organization_projects: 'read',
-              actions: 'read',
-              administration: 'read',
-              contents: 'read',
-              discussions: 'write',
-              issues: 'write',
-              metadata: 'read',
-              pull_requests: 'write',
-              repository_hooks: 'write',
-              repository_projects: 'read',
-              vulnerability_alerts: 'read',
-            },
-            repository_selection: 'selected',
-          })
           .get('/repositories/237888452')
           .reply(404);
       });
@@ -3100,6 +3017,10 @@ describe('Import Repository Queue', () => {
 
         it('should have sync status unauthorized', () => {
           expect(repository.sync.status).toBe('unauthorized');
+        });
+
+        it('should have visibility private', () => {
+          expect(repository.visibility).toBe('private');
         });
       });
     });
@@ -4180,14 +4101,128 @@ function getPullRequestReviewsForPR4() {
   ];
 }
 
+function getPullRequestDetailAstrobeePR() {
+  return {
+    url: 'https://api.github.com/repos/SemaSandbox/astrobee/pulls/3',
+    id: 383552850,
+    node_id: 'MDExOlB1bGxSZXF1ZXN0MzgzNTUyODUw',
+    html_url: 'https://github.com/SemaSandbox/astrobee/pull/3',
+    issue_url: 'https://api.github.com/repos/SemaSandbox/astrobee/issues/3',
+    number: 3,
+    state: 'closed',
+    locked: false,
+    title: 'SP-224: Add reporting page, state, and wire up to API calls',
+    user: {
+      login: 'codykenb',
+      id: 6106595,
+      node_id: 'MDQ6VXNlcjYxMDY1OTU=',
+      avatar_url: 'https://avatars.githubusercontent.com/u/6106595?v=4',
+      gravatar_id: '',
+      url: 'https://api.github.com/users/codykenb',
+      html_url: 'https://github.com/codykenb',
+      type: 'User',
+      site_admin: false,
+    },
+    body: '',
+    created_at: '2020-03-04T13:24:05Z',
+    updated_at: '2020-07-30T14:56:13Z',
+    closed_at: '2020-03-04T19:29:26Z',
+    merged_at: '2020-03-04T19:29:26Z',
+    merge_commit_sha: '5586e1fbc2058552232b6e04bde865f0c7c017c7',
+    draft: false,
+    head: {
+      label: 'SemaSandbox:SP-224',
+      ref: 'SP-224',
+      sha: '5cf414e8a9cc594cdef7b73156c8adaf68191724',
+      user: {
+        login: 'SemaSandbox',
+        id: 31629704,
+        node_id: 'MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0',
+        avatar_url: 'https://avatars.githubusercontent.com/u/31629704?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/SemaSandbox',
+        html_url: 'https://github.com/SemaSandbox',
+        type: 'Organization',
+        site_admin: false,
+      },
+      repo: {
+        id: 391620249,
+        node_id: 'MDEwOlJlcG9zaXRvcnkyMzc4ODg0NTI=',
+        name: 'astrobee',
+        full_name: 'SemaSandbox/astrobee',
+        private: true,
+        owner: {
+          login: 'SemaSandbox',
+          id: 31629704,
+          node_id: 'MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0',
+          avatar_url: 'https://avatars.githubusercontent.com/u/31629704?v=4',
+          gravatar_id: '',
+          url: 'https://api.github.com/users/SemaSandbox',
+          html_url: 'https://github.com/SemaSandbox',
+          type: 'Organization',
+          site_admin: false,
+        },
+        html_url: 'https://github.com/SemaSandbox/astrobee',
+        description: 'Sema Code Quality Platform Web App',
+        created_at: '2020-02-03T05:00:24Z',
+        updated_at: '2022-01-10T16:48:10Z',
+        pushed_at: '2022-05-16T18:59:54Z',
+        clone_url: 'https://github.com/SemaSandbox/astrobee.git',
+      },
+    },
+    base: {
+      label: 'SemaSandbox:qa',
+      ref: 'qa',
+      sha: '0eb67e6907592253463eff8d6d21f3494b2213ca',
+      user: {
+        login: 'SemaSandbox',
+        id: 31629704,
+        node_id: 'MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0',
+        avatar_url: 'https://avatars.githubusercontent.com/u/31629704?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/SemaSandbox',
+        html_url: 'https://github.com/SemaSandbox',
+        type: 'Organization',
+        site_admin: false,
+      },
+      repo: {
+        id: 391620249,
+        node_id: 'MDEwOlJlcG9zaXRvcnkyMzc4ODg0NTI=',
+        name: 'astrobee',
+        full_name: 'SemaSandbox/astrobee',
+        private: true,
+        owner: {
+          login: 'SemaSandbox',
+          id: 31629704,
+          node_id: 'MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0',
+          avatar_url: 'https://avatars.githubusercontent.com/u/31629704?v=4',
+          gravatar_id: '',
+          url: 'https://api.github.com/users/SemaSandbox',
+          html_url: 'https://github.com/SemaSandbox',
+          type: 'Organization',
+          site_admin: false,
+        },
+        html_url: 'https://github.com/SemaSandbox/astrobee',
+        description: 'Sema Code Quality Platform Web App',
+        created_at: '2020-02-03T05:00:24Z',
+        updated_at: '2022-01-10T16:48:10Z',
+        pushed_at: '2022-05-16T18:59:54Z',
+        clone_url: 'https://github.com/SemaSandbox/astrobee.git',
+      },
+    },
+    comments: 1,
+    review_comments: 16,
+    maintainer_can_modify: false,
+    commits: 28,
+    additions: 2718,
+    deletions: 2283,
+    changed_files: 21,
+  };
+}
+
 function nockPhoenixInstallation() {
   nock('https://api.github.com')
     .persist()
-    .get('/repositories/237888452')
-    .reply(200, {
-      id: '237888452',
-      name: 'phoenix',
-    })
     .get('/repos/Semalab/phoenix/installation')
     .reply(200, {
       id: '25676597',

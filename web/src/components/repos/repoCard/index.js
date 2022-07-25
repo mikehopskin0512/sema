@@ -76,12 +76,11 @@ function RepoCard(props) {
 
   return (
   <>
-    <ReactTooltip html place="top" type="dark" effect="float"/>
+    <ReactTooltip html type="dark" effect="solid" />
     <Link href={`${PATHS.REPO}/${externalId}`}>
       <div
         className={clsx('p-10 is-flex is-clickable', column === 3 && styles['card-width-3c'], column === 2 && styles['card-width-2c'])}
         aria-hidden
-        style={{zIndex: reposLength - idx}}
       >
         <div className={clsx('box has-background-white is-full-width p-0 border-radius-8px is-flex is-flex-direction-column', styles['card-wrapper'])}>
           <div className={clsx("is-flex is-justify-content-space-between is-align-items-center px-16", styles[repoStatus], styles['repo-card-header'])}>

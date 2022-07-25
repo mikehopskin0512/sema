@@ -3,10 +3,7 @@ import logger from '../../shared/logger';
 import { findByExternalId } from '../../repositories/repositoryService';
 import Repository from '../../repositories/repositoryModel';
 import { EMOJIS_ID } from '../suggestedComments/constants';
-import {
-  addRepositoryToIdentity,
-  findById as findUserById,
-} from '../../users/userService';
+import { addRepositoryToIdentity } from '../../users/userService';
 
 const {
   Types: { ObjectId },
@@ -124,14 +121,13 @@ smartCommentSchema.pre('save', function setGitHubDefaults() {
 
 smartCommentSchema.post('save', async function addRepositoryToUser() {
   if (!this.repositoryId) return;
+  if (!this.userId) return;
 
-  const { userId } = this;
-  const user = userId && (await findUserById(userId));
-  if (!user) return;
+  const repository = this.populated('repositoryId')
+    ? this.repositoryId
+    : await Repository.findById(this.repositoryId).select('-repoStats');
 
-  const repository = await Repository.findById(this.repositoryId);
-  await addRepositoryToIdentity(user, repository);
-  await repository.updateOne({ $addToSet: { 'repoStats.userIds': user._id } });
+  await addRepositoryToIdentity(this.userId, repository);
 });
 
 smartCommentSchema.post('save', async function updateRepoStats() {

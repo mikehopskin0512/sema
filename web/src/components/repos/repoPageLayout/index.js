@@ -102,7 +102,7 @@ function RepoPageLayout({
 
   return (
     <>
-      <ReactTooltip html place="top" type="dark" effect="float"/>
+      <ReactTooltip type="dark" effect="solid" />
       <div className="has-background-white">
           {(auth.isFetching || repositories.isFetching) && initialLoading ? (
             <div

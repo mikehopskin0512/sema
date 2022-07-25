@@ -183,22 +183,13 @@ function RepoList({
           </div>
           <div className="is-flex">
             {/** Return this code when design work will be finished */}
-        {/* <button className={clsx("button border-radius-0 is-small", view === 'list' ? 'is-primary' : '')} onClick={() => setView('list')}>
-          <ListIcon />
-        </button>
-        <button className={clsx("button border-radius-0 is-small", view === 'grid' ? 'is-primary' : '')} onClick={() => setView('grid')}>
-          <GridIcon />
-        </button> */}
-            {/* {isOrganizationAdmin() && (
-              <button
-                type="button"
-                className={clsx("ml-16 button is-primary", styles['add-repo-button'])}
-                onClick={() => setRepoListOpen(true)}
-              >
-                <PlusIcon size="small" />
-                <span className="ml-8">Add a Repo</span>
-              </button>
-            )} */}
+            {/* <button className={clsx("button border-radius-0 is-small", view === 'list' ? 'is-primary' : '')} onClick={() => setView('list')}>
+              <ListIcon />
+            </button>
+            <button className={clsx("button border-radius-0 is-small", view === 'grid' ? 'is-primary' : '')} onClick={() => setView('grid')}>
+              <GridIcon />
+            </button> */}
+
             {/** Return functionality of connection Org when it will be ready */}
             {/* <button
               type="button"
@@ -266,7 +257,7 @@ function RepoList({
                 </div>
               </div>
             )) :
-              <div className="is-fullwidth">
+              <div className={clsx(styles['repos-container'])}>
                 <div className="has-text-weight-semibold is-size-5 ml-10 mb-25">{`Pinned repos (${pinnedRepos.length})`}</div>
                 <div className={clsx("is-flex is-flex-wrap-wrap is-align-content-stretch", !filteredRepos.pinned.length && 'ml-10' )}>{!pinnedRepos.length ? 'No Pinned Repos yet. Add your first one!' : (search && filteredRepos.pinned.length === 0) ? 'No Results Found. We couldn’t find any match' : renderCards(filteredRepos.pinned, true)}</div>
                 <div className="has-text-weight-semibold is-size-5 ml-10 mb-25 mt-40">{`Other repos (${otherReposCount})`}</div>

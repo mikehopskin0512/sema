@@ -8,45 +8,27 @@ import { github } from '../config';
 
 const rateLimitedUntil = new Map();
 
-export const getOctokit = async (repository) => {
-  const isValidCloneURL = repository.cloneUrl?.startsWith('https://');
-  if (!isValidCloneURL) {
-    // Pre-validate hook will fix the format of the
-    // clone URL, if present.
-    await repository.save();
-  }
+export const getOctokit = async (repository) =>
+  (await getOctokitForRepository(repository)) || (await getOctokitFromPool());
 
-  const octokit =
-    (await getOctokitForRepository(repository)) || (await getOctokitFromPool());
+export const getGitHubRepository = async ({ octokit, repository }) => {
+  // TODO: Octokit could be cached by repo ID.
 
-  if (!octokit) {
-    return null;
-  }
+  if (!repository.externalId) return null;
+  if (!octokit) return null;
 
-  if (repository.externalId) {
-    // Probe access to the repository
-    try {
-      const { data: githubRepository } = await octokit.request(
-        '/repositories/{id}',
-        {
-          id: repository.externalId,
-        }
-      );
-      if (!repository.cloneUrl) {
-        // eslint-disable-next-line no-param-reassign
-        repository.cloneUrl = githubRepository.clone_url;
-        await repository.save();
-      }
-    } catch (error) {
-      if (error.status === 404) {
-        // No access.
-        return null;
-      }
-      throw error;
+  try {
+    const { data: repo } = await octokit.request('/repositories/{id}', {
+      id: repository.externalId,
+    });
+    return repo;
+  } catch (error) {
+    if (error.status === 404) {
+      // No access.
+      return null;
     }
+    throw error;
   }
-
-  return octokit;
 };
 
 // See https://github.com/vercel/async-retry
@@ -97,7 +79,8 @@ const appOctokit = new Octokit({
 
 export async function getOctokitForRepository(repository) {
   try {
-    const { owner, repo } = getOwnerAndRepo(repository);
+    const { owner, repo } = repository.getOwnerAndRepo();
+    if (!owner || !repo) return null;
     const { data: installation } = await appOctokit.apps.getRepoInstallation({
       owner,
       repo,
@@ -115,7 +98,7 @@ export async function getOctokitFromPool() {
   const octokits = await getOctokitsWithLimits();
 
   if (octokits.length === 0)
-    throw new Error('Sema app not installed on any account');
+    throw new QuotaError('Sema app not installed on any account');
 
   const now = new Date().getTime();
   const withRemainingLimit = octokits
@@ -126,8 +109,9 @@ export async function getOctokitFromPool() {
     )
     .filter(({ rateLimit }) => rateLimit.resources.core.remaining > 500);
 
-  if (withRemainingLimit.length === 0)
-    throw new Error('Ran out of GitHub API quota');
+  if (withRemainingLimit.length === 0) {
+    throw new QuotaError('Ran out of GitHub API quota');
+  }
 
   const { installation, octokit } = sample(withRemainingLimit);
 
@@ -245,3 +229,5 @@ export async function setSyncUnauthorized(repository) {
 export function resetRateLimitTracking() {
   rateLimitedUntil.clear();
 }
+
+export class QuotaError extends Error {}

@@ -398,17 +398,26 @@ export const renderMenuItems = (personalDashboard, isEmpty, selectedOrganization
   const standardClass = 'navbar-item menu-item has-text-black-950 mr-10 has-text-weight-semibold border-radius-4';
 
   return [
+  /* Commented for a future implementation */
+  /*
   ... personalDashboard && isEmpty(selectedOrganization) ? [{
     title: 'Dashboard Hidden',
     className : standardClass,
     path: PATHS.PERSONAL,
   }] : [],
-  // ... !isEmpty(selectedOrganization) ? [{
-  //   title: 'Dashboard',
-  //   className : standardClass,
-  //   path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`,
-  //   stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.DASHBOARD}`,
-  // }] : [],
+  ... !isEmpty(selectedOrganization) ? [{
+    title: 'Dashboard',
+    className : standardClass,
+    path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`,
+    stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.DASHBOARD}`,
+  }] : [],
+  ... !isEmpty(selectedOrganization) ? [{
+    title: 'Dashboard',
+    className : standardClass,
+    path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`,
+    stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.DASHBOARD}`,
+  }] : [],
+  */
   ... !isEmpty(selectedOrganization) ? [{
     title: 'Repos',
     className : standardClass,

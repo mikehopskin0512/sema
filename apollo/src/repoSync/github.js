@@ -18,7 +18,7 @@ export default function createGitHubImporter(octokit) {
   const unmatchedComments = getUnmatchedCommentsCache();
   const pullRequestCache = getPullRequestCache(octokit);
   const userCache = getUserCache(octokit);
-  const repositoryIdCache = getRepositoryIdCache();
+  const repositoryCache = getRepositoryCache();
 
   return async function importComment(githubComment) {
     if (!githubComment.body) return null;
@@ -42,8 +42,8 @@ export default function createGitHubImporter(octokit) {
     if (!pullRequest) return null;
 
     const { repo, user } = pullRequest.base;
-    const repositoryId = await repositoryIdCache.get(repo.id);
-    const otherComments = await unmatchedComments.get(repositoryId);
+    const repository = await repositoryCache.get(repo.id);
+    const otherComments = await unmatchedComments.get(repository._id);
     const existingComment = await findDuplicate(githubComment, otherComments);
 
     if (existingComment) {
@@ -77,7 +77,7 @@ export default function createGitHubImporter(octokit) {
       githubComment,
       pullRequest,
       userCache,
-      repositoryId,
+      repository,
     });
   };
 }
@@ -122,7 +122,7 @@ async function createNewSmartComment({
   githubComment,
   pullRequest,
   userCache,
-  repositoryId,
+  repository,
 }) {
   const type = getType(githubComment);
   const text = githubComment.body;
@@ -165,7 +165,7 @@ async function createNewSmartComment({
     {
       'comment': sanitizedText,
       'userId': user,
-      repositoryId,
+      'repositoryId': repository,
       githubMetadata,
       'reaction': reaction?._id ?? SmartComment.schema.paths.reaction.default(),
       'tags': tags.map((t) => t._id),
@@ -387,15 +387,13 @@ function getUserCache(octokit) {
   return cache;
 }
 
-// Cache of repository external ID → MongoDB ID.
-function getRepositoryIdCache() {
+// Cache of repository external ID → MongoDB document.
+function getRepositoryCache() {
   const cache = new Cache(50);
-  cache.materialize = async (externalId) => {
-    const { _id } = await Repository.findOne({
+  cache.materialize = async (externalId) =>
+    await Repository.findOne({
       type: 'github',
       externalId,
-    }).select('_id');
-    return _id;
-  };
+    }).select('-repoStats');
   return cache;
 }
