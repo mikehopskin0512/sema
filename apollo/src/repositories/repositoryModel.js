@@ -147,14 +147,15 @@ const parseCloneUrl = (string) => {
 };
 
 repositoriesSchema.methods.updateRepoStats = async function updateRepoStats() {
-  const { reactions, tags } = await getReactionsAndTags(this._id);
+  const reactionsAndTagsPromise = getReactionsAndTags(this._id);
   const update = await Bluebird.props({
     'repoStats.smartCodeReviews': getPullRequestCount(this._id),
     'repoStats.smartComments': getSmartCommentCount(this._id),
     'repoStats.smartCommenters': getCommenterCount(this._id),
     'repoStats.semaUsers': getCommenterCount(this._id),
-    'repoStats.reactions': reactions,
-    'repoStats.tags': tags,
+    'repoStats.userIds': getUserIds(this._id),
+    'repoStats.reactions': reactionsAndTagsPromise.then((o) => o.reactions),
+    'repoStats.tags': reactionsAndTagsPromise.then((o) => o.tags),
   });
 
   await mongoose.model('Repository').updateOne({ _id: this._id }, update);
@@ -184,6 +185,16 @@ export async function getCommenterCount(repositoryId) {
       { $count: 'count' },
     ]);
   return count;
+}
+
+async function getUserIds(repositoryId) {
+  const docs = await mongoose
+    .model('SmartComment')
+    .aggregate([
+      { $match: { repositoryId, userId: { $ne: null } } },
+      { $group: { _id: '$userId' } },
+    ]);
+  return docs;
 }
 
 export async function getReactionsAndTags(repositoryId) {
