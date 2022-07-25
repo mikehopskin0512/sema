@@ -12,8 +12,7 @@ Feature: Web tabs
 
         When I click on the button "personalInsightsTab"
         Then I expect that element "personalInsightsSummariesLbl" becomes displayed
-        #TODO: Andriy please update this element properly or wait for element
-        #And  I expect that element "personalInsightsHeader" becomes displayed        
+        And  I expect that element "personalInsightsHeader" becomes displayed
         Then I expect that the url is "/personal-insights"
         And  I expect that the title is "Personal Insights"
 
@@ -21,11 +20,11 @@ Feature: Web tabs
         And  I expect that element "collectionArea" becomes displayed
         Then I expect that the url is "/snippets"
         And  I expect that the title is "Snippet Collections"
-
-        When I click on the button "invitationsTab"
-        And  I expect that element "invitesSection" becomes displayed
-        Then I expect that the url is "/invitations"
-        And  I expect that the title is "Invites"
+#
+#        When I click on the button "invitationsTab"
+#        And  I expect that element "invitesSection" becomes displayed
+#        Then I expect that the url is "/invitations"
+#        And  I expect that the title is "Invites"
 
         When I click on the button "supportTab"
         And  I expect that element "supportSection" becomes displayed

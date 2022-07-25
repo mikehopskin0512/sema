@@ -50,10 +50,12 @@ Feature: Portfolios
     When I click on the element "reposTab"
     And  I pause for 3000ms
     Then I expect that element "reposContainer" becomes displayed
+    Then I expect that element "searchRepoInput" becomes displayed
+    When I set "pho" to the inputfield "searchRepoInput"
+    And  I pause for 2000ms
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
-    And  I pause for 2000ms
-    And  I click on the element "1stReposCard" if visible
+    And  I pause for 1000ms
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "last30DaysDateRange" becomes displayed
@@ -136,10 +138,12 @@ Feature: Portfolios
     When I click on the element "reposTab"
     And  I pause for 3000ms
     Then I expect that element "reposContainer" becomes displayed
+    Then I expect that element "searchRepoInput" becomes displayed
+    When I set "pho" to the inputfield "searchRepoInput"
+    And  I pause for 2000ms
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
-    And  I pause for 2000ms
-    And  I click on the element "1stReposCard" if visible
+    And  I pause for 1000ms
     Then I expect that element "codeStatsTabBtn" becomes displayed
     When I click on the element "codeStatsTabBtn"
     Then I expect that element "dateRangeFilter" becomes displayed
@@ -219,10 +223,12 @@ Feature: Portfolios
     When I click on the element "reposTab"
     And  I pause for 3000ms
     Then I expect that element "reposContainer" becomes displayed
+    Then I expect that element "searchRepoInput" becomes displayed
+    When I set "pho" to the inputfield "searchRepoInput"
+    And  I pause for 2000ms
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
-    And  I pause for 2000ms
-    And  I click on the element "1stReposCard" if visible
+    And  I pause for 1000ms
     Then I expect that element "codeStatsTabBtn" becomes displayed
     When I click on the element "codeStatsTabBtn"
     Then I expect that element "dateRangeFilter" becomes displayed
@@ -304,10 +310,12 @@ Feature: Portfolios
     When I click on the element "reposTab"
     And  I pause for 3000ms
     Then I expect that element "reposContainer" becomes displayed
+    Then I expect that element "searchRepoInput" becomes displayed
+    When I set "pho" to the inputfield "searchRepoInput"
+    And  I pause for 2000ms
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
-    And  I pause for 2000ms
-    And  I click on the element "1stReposCard" if visible
+    And  I pause for 1000ms
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "last30DaysDateRange" becomes displayed
@@ -382,10 +390,12 @@ Feature: Portfolios
     When I click on the element "reposTab"
     And  I pause for 3000ms
     Then I expect that element "reposContainer" becomes displayed
+    Then I expect that element "searchRepoInput" becomes displayed
+    When I set "pho" to the inputfield "searchRepoInput"
+    And  I pause for 2000ms
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
-    And  I pause for 2000ms
-    And  I click on the element "1stReposCard" if visible
+    And  I pause for 1000ms
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "last30DaysDateRange" becomes displayed
@@ -457,10 +467,12 @@ Feature: Portfolios
     When I click on the element "reposTab"
     And  I pause for 3000ms
     Then I expect that element "reposContainer" becomes displayed
+    Then I expect that element "searchRepoInput" becomes displayed
+    When I set "pho" to the inputfield "searchRepoInput"
+    And  I pause for 2000ms
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
-    And  I pause for 2000ms
-    And  I click on the element "1stReposCard" if visible
+    And  I pause for 1000ms
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "last30DaysDateRange" becomes displayed
@@ -521,10 +533,12 @@ Feature: Portfolios
     When I click on the element "reposTab"
     And  I pause for 3000ms
     Then I expect that element "reposContainer" becomes displayed
+    Then I expect that element "searchRepoInput" becomes displayed
+    When I set "pho" to the inputfield "searchRepoInput"
+    And  I pause for 2000ms
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
     And  I pause for 2000ms
-    And  I click on the element "1stReposCard" if visible
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "last30DaysDateRange" becomes displayed
@@ -572,10 +586,12 @@ Feature: Portfolios
     When I click on the element "reposTab"
     And  I pause for 3000ms
     Then I expect that element "reposContainer" becomes displayed
+    Then I expect that element "searchRepoInput" becomes displayed
+    When I set "pho" to the inputfield "searchRepoInput"
+    And  I pause for 2000ms
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
-    And  I pause for 2000ms
-    And  I click on the element "1stReposCard" if visible
+    And  I pause for 1000ms
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "last30DaysDateRange" becomes displayed
@@ -652,10 +668,12 @@ Feature: Portfolios
     When I click on the element "reposTab"
     And  I pause for 3000ms
     Then I expect that element "reposContainer" becomes displayed
+    Then I expect that element "searchRepoInput" becomes displayed
+    When I set "pho" to the inputfield "searchRepoInput"
+    And  I pause for 2000ms
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
-    And  I pause for 2000ms
-    And  I click on the element "1stReposCard" if visible
+    And  I pause for 1000ms
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "last30DaysDateRange" becomes displayed
@@ -757,10 +775,12 @@ Feature: Portfolios
     When I click on the element "reposTab"
     And  I pause for 3000ms
     Then I expect that element "reposContainer" becomes displayed
+    Then I expect that element "searchRepoInput" becomes displayed
+    When I set "pho" to the inputfield "searchRepoInput"
+    And  I pause for 2000ms
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
-    And  I pause for 2000ms
-    And  I click on the element "1stReposCard" if visible
+    And  I pause for 1000ms
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "last30DaysDateRange" becomes displayed
@@ -862,10 +882,12 @@ Feature: Portfolios
 #    When I click on the element "reposTab"
 #    And  I pause for 3000ms
 #    Then I expect that element "reposContainer" becomes displayed
+#    Then I expect that element "searchRepoInput" becomes displayed
+#    When I set "pho" to the inputfield "searchRepoInput"
+#    And  I pause for 2000ms
 #    And  I expect that element "1stReposCard" becomes displayed
 #    When I click on the element "1stReposCard"
 #    And  I pause for 2000ms
-#    And  I click on the element "1stReposCard" if visible
 #    Then I expect that element "dateRangeFilter" becomes displayed
 #    When I click on the element "dateRangeFilter"
 #    Then I expect that element "last30DaysDateRange" becomes displayed
@@ -961,9 +983,10 @@ Feature: Portfolios
 #
 #    When I click on the element "reposTab"
 #    Then I expect that element "reposContainer" becomes displayed
-#    And  I pause for 3000ms
-#    And  I expect that element "1stReposCard" becomes displayed
-#    And  I pause for 1000ms
+#    Then I expect that element "searchRepoInput" becomes displayed
+#    When I set "pho" to the inputfield "searchRepoInput"
+#    And  I pause for 1000ms#    And  I expect that element "1stReposCard" becomes displayed
+#    And  I pause for 2000ms
 #    When I click on the element "1stReposCard"
 #    And  I pause for 1000ms
 #    Then I expect that element "dateRangeFilter" becomes displayed
@@ -1135,10 +1158,13 @@ Feature: Portfolios
     When I click on the element "reposTab"
     And  I pause for 3000ms
     Then I expect that element "reposContainer" becomes displayed
+    Then I expect that element "searchRepoInput" becomes displayed
+    When I set "pho" to the inputfield "searchRepoInput"
+    And  I pause for 2000ms
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
-    And  I pause for 2000ms
-    And  I click on the element "1stReposCard" if visible
+    And  I pause for 1000ms
+
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "last30DaysDateRange" becomes displayed
@@ -1164,7 +1190,7 @@ Feature: Portfolios
     When I click on the element "snapshotLibraryTab"
     Then I expect that element "snapshotListTitles" becomes displayed
     And  I expect that element "snapshotListThreeDotsBtns" becomes displayed
-    
+    And  I pause for 1000ms
     When I click on the element "snapshotListThreeDotsBtns"
     Then I expect that element "snapshotListEditBtn" becomes displayed
     When I click on the element "snapshotListEditBtn"
@@ -1236,10 +1262,12 @@ Feature: Portfolios
     When I click on the element "reposTab"
     And  I pause for 3000ms
     Then I expect that element "reposContainer" becomes displayed
+    Then I expect that element "searchRepoInput" becomes displayed
+    When I set "pho" to the inputfield "searchRepoInput"
+    And  I pause for 2000ms
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
-    And  I pause for 2000ms
-    And  I click on the element "1stReposCard" if visible
+    And  I pause for 1000ms
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "last30DaysDateRange" becomes displayed
@@ -1267,7 +1295,7 @@ Feature: Portfolios
     Then I expect that element "snapshotListTitles" becomes displayed
     And  I expect that element "snapshotListTitles" does appear exactly "1" times
     And  I expect that element "snapshotListThreeDotsBtns" becomes displayed
-
+    And  I pause for 1000ms
     When I click on the element "snapshotListThreeDotsBtns"
     Then I expect that element "snapshotListDuplicateBtn" becomes displayed
     When I click on the element "snapshotListDuplicateBtn"
