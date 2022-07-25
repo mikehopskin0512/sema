@@ -6,7 +6,7 @@ import SmartComment from '../comments/smartComments/smartCommentModel';
 import createGitHubImporter from './github';
 import {
   withOctokit,
-  getOwnerAndRepo,
+  getGitHubRepository,
   importReviewsFromPullRequest,
   setSyncErrored,
   setSyncUnauthorized,
@@ -48,6 +48,11 @@ export default async function importRepository({ id }) {
       logger.info(
         `Repo sync: Not authorized to access repository ${repository.fullName} ${id}`
       );
+      await setSyncUnauthorized(repository);
+      return;
+    }
+
+    if (!(await probeRepository({ repository, octokit }))) {
       await setSyncUnauthorized(repository);
       return;
     }
@@ -160,7 +165,7 @@ async function* resumablePaginate({
     return;
   }
 
-  const { owner, repo } = getOwnerAndRepo(repository);
+  const { owner, repo } = repository.getOwnerAndRepo();
   const pages = octokit.paginate.iterator(endpoint, {
     owner,
     repo,
@@ -232,6 +237,21 @@ async function updateLastUpdatedTimestamp({ repository, type }) {
       $max: { [`sync.progress.${type}.lastUpdatedAt`]: lastUpdatedAt },
     });
   }
+}
+
+async function probeRepository({ octokit, repository }) {
+  const repo = await getGitHubRepository({ octokit, repository });
+
+  if (repo) {
+    if (!repository.cloneUrl) {
+      repository.set({ cloneUrl: repo.clone_url });
+      await repository.save();
+    }
+
+    return true;
+  }
+
+  return false;
 }
 
 export { queue };

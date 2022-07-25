@@ -60,6 +60,7 @@ describe('GET /identities/github/cb', () => {
           id: 175071530,
           name: 'reactivesearch',
           clone_url: 'https://github.com/jrock17/reactivesearch.git',
+          visibility: 'public',
           owner: {
             id: 1270524,
             login: 'jrock17',
@@ -70,6 +71,7 @@ describe('GET /identities/github/cb', () => {
           id: 237888452,
           name: 'phoenix',
           clone_url: 'https://github.com/Semalab/phoenix.git',
+          visibility: 'public',
           owner: {
             id: 31629704,
             login: 'Semalab',
@@ -80,6 +82,7 @@ describe('GET /identities/github/cb', () => {
           id: 391620249,
           name: 'astrobee',
           clone_url: 'https://github.com/SemaSandbox/astrobee.git',
+          visibility: 'public',
           owner: {
             id: 80909084,
             login: 'SemaSandbox',
@@ -203,6 +206,11 @@ describe('GET /identities/github/cb', () => {
       it('should be added to the identity', () => {
         const ids = user.identities[0].repositories.map((r) => r.id).sort();
         expect([...ids]).toEqual(['175071530', '237888452', '391620249']);
+      });
+
+      it('should be marked as public', () => {
+        const visibility = [...new Set(repositories.map((r) => r.visibility))];
+        expect(visibility).toEqual(['public']);
       });
     });
 

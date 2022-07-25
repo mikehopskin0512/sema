@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
 import Bluebird from 'bluebird';
 import { autoIndex } from '../config';
+import {
+  getOctokit,
+  getGitHubRepository,
+  QuotaError,
+} from '../repoSync/repoSyncService';
 
 const tagsScheme = new mongoose.Schema(
   {
@@ -107,6 +112,10 @@ const repositoriesSchema = new mongoose.Schema(
       type: repoStatsSchema,
       default: {},
     },
+    visibility: {
+      type: String,
+      enum: ['public', 'private'],
+    },
   },
   { timestamps: true }
 );
@@ -123,7 +132,35 @@ repositoriesSchema.pre('validate', function setFullNameAndCloneUrl() {
   this.fullName = fullName;
 });
 
+repositoriesSchema.pre('validate', async function setVisibility() {
+  if (!this.externalId) return;
+  if (this.visibility) return;
+
+  try {
+    const octokit = await getOctokit(this);
+    const repo = await getGitHubRepository({ octokit, repository: this });
+    this.visibility = repo?.visibility ?? 'private';
+  } catch (error) {
+    // Can't determine visibility now.
+    if (error instanceof QuotaError) return;
+    throw error;
+  }
+});
+
+repositoriesSchema.methods.getNormalizedCloneUrl =
+  function getNormalizedCloneUrl() {
+    const { cloneUrl } = parseCloneUrl(this.cloneUrl);
+    return cloneUrl;
+  };
+
+repositoriesSchema.methods.getOwnerAndRepo = function getOwnerAndRepo() {
+  const { owner, repo } = parseCloneUrl(this.cloneUrl);
+  return { owner, repo };
+};
+
 const parseCloneUrl = (string) => {
+  if (!string) return {};
+
   const url = string.includes('@')
     ? new URL(`http://${string.replace(':', '/')}`)
     : new URL(string);

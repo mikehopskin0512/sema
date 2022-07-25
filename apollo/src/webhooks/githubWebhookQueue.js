@@ -25,13 +25,8 @@ export default async function githubWebhook(body) {
     return;
   }
 
-  if (!repository.cloneUrl && body.repository?.clone_url) {
-    repository.cloneUrl = body.repository.clone_url;
-    await repository.save();
-    logger.info(
-      `Updated repository clone URL for ${repository.fullName} ${repository.cloneUrl}`
-    );
-  }
+  repository.cloneUrl = body.repository.clone_url;
+  await repository.save();
 
   const octokit = await getOctokit(repository);
   const importComment = createGitHubImporter(octokit);
