@@ -6,8 +6,8 @@ const enabled = process.env.NODE_ENV === 'production';
 
 const rollbar = new Rollbar({
   accessToken: rollbarToken,
-  captureUncaught: true,
-  captureUnhandledRejections: true,
+  captureUncaught: enabled,
+  captureUnhandledRejections: enabled,
   environment,
   enabled,
 });
