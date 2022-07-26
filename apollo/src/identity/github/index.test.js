@@ -1,7 +1,5 @@
 import nock from 'nock';
 import { decode } from 'jsonwebtoken';
-import path from 'path';
-import fs from 'fs';
 import apollo from '../../../test/apolloClient';
 import User from '../../users/userModel';
 import { createGhostUser } from '../../users/userService';
@@ -9,12 +7,7 @@ import { getRepoByUserIds } from '../../repositories/repositoryService';
 import { queue as importRepositoryQueue } from '../../repoSync/importRepositoryQueue';
 import { getOrganizationsByUser } from '../../organizations/organizationService';
 import createUser from '../../../test/helpers/userHelper';
-
-const justin = JSON.parse(
-  fs.readFileSync(
-    path.join(__dirname, '../../../test/fixtures/github/users/jrock17.json')
-  )
-);
+import { fixtures as githubFixtures } from '../../../test/nocks/github';
 
 describe('GET /identities/github/cb', () => {
   let status;
@@ -38,7 +31,7 @@ describe('GET /identities/github/cb', () => {
     nock('https://api.github.com')
       .persist()
       .get('/user')
-      .reply(200, justin)
+      .reply(200, githubFixtures.users.get('jrock17'))
       .get('/user/emails')
       .reply(200, [
         {
