@@ -27,7 +27,7 @@ pipeline {
 
         stage("Create branch file"){
             steps{
-                writeFile file: 'branch.txt', text: "export BRANCH=${params.ENVIRONMENT}"
+                writeFile file: 'web/branch.txt', text: "export BRANCH=${params.ENVIRONMENT}"
             }
         }
 

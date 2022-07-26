@@ -7,7 +7,7 @@ readonly AWS_REGION="us-east-1"
 
 source branch.txt || true
 
-if [ -z ${2} ]; then
+if [[ -z ${2} ]]; then
     BRANCH="${2}"
 fi
 
