@@ -76,7 +76,8 @@ const RepoSocialCircle = ({ repoId }) => {
 
   const socials = [
     { name: 'twitter', icon: TwitterIcon, onClick: () => shareWithTwitter({ text: 'Check out my Github Social Circle!', url: socialCircleUrl })},
-    { name: 'facebook', icon: FacebookIcon, onClick: () => shareWithFacebook({ url: socialCircleUrl })},
+    //ToDo: return this code when facebook sharing will be fixed
+    //{ name: 'facebook', icon: FacebookIcon, onClick: () => shareWithFacebook({ url: socialCircleUrl })},
     { name: 'linkedin', icon: LinkedinIcon, onClick: () => shareWithLinkedIn({ url: socialCircleUrl })},
   ];
 
