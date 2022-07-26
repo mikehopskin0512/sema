@@ -2,6 +2,7 @@ import glob from 'glob';
 import path from 'path';
 import Ironium from 'ironium';
 import AWS from 'aws-sdk';
+import mongoose from 'mongoose';
 import { environment } from './config';
 import logger from './shared/logger';
 
@@ -17,6 +18,7 @@ if (isProduction) {
   );
   Ironium.configure({
     credentials: new AWS.RemoteCredentials(),
+    canScheduleJob,
     region,
   });
 }
@@ -90,4 +92,36 @@ function getQueueNameFromFile(filename) {
     .toLowerCase();
   const queueName = `${prefix}-${environment}-${suffix}`;
   return queueName;
+}
+
+let ironiumCollectionPromise;
+
+// Coordinate Ironium workers to prevent duplicate scheduled jobs.
+async function canScheduleJob(jobName, timestamp) {
+  if (!ironiumCollectionPromise) {
+    ironiumCollectionPromise = getIroniumCollection();
+  }
+  const collection = await ironiumCollectionPromise;
+  try {
+    const { insertedCount } = await collection.insertOne({
+      jobName,
+      timestamp,
+    });
+    const acquiredLock = insertedCount === 1;
+    return acquiredLock;
+  } catch (error) {
+    if (error.code === 11000) {
+      return false;
+    }
+    throw error;
+  }
+}
+
+async function getIroniumCollection() {
+  const collection = mongoose.connection.collection('ironium');
+  await Promise.all([
+    collection.createIndex({ jobName: 1 }, { unique: true }),
+    collection.createIndex({ timestamp: 1 }, { expireAfterSeconds: 59 }),
+  ]);
+  return collection;
 }
