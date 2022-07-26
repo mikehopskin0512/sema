@@ -2,7 +2,7 @@
 set -euo pipefail
 readonly NAME=phoenix
 readonly ENV="${1}"
-readonly BRANCH="${2}"
+readonly BRANCH="${2}" || true
 readonly AWS_ACCOUNT="091235034633"
 readonly AWS_REGION="us-east-1"
 
