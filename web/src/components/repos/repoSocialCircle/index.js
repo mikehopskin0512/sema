@@ -86,6 +86,18 @@ const RepoSocialCircle = ({ repoId }) => {
     setTimeout(() => changeIsCopied(false), 3000);
   };
 
+  const renderIcons = (iconsArray) => iconsArray.map(({
+      onClick,
+      icon,
+    }) => (
+      <div className={clsx('is-flex mr-16 is-clickable', styles['social-item'])} onClick={onClick}>
+        {icon({
+          color: blue700,
+          size: 'medium',
+        })}
+      </div>
+    ));
+
   if (isRepoPrivate) {
     return <PrivateRepoBanner />
   }
@@ -118,29 +130,9 @@ const RepoSocialCircle = ({ repoId }) => {
         <div className={clsx('pr-30', styles.socials)}>
           <span className={styles['socials-title']}>Share your Circle</span>
           <div className="mt-16 is-flex is-justify-content-center">
-            {actions.map(({
-              onClick,
-              icon,
-            }) => (
-              <div className={clsx('is-flex mr-16 is-clickable', styles['social-item'])} onClick={onClick}>
-                {icon({
-                  color: blue700,
-                  size: 'medium',
-                })}
-              </div>
-            ))}
+            {renderIcons(actions)}
             <div className={styles.divider} />
-            {socials.map(({
-              onClick,
-              icon,
-            }) => (
-              <div className={clsx('is-flex mr-16 is-clickable', styles['social-item'])} onClick={onClick}>
-                {icon({
-                  color: blue700,
-                  size: 'medium',
-                })}
-              </div>
-            ))}
+            {renderIcons(socials)}
           </div>
         </div>
       </div>
