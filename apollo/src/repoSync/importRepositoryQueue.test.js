@@ -2500,27 +2500,6 @@ describe('Import Repository Queue', () => {
         .reply(404);
     }
 
-    const pullRequestComments = [
-      {
-        url: 'https://api.github.com/repos/SemaSandbox/astrobee/pulls/comments/545313646',
-        pull_request_review_id: 554880620,
-        id: 545313646,
-        node_id: 'MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDU0NTMxMzY0Ng==',
-        commit_id: '7db0665a4c0f7e496d96920f1fe0db207bb4437c',
-        original_commit_id: '43d87631f9550c05ef2786513d76b4ba49c6aadb',
-        user: {
-          login: 'pangeaware',
-          id: 1045023,
-          type: 'User',
-        },
-        body: '@jrock17 this function feels like it should live somewhere else as well with repo code.',
-        created_at: '2020-12-17T18:35:40Z',
-        updated_at: '2020-12-17T20:30:14Z',
-        pull_request_url:
-          'https://api.github.com/repos/SemaSandbox/astrobee/pulls/3',
-      },
-    ];
-
     beforeAll(async () => {
       resetNocksForPublicRepository();
 
@@ -2557,7 +2536,7 @@ describe('Import Repository Queue', () => {
           .reply(200, function recordTokenAndReply() {
             [, tokenUsedForGitHubAPI] =
               this.req.headers.authorization[0].split(' ');
-            return pullRequestComments;
+            return getPullRequestCommentsForAstrobee();
           });
       });
 
@@ -2635,7 +2614,7 @@ describe('Import Repository Queue', () => {
                 ];
               }
               if (token === 'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a') {
-                return [200, pullRequestComments];
+                return [200, getPullRequestCommentsForAstrobee()];
               }
               return [500];
             })
@@ -2822,7 +2801,7 @@ describe('Import Repository Queue', () => {
                 ];
               }
               if (token === 'ghs_4Z0VGC4uvSelTLk3bbumXa8IycJNAx3I0j3a') {
-                return [200, pullRequestComments];
+                return [200, getPullRequestCommentsForAstrobee()];
               }
               return [500];
             })
@@ -3027,6 +3006,8 @@ describe('Import Repository Queue', () => {
   });
 
   describe('legacy repository with no clone URL', () => {
+    let comments;
+
     beforeAll(async () => {
       resetNocks();
       await Repository.deleteMany();
@@ -3037,22 +3018,135 @@ describe('Import Repository Queue', () => {
       repository = await createRepository({
         name: 'phoenix',
         type: 'github',
-        id: '237888452',
+        id: '391620249',
       });
-      await startSync({ repository, user });
+    });
+
+    describe('processing queue', () => {
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/SemaSandbox/astrobee/pulls/comments')
+          .query(() => true)
+          .reply(200, getPullRequestCommentsForAstrobee())
+          .get('/repos/SemaSandbox/astrobee/issues/comments')
+          .query(() => true)
+          .reply(200, [])
+          .get('/repos/SemaSandbox/astrobee/pulls')
+          .query(() => true)
+          .reply(200, [])
+          .get('/repos/SemaSandbox/astrobee/pulls/3')
+          .reply(200, getPullRequestDetailAstrobeePR());
+      });
+
+      beforeAll(async () => {
+        await handler({ id: repository.id });
+      });
+
+      beforeAll(async () => {
+        comments = await findSmartCommentsByExternalId(repository.externalId);
+      });
+
+      it('should import comments', () => {
+        expect(comments.length).toBe(1);
+      });
+
+      describe('repository', () => {
+        beforeAll(async () => {
+          repository = await Repository.findById(repository._id);
+        });
+
+        it('should have sync status "completed"', () => {
+          expect(repository.sync.status).toBe('completed');
+        });
+
+        it('should have the updated full name', () => {
+          expect(repository.fullName).toBe('SemaSandbox/astrobee');
+        });
+
+        it('should have the updated clone URL', () => {
+          expect(repository.cloneUrl).toBe(
+            'https://github.com/SemaSandbox/astrobee'
+          );
+        });
+      });
+    });
+  });
+
+  describe('renamed repository', () => {
+    let comments;
+
+    beforeAll(async () => {
+      resetNocks();
+      await Repository.deleteMany();
+      await SmartComment.deleteMany();
     });
 
     beforeAll(async () => {
-      await handler({ id: repository.id });
-    });
-
-    describe('repository', () => {
-      beforeAll(async () => {
-        repository = await Repository.findById(repository._id);
+      repository = await createRepository({
+        name: 'astromoth',
+        type: 'github',
+        id: '391620249',
+        cloneUrl: 'https://github.com/SemaSandbox/astromoth',
+        fullName: 'SemaSandbox/astromoth',
       });
 
-      it('should have sync status errored', () => {
-        expect(repository.sync.status).toBe('errored');
+      assert.equal(
+        repository.cloneUrl,
+        'https://github.com/SemaSandbox/astromoth'
+      );
+      assert.equal(repository.fullName, 'SemaSandbox/astromoth');
+    });
+
+    describe('processing queue', () => {
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/SemaSandbox/astrobee/pulls/comments')
+          .query(() => true)
+          .reply(200, getPullRequestCommentsForAstrobee())
+          .get('/repos/SemaSandbox/astrobee/issues/comments')
+          .query(() => true)
+          .reply(200, [])
+          .get('/repos/SemaSandbox/astrobee/pulls')
+          .query(() => true)
+          .reply(200, [])
+          .get('/repos/SemaSandbox/astrobee/pulls/3')
+          .reply(200, getPullRequestDetailAstrobeePR());
+      });
+
+      beforeAll(async () => {
+        await handler({ id: repository.id });
+      });
+
+      beforeAll(async () => {
+        comments = await findSmartCommentsByExternalId(repository.externalId);
+      });
+
+      it('should import comments', () => {
+        expect(comments.length).toBe(1);
+      });
+
+      describe('repository', () => {
+        beforeAll(async () => {
+          repository = await Repository.findById(repository._id);
+        });
+
+        it('should have sync status "completed"', () => {
+          expect(repository.sync.status).toBe('completed');
+        });
+
+        it('should have the updated name', () => {
+          expect(repository.name).toBe('astrobee');
+        });
+
+        it('should have the updated full name', () => {
+          expect(repository.fullName).toBe('SemaSandbox/astrobee');
+        });
+
+        it('should have the updated clone URL', () => {
+          expect(repository.cloneUrl).toBe(
+            'https://github.com/SemaSandbox/astrobee'
+          );
+        });
       });
     });
   });
@@ -4227,4 +4321,27 @@ function nockPhoenixInstallation() {
     .reply(200, {
       id: '25676597',
     });
+}
+
+function getPullRequestCommentsForAstrobee() {
+  return [
+    {
+      url: 'https://api.github.com/repos/SemaSandbox/astrobee/pulls/comments/545313646',
+      pull_request_review_id: 554880620,
+      id: 545313646,
+      node_id: 'MDI0OlB1bGxSZXF1ZXN0UmV2aWV3Q29tbWVudDU0NTMxMzY0Ng==',
+      commit_id: '7db0665a4c0f7e496d96920f1fe0db207bb4437c',
+      original_commit_id: '43d87631f9550c05ef2786513d76b4ba49c6aadb',
+      user: {
+        login: 'pangeaware',
+        id: 1045023,
+        type: 'User',
+      },
+      body: '@jrock17 this function feels like it should live somewhere else as well with repo code.',
+      created_at: '2020-12-17T18:35:40Z',
+      updated_at: '2020-12-17T20:30:14Z',
+      pull_request_url:
+        'https://api.github.com/repos/SemaSandbox/astrobee/pulls/3',
+    },
+  ];
 }

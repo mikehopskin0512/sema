@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import glob from 'glob';
 
-const fixtures = {
+export const fixtures = {
   repos: glob
     .sync(path.join(__dirname, '../fixtures/github/repos/*.json'))
     .reduce((accum, filename) => {
