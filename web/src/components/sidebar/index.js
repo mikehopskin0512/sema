@@ -41,9 +41,9 @@ function Sidebar({ children, ...menuItemProps }) {
         />
         
         <MenuItem
-          pathName="stats"
-          name="Repo Insights"
-          icon={<CodeStatsIcon />}
+          pathName="activity"
+          name="Activity Logs"
+          icon={<ActivityLogIcon />}
           {...menuItemProps}
         />
       </div>
