@@ -16,6 +16,8 @@ if [[ -z ${BRANCH} ]]; then
     exit 1
 fi
 
+source branch.txt || true
+
 NODE_ENV=production
 DOCKER_FILE=../.docker/web/Dockerfile.prod
 SHA1=$(git rev-parse HEAD)
