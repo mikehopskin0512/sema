@@ -11,8 +11,8 @@ export const shareWithTwitter = ({ text = '', url = '', via ='', hashtags = '' }
   window.open(link, '_blank');
 }
 
-export const shareWithLinkedIn = ({ url = '', title = '', summary = '', source = '' }) => {
-  const link =  `${LINKEDIN_URL}/shareArticle?url=${url}&summary=${summary}&title=${title}&source=${source}`;
+export const shareWithLinkedIn = ({ url = '' }) => {
+  const link =  `${LINKEDIN_URL}/shareArticle?url=${url}`;
   window.open(link, '_blank');
 }
 
