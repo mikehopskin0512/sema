@@ -18,6 +18,7 @@ import Logo from '../Logo';
 import { PATHS } from '../../utils/constants';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import UserHeaderNav from './UserHeaderNav';
+import { isEmpty } from 'lodash';
 
 const { fetchOrganizationsOfUser } = organizationsOperations;
 const { fetchPortfoliosOfUser } = portfoliosOperations;
@@ -56,7 +57,7 @@ function Header() {
   const closeSupportForm = () => setSupportForm(false);
 
   const handleClick = () => {
-    if (selectedOrganization) {
+    if (selectedOrganization && !isEmpty(selectedOrganization)) {
       return router.push(`${PATHS.ORGANIZATIONS._}/${selectedOrganization?.organization?._id}${PATHS.DASHBOARD}`);
     }
     return router.push(`${PATHS.DASHBOARD}`);
