@@ -9,8 +9,6 @@
 }
 
 .organization-insights-header-wrapper {
-  padding-left: 6%;
-  padding-right: 6%;
 }
 
 .organization-insights-tag {
@@ -75,4 +73,9 @@
   > div:first-child {
     padding-left: 0 !important;
   }
+}
+
+.organization-insights-container {
+  padding-left: 6%;
+  padding-right: 6%;
 }

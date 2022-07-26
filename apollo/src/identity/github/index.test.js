@@ -1,7 +1,5 @@
 import nock from 'nock';
 import { decode } from 'jsonwebtoken';
-import path from 'path';
-import fs from 'fs';
 import apollo from '../../../test/apolloClient';
 import User from '../../users/userModel';
 import { createGhostUser } from '../../users/userService';
@@ -9,12 +7,7 @@ import { getRepoByUserIds } from '../../repositories/repositoryService';
 import { queue as importRepositoryQueue } from '../../repoSync/importRepositoryQueue';
 import { getOrganizationsByUser } from '../../organizations/organizationService';
 import createUser from '../../../test/helpers/userHelper';
-
-const justin = JSON.parse(
-  fs.readFileSync(
-    path.join(__dirname, '../../../test/fixtures/github/users/jrock17.json')
-  )
-);
+import { fixtures as githubFixtures } from '../../../test/nocks/github';
 
 describe('GET /identities/github/cb', () => {
   let status;
@@ -38,7 +31,7 @@ describe('GET /identities/github/cb', () => {
     nock('https://api.github.com')
       .persist()
       .get('/user')
-      .reply(200, justin)
+      .reply(200, githubFixtures.users.get('jrock17'))
       .get('/user/emails')
       .reply(200, [
         {
@@ -60,6 +53,7 @@ describe('GET /identities/github/cb', () => {
           id: 175071530,
           name: 'reactivesearch',
           clone_url: 'https://github.com/jrock17/reactivesearch.git',
+          visibility: 'public',
           owner: {
             id: 1270524,
             login: 'jrock17',
@@ -70,6 +64,7 @@ describe('GET /identities/github/cb', () => {
           id: 237888452,
           name: 'phoenix',
           clone_url: 'https://github.com/Semalab/phoenix.git',
+          visibility: 'public',
           owner: {
             id: 31629704,
             login: 'Semalab',
@@ -80,6 +75,7 @@ describe('GET /identities/github/cb', () => {
           id: 391620249,
           name: 'astrobee',
           clone_url: 'https://github.com/SemaSandbox/astrobee.git',
+          visibility: 'public',
           owner: {
             id: 80909084,
             login: 'SemaSandbox',
@@ -203,6 +199,11 @@ describe('GET /identities/github/cb', () => {
       it('should be added to the identity', () => {
         const ids = user.identities[0].repositories.map((r) => r.id).sort();
         expect([...ids]).toEqual(['175071530', '237888452', '391620249']);
+      });
+
+      it('should be marked as public', () => {
+        const visibility = [...new Set(repositories.map((r) => r.visibility))];
+        expect(visibility).toEqual(['public']);
       });
     });
 

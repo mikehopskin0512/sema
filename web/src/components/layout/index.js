@@ -10,6 +10,8 @@ import ExtensionStatus from '../extensionStatus';
 import { FACEBOOK_VERIFICATION_META, noContactUs, PATHS } from '../../utils/constants';
 import { blue200, blue900, white0 } from '../../../styles/_colors.module.scss';
 import OrganizationCreateBanner from '../banners/organizationCreate';
+import { GithubSyncPromBanner } from '../repos/repoSocialCircle/banners/githubSyncPromBanner';
+import { GithubAppInstallBanner } from '../repos/repoSocialCircle/banners/githubAppBanner';
 
 const widescreenPages = [
   `${PATHS.REPO}/[repoId]`,
@@ -80,6 +82,8 @@ const withLayout = (Page) => (props) => {
       <ExtensionStatus />
       {!hasNoHeader && (<Header />) }
       <OrganizationCreateBanner />
+      <GithubSyncPromBanner />
+      <GithubAppInstallBanner />
       <div className={clsx(!isWideScreen && 'container', !noContactUs.includes(pathname) && 'pb-250')}>
         <Page {...props} />
       </div>

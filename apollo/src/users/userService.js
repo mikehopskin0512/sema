@@ -484,14 +484,16 @@ export const updatePreviewImgLink = async (userId, repoId, imgUrl) => {
     const identityRepos = user.identities[0].repositories || [];
     const updatedRepo = identityRepos.find((repo) => repo.id === repoId);
     updatedRepo.previewImgLink = imgUrl;
-    const newIdentity = Object.assign(user.identities[0], { repositories: identityRepos });
+    const newIdentity = Object.assign(user.identities[0], {
+      repositories: identityRepos,
+    });
     await updateIdentity(user, newIdentity);
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
     throw error;
   }
-}
+};
 
 export const addRepositoryToIdentity = async (user, repository) => {
   try {
@@ -710,7 +712,11 @@ export async function getOrganizationUsersMetrics(organizationId) {
 
 export const findUsersByGitHubHandle = async (handles) => {
   try {
-    return User.find({ identities: { $elemMatch: { username: { $in: handles } } } }).lean().exec()
+    return User.find({
+      identities: { $elemMatch: { username: { $in: handles } } },
+    })
+      .lean()
+      .exec();
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
@@ -731,9 +737,55 @@ export const findByHandle = async (handle) => {
   }
 };
 
-export const createGhostUser = async (attributes) =>
-  await User.create({
+export const createGhostUser = async (attributes) => {
+  const newUser = await User.create({
     ...attributes,
     isActive: false,
     origin: 'sync',
   });
+
+  // There is no unique index on the user's identity.
+  // Until https://semalab.atlassian.net/browse/WEST-1567
+  // gets fixed, we need to manually ensure uniqueness
+  // to prevent duplicate ghost users from being created.
+  const otherUser = await User.findOne({
+    identities: {
+      $elemMatch: {
+        id: newUser.identities[0].id,
+        provider: newUser.identities[0].provider,
+      },
+    },
+  }).sort({ _id: 1 });
+
+  const isDuplicate = otherUser._id.toString() !== newUser._id.toString();
+  if (isDuplicate) {
+    await newUser.remove();
+    return otherUser;
+  }
+
+  return newUser;
+};
+
+export const toggleUserRepoPinned = async (userId, repoId) => {
+  await User.updateOne({ _id: userId }, [
+    {
+      $set: {
+        pinnedRepos: {
+          $cond: [
+            { $ifNull: ['$pinnedRepos', false] },
+            {
+              $cond: [
+                { $in: [repoId, '$pinnedRepos'] },
+                { $setDifference: ['$pinnedRepos', [repoId]] },
+                { $concatArrays: ['$pinnedRepos', [repoId]] },
+              ],
+            },
+            [repoId],
+          ],
+        },
+      },
+    },
+  ]);
+
+  return true;
+};

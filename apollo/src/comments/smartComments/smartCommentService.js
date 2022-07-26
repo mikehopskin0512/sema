@@ -12,6 +12,8 @@ import { _, isEmpty, uniq, uniqBy } from 'lodash';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
+import Organization from '../../organizations/organizationModel';
+import Repository from '../../repositories/repositoryModel';
 import Reaction from '../reaction/reactionModel';
 import User from '../../users/userModel';
 
@@ -88,15 +90,15 @@ export const getCollaborativeSmartComments = async ({ repoId, handle }) => {
       })
         .lean()
         .exec(),
-     SmartComment.find({
-      'githubMetadata.repo_id': repoId,
-      'githubMetadata.requester': handle,
-      'githubMetadata.user.login': { $ne: handle },
-    })
-       .lean()
-       .exec(),
+      SmartComment.find({
+        'githubMetadata.repo_id': repoId,
+        'githubMetadata.requester': handle,
+        'githubMetadata.user.login': { $ne: handle },
+      })
+        .lean()
+        .exec(),
     ]);
-    return {givenComments, receivedComments};
+    return { givenComments, receivedComments };
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
@@ -747,7 +749,7 @@ const groupMetricsPipeline = [
       _id: {
         $dateToString: {
           format: '%Y-%m-%d',
-          date: '$createdAt',
+          date: '$source.createdAt',
         },
       },
       comments: { $sum: 1 },
@@ -788,80 +790,17 @@ const groupMetricsPipeline = [
 ];
 
 export async function getOrganizationSmartCommentsMetrics(organizationId) {
+  const { repos: repositoryIds } = await Organization.findById(
+    organizationId
+  ).select('repos');
+
   const [doc] = await SmartComment.aggregate([
     {
       $match: {
-        createdAt: {
+        'repositoryId': { $in: repositoryIds },
+        'source.createdAt': {
           $gte: metricsStartDate,
         },
-      },
-    },
-    {
-      $lookup: {
-        from: 'repositories',
-        let: {
-          repoExternalId: '$githubMetadata.repo_id',
-        },
-        pipeline: [
-          {
-            $match: {
-              $expr: {
-                $eq: ['$externalId', '$$repoExternalId'],
-              },
-            },
-          },
-          {
-            $project: {
-              _id: 1,
-            },
-          },
-        ],
-        as: 'repo',
-      },
-    },
-    {
-      $unwind: '$repo',
-    },
-    {
-      $lookup: {
-        from: 'organizations',
-        let: {
-          repoId: '$repo._id',
-        },
-        pipeline: [
-          {
-            $match: {
-              'repos.0': {
-                $exists: true,
-              },
-            },
-          },
-          {
-            $match: {
-              $expr: {
-                $in: ['$$repoId', '$repos'],
-              },
-            },
-          },
-          {
-            $project: {
-              _id: 1,
-            },
-          },
-        ],
-        as: 'organizations',
-      },
-    },
-    {
-      $match: {
-        'organizations.0': {
-          $exists: true,
-        },
-      },
-    },
-    {
-      $match: {
-        'organizations._id': new ObjectId(organizationId),
       },
     },
     ...groupMetricsPipeline,
@@ -870,14 +809,16 @@ export async function getOrganizationSmartCommentsMetrics(organizationId) {
 }
 
 export async function getRepoSmartCommentsMetrics(repoExternalId) {
+  const { _id: repositoryId } = await Repository.findOne({
+    externalId: repoExternalId,
+  }).select('_id');
+
   const [doc] = await SmartComment.aggregate([
     {
       $match: {
-        'createdAt': {
+        'repositoryId': repositoryId,
+        'source.createdAt': {
           $gte: metricsStartDate,
-        },
-        'githubMetadata.repo_id': {
-          $eq: repoExternalId,
         },
       },
     },

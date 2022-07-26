@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import _, { debounce } from 'lodash';
+import _, { debounce, isEmpty } from 'lodash';
 import * as analytics from '../../utils/analytics';
 import { repositoriesOperations } from '../../state/features/repositories';
 import { collectionsOperations } from '../../state/features/collections';
@@ -149,7 +149,7 @@ const Dashboard = () => {
   if (redirectUser) {
     trackUserLogin();
     setRedirectUser(false);
-    if (selectedOrganization) {
+    if (selectedOrganization && !isEmpty(selectedOrganization)) {
       router.push(`${PATHS.ORGANIZATIONS._}/${selectedOrganization._id}${PATHS.DASHBOARD}`);
     } else {
       router.push(PATHS.DASHBOARD);

@@ -1,5 +1,11 @@
 import mongoose from 'mongoose';
+import Bluebird from 'bluebird';
 import { autoIndex } from '../config';
+import {
+  getOctokit,
+  getGitHubRepository,
+  QuotaError,
+} from '../repoSync/repoSyncService';
 
 const tagsScheme = new mongoose.Schema(
   {
@@ -106,6 +112,10 @@ const repositoriesSchema = new mongoose.Schema(
       type: repoStatsSchema,
       default: {},
     },
+    visibility: {
+      type: String,
+      enum: ['public', 'private'],
+    },
   },
   { timestamps: true }
 );
@@ -116,13 +126,42 @@ repositoriesSchema.index({ orgId: 1, externalId: 1 });
 repositoriesSchema.pre('validate', function setFullNameAndCloneUrl() {
   if (!this.cloneUrl) return;
 
-  const { cloneUrl, type, fullName } = parseCloneUrl(this.cloneUrl);
+  const { cloneUrl, type, fullName, repo } = parseCloneUrl(this.cloneUrl);
   this.type ||= type;
   this.cloneUrl = cloneUrl;
   this.fullName = fullName;
+  this.name = repo;
 });
 
+repositoriesSchema.pre('validate', async function setVisibility() {
+  if (!this.externalId) return;
+  if (this.visibility) return;
+
+  try {
+    const octokit = await getOctokit(this);
+    const repo = await getGitHubRepository({ octokit, repository: this });
+    this.visibility = repo?.visibility ?? 'private';
+  } catch (error) {
+    // Can't determine visibility now.
+    if (error instanceof QuotaError) return;
+    throw error;
+  }
+});
+
+repositoriesSchema.methods.getNormalizedCloneUrl =
+  function getNormalizedCloneUrl() {
+    const { cloneUrl } = parseCloneUrl(this.cloneUrl);
+    return cloneUrl;
+  };
+
+repositoriesSchema.methods.getOwnerAndRepo = function getOwnerAndRepo() {
+  const { owner, repo } = parseCloneUrl(this.cloneUrl);
+  return { owner, repo };
+};
+
 const parseCloneUrl = (string) => {
+  if (!string) return {};
+
   const url = string.includes('@')
     ? new URL(`http://${string.replace(':', '/')}`)
     : new URL(string);
@@ -144,6 +183,79 @@ const parseCloneUrl = (string) => {
     fullName,
   };
 };
+
+repositoriesSchema.methods.updateRepoStats = async function updateRepoStats() {
+  const reactionsAndTagsPromise = getReactionsAndTags(this._id);
+  const update = await Bluebird.props({
+    'repoStats.smartCodeReviews': getPullRequestCount(this._id),
+    'repoStats.smartComments': getSmartCommentCount(this._id),
+    'repoStats.smartCommenters': getCommenterCount(this._id),
+    'repoStats.semaUsers': getCommenterCount(this._id),
+    'repoStats.userIds': getUserIds(this._id),
+    'repoStats.reactions': reactionsAndTagsPromise.then((o) => o.reactions),
+    'repoStats.tags': reactionsAndTagsPromise.then((o) => o.tags),
+  });
+
+  await mongoose.model('Repository').updateOne({ _id: this._id }, update);
+};
+
+export async function getSmartCommentCount(repositoryId) {
+  return await mongoose.model('SmartComment').countDocuments({ repositoryId });
+}
+
+export async function getPullRequestCount(repositoryId) {
+  const [{ count } = { count: 0 }] = await mongoose
+    .model('SmartComment')
+    .aggregate([
+      { $match: { repositoryId } },
+      { $group: { _id: '$githubMetadata.pull_number' } },
+      { $count: 'count' },
+    ]);
+  return count;
+}
+
+export async function getCommenterCount(repositoryId) {
+  const [{ count } = { count: 0 }] = await mongoose
+    .model('SmartComment')
+    .aggregate([
+      { $match: { repositoryId, userId: { $ne: null } } },
+      { $group: { _id: '$userId' } },
+      { $count: 'count' },
+    ]);
+  return count;
+}
+
+async function getUserIds(repositoryId) {
+  const docs = await mongoose
+    .model('SmartComment')
+    .aggregate([
+      { $match: { repositoryId, userId: { $ne: null } } },
+      { $group: { _id: '$userId' } },
+    ]);
+  return docs;
+}
+
+export async function getReactionsAndTags(repositoryId) {
+  const comments = await mongoose
+    .model('SmartComment')
+    .find({ repositoryId })
+    .select('reaction tags createdAt')
+    .lean();
+
+  const tags = comments.map((comment) => ({
+    createdAt: comment.createdAt,
+    tagsId: comment.tags ? comment.tags.map((tag) => tag._id.toString()) : [],
+    smartCommentId: comment._id,
+  }));
+
+  const reactions = comments.map((comment) => ({
+    createdAt: comment.createdAt,
+    reactionId: comment.reaction._id,
+    smartCommentId: comment._id,
+  }));
+
+  return { tags, reactions };
+}
 
 // { type, externalId } should be unique.
 repositoriesSchema.index(

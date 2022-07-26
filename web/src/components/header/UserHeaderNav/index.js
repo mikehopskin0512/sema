@@ -7,11 +7,11 @@ import { setProfileViewMode } from '../../../state/features/auth/actions';
 import { authOperations } from '../../../state/features/auth';
 import { PATHS, PROFILE_VIEW_MODE, renderMenuItems } from '../../../utils/constants';
 import { useFlags } from '../../launchDarkly';
-import constants from "./UserHeaderNav.module.scss";
 import { InviteModal } from "../InviteModal";
 import OrgSwitcher from '../OrganizationSwitcher';
 import * as analytics from '../../../utils/analytics';
 import { invitationsOperations } from '../../../state/features/invitations';
+import { COLORS_ARRAY } from './constants';
 
 const { createInviteAndHydrateUser, trackSendInvite } = invitationsOperations;
 const { setSelectedOrganization } = authOperations;
@@ -66,18 +66,13 @@ function UserHeaderNav({
   const [orgIndex, setOrgIndex] = useState(null);
   const [openOrgSwitcher, setOpenOrgSwitcher] = useState(false);
 
-  const HEADER_BACKGROUND = constants.headerBackground
-    .split(', ')
-    .map((item) => item.replace(/[\[\]']+/g, ''));
-
   const selectedMenuItem = () => ({
     backgroundColor: isEmpty(selectedOrganization)
-      ? HEADER_BACKGROUND[HEADER_BACKGROUND.length - 1]
-      : HEADER_BACKGROUND[orgIndex % HEADER_BACKGROUND.length],
+      ? COLORS_ARRAY[COLORS_ARRAY.length - 1]
+      : COLORS_ARRAY[orgIndex % COLORS_ARRAY.length]
   });
 
-  const setMenuItemStyle = (matchPath) =>
-    pathname === matchPath ? selectedMenuItem() : {};
+  const setMenuItemStyle = (matchPath) => pathname === matchPath ? selectedMenuItem() : {};
 
   const setOrganization = (org) => {
     let viewMode = PROFILE_VIEW_MODE.INDIVIDUAL_VIEW;
@@ -135,8 +130,7 @@ function UserHeaderNav({
         />
       }
       {
-        renderMenuItems(personalDashboard, isEmpty, selectedOrganization).map((item, idx) =>
-          <Link key={idx} href={item.path}>
+        renderMenuItems(personalDashboard, isEmpty, selectedOrganization).map((item, idx) => <Link key={idx} href={item.path}>
             <a
               aria-hidden="true"
               className={item.className}

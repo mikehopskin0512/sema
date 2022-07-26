@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { find, isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
+import ReactTooltip from 'react-tooltip';
 import Sidebar from '../../sidebar';
 import withLayout from '../../layout';
 import Loader from '../../Loader';
@@ -100,54 +101,57 @@ function RepoPageLayout({
   };
 
   return (
-    <div className="has-background-white">
-      {(auth.isFetching || repositories.isFetching) && initialLoading ? (
-        <div
-          className="is-flex is-align-items-center is-justify-content-center"
-          style={{ height: '55vh' }}
-        >
-          <Loader />
-        </div>
-      ) : (
-        <>
-          <div className="is-flex is-justify-content-space-between is-align-items-center container pt-25 is-flex-wrap-wrap">
-            <div className="is-flex-grow-1">
-              {repoOptions.length > 1 ? (
-                <HoverSelect
-                  onChange={onChangeSelect}
-                  value={selectedRepo}
-                  options={repoOptions}
-                  className="pl-8"
-                  openOnMouseOver
-                  placeholder=""
-                />
-              ) : (
-                <p
-                  className={clsx(
-                    'has-text-black-950 px-20 pt-20 has-background-white has-text-weight-semibold is-size-3 is-size-5-mobile',
-                    styles['select-container'],
-                    styles['repo-select-container']
+    <>
+      <ReactTooltip type="dark" effect="solid" />
+      <div className="has-background-white">
+          {(auth.isFetching || repositories.isFetching) && initialLoading ? (
+            <div
+              className="is-flex is-align-items-center is-justify-content-center"
+              style={{ height: '55vh' }}
+            >
+              <Loader />
+            </div>
+          ) : (
+            <>
+              <div className="is-flex is-justify-content-space-between is-align-items-center container pt-25 is-flex-wrap-wrap">
+                <div className="is-flex-grow-1">
+                  {repoOptions.length > 1 ? (
+                    <HoverSelect
+                      onChange={onChangeSelect}
+                      value={selectedRepo}
+                      options={repoOptions}
+                      className="pl-8"
+                      openOnMouseOver
+                      placeholder=""
+                    />
+                  ) : (
+                    <p
+                      className={clsx(
+                        'has-text-black-950 px-20 pt-20 has-background-white has-text-weight-semibold is-size-3 is-size-5-mobile',
+                        styles['select-container'],
+                        styles['repo-select-container']
+                      )}
+                    >
+                      {name}
+                    </p>
                   )}
-                >
-                  {name}
-                </p>
-              )}
-            </div>
-            {repoSyncTab && <div>
-              <RepoSyncButton refresh={refresh} />
-            </div>}
-          </div>
-          <div className="container mt-10">
-            <Sidebar {...sidebarProps} />
-          </div>
-          <div className="has-background-gray-200 pt-20">
-            <div className="pb-50 container px-20">
-              <div>{children}</div>
-            </div>
-          </div>
-        </>
-      )}
-    </div>
+                </div>
+                {repoSyncTab && <div>
+                  <RepoSyncButton refresh={refresh} />
+                </div>}
+              </div>
+              <div className="container mt-10">
+                <Sidebar {...sidebarProps} />
+              </div>
+              <div className="has-background-gray-200 pt-20">
+                <div className="pb-50 container px-20">
+                  <div>{children}</div>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+    </>
   );
 }
 

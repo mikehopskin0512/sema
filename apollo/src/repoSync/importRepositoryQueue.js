@@ -1,13 +1,16 @@
 import Bluebird from 'bluebird';
-import retry from 'async-retry';
+import {
+  setIntervalAsync,
+  clearIntervalAsync,
+} from 'set-interval-async/dynamic';
 import logger from '../shared/logger';
 import { queues } from '../queues';
 import Repository from '../repositories/repositoryModel';
 import SmartComment from '../comments/smartComments/smartCommentModel';
 import createGitHubImporter from './github';
 import {
-  getOctokit,
-  getOwnerAndRepo,
+  withOctokit,
+  probeRepository,
   importReviewsFromPullRequest,
   setSyncErrored,
   setSyncUnauthorized,
@@ -36,24 +39,22 @@ export default async function importRepository({ id }) {
     return;
   }
 
-  if (!repository.cloneUrl) {
-    await setSyncErrored(
-      repository,
-      'Repository not found on GitHub (no clone URL)'
-    );
-    return;
-  }
-
   await withOctokit(repository, async (octokit) => {
-    if (!octokit) {
+    if (!(await probeRepository({ repository, octokit }))) {
       logger.info(
-        `Repo sync: Not authorized to access repository ${repository.fullName} ${id}`
+        `Repo sync: Not authorized to access repository ${
+          repository.fullName || repository.name
+        } ${id}`
       );
       await setSyncUnauthorized(repository);
       return;
     }
 
     await setSyncStarted(repository);
+
+    const updateRepoStatsTimer = setIntervalAsync(async () => {
+      await repository.updateRepoStats();
+    }, 5000);
 
     try {
       const importComment = createGitHubImporter(octokit);
@@ -87,35 +88,13 @@ export default async function importRepository({ id }) {
         `Repo sync: Completed processing repository ${repository.fullName} ${id}`
       );
     } catch (error) {
-      logger.error(error);
       await setSyncErrored(repository, error);
       throw error;
+    } finally {
+      await clearIntervalAsync(updateRepoStatsTimer);
+      await repository.updateRepoStats();
     }
   });
-}
-
-// Runs the given function with a suitable Octokit instance.
-// Rate limit errors are retried with a new Octokit instance
-// from our pool (see getOctokitFromPool()).
-async function withOctokit(repository, fn) {
-  await retry(
-    async (bail) => {
-      try {
-        const octokit = await getOctokit(repository);
-        await fn(octokit);
-      } catch (error) {
-        const isRateLimitError =
-          error.status === 403 &&
-          error.response?.headers?.get('x-ratelimit-remaining') === '0';
-
-        if (isRateLimitError) throw error; // Retry on rate limit error.
-        else bail(error); // Actually throw the error.
-      }
-    },
-    {
-      retries: 3,
-    }
-  );
 }
 
 // Imports pull request and issue comments.
@@ -184,7 +163,7 @@ async function* resumablePaginate({
     return;
   }
 
-  const { owner, repo } = getOwnerAndRepo(repository);
+  const { owner, repo } = repository.getOwnerAndRepo();
   const pages = octokit.paginate.iterator(endpoint, {
     owner,
     repo,

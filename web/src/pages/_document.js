@@ -69,7 +69,7 @@ export default class MyDocument extends Document {
           <meta property="og:url" content="https://app.semasoftware.com" />
           <meta name="twitter:image:alt" content={`My GitHub interactions in ${repo}`}/>
           <meta name="twitter:title" content={`My GitHub interactions in ${repo}`}/>
-          <meta name="twitter:description" content="test image"/>
+          <meta name="twitter:description" content={`My GitHub interactions in ${repo}`}/>
           <meta property="og:image" content={this.props.previewImgLink}/>
         </Head>
         <body>

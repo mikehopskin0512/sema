@@ -5,12 +5,11 @@ import { queues } from '../queues';
 import Repository from '../repositories/repositoryModel';
 import createGitHubImporter from './github';
 import {
-  getOctokit,
-  getOwnerAndRepo,
+  withOctokit,
+  probeRepository,
   importReviewsFromPullRequest,
   setSyncErrored,
   setSyncUnauthorized,
-  setSyncCompleted,
 } from './repoSyncService';
 
 const queue = queues.self(module);
@@ -30,56 +29,54 @@ export default async function pollRepository({ id }) {
     return;
   }
 
-  if (!repository.cloneUrl) {
-    await setSyncErrored(
-      repository,
-      'Repository not found on GitHub (no clone URL)'
-    );
-    return;
-  }
+  await withOctokit(repository, async (octokit) => {
+    if (!(await probeRepository({ repository, octokit }))) {
+      logger.info(
+        `Repo sync: Not authorized to access repository ${
+          repository.fullName || repository.name
+        } ${id}`
+      );
+      await setSyncUnauthorized(repository);
+      return;
+    }
 
-  const octokit = await getOctokit(repository);
-  if (!octokit) {
-    await setSyncUnauthorized(repository);
-    return;
-  }
+    try {
+      const importComment = createGitHubImporter(octokit);
 
-  try {
-    const importComment = createGitHubImporter(octokit);
+      await Promise.all([
+        pollComments({
+          octokit,
+          type: 'pullRequestComment',
+          endpoint: `/repos/{owner}/{repo}/pulls/comments`,
+          repository,
+          importComment,
+        }),
+        pollComments({
+          octokit,
+          type: 'issueComment',
+          endpoint: `/repos/{owner}/{repo}/issues/comments`,
+          repository,
+          importComment,
+        }),
+        pollReviews({
+          octokit,
+          endpoint: `/repos/{owner}/{repo}/pulls`,
+          repository,
+          importComment,
+        }),
+      ]);
 
-    await Promise.all([
-      pollComments({
-        octokit,
-        type: 'pullRequestComment',
-        endpoint: `/repos/{owner}/{repo}/pulls/comments`,
-        repository,
-        importComment,
-      }),
-      pollComments({
-        octokit,
-        type: 'issueComment',
-        endpoint: `/repos/{owner}/{repo}/issues/comments`,
-        repository,
-        importComment,
-      }),
-      pollReviews({
-        octokit,
-        endpoint: `/repos/{owner}/{repo}/pulls`,
-        repository,
-        importComment,
-      }),
-    ]);
-
-    await setSyncCompleted(repository);
-
-    logger.info(
-      `Repo sync: Completed polling repository ${repository.fullName} ${id}`
-    );
-  } catch (error) {
-    logger.error(error);
-    await setSyncErrored(repository, error);
-    throw error;
-  }
+      logger.info(
+        `Repo sync: Completed polling repository ${repository.fullName} ${id}`
+      );
+    } catch (error) {
+      logger.error(error);
+      await setSyncErrored(repository, error);
+      throw error;
+    } finally {
+      await repository.updateRepoStats();
+    }
+  });
 }
 
 // Imports pull request and issue comments that were updated since
@@ -100,7 +97,7 @@ async function pollComments({
 }) {
   const progressKey = `sync.progress.${type}`;
   const since = repository.get(progressKey)?.lastUpdatedAt?.toISOString();
-  const { owner, repo } = getOwnerAndRepo(repository);
+  const { owner, repo } = repository.getOwnerAndRepo();
   const pages = octokit.paginate.iterator(endpoint, {
     owner,
     repo,
@@ -131,7 +128,7 @@ async function pollComments({
 async function pollReviews({ octokit, endpoint, repository, importComment }) {
   const progressKey = `sync.progress.pullRequestReview`;
   const lastUpdatedAt = repository.get(progressKey)?.lastUpdatedAt;
-  const { owner, repo } = getOwnerAndRepo(repository);
+  const { owner, repo } = repository.getOwnerAndRepo();
   const pages = octokit.paginate.iterator(endpoint, {
     owner,
     repo,
