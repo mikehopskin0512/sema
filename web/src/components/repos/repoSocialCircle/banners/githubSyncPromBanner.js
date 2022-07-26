@@ -38,7 +38,7 @@ export const GithubSyncPromBanner = () => {
       </div>
       <div className={clsx('is-flex is-align-items-center', styles['promo-banner-button-section'])}>
         <button className='button is-inverted is-outlined is-bold' onClick={() => {
-          window.open('https://app.intercom.com/a/apps/bkmx8nl7/articles/articles/6344622/show', '__blank');
+          window.open('https://intercom.help/sema-software/en/articles/6344622-what-is-github-sync-and-how-do-i-use-it', '__blank');
         }}>Learn More</button>
         <span className='icon is-clickable has-text-dark' onClick={() => {
           dispatch(toggleSyncPromoBanner(false));
