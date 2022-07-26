@@ -33,16 +33,17 @@ function Sidebar({ children, ...menuItemProps }) {
   return (
     <div className="px-20 is-flex">
       <div className="is-flex is-justify-content-space-between mt-10 is-flex-wrap-wrap">
-        <MenuItem
+      <MenuItem
           pathName="stats"
           name="Repo Insights"
           icon={<CodeStatsIcon />}
           {...menuItemProps}
         />
+        
         <MenuItem
-          pathName="activity"
-          name="Activity Logs"
-          icon={<ActivityLogIcon />}
+          pathName="stats"
+          name="Repo Insights"
+          icon={<CodeStatsIcon />}
           {...menuItemProps}
         />
       </div>
