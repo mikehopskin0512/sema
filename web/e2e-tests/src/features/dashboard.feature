@@ -1,20 +1,36 @@
 @dashboard @regression
 Feature: Dashboard options
 
-    @PTA25 @smoke
-    Scenario: User profile elements are displayed
+    @PTA25
+    Scenario: User profile elements are displayed for personal account
         When I open the site "/dashboard"
         Then I expect that element "userLogo" becomes displayed
         And  I expect that element "userLogo" does appear exactly "1" times
         When I click on the element "userLogo"
-        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
-        And  I expect that element "semaCorporateOrganizationLogo" does appear exactly "1" times
-        And  I expect that element "userLogo" does appear exactly "1" times
 
-        And  I expect that element "createOrganizationBtn" becomes displayed
-        And  I expect that element "createOrganizationBtn" does appear exactly "1" times
         And  I expect that element "accountBtn" becomes displayed
         And  I expect that element "accountBtn" does appear exactly "1" times
+        And  I expect that element "signOutBtn" becomes displayed
+        And  I expect that element "recommendAFriendBtn" becomes displayed
+
+    @PTA25_2 @smoke
+    Scenario: User profile elements are displayed for company account
+        When I open the site "/dashboard"
+        Then I expect that element "companyDropdown" becomes displayed
+        When I click on the element "companyDropdown"
+        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+        When I hover over element "semaCorporateOrganizationLogo"
+        And  I click on the element "highlightedTeam"
+        Then I expect that element "userLogo" becomes displayed
+        And  I expect that element "userLogo" does appear exactly "1" times
+        And  I pause for 1000ms
+        When I click on the element "userLogo"
+
+        And  I expect that element "accountBtn" becomes displayed
+        And  I expect that element "accountBtn" does appear exactly "1" times
+        And  I expect that element "signOutBtn" becomes displayed
+        And  I expect that element "recommendAFriendBtn" becomes displayed
+        And  I expect that element "adminPanelBtn" becomes displayed
 
     @PTA24
     Scenario: Contact support button sends request
@@ -43,7 +59,7 @@ Feature: Dashboard options
         And  I click on the element "supportModalSubmitBtn"
         Then I expect that element "supportModal" becomes not displayed
 
-    @PTA24_2 @smoke
+    @PTA24_2
     Scenario: Error messages works on contact support modal
         When I open the site "/dashboard"
         Then I expect that element "reposContainer" becomes displayed
@@ -72,15 +88,14 @@ Feature: Dashboard options
         Then I expect that element "supportModalTitleError" becomes not displayed
         And  I expect that element "supportModalEmailError" becomes not displayed
 
-    @PTA34
-    Scenario: Footer action Release Notes leads to info page
-        When I open the site "/dashboard"
-        Then I expect that element "reposContainer" becomes displayed
-        When I wait on element "footerReleaseNoteBtn" for 3000ms to be displayed
-        And  I scroll to element "footerReleaseNoteBtn"
-        And  I click on the button "footerReleaseNoteBtn"
-        And  I expect that the url is "/release-notes"
-        #TODO: Andryi please check this step
+#    @PTA34
+#    Scenario: Footer action Release Notes leads to info page
+#        When I open the site "/dashboard"
+#        Then I expect that element "reposContainer" becomes displayed
+#        When I wait on element "footerReleaseNoteBtn" for 3000ms to be displayed
+#        And  I scroll to element "footerReleaseNoteBtn"
+#        And  I click on the button "footerReleaseNoteBtn"
+#        And  I expect that the url is "/release-notes"
     #And  I expect that the title is "Release Notes"
     #And  I expect that element "releaseNoteList" becomes displayed
 
@@ -115,8 +130,7 @@ Feature: Dashboard options
 #        Then I expect that element "reposContainer" becomes displayed
 #        When I wait on element "footerIdeaBoardBtn" for 10000ms to be displayed
 #        And  I click on the button "footerIdeaBoardBtn"
-#        #TODO: Andryi please check this step
-        #And  I expect that the absolute url is "sema.uservoice.com/forums/934797-sema"
+        #And  I expect that the absolute url is "sema.uservoice.com"
         #And  I expect that element "createIdeaInput" becomes displayed
 
     @PTA39
@@ -149,7 +163,7 @@ Feature: Dashboard options
         And I scroll to element "footerLinkedInBtn"         
         And I expect that element "footerLinkedInBtn" becomes displayed
         #And I scroll to element "footerInstagramBtn"
-        And I expect that element "footerInstagramBtn" becomes displayed
+#        And I expect that element "footerInstagramBtn" becomes displayed
         #And I scroll to element "footerFacebookBtn"
         And I expect that element "footerFacebookBtn" becomes displayed
         #And I scroll to element "footerTwitterBtn"

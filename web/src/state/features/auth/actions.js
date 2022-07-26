@@ -44,6 +44,7 @@ export const reauthenticate = (token) => ({
 });
 
 export const deauthenticate = () => (dispatch) => {
+  localStorage.removeItem('is-sync-banner');
   removeCookie(refreshCookie);
   Router.push(PATHS.LOGIN);
   dispatch({ type: types.DEAUTHENTICATE });
@@ -295,6 +296,17 @@ export const toggleFFOnboardingModal = (payload) => ({
   type: types.TOGGLE_FF_ONBOARDING_MODAL,
   payload
 })
+
+export const toggleSyncPromoBanner = (payload) => ({
+  type: types.TOGGLE_SYNC_PROMO_BANNER,
+  payload
+})
+
+export const toggleAppInstallBanner = (payload) => ({
+  type: types.TOGGLE_APP_INSTALL_BANNER,
+  payload
+})
+
 
 export const setSelectedOrganization = (selectedOrganization) => (dispatch) => {
   localStorage.setItem('sema_selected_organization', JSON.stringify(selectedOrganization));

@@ -1,13 +1,12 @@
 import Bluebird from 'bluebird';
-import retry from 'async-retry';
 import logger from '../shared/logger';
 import { queues } from '../queues';
 import Repository from '../repositories/repositoryModel';
 import SmartComment from '../comments/smartComments/smartCommentModel';
 import createGitHubImporter from './github';
 import {
-  getOctokit,
-  getOwnerAndRepo,
+  withOctokit,
+  getGitHubRepository,
   importReviewsFromPullRequest,
   setSyncErrored,
   setSyncUnauthorized,
@@ -53,6 +52,11 @@ export default async function importRepository({ id }) {
       return;
     }
 
+    if (!(await probeRepository({ repository, octokit }))) {
+      await setSyncUnauthorized(repository);
+      return;
+    }
+
     await setSyncStarted(repository);
 
     try {
@@ -87,35 +91,12 @@ export default async function importRepository({ id }) {
         `Repo sync: Completed processing repository ${repository.fullName} ${id}`
       );
     } catch (error) {
-      logger.error(error);
       await setSyncErrored(repository, error);
       throw error;
+    } finally {
+      await repository.updateRepoStats();
     }
   });
-}
-
-// Runs the given function with a suitable Octokit instance.
-// Rate limit errors are retried with a new Octokit instance
-// from our pool (see getOctokitFromPool()).
-async function withOctokit(repository, fn) {
-  await retry(
-    async (bail) => {
-      try {
-        const octokit = await getOctokit(repository);
-        await fn(octokit);
-      } catch (error) {
-        const isRateLimitError =
-          error.status === 403 &&
-          error.response?.headers?.get('x-ratelimit-remaining') === '0';
-
-        if (isRateLimitError) throw error; // Retry on rate limit error.
-        else bail(error); // Actually throw the error.
-      }
-    },
-    {
-      retries: 3,
-    }
-  );
 }
 
 // Imports pull request and issue comments.
@@ -184,7 +165,7 @@ async function* resumablePaginate({
     return;
   }
 
-  const { owner, repo } = getOwnerAndRepo(repository);
+  const { owner, repo } = repository.getOwnerAndRepo();
   const pages = octokit.paginate.iterator(endpoint, {
     owner,
     repo,
@@ -256,6 +237,21 @@ async function updateLastUpdatedTimestamp({ repository, type }) {
       $max: { [`sync.progress.${type}.lastUpdatedAt`]: lastUpdatedAt },
     });
   }
+}
+
+async function probeRepository({ octokit, repository }) {
+  const repo = await getGitHubRepository({ octokit, repository });
+
+  if (repo) {
+    if (!repository.cloneUrl) {
+      repository.set({ cloneUrl: repo.clone_url });
+      await repository.save();
+    }
+
+    return true;
+  }
+
+  return false;
 }
 
 export { queue };

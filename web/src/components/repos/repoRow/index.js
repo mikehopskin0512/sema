@@ -3,14 +3,12 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
-import { alertOperations } from '../../../state/features/alerts';
 import styles from './repoRow.module.scss';
 import RepoUsers from '../repoUsers';
 import { PATHS } from '../../../utils/constants';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 import Tooltip from '../../Tooltip';
-import { OptionsIcon, StarFilledIcon, StarOutlineScg } from '../../Icons';
-import DropDownMenu from '../../dropDownMenu';
+import { StarFilledIcon, StarOutlineScg } from '../../Icons';
 import usePermission from '../../../hooks/usePermission';
 import DeleteRepoModal from '../repoCard/deleteRepoModal';
 import { black900, orange400 } from '../../../../styles/_colors.module.scss';
@@ -19,7 +17,7 @@ import { toggleOrgRepoPinned } from '../../../state/features/organizations[new]/
 import RepoSyncText from '../../repoSync/repoSyncText';
 import { useFlags } from '../../launchDarkly';
 
-const RepoRow = (props) => {
+function RepoRow(props) {
   const dispatch = useDispatch();
   const { token, user, selectedOrganization } = useSelector((state) => state.authState);
   const titleRef = useRef(null);
@@ -31,6 +29,7 @@ const RepoRow = (props) => {
   const { isOrganizationAdmin } = usePermission();
   const [isDeleteRepoModalOpen, toggleDeleteModal] = useState(false);
   const [repoStatus] = useState(sync?.status || 'notsynced');
+  const progress = sync?.progress || {};
   const [hovered, setHovered] = useState(false);
 
   const onRemoveRepo = async (e) => {
@@ -53,30 +52,6 @@ const RepoRow = (props) => {
       }));
   }
 
-  const ActionColumn = () => {
-    if (isOrganizationAdmin()) {
-      return (
-        <td className={clsx('py-15 has-background-white px-10')}>
-          <DropDownMenu
-            isRight
-            options={[
-              {
-                label: 'Remove from Organization',
-                onClick: () => toggleDeleteModal(true),
-              },
-            ]}
-            trigger={
-              <div className="is-clickable is-flex">
-                <OptionsIcon />
-              </div>
-            }
-          />
-        </td>
-      )
-    }
-    return '';
-  };
-
   return (
     <>
       <Link href={`${PATHS.REPO}/${externalId}`}>
@@ -84,7 +59,7 @@ const RepoRow = (props) => {
           <td className={clsx('py-15 has-background-white px-10', styles.document)}>
             <div className="is-flex is-align-items-center">
               {/* <FontAwesomeIcon icon={faStarSolid} color="#FFA20F" className="mr-20" /> */}
-              <Tooltip direction='right' text={isPinned ? 'Remove from Pinned Repos' : 'Pin this Repo'} isActive={true} showDelay={0} isRepoPage={true}>
+              <Tooltip direction='right' text={isPinned ? 'Remove from Pinned Repos' : 'Pin this Repo'} isActive showDelay={0} isRepoPage>
                 <div className="mt-5" onClick={onToggleIsPinned} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
                   {isPinned ? <StarFilledIcon color={orange400} /> : <StarOutlineScg color={hovered ? orange400 : black900} />}
                 </div>
@@ -122,7 +97,11 @@ const RepoRow = (props) => {
             {/* {ActionColumn()} */}
           {repoSyncTab && <td className={clsx('py-15 has-background-white px-10')}>
             <div className='is-flex is-align-items-center'>
-              <RepoSyncText repoStatus={repoStatus} />
+              <RepoSyncText 
+                repoStatus={repoStatus}
+                progress={progress}
+                completedAt={sync.completedAt}
+              />
             </div>
           </td>}
         </tr>

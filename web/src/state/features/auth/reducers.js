@@ -13,6 +13,8 @@ const initialState = {
   selectedOrganization: {},
   profileViewMode: PROFILE_VIEW_MODE.INDIVIDUAL_VIEW,
   pinnedRepos: [],
+  isSyncBannerPromo: false,
+  isAppInstallBanner: false,
   ffOnboarding: {
     isModalOpen: false
   }
@@ -247,6 +249,16 @@ const reducer = (state = initialState, action) => {
         ...state.ffOnboarding,
         isModalOpen: action.payload
       },
+    };
+  case types.TOGGLE_SYNC_PROMO_BANNER:
+    return  {
+      ...state,
+      isSyncBannerPromo: action.payload
+    };
+  case types.TOGGLE_APP_INSTALL_BANNER:
+    return {
+      ...state,
+      isAppInstallBanner: action.payload,
     };
   default:
     return state;

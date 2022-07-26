@@ -398,6 +398,8 @@ export const renderMenuItems = (personalDashboard, isEmpty, selectedOrganization
   const standardClass = 'navbar-item menu-item has-text-black-950 mr-10 has-text-weight-semibold border-radius-4';
 
   return [
+  /* Commented for a future implementation */
+  /*
   ... personalDashboard && isEmpty(selectedOrganization) ? [{
     title: 'Dashboard Hidden',
     className : standardClass,
@@ -410,6 +412,13 @@ export const renderMenuItems = (personalDashboard, isEmpty, selectedOrganization
     stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.DASHBOARD}`,
   }] : [],
   ... !isEmpty(selectedOrganization) ? [{
+    title: 'Dashboard',
+    className : standardClass,
+    path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`,
+    stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.DASHBOARD}`,
+  }] : [],
+  */
+  ... !isEmpty(selectedOrganization) ? [{
     title: 'Repos',
     className : standardClass,
     path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.REPOS}`,
@@ -420,7 +429,7 @@ export const renderMenuItems = (personalDashboard, isEmpty, selectedOrganization
     path: PATHS.DASHBOARD
   }],
   ... !isEmpty(selectedOrganization) ? [{
-    title: 'Organization Insights',
+    title: 'Insights',
     className : standardClass,
     path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.ORGANIZATION_INSIGHTS}`,
     stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.ORGANIZATION_INSIGHTS}`,
@@ -443,7 +452,6 @@ export const renderMenuItems = (personalDashboard, isEmpty, selectedOrganization
 export const SYNC_STATUS = {
   started: {
     status: 'started',
-    tooltip: 'Syncing from GitHub in progress',
     label: 'Syncing',
   },
   completed: {
@@ -470,5 +478,25 @@ export const SYNC_STATUS = {
     status: 'notsynced',
     tooltip: '<u>Activate GitHub Sync</u> to unlock the full power of Sema for this repo.',
     label: 'Sync Inactive',
+  }
+}
+
+export const getStatusLabels = (status, progress = null) => {
+  switch (status) {
+    case 'started':
+      return {
+        ...SYNC_STATUS.started,
+        tooltip: `${Math.round(parseFloat(progress?.overall || '0', 10) * 100)}% Synced`,
+      }
+    case 'completed':
+      return SYNC_STATUS.completed
+    case 'errored':
+      return SYNC_STATUS.errored
+    case 'unauthorized':
+      return SYNC_STATUS.unauthorized
+    case 'queued':
+      return SYNC_STATUS.queued
+    default:
+      return SYNC_STATUS.notsynced
   }
 }

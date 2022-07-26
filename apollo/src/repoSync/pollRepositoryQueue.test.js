@@ -43,6 +43,7 @@ describe('Poll Repository Queue', () => {
       cloneUrl: 'https://github.com/Semalab/phoenix',
     });
     repository.sync.status = 'completed';
+    repository.sync.completedAt = new Date('2020-10-10T10:00:00.000Z');
     await repository.save();
   });
 
@@ -125,6 +126,12 @@ describe('Poll Repository Queue', () => {
 
       it('should have sync status "completed"', () => {
         expect(repository.sync.status).toBe('completed');
+      });
+
+      it('should not update the existing completed timestamp', () => {
+        expect(repository.sync.completedAt).toEqual(
+          new Date('2020-10-10T10:00:00.000Z')
+        );
       });
     });
 

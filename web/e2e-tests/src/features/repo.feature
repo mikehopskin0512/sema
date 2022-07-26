@@ -1,21 +1,21 @@
 @repo @regression
 Feature: Repo
 
-  @PTA48
-  Scenario: My Repos can change card view to list view
-      When I click on the element "reposTab"
-      Then I expect that element "reposContainer" becomes displayed
-      And  I expect that element "reposCards" becomes displayed
-      And  I expect that element "reposListRows" becomes not displayed
-      And  I expect that element "reposCards" becomes displayed
-      And  I expect that element "repoListViewBtn" becomes displayed
-      And  I expect that element "repoCardViewBtn" becomes displayed
-      When I click on the element "repoListViewBtn"
-      Then I expect that element "reposCards" becomes not displayed
-      And  I expect that element "reposListRows" becomes displayed
-      When I click on the element "repoCardViewBtn"
-      Then I expect that element "reposCards" becomes displayed
-      And  I expect that element "reposListRows" becomes not displayed
+#  @PTA48  not needed anymore
+#  Scenario: My Repos can change card view to list view
+#      When I click on the element "reposTab"
+#      Then I expect that element "reposContainer" becomes displayed
+#      And  I expect that element "reposCards" becomes displayed
+#      And  I expect that element "reposListRows" becomes not displayed
+#      And  I expect that element "reposCards" becomes displayed
+#      And  I expect that element "repoListViewBtn" becomes displayed
+#      And  I expect that element "repoCardViewBtn" becomes displayed
+#      When I click on the element "repoListViewBtn"
+#      Then I expect that element "reposCards" becomes not displayed
+#      And  I expect that element "reposListRows" becomes displayed
+#      When I click on the element "repoCardViewBtn"
+#      Then I expect that element "reposCards" becomes displayed
+#      And  I expect that element "reposListRows" becomes not displayed
 
   @PTA52 @smoke
   Scenario: Activity log elements are displayed for repo
@@ -23,10 +23,21 @@ Feature: Repo
       Then I expect that element "reposContainer" becomes displayed
       And  I expect that element "reposCards" becomes displayed
       And  I pause for 1000ms
+      Then I expect that element "searchRepoInput" becomes displayed
+      When I set "pho" to the inputfield "searchRepoInput"
+      And  I pause for 1000ms
+
+      Then I expect that element "1stReposCard" becomes displayed
+
       When I click on the element "1stReposCard"
       Then I expect that element "activityLogTabBtn" becomes displayed
       And  I expect that element "codeStatsTabBtn" becomes displayed
-      And  I expect that element "dateRangeFilter" becomes displayed
+      Then I expect that element "dateRangeFilter" becomes displayed
+      When I click on the element "dateRangeFilter"
+      Then I expect that element "last30DaysDateRange" becomes displayed
+      When I click on the element "last30DaysDateRange"
+      And  I pause for 1000ms
+      And  I click on the element "dateRangeFilter"
       And  I expect that element "fromFilter" becomes displayed
       And  I expect that element "toFilter" becomes displayed
       And  I expect that element "summariesFilter" becomes displayed
@@ -56,7 +67,11 @@ Feature: Repo
         And  I pause for 2000ms
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
-        And  I expect that element "1stReposCard" becomes displayed
+        Then I expect that element "searchRepoInput" becomes displayed
+        When I set "pho" to the inputfield "searchRepoInput"
+        And  I pause for 1000ms
+
+        Then I expect that element "1stReposCard" becomes displayed
         When I click on the element "1stReposCard"
         Then I expect that element "dateRangeFilter" becomes displayed
         When I click on the element "dateRangeFilter"
@@ -66,8 +81,8 @@ Feature: Repo
         And  I expect that element "last3MonthsDateRange" becomes displayed
         And  I expect that element "last12MonthsDateRange" becomes displayed
         And  I expect that element "allTimeDateRange" becomes displayed
-        
-        When I click on the element "allTimeDateRange"
+        When I click on the element "last30DaysDateRange"
+        And  I pause for 1000ms
         And  I click on the element "dateRangeFilter"
         Then I expect that element "fromFilter" becomes displayed
         And  I expect that element "toFilter" becomes displayed
@@ -94,6 +109,11 @@ Feature: Repo
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
         And  I pause for 1000ms
+        Then I expect that element "searchRepoInput" becomes displayed
+        When I set "pho" to the inputfield "searchRepoInput"
+        And  I pause for 1000ms
+
+        Then I expect that element "1stReposCard" becomes displayed
         When I click on the element "1stReposCard"
         Then I expect that element "codeStatsTabBtn" becomes displayed
 
@@ -126,9 +146,11 @@ Feature: Repo
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
         And  I pause for 1000ms
-        When I click on the element "1stReposCard"
+        Then I expect that element "searchRepoInput" becomes displayed
+        When I set "pho" to the inputfield "searchRepoInput"
         And  I pause for 2000ms
-        And  I click on the element "1stReposCard" if visible
+        Then I expect that element "1stReposCard" becomes displayed
+        When I click on the element "1stReposCard"
         And  I pause for 1000ms
         Then I expect that element "codeStatsTabBtn" becomes displayed
 

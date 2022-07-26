@@ -64,7 +64,7 @@ function RepoPage() {
   } = useRouter();
 
   const firstUpdate = useRef(true);
-  const [selectedTab, setSelectedTab] = useState('activity');
+  const [selectedTab, setSelectedTab] = useState('stats');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [dates, setDates] = useState({
@@ -198,6 +198,8 @@ function RepoPage() {
 
   const { socialCircles } = useFlags();
 
+  const isSocialCyclesShown = socialCircles && selectedTab === 'stats' && !isLoading && !repositories.isFetching;
+
   return (
     <RepoPageLayout
       setSelectedTab={setSelectedTab}
@@ -210,7 +212,7 @@ function RepoPage() {
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
 
       <div className={styles.wrapper}>
-        {true && !isLoading && !repositories.isFetching && (
+        {isSocialCyclesShown && (
           <div className="mb-32 px-8">
             <RepoSocialCircle repoId={repoId} />
           </div>

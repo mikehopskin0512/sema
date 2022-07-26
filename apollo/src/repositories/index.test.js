@@ -18,7 +18,7 @@ describe('GET /repositories/overview', () => {
     it('should return 401 Unauthorized', async () => {
       await expect(async () => {
         await apollo.get('/v1/repositories/overview', {
-          params: { externalId: '123456' },
+          params: { externalId: '237888452' },
           headers: {
             authorization: 'Bearer 123',
           },
@@ -38,7 +38,7 @@ describe('GET /repositories/overview', () => {
       await createRepository({
         name: 'phoenix',
         type: 'github',
-        id: '123456',
+        id: '237888452',
       });
 
       await createSmartComment({
@@ -46,7 +46,7 @@ describe('GET /repositories/overview', () => {
         userId: user._id,
         location: 'files changed',
         githubMetadata: {
-          repo_id: '123456',
+          repo_id: '237888452',
           commentId: 'r690362133',
           url: 'https://github.com/Semalab/phoenix',
           created_at: '2020-12-18T20:30:00Z',
@@ -58,7 +58,7 @@ describe('GET /repositories/overview', () => {
         userId: user._id,
         location: 'files changed',
         githubMetadata: {
-          repo_id: '123456',
+          repo_id: '237888452',
           commentId: 'r730362118',
           url: 'https://github.com/Semalab/phoenix',
           created_at: '2020-12-17T20:30:00Z',
@@ -68,7 +68,7 @@ describe('GET /repositories/overview', () => {
 
     beforeAll(async () => {
       ({ data } = await apollo.get('/v1/repositories/overview', {
-        params: { externalId: '123456' },
+        params: { externalId: '237888452' },
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -76,6 +76,10 @@ describe('GET /repositories/overview', () => {
     });
 
     it.todo('should respond with 200 OK');
+
+    it('should have visibility', () => {
+      expect(data.visibility).toBe('private');
+    });
 
     it('should include smart comments', () => {
       expect(data.smartcomments.length).toBe(2);
@@ -92,7 +96,7 @@ describe('GET /repositories/overview', () => {
     });
 
     beforeAll(async () => {
-      const repository = await Repository.findOne({ externalId: '123456' });
+      const repository = await Repository.findOne({ externalId: '237888452' });
       repository.sync = {
         progress: {
           pullRequestComment: {
@@ -114,7 +118,7 @@ describe('GET /repositories/overview', () => {
 
     beforeAll(async () => {
       ({ data } = await apollo.get('/v1/repositories/overview', {
-        params: { externalId: '123456' },
+        params: { externalId: '237888452' },
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -136,13 +140,13 @@ describe('GET /repositories/overview', () => {
     });
 
     beforeAll(async () => {
-      const repository = await Repository.findOne({ externalId: '123456' });
+      const repository = await Repository.findOne({ externalId: '237888452' });
       await repository.updateOne({ sync: null });
     });
 
     beforeAll(async () => {
       ({ data } = await apollo.get('/v1/repositories/overview', {
-        params: { externalId: '123456' },
+        params: { externalId: '237888452' },
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -168,9 +172,9 @@ describe('POST /repositories/:id/sync', () => {
 
   beforeAll(async () => {
     repository = await createRepository({
-      name: 'phoenix',
+      name: 'astrobee',
       type: 'github',
-      id: '234567',
+      id: '391620249',
     });
   });
 
