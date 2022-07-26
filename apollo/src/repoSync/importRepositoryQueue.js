@@ -1,4 +1,8 @@
 import Bluebird from 'bluebird';
+import {
+  setIntervalAsync,
+  clearIntervalAsync,
+} from 'set-interval-async/dynamic';
 import logger from '../shared/logger';
 import { queues } from '../queues';
 import Repository from '../repositories/repositoryModel';
@@ -58,6 +62,10 @@ export default async function importRepository({ id }) {
     }
 
     await setSyncStarted(repository);
+    
+    const updateRepoStatsTimer = setIntervalAsync(async () => {
+      await repository.updateRepoStats();
+    }, 5000);
 
     try {
       const importComment = createGitHubImporter(octokit);
@@ -94,6 +102,7 @@ export default async function importRepository({ id }) {
       await setSyncErrored(repository, error);
       throw error;
     } finally {
+      await clearIntervalAsync(updateRepoStatsTimer);
       await repository.updateRepoStats();
     }
   });
