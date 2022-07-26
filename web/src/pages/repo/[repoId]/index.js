@@ -204,6 +204,8 @@ function RepoPage() {
 
   const { socialCircles } = useFlags();
 
+  const isSocialCyclesShown = socialCircles && selectedTab === 'stats' && !isLoading && !repositories.isFetching;
+
   return (
     <RepoPageLayout
       setSelectedTab={setSelectedTab}
@@ -216,7 +218,7 @@ function RepoPage() {
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
 
       <div className={styles.wrapper}>
-        {socialCircles && !isLoading && !repositories.isFetching && (
+        {isSocialCyclesShown && (
           <div className="mb-32 px-8">
             <RepoSocialCircle repoId={repoId} />
           </div>

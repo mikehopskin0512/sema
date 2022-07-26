@@ -3,6 +3,7 @@ import apollo from '../../../test/apolloClient';
 import { createAuthToken } from '../../auth/authService';
 import createUser from '../../../test/helpers/userHelper';
 import SmartComment from './smartCommentModel';
+import Repository from '../../repositories/repositoryModel';
 
 describe('GET /comments/smart', () => {
   let user;
@@ -193,6 +194,21 @@ describe('POST /comments/smart', () => {
 
       it('should have GitHub metadata type', () => {
         expect(comment.githubMetadata.type).toBe('issueComment');
+      });
+    });
+
+    describe('repository', () => {
+      let repository;
+
+      beforeAll(async () => {
+        repository = await Repository.findOne({
+          type: 'github',
+          externalId: '237888452',
+        });
+      });
+
+      it('should have visibility "private"', () => {
+        expect(repository.visibility).toBe('private');
       });
     });
   });

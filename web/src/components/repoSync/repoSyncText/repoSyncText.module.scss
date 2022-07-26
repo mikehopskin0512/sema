@@ -30,15 +30,7 @@
 }
 
 .tooltip-wrapper {
-    >div {
-        display: flex;
-        align-items: center;
-    }
-}
-
-.completed-tooltip {
-    >div {
-        display: flex;
-        align-items: center;
-    }
+    cursor: default;
+    display: flex;
+    align-items: center;
 }

@@ -121,6 +121,7 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  border: 1px solid #9FE1F5;
 }
 
 .promo-banner-text {
@@ -133,6 +134,12 @@
 .promo-banner-img {
   height: 50px;
   width: 96px;
+}
+
+.promo-banner-img-app {
+  position: relative;
+  bottom: 8px;
+  margin-left: 25px;
 }
 
 .promo-banner-section {

@@ -67,6 +67,7 @@ function RepoSyncButton({refresh}) {
           progress={progress}
           completedAt={sync.completedAt}
           isRepoPage
+          action={handleOnClick}
         />
       </div>
       {isSyncStartedOrQueued() && renderSyncButton()}

@@ -33,6 +33,7 @@ export const create = async ({
   description,
   type,
   cloneUrl,
+  visibility,
   created_at: repositoryCreatedAt,
   updated_at: repositoryUpdatedAt,
 }) => {
@@ -44,6 +45,7 @@ export const create = async ({
         description,
         language,
         cloneUrl,
+        visibility,
         repositoryCreatedAt,
         repositoryUpdatedAt,
       }
@@ -302,6 +304,7 @@ export const aggregateRepositories = async (
             users: repo.repoStats.userIds,
             updatedAt,
             sync: getSyncResponse(sync),
+            visibility: repo.visibility,
             smartcomments: includeSmartComments
               ? await findSmartCommentsByExternalId(
                   externalId,
