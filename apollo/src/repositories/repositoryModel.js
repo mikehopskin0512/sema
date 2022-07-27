@@ -126,10 +126,11 @@ repositoriesSchema.index({ orgId: 1, externalId: 1 });
 repositoriesSchema.pre('validate', function setFullNameAndCloneUrl() {
   if (!this.cloneUrl) return;
 
-  const { cloneUrl, type, fullName } = parseCloneUrl(this.cloneUrl);
+  const { cloneUrl, type, fullName, repo } = parseCloneUrl(this.cloneUrl);
   this.type ||= type;
   this.cloneUrl = cloneUrl;
   this.fullName = fullName;
+  this.name = repo;
 });
 
 repositoriesSchema.pre('validate', async function setVisibility() {

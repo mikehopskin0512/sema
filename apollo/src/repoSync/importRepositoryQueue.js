@@ -1,4 +1,8 @@
 import Bluebird from 'bluebird';
+import {
+  setIntervalAsync,
+  clearIntervalAsync,
+} from 'set-interval-async/dynamic';
 import logger from '../shared/logger';
 import { queues } from '../queues';
 import Repository from '../repositories/repositoryModel';
@@ -6,7 +10,7 @@ import SmartComment from '../comments/smartComments/smartCommentModel';
 import createGitHubImporter from './github';
 import {
   withOctokit,
-  getGitHubRepository,
+  probeRepository,
   importReviewsFromPullRequest,
   setSyncErrored,
   setSyncUnauthorized,
@@ -35,29 +39,22 @@ export default async function importRepository({ id }) {
     return;
   }
 
-  if (!repository.cloneUrl) {
-    await setSyncErrored(
-      repository,
-      'Repository not found on GitHub (no clone URL)'
-    );
-    return;
-  }
-
   await withOctokit(repository, async (octokit) => {
-    if (!octokit) {
+    if (!(await probeRepository({ repository, octokit }))) {
       logger.info(
-        `Repo sync: Not authorized to access repository ${repository.fullName} ${id}`
+        `Repo sync: Not authorized to access repository ${
+          repository.fullName || repository.name
+        } ${id}`
       );
       await setSyncUnauthorized(repository);
       return;
     }
 
-    if (!(await probeRepository({ repository, octokit }))) {
-      await setSyncUnauthorized(repository);
-      return;
-    }
-
     await setSyncStarted(repository);
+
+    const updateRepoStatsTimer = setIntervalAsync(async () => {
+      await repository.updateRepoStats();
+    }, 5000);
 
     try {
       const importComment = createGitHubImporter(octokit);
@@ -94,6 +91,7 @@ export default async function importRepository({ id }) {
       await setSyncErrored(repository, error);
       throw error;
     } finally {
+      await clearIntervalAsync(updateRepoStatsTimer);
       await repository.updateRepoStats();
     }
   });
@@ -237,21 +235,6 @@ async function updateLastUpdatedTimestamp({ repository, type }) {
       $max: { [`sync.progress.${type}.lastUpdatedAt`]: lastUpdatedAt },
     });
   }
-}
-
-async function probeRepository({ octokit, repository }) {
-  const repo = await getGitHubRepository({ octokit, repository });
-
-  if (repo) {
-    if (!repository.cloneUrl) {
-      repository.set({ cloneUrl: repo.clone_url });
-      await repository.save();
-    }
-
-    return true;
-  }
-
-  return false;
 }
 
 export { queue };

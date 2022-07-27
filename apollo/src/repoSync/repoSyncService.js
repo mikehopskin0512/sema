@@ -230,4 +230,17 @@ export function resetRateLimitTracking() {
   rateLimitedUntil.clear();
 }
 
+export async function probeRepository({ octokit, repository }) {
+  const repo = await getGitHubRepository({ octokit, repository });
+
+  if (repo) {
+    repository.set({ cloneUrl: repo.clone_url });
+    await repository.save();
+
+    return true;
+  }
+
+  return false;
+}
+
 export class QuotaError extends Error {}

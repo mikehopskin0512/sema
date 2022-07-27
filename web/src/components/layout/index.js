@@ -79,11 +79,12 @@ const withLayout = (Page) => (props) => {
         catch(e){window.attachEvent("onload", $buo_f)}
         ` }} />
       </Head>
-      <ExtensionStatus />
+      <GithubAppInstallBanner />
+      {/** ToDo: Return extension status when needed */}
+      {/* <ExtensionStatus /> */}
       {!hasNoHeader && (<Header />) }
       <OrganizationCreateBanner />
       <GithubSyncPromBanner />
-      <GithubAppInstallBanner />
       <div className={clsx(!isWideScreen && 'container', !noContactUs.includes(pathname) && 'pb-250')}>
         <Page {...props} />
       </div>
