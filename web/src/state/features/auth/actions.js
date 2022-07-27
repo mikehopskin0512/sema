@@ -44,7 +44,6 @@ export const reauthenticate = (token) => ({
 });
 
 export const deauthenticate = () => (dispatch) => {
-  localStorage.removeItem('is-sync-banner');
   removeCookie(refreshCookie);
   Router.push(PATHS.LOGIN);
   dispatch({ type: types.DEAUTHENTICATE });

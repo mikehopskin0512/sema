@@ -6,11 +6,9 @@ import { useRouter } from 'next/router';
 import styles from './layout.module.scss';
 import Header from '../header';
 import Footer from '../footer';
-import ExtensionStatus from '../extensionStatus';
 import { FACEBOOK_VERIFICATION_META, noContactUs, PATHS } from '../../utils/constants';
 import { blue200, blue900, white0 } from '../../../styles/_colors.module.scss';
 import OrganizationCreateBanner from '../banners/organizationCreate';
-import { GithubSyncPromBanner } from '../repos/repoSocialCircle/banners/githubSyncPromBanner';
 import { GithubAppInstallBanner } from '../repos/repoSocialCircle/banners/githubAppBanner';
 
 const widescreenPages = [
@@ -84,7 +82,6 @@ const withLayout = (Page) => (props) => {
       {/* <ExtensionStatus /> */}
       {!hasNoHeader && (<Header />) }
       <OrganizationCreateBanner />
-      <GithubSyncPromBanner />
       <div className={clsx(!isWideScreen && 'container', !noContactUs.includes(pathname) && 'pb-250')}>
         <Page {...props} />
       </div>
