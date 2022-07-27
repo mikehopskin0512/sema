@@ -41,6 +41,14 @@ aws configure set default.region "${AWS_REGION}"
 # Authenticate against our Docker registry
 aws ecr get-login-password | docker login --username AWS --password-stdin https://091235034633.dkr.ecr.us-east-1.amazonaws.com
 
+# build builder image
+docker build \
+    --target builder \
+    --cache-from ${ECR_URL}/${NAME}:builder \
+    -t ${ECR_URL}/${NAME}:builder \
+    -f ${DOCKER_FILE} \
+    .
+
 # Build and push the image
 echo "Building image..."
 docker build --cache-from ${BASE_IMAGE}:builder \
