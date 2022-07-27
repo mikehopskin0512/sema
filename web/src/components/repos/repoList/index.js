@@ -131,7 +131,7 @@ function RepoList({
   };
 
   const renderCards = (repos, isPinned) => repos.map((child, i) => (
-      <RepoCard 
+      <RepoCard
         {...child}
         isOrganizationView={type !== 'MY_REPOS'}
         isFavorite={type === 'FAVORITES'}
@@ -151,7 +151,7 @@ function RepoList({
   useEffect(() => {
     sortRepos();
   }, [sort, repos, pinnedRepos]);
-  
+
   const githubLogin = async () => {
     try {
       await dispatch(connectOrg(token));
@@ -244,8 +244,9 @@ function RepoList({
         </div>
         {view === 'grid' ? (
           <div className="is-flex is-flex-wrap-wrap is-align-content-stretch">
-            {!isLoaded ? range(9).map(_ => (
+            {!isLoaded ? range(9).map((_, index) => (
               <div
+                key={index}
                 className={clsx(
                   'p-10 is-flex is-flex-grow-1 is-clickable',
                   repoStyles['card-width-3c'],

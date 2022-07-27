@@ -51,7 +51,6 @@ const revokeInviteAndHydrateUser = (id, userId, token, recipient) => async (disp
 
 const trackRedeemedInvite = (email) => {
   analytics.segmentTrack(analytics.SEGMENT_EVENTS.INVITATION_ACCEPTED, { email });
-  analytics.segmentTrack(analytics.SEGMENT_EVENTS.PRODUCT_SIGNUP, { email });
 };
 
 const trackOrganizationInviteAccepted = (organizationId, traits) => {

@@ -323,6 +323,7 @@ export const registerUser = (user, invitation = {}) => async (dispatch) => {
     const payload = await createUser({ user, invitation });
     const { data: { jwtToken, user: newUser } } = payload;
     analytics.segmentIdentify(newUser);
+    analytics.segmentTrack(analytics.SEGMENT_EVENTS.PRODUCT_SIGNUP, { email: newUser.username });
     dispatch(registrationSuccess(jwtToken, newUser));
     return payload;
   } catch (error) {
