@@ -24,7 +24,8 @@ export const GithubAppInstallBanner = () => {
 
   if (!isAppInstallBanner || !isShown) return null;
 
-  return (
+  return (<div className="has-background-blue-0">
+  <div className="container">
     <div className={styles['promo-banner-wrapper']}>
       <div className={clsx('is-flex is-align-items-center', styles['promo-banner-section'])}>
         <p className={styles['promo-banner-text']}>Make Sync Faster! </p>
@@ -53,5 +54,7 @@ export const GithubAppInstallBanner = () => {
         </span>
       </div>
     </div>
+  </div>
+  </div>
   );
 };
