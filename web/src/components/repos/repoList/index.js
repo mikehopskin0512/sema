@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { range } from 'lodash';
+import { useRouter } from "next/router";
 import usePermission from '../../../hooks/usePermission';
 import RepoCard from '../repoCard';
 import OrganizationReposList from "../../organizationReposList";
@@ -18,11 +19,11 @@ import { getCommentsCountLastMonth } from '../../../utils/codeStats';
 import InputField from "../../inputs/InputField";
 import { blue700 } from '../../../../styles/_colors.module.scss';
 import { alertOperations } from '../../../state/features/alerts';
-import RepoSkeleton from '../../../components/skeletons/repoSkeleton';
+import RepoSkeleton from "../../skeletons/repoSkeleton";
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import { identitiesOperations } from '../../../state/features/identities';
-import { useRouter } from "next/router";
 import { PATHS } from "../../../utils/constants";
+
 const githubAppName = process.env.NEXT_PUBLIC_GITHUB_APP_NAME;
 
 const LIST_TYPE = {
@@ -259,10 +260,18 @@ function RepoList({
               </div>
             )) :
               <div className={clsx(styles['repos-container'])}>
-                <div className="has-text-weight-semibold is-size-5 ml-10 mb-25">{`Pinned repos (${pinnedRepos.length})`}</div>
-                <div className={clsx("is-flex is-flex-wrap-wrap is-align-content-stretch", !filteredRepos.pinned.length && 'ml-10' )}>{!pinnedRepos.length ? 'No Pinned Repos yet. Add your first one!' : (search && filteredRepos.pinned.length === 0) ? 'No Results Found. We couldn’t find any match' : renderCards(filteredRepos.pinned, true)}</div>
-                <div className="has-text-weight-semibold is-size-5 ml-10 mb-25 mt-40">{`Other repos (${otherReposCount})`}</div>
-                <div className={clsx("is-flex is-flex-wrap-wrap is-align-content-stretch", !filteredRepos.other.length && 'ml-10' )}>{!repos.length ? 'No Repos yet.' : (search && filteredRepos.other.length === 0) ? 'No Results Found. We couldn’t find any match' : renderCards(filteredRepos.other, false)}</div>
+                {pinnedRepos.length > 0 &&
+                  <>
+                    <div className="has-text-weight-semibold is-size-5 ml-10 mb-25">{`Pinned repos (${pinnedRepos.length})`}</div>
+                    <div className={clsx("is-flex is-flex-wrap-wrap is-align-content-stretch", !filteredRepos.pinned.length && 'ml-10' )}>{!pinnedRepos.length ? 'No Pinned Repos yet. Add your first one!' : (search && filteredRepos.pinned.length === 0) ? 'No Results Found. We couldn’t find any match' : renderCards(filteredRepos.pinned, true)}</div>
+                  </>
+                }
+                {otherReposCount > 0 &&
+                  <>
+                    <div className="has-text-weight-semibold is-size-5 ml-10 mb-25 mt-40">{`Other repos (${otherReposCount})`}</div>
+                    <div className={clsx("is-flex is-flex-wrap-wrap is-align-content-stretch", !filteredRepos.other.length && 'ml-10' )}>{!repos.length ? 'No Repos yet.' : (search && filteredRepos.other.length === 0) ? 'No Results Found. We couldn’t find any match' : renderCards(filteredRepos.other, false)}</div>
+                  </>
+                }
                 </div>}
           </div>
         ) : null}
@@ -286,7 +295,7 @@ RepoList.propTypes = {
   // Repos model isn't currently updated in RepoType
   // repos: PropTypes.arrayOf(
   //  PropTypes.exact(RepoType),
-  //),
+  // ),
 };
 
 export default RepoList;
