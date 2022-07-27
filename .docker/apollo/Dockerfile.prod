@@ -1,5 +1,5 @@
 # ---------- Base ----------
-FROM node:16-alpine3.14 AS base
+FROM public.ecr.aws/docker/library/node:16-alpine3.14 AS base
 
 RUN mkdir /usr/app/ && chown -R node:node /usr/app/
 WORKDIR /usr/app

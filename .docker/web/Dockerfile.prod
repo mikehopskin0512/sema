@@ -1,4 +1,4 @@
-FROM node:16-alpine3.14 AS builder
+FROM public.ecr.aws/docker/library/node:16-alpine3.14 AS builder
 
 COPY ./adonis /adonis
 COPY . /src
@@ -15,7 +15,7 @@ RUN npm run build
 # Should be one RUN because npm prune depends on layers above
 RUN npm prune --production
 
-FROM node:16-alpine3.14
+FROM public.ecr.aws/docker/library/node:16-alpine3.14
 
 WORKDIR /usr/app
 
