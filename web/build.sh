@@ -26,7 +26,9 @@ DOCKER_FILE=../.docker/web/Dockerfile.prod
 SHA1=$(git rev-parse HEAD)
 VERSION=$BRANCH-$SHA1-$NODE_ENV
 ECR_URL="${AWS_ACCOUNT}".dkr.ecr."${AWS_REGION}".amazonaws.com
-IMAGE=$ECR_URL/$NAME:$VERSION
+BASE_IMAGE=$ECR_URL/$NAME
+IMAGE=$BASE_IMAGE:$VERSION
+IMAGE_LATEST=$ECR_URL/$NAME:latest
 
 cp .env.$ENV .env
 
@@ -41,11 +43,15 @@ aws ecr get-login-password | docker login --username AWS --password-stdin https:
 
 # Build and push the image
 echo "Building image..."
-docker build -f $DOCKER_FILE -t $NAME:$VERSION . --no-cache
+docker build --cache-from ${BASE_IMAGE}:builder \
+    --cache-from ${IMAGE_LATEST} \
+    -f $DOCKER_FILE -t $NAME:$VERSION .
+
 echo "Tagging image..."
 docker tag $NAME:$VERSION $IMAGE
+docker tag $NAME:$VERSION $IMAGE_LATEST
 echo "Pushing image..."
-docker push $IMAGE
+docker push $BASE_IMAGE --all-tags
 echo "Delete image..."
 docker rmi $IMAGE
 docker rmi $NAME:$VERSION
