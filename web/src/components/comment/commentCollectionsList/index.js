@@ -242,8 +242,10 @@ const CommentCollectionsList = () => {
     setView(value);
     localStorage.setItem(SEMA_COLLECTIONS_VIEW_MODE, value);
   };
-
-  const isLoaderNeeded = isFetching || organizationsNewState.isFetching;
+  
+  const isLoaderNeeded = isEmpty(selectedOrganization) ?
+    isFetching :
+    !organizationCollections.length && organizationsNewState.isFetching;
 
   return (
     <div>

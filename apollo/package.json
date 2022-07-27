@@ -67,6 +67,7 @@
     "pg": "^8.2.1",
     "request": "^2.88.2",
     "rollbar": "^2.25.0",
+    "set-interval-async": "^2.0.3",
     "speakingurl": "^14.0.1",
     "string-similarity": "^4.0.4",
     "swagger-ui-express": "^4.3.0",

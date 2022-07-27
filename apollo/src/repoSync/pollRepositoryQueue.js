@@ -6,7 +6,7 @@ import Repository from '../repositories/repositoryModel';
 import createGitHubImporter from './github';
 import {
   withOctokit,
-  getOwnerAndRepo,
+  probeRepository,
   importReviewsFromPullRequest,
   setSyncErrored,
   setSyncUnauthorized,
@@ -29,16 +29,13 @@ export default async function pollRepository({ id }) {
     return;
   }
 
-  if (!repository.cloneUrl) {
-    await setSyncErrored(
-      repository,
-      'Repository not found on GitHub (no clone URL)'
-    );
-    return;
-  }
-
   await withOctokit(repository, async (octokit) => {
-    if (!octokit) {
+    if (!(await probeRepository({ repository, octokit }))) {
+      logger.info(
+        `Repo sync: Not authorized to access repository ${
+          repository.fullName || repository.name
+        } ${id}`
+      );
       await setSyncUnauthorized(repository);
       return;
     }
@@ -100,7 +97,7 @@ async function pollComments({
 }) {
   const progressKey = `sync.progress.${type}`;
   const since = repository.get(progressKey)?.lastUpdatedAt?.toISOString();
-  const { owner, repo } = getOwnerAndRepo(repository);
+  const { owner, repo } = repository.getOwnerAndRepo();
   const pages = octokit.paginate.iterator(endpoint, {
     owner,
     repo,
@@ -131,7 +128,7 @@ async function pollComments({
 async function pollReviews({ octokit, endpoint, repository, importComment }) {
   const progressKey = `sync.progress.pullRequestReview`;
   const lastUpdatedAt = repository.get(progressKey)?.lastUpdatedAt;
-  const { owner, repo } = getOwnerAndRepo(repository);
+  const { owner, repo } = repository.getOwnerAndRepo();
   const pages = octokit.paginate.iterator(endpoint, {
     owner,
     repo,
