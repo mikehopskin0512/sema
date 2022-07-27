@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import EmptyRepo from "../emptyRepo";
 import RepoList from "../repoList";
 import styles from './reposView.module.scss';
+import RepoMissingBanner from '../../banners/repoMissing';
 
 const NUM_PER_PAGE = 9;
 
@@ -55,7 +56,7 @@ function ReposView({
 
   useEffect(() => {
     if (organizations && type === 'organization') {
-      const repos = organizations.repos;
+      const {repos} = organizations;
       const pinnedRepos = repos.filter(repo => selectedOrganization?.organization?.pinnedRepos?.includes(repo._id.toString()));
       const otherRepos = repos.filter(repo => !selectedOrganization?.organization?.pinnedRepos?.includes(repo._id.toString()));
       setRepos({
@@ -68,7 +69,7 @@ function ReposView({
 
   return ( !repositories.isFetching &&
     <>
-    <div className={clsx('my-40', styles['repos-container'])}>
+    <div className={clsx('mt-40 mb-20', styles['repos-container'])}>
       <RepoList
           type={type === 'organization' ? 'REPOS' : 'MY_REPOS'}
           repos={repos.other.slice(0, NUM_PER_PAGE * page)}
@@ -81,16 +82,15 @@ function ReposView({
         />
         {isEmptyRepo && !searchQuery && <EmptyRepo />}
       </div>
-      <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth has-footer-margin">
-        {isMoreReposAvailable && (
-          <button
-            onClick={() => setPage(page + 1)}
-            className="button has-background-gray-200 is-outlined has-text-black-900 has-text-weight-semibold is-size-6 has-text-primary"
-            type="button"
-          >View More
-          </button>
-        )}
-      </div>
+      {isMoreReposAvailable && <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth has-footer-margin">
+        <button
+          onClick={() => setPage(page + 1)}
+          className="button has-background-gray-200 is-outlined has-text-black-900 has-text-weight-semibold is-size-6 has-text-primary"
+          type="button"
+        >View More
+        </button>
+      </div>}
+      <RepoMissingBanner />
     </>
   )
 }
