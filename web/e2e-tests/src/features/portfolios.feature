@@ -144,8 +144,8 @@ Feature: Portfolios
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
     And  I pause for 1000ms
-    Then I expect that element "codeStatsTabBtn" becomes displayed
-    When I click on the element "codeStatsTabBtn"
+    Then I expect that element "repoInsightsTabBtn" becomes displayed
+    When I click on the element "repoInsightsTabBtn"
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "last14DaysDateRange" becomes displayed
@@ -229,8 +229,8 @@ Feature: Portfolios
     And  I expect that element "1stReposCard" becomes displayed
     When I click on the element "1stReposCard"
     And  I pause for 1000ms
-    Then I expect that element "codeStatsTabBtn" becomes displayed
-    When I click on the element "codeStatsTabBtn"
+    Then I expect that element "repoInsightsTabBtn" becomes displayed
+    When I click on the element "repoInsightsTabBtn"
     Then I expect that element "dateRangeFilter" becomes displayed
     When I click on the element "dateRangeFilter"
     Then I expect that element "last30DaysDateRange" becomes displayed
@@ -407,6 +407,7 @@ Feature: Portfolios
     Then I expect that element "saveSnapshotTitleInput" becomes displayed
 
     When I set "snapshot 1" to the inputfield "saveSnapshotTitleInput"
+    Then I expect that element "saveSnapshotDescriptionInput" becomes displayed
     And  I click on the element "saveSnapshotDescriptionInput"
     And  I add "snapshot from portfolio" to the inputfield "saveSnapshotDescriptionInput"
     And  I pause for 1000ms

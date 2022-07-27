@@ -31,8 +31,10 @@ Feature: Repo
 
       When I click on the element "1stReposCard"
       Then I expect that element "activityLogTabBtn" becomes displayed
-      And  I expect that element "codeStatsTabBtn" becomes displayed
+      When I click on the element "activityLogTabBtn"
+
       Then I expect that element "dateRangeFilter" becomes displayed
+      And  I expect that element "repoInsightsTabBtn" becomes displayed
       When I click on the element "dateRangeFilter"
       Then I expect that element "last30DaysDateRange" becomes displayed
       When I click on the element "last30DaysDateRange"
@@ -73,6 +75,9 @@ Feature: Repo
 
         Then I expect that element "1stReposCard" becomes displayed
         When I click on the element "1stReposCard"
+
+        Then I expect that element "activityLogTabBtn" becomes displayed
+        When I click on the element "activityLogTabBtn"
         Then I expect that element "dateRangeFilter" becomes displayed
         When I click on the element "dateRangeFilter"
         Then I expect that element "last7DaysDateRange" becomes displayed
@@ -104,7 +109,7 @@ Feature: Repo
         And  I expect that element "codeStatsTagsSnapshotBtn" becomes not displayed
 
     @PTA53 @smoke
-    Scenario: Code stats elements are displayed for repo
+    Scenario: Repo Insights elements are displayed for repo
         When I click on the element "reposTab"
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
@@ -115,16 +120,16 @@ Feature: Repo
 
         Then I expect that element "1stReposCard" becomes displayed
         When I click on the element "1stReposCard"
-        Then I expect that element "codeStatsTabBtn" becomes displayed
+        Then I expect that element "repoInsightsTabBtn" becomes displayed
 
-        When I click on the element "codeStatsTabBtn"
+        When I click on the element "repoInsightsTabBtn"
         Then I expect that element "dateRangeFilter" becomes displayed
         And  I expect that element "fromFilter" becomes not displayed
         And  I expect that element "toFilter" becomes not displayed
         And  I expect that element "summariesFilter" becomes displayed
         And  I expect that element "tagsFilter" becomes displayed
         And  I expect that element "pullRequestsFilter" becomes displayed
-        And  I expect that element "searchFilterBtn" becomes displayed
+        And  I expect that element "searchFilterBtn" becomes not displayed
         And  I expect that element "searchFilterInput" becomes not displayed
         And  I expect that element "smartCodeReviewsIndicator" becomes displayed
         And  I expect that element "smartCommentsIndicator" becomes displayed
@@ -137,11 +142,8 @@ Feature: Repo
         And  I expect that element "codeStatsSummariesSnapshotBtn" becomes displayed
         And  I expect that element "codeStatsTagsSnapshotBtn" becomes displayed
 
-        When I click on the element "searchFilterBtn"
-        Then I expect that element "searchFilterInput" becomes displayed
-
     @PTA53_2
-    Scenario: Code stats elements are displayed for repo with selected date range
+    Scenario: Repo Insights elements are displayed for repo with selected date range
         When I click on the element "reposTab"
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
@@ -152,9 +154,9 @@ Feature: Repo
         Then I expect that element "1stReposCard" becomes displayed
         When I click on the element "1stReposCard"
         And  I pause for 1000ms
-        Then I expect that element "codeStatsTabBtn" becomes displayed
+        Then I expect that element "repoInsightsTabBtn" becomes displayed
 
-        When I click on the element "codeStatsTabBtn"
+        When I click on the element "repoInsightsTabBtn"
         Then I expect that element "dateRangeFilter" becomes displayed
         When I click on the element "dateRangeFilter"
         Then I expect that element "last7DaysDateRange" becomes displayed
