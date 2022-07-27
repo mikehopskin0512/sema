@@ -82,6 +82,10 @@ const smartCommentSchema = new Schema(
       // Date of creation in the source.
       createdAt: Date,
     },
+    analyzedAt: {
+      type: Date,
+      default: null
+    }
   },
   { collection: 'smartComments', timestamps: true }
 );

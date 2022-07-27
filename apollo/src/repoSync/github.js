@@ -170,6 +170,7 @@ async function createNewSmartComment({
       'reaction': reaction?._id ?? SmartComment.schema.paths.reaction.default(),
       'tags': tags.map((t) => t._id),
       'source.origin': 'sync',
+      'analyzedAt': null  // we will set right timestamp of Jaxon api call in the future
     }
   );
 }
