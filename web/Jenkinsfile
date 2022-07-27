@@ -25,11 +25,15 @@ pipeline {
             }
         }
 
-        stage('Build web') {
+        stage("Create branch file"){
+            steps{
+                writeFile file: 'web/branch.txt', text: "export BRANCH=${params.ENVIRONMENT}"
+            }
+        }
+
+        stage('Kick off codebuild project') {
             steps {
-                script {
-                    buildWeb(params.ENVIRONMENT, params.BRANCH_NAME)
-                }
+                awsCodeBuild credentialsType: 'keys', projectName: "${params.ENVIRONMENT}-scr-phoenix-build", region: 'us-east-1', sourceControlType: 'jenkins'
             }
         }
 
@@ -48,12 +52,10 @@ pipeline {
         failure {
             slackSendsFail(env.JOB_NAME, params.BRANCH_NAME, BUILD_URL)
         }
-    }
-}
 
-def buildWeb(String environment, String branchName) {
-    dir('web') {
-        sh './build.sh ' + environment + ' ' + branchName
+        always{
+            cleanWs()
+        }
     }
 }
 

@@ -2,9 +2,14 @@
 set -euo pipefail
 readonly NAME=phoenix
 readonly ENV="${1}"
-readonly BRANCH="${2}"
 readonly AWS_ACCOUNT="091235034633"
 readonly AWS_REGION="us-east-1"
+
+source branch.txt || true
+
+if [[ -z ${BRANCH} ]]; then
+    BRANCH="${2}"
+fi
 
 if [[ -z ${ENV} ]]; then
     printf "environment name (prod,qa etc) must me specified, e.g. ./build.sh staging release-20... \n"
