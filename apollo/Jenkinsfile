@@ -34,21 +34,23 @@ pipeline {
             }
         }
 
+        stage("Create branch file"){
+            steps{
+                writeFile file: 'apollo/branch.txt', text: "export BRANCH=${params.BRANCH_NAME}"
+            }
+        }
+
         stage('Build') {
             failFast true
             parallel {
-                stage('Build Apollo') {
+                 stage('Kick off apollo codebuild project') {
                     steps {
-                        script {
-                            buildApollo(params.ENVIRONMENT, params.BRANCH_NAME)
-                        }
+                        awsCodeBuild credentialsType: 'keys', projectName: "${params.ENVIRONMENT}-scr-apollo-build", region: 'us-east-1', sourceControlType: 'jenkins'
                     }
                 }
-                stage('Build Apollo Worker'){
+                stage('Kick off apollo-worker codebuild project') {
                     steps{
-                        script{
-                            buildApolloWorker(params.ENVIRONMENT, params.BRANCH_NAME)
-                        }
+                        awsCodeBuild credentialsType: 'keys', projectName: "${params.ENVIRONMENT}-scr-apollo-worker-build", region: 'us-east-1', sourceControlType: 'jenkins'    
                     }
                 }
             }
@@ -103,18 +105,6 @@ pipeline {
         cleanup{
             cleanWs()
         }
-    }
-}
-
-def buildApollo(String environment, String branchName) {
-    dir('apollo') {
-        sh './build.sh ' + environment + ' ' + branchName
-    }
-}
-
-def buildApolloWorker(String environment, String branchName) {
-    dir('apollo') {
-        sh './worker-build.sh ' + environment + ' ' + branchName
     }
 }
 
