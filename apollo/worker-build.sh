@@ -50,7 +50,7 @@ echo "Tagging image..."
 docker tag $NAME:$VERSION $IMAGE
 docker tag $NAME:$VERSION $IMAGE_LATEST
 echo "Pushing image..."
-docker push $IMAGE
+docker push $BASE_IMAGE --all-tags
 echo "Delete image..."
 docker rmi $IMAGE
 docker rmi $NAME:$VERSION
