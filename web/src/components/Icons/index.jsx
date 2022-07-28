@@ -100,6 +100,8 @@ import { ReactComponent as DragTrigger } from './img/drag-icon.svg';
 import { ReactComponent as CopyIcon } from './img/copy.svg';
 import { ReactComponent as ReplayIcon } from './img/replay.svg';
 import { ReactComponent as UndoNewIcon } from './img/undo-icon.svg';
+import { ReactComponent as GithubSyncIcon } from './img/github-sync.svg';
+import { ReactComponent as GithubRefreshIcon } from './img/sync-refresh.svg';
 
 const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
 
@@ -771,5 +773,17 @@ export function ReplayArrowIcon(props) {
 export function UndoIconNew(props) {
   return <Icon {...props}>
     <UndoNewIcon />
+  </Icon>
+}
+
+export function GhSyncIcon(props) {
+  return <Icon {...props}>
+    <GithubSyncIcon />
+  </Icon>
+}
+
+export function GhRefreshIcon(props) {
+  return <Icon {...props}>
+    <GithubRefreshIcon />
   </Icon>
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import styles from './onboarding.module.scss';
-import { CloseIcon } from '../../components/Icons';
+import { CloseIcon, GhRefreshIcon, GhSyncIcon } from '../../components/Icons';
 import { black900 } from '../../../styles/_colors.module.scss';
 import useOutsideClick from '../../utils/useOutsideClick';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,7 +13,6 @@ import { PATHS } from '../../utils/constants';
 
 const RepoListItem = ({
   repoData,
-  isSynced,
   onModalClose,
 }) => {
   const router = useRouter();
@@ -21,12 +20,20 @@ const RepoListItem = ({
     router.push(`${PATHS.REPO}/${repoData?.externalId}`);
     onModalClose();
   };
+
+  const isSynced = repoData?.sync?.status === 'completed';
+
   return (
     <div className={styles['repo-list-item-wrapper']} onClick={onItemClick}>
       {/* TODO: ask to add images into repo-sync data fetching */}
-      <img className={styles['repo-list-item-img']} alt='temporary_alt' src='/img/onboarding/repo-item-ph.png' />
-      <p className={styles['repo-list-item-name']}>{capitalize(repoData.name)}</p>
-      <button className={styles['repo-list-item-button']}>{isSynced ? 'Synced' : 'Ready for sync'}</button>
+      <img className={styles['repo-list-item-img']} alt='temporary_alt' src={`https://avatars.githubusercontent.com/${repoData.externalId}`} />
+      <div className={styles['repo-list-item-name-wrapper']}>
+        <p className={styles['repo-list-item-name']}>{capitalize(repoData.name)}</p>
+      </div>
+      <button className={styles['repo-list-item-button']}>
+        {isSynced ? <GhSyncIcon size="small" /> : <GhRefreshIcon size="small" />}
+        {isSynced ? 'Synced' : 'Syncing'}
+      </button>
     </div>
   );
 };
@@ -71,9 +78,9 @@ const FFOnboardingModal = ({
   const correctModalTexts = useMemo(() => {
     return repositories.length ?
       {
-        title: 'Choose a repo to get started',
+        title: 'Create your GitHub Social Circle',
         text: (
-          <span>Pick your favorite or your most important repo so you can <br /> get the most out of Sema.</span>
+          <span>Choose your most active repo to see who<br /> your closest collaborators are.</span>
         ),
       } :
       {
@@ -95,11 +102,7 @@ const FFOnboardingModal = ({
       <div className='modal-background' />
       <div className={clsx('modal-card', styles['ffo-modal-wrapper'])} ref={modalRef}>
         <section className={clsx('modal-card-body p-0', styles['modal-body'])}>
-          <div onClick={onClose} className='is-clickable' style={{
-            position: 'absolute',
-            top: 20,
-            right: 30,
-          }}>
+          <div onClick={onClose} className={clsx('is-clickable', styles['ffo-modal-close-icon'])}>
             <CloseIcon size='medium' color={black900} />
           </div>
 
@@ -119,16 +122,23 @@ const FFOnboardingModal = ({
                 </p>
                 <div className={styles['ffo-modal-repos-list']}>
                   {repositories?.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-                    ?.map((data, index) => <RepoListItem repoData={data} isSynced onModalClose={onClose} key={index} />)}
+                    ?.map((data, index) => <RepoListItem repoData={data} onModalClose={onClose} key={index} />)}
                 </div>
               </div>
             )}
-            <button
-              type='button'
-              className={clsx('button is-outlined is-primary has-background-white has-text-primary border-radius-4px', styles['ffo-modal-repos-list-section-button'])}
-              onClick={onClose}>
-              Complete
-            </button>
+            {Boolean(repositories.length) && (
+              <p className={styles['ffo-modal-missing-repos-block']}>
+                Missing a repo? Only public repos can be synced with Sema <br /> for now. Private repo sync is coming soon!
+              </p>
+            )}
+            {!Boolean(repositories.length) && (
+              <button
+                type='button'
+                className={clsx('button is-outlined is-primary has-background-white has-text-primary border-radius-4px', styles['ffo-modal-repos-list-section-button'])}
+                onClick={onClose}>
+                Complete
+              </button>
+            )}
           </div>
         </section>
       </div>
