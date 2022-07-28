@@ -52,8 +52,7 @@ docker build \
 
 # Build and push the image
 echo "Building image..."
-docker build --cache-from ${BASE_IMAGE}:builder \
-    --cache-from ${IMAGE_LATEST} \
+docker build --cache-from ${BASE_IMAGE}:builder,${IMAGE_LATEST} \
     --build-arg BUILDKIT_INLINE_CACHE=1 \
     -f $DOCKER_FILE -t $NAME:$VERSION .
 
