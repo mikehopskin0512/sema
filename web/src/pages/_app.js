@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LaunchDarkly from '../components/launchDarkly';
 import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
-import { Provider } from 'react-redux';
+import { useDispatch, useSelector , Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import { config, library } from '@fortawesome/fontawesome-svg-core';
 import 'adonis/dist/styles/styles.css';
@@ -56,6 +55,7 @@ function Layout({ Component, pageProps }) {
   useEffect(() => {
     setDataLoaded(false);
     const accountData = localStorage.getItem('sema_selected_organization');
+    const isAllOrgsSelected = Boolean(JSON.parse(localStorage.getItem('sema_all_orgs')));
     let selectedOrganization = accountData ? JSON.parse(accountData) : null;
 
     if (!!selectedOrganization?.organization?._id && user._id === selectedOrganization?.user) {
@@ -68,7 +68,7 @@ function Layout({ Component, pageProps }) {
       dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
     }
     setDataLoaded(true);
-    dispatch(setSelectedOrganization(selectedOrganization || {}));
+    dispatch(setSelectedOrganization((selectedOrganization || {}), isAllOrgsSelected));
   }, []);
 
   if (apiError) return <ErrorScreen imagePath="/img/500.svg" title="We are sorry..." subtitle="Something went wrong." />;
@@ -78,7 +78,7 @@ function Layout({ Component, pageProps }) {
   );
 }
 
-const Application = ({ Component, pageProps, store }) => {
+function Application({ Component, pageProps, store }) {
   const router = useRouter();
 
   useEffect(() => {
@@ -111,7 +111,7 @@ const Application = ({ Component, pageProps, store }) => {
       </LaunchDarkly>
     </Provider>
   );
-};
+}
 
 Application.getInitialProps = async ({ Component, ctx }) => {
   await initialize(ctx);

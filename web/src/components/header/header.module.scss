@@ -107,7 +107,7 @@
 }
 
 .selected-org-name {
-  max-width: 130px;
+  max-width: 135px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -120,7 +120,8 @@
 
 .internal-org-switcher-container {
   width: 150%;
-  height: 450px;
+  height: auto;
+  max-height: 450px;
   overflow-y: scroll;
   box-shadow: 0px 10px 30px rgba(32, 32, 32, 0.2);
   position: absolute;
@@ -128,6 +129,34 @@
   top: calc(100% + 14px);
   -webkit-animation: fade-in .4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
   animation: fade-in .4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+
+  /* width */
+  &::-webkit-scrollbar {
+    width: 6px;
+    border-radius: 8px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: $gray-300;
+    border-radius: 8px;
+    margin: 16px 0;
+    border-right: 2px $white-0 solid;
+    background-clip: padding-box;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: $gray-400;
+    border-radius: 8px;
+    border-right: 2px $white-0 solid;
+    background-clip: padding-box;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: $gray-500 !important;
+  }
 }
 
 .org-switcher-item {
@@ -167,7 +196,7 @@
   }
   100% {
     opacity: 1;
-    height: 450px;
+    height: auto;
   }
 }
 @keyframes fade-in {
@@ -177,6 +206,6 @@
   }
   100% {
     opacity: 1;
-    height: 450px;
+    height: auto;
   }
 }

@@ -70,6 +70,7 @@ import { ReactComponent as ResendSvg } from './img/resend.svg';
 import { ReactComponent as SaveSvg } from './img/save.svg';
 import { ReactComponent as SearchSvg } from './img/search.svg';
 import { ReactComponent as SemaSvg } from './img/sema.svg';
+import { ReactComponent as SemaInverseSvg } from './img/sema-inverse.svg';
 import { ReactComponent as SemaCircleLogoSvg } from './img/sema-circle-logo.svg';
 import { ReactComponent as SeparatorSvg } from './img/separator.svg';
 import { ReactComponent as SettingsSvg } from './img/settings.svg';
@@ -579,6 +580,11 @@ export function SearchIcon(props) {
 export function SemaIcon(props) {
   return <Icon {...props}>
     <SemaSvg />
+  </Icon>
+}
+export function SemaInverseIcon(props) {
+  return <Icon {...props}>
+    <SemaInverseSvg />
   </Icon>
 }
 export function SemaCircleIcon(props) {

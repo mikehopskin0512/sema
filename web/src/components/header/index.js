@@ -151,7 +151,6 @@ function Header() {
                   toggleHamburger={toggleHamburger}
                   isSemaAdmin={isSemaAdmin}
                   type='desktop'
-                  selectedOrganization={selectedOrganization}
                 />
               </div>
               {/* Hamburger menu (mobile & tablet) */}

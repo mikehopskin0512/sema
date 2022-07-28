@@ -11,6 +11,7 @@ import { InviteModal } from "../InviteModal";
 import OrgSwitcher from '../OrganizationSwitcher';
 import * as analytics from '../../../utils/analytics';
 import { invitationsOperations } from '../../../state/features/invitations';
+import { blue50, white0 } from '../../../../styles/_colors.module.scss';
 import { COLORS_ARRAY } from './constants';
 
 const { createInviteAndHydrateUser, trackSendInvite } = invitationsOperations;
@@ -18,8 +19,7 @@ const { setSelectedOrganization } = authOperations;
 
 function UserHeaderNav({
   toggleHamburger,
-  type = 'desktop',
-  selectedOrganization,
+  type = 'desktop'
 }) {
   const router = useRouter();
   const { pathname } = router;
@@ -27,7 +27,7 @@ function UserHeaderNav({
   const [isInviteModal, setInviteModal] = useState(false);
 
   const {
-    auth: { user: userData, token },
+    auth: { user: userData, token, isAllOrgsSelected, selectedOrganization },
     organizations,
     repositories,
   } = useSelector((state) => ({
@@ -66,25 +66,38 @@ function UserHeaderNav({
   const [orgIndex, setOrgIndex] = useState(null);
   const [openOrgSwitcher, setOpenOrgSwitcher] = useState(false);
 
+  const setSelectedOrgColourOrClass = (toggleClass = false) => {
+    switch (true) {
+      case orgIndex === null:
+        return white0;
+      case isAllOrgsSelected:
+        return toggleClass ? 'org-colour-allorgs' : blue50;
+      case !isAllOrgsSelected && isEmpty(selectedOrganization):
+        return toggleClass ? 'org-colour-personal' : COLORS_ARRAY[COLORS_ARRAY.length - 1];
+      case !isAllOrgsSelected && !isEmpty(selectedOrganization):
+        return toggleClass ? `org-colour-${orgIndex % 15}` : COLORS_ARRAY[orgIndex % COLORS_ARRAY.length];
+      default:
+        break;
+    }
+  }
+
   const selectedMenuItem = () => ({
-    backgroundColor: isEmpty(selectedOrganization)
-      ? COLORS_ARRAY[COLORS_ARRAY.length - 1]
-      : COLORS_ARRAY[orgIndex % COLORS_ARRAY.length]
+    backgroundColor: setSelectedOrgColourOrClass()
   });
 
   const setMenuItemStyle = (matchPath) => pathname === matchPath ? selectedMenuItem() : {};
 
-  const setOrganization = (org) => {
+  const setOrganization = (org, allOrgs) => {
     let viewMode = PROFILE_VIEW_MODE.INDIVIDUAL_VIEW;
     if (org?.organization?._id) {
       viewMode = PROFILE_VIEW_MODE.ORGANIZATION_VIEW;
     }
-    dispatch(setSelectedOrganization(org || {}));
+    dispatch(setSelectedOrganization((org || {}), allOrgs));
     dispatch(setProfileViewMode(viewMode));
   };
 
-  const handleOnOrganizationClick = (org) => {
-    setOrganization(org);
+  const handleOnOrganizationClick = (org, allOrgs = false) => {
+    setOrganization(org, allOrgs);
     router.push(
       org
         ? `${PATHS.ORGANIZATIONS._}/${org?.organization?._id}${PATHS.REPOS}`
@@ -94,11 +107,7 @@ function UserHeaderNav({
 
   const toggleOrgSwitcherItemsHoverColor = (e) => {
     const el = e.target;
-    el.classList.toggle(
-      isEmpty(selectedOrganization)
-        ? 'org-colour-personal'
-        : `org-colour-${orgIndex % 15}`
-    );
+    el.classList.toggle(setSelectedOrgColourOrClass(true));
   };
 
   useEffect(() => {
@@ -120,6 +129,7 @@ function UserHeaderNav({
         <OrgSwitcher 
           organizations={organizations}
           selectedOrganization={selectedOrganization}
+          isAllOrgsSelected={isAllOrgsSelected}
           userData={userData}
           repositories={repositories}
           openOrgSwitcher={openOrgSwitcher}

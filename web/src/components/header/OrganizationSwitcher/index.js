@@ -5,12 +5,13 @@ import Avatar from 'react-avatar';
 import useOutsideClick from '../../../utils/useOutsideClick';
 import { SYNC_STATUS } from '../../../utils/constants';
 import { red500 } from '../../../../styles/_colors.module.scss'
-import { AlertOutlineIcon, ArrowDropdownIcon, ArrowDropupIcon, AuthorIcon } from '../../Icons';
+import { AlertOutlineIcon, ArrowDropdownIcon, ArrowDropupIcon, AuthorIcon, SemaInverseIcon } from '../../Icons';
 import styles from '../header.module.scss';
 
 function OrgSwitcher({
   organizations,
   selectedOrganization,
+  isAllOrgsSelected,
   userData,
   repositories,
   openOrgSwitcher,
@@ -21,10 +22,18 @@ function OrgSwitcher({
 }) {
   const orgMenu = useRef(null);
 
-  const renderOrgName = () =>
-    isEmpty(selectedOrganization)
-      ? `${userData.firstName} ${userData.lastName}`
-      : selectedOrganization.organization.name;
+  const renderNameOrClass = (className = false) => {
+    switch (true) {
+      case isAllOrgsSelected:
+        return className ? 'org-colour-allorgs' : 'All Organizations'
+      case !isAllOrgsSelected && isEmpty(selectedOrganization):
+        return className ? 'org-colour-personal' : `${userData.firstName} ${userData.lastName}`
+      case !isAllOrgsSelected && !isEmpty(selectedOrganization):
+        return className ? `org-colour-${orgIndex % 15}` :selectedOrganization.organization.name
+      default:
+        break;
+    }
+  }
 
   const renderAvatar = () =>
     isEmpty(selectedOrganization)
@@ -42,38 +51,38 @@ function OrgSwitcher({
   return (
     <div
       className={clsx(
-        'border-radius-4px is-flex is-justify-content-center is-align-items-center mr-20',
+        'border-radius-4px is-flex is-justify-content-space-around is-align-items-center mr-20',
         styles['external-org-switcher-container'],
-        isEmpty(selectedOrganization)
-          ? 'org-colour-personal'
-          : `org-colour-${orgIndex % 15}`
+        renderNameOrClass(true),
       )}
       onClick={() => setOpenOrgSwitcher((state) => !state)}
       ref={orgMenu}
     >
-      <div className="is-flex">
-        <Avatar
-          name={renderOrgName()}
-          src={renderAvatar()}
-          size="24"
-          textSizeRatio={2.5}
-          maxInitials={2}
-          round
-        />
+      <div className="is-flex is-align-items-center">
+        {!isAllOrgsSelected &&
+          <Avatar
+            name={renderNameOrClass()}
+            src={renderAvatar()}
+            size="24"
+            textSizeRatio={2.5}
+            maxInitials={2}
+            round
+          />
+        }
         <span
           className={clsx(
             'has-text-black-950 has-text-weight-semibold is-size-7 px-8',
             styles['selected-org-name']
           )}
         >
-          {renderOrgName()}
+          {renderNameOrClass()}
         </span>
-        {openOrgSwitcher ? (
-          <ArrowDropupIcon className={clsx(styles['dropdown-icon'])} />
-        ) : (
-          <ArrowDropdownIcon className={clsx(styles['dropdown-icon'])} />
-        )}
       </div>
+      {openOrgSwitcher ? (
+        <ArrowDropupIcon className={clsx(styles['dropdown-icon'])} />
+      ) : (
+        <ArrowDropdownIcon className={clsx(styles['dropdown-icon'])} />
+      )}
       {openOrgSwitcher && (
         <div
           className={clsx(
@@ -81,16 +90,34 @@ function OrgSwitcher({
             'has-background-white border-radius-4px'
           )}
         >
-          {/* All Orgs will be implemented in a future ticket */}
-          {/* <div className={`${styles['org-switcher-item']}`}>
-                <div className='is-flex is-align-items-center'>
-                  <div className={clsx(styles['sema-org-avatar'], 'border-radius-8px')} />
-                  <div className='is-flex is-flex-direction-column'>
-                    <p className='has-text-black-950 has-text-weight-semibold'>All Orgs</p>
-                    <p className='is-size-8'>X repos</p>
-                  </div>
-                </div>
-              </div> */}
+
+          {/* All Organizations */}
+          <div
+            className={clsx(
+              styles['org-switcher-item'],
+              'is-flex is-flex-direction-column is-justify-content-center'
+            )}
+            onClick={() => handleOnOrganizationClick(null, true)}
+            onMouseEnter={toggleOrgSwitcherItemsHoverColor}
+            onMouseLeave={toggleOrgSwitcherItemsHoverColor}
+          >
+            <div className='is-flex is-align-items-center noHover'>
+              <div className={clsx(styles.avatar,
+                'ml-20 mr-10 has-background-black-900 border-radius-8px is-flex is-justify-content-center is-align-items-center')}>
+                <SemaInverseIcon />
+              </div>
+              <div className="is-flex is-flex-direction-column">
+                <p className="has-text-black-950 has-text-weight-semibold">
+                  All Organizations
+                </p>
+                <p className="is-size-8">
+                  {repositories.data.repositories.length} repos
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Personal Account */}
           <div
             className={clsx(
               styles['org-switcher-item'],
@@ -101,9 +128,7 @@ function OrgSwitcher({
             onMouseLeave={toggleOrgSwitcherItemsHoverColor}
           >
             <div className="is-flex is-align-items-center noHover">
-              <div
-                className={clsx(styles['user-bullet'], 'border-radius-8px')}
-              />
+              <div className={clsx(styles['user-bullet'], 'border-radius-8px')} />
               <div className={clsx(styles.avatar, 'mx-10')}>
                 <Avatar
                   name={`${userData.firstName} ${userData.lastName}`}
@@ -132,6 +157,8 @@ function OrgSwitcher({
               </div>
             </div>
           </div>
+
+          {/* Organizations */}
           {organizations.organizations.map((org, idx) => (
             <div
               key={org._id}

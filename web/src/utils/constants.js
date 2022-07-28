@@ -411,12 +411,6 @@ export const renderMenuItems = (personalDashboard, isEmpty, selectedOrganization
     path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`,
     stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.DASHBOARD}`,
   }] : [],
-  ... !isEmpty(selectedOrganization) ? [{
-    title: 'Dashboard',
-    className : standardClass,
-    path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`,
-    stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.DASHBOARD}`,
-  }] : [],
   */
   ... !isEmpty(selectedOrganization) ? [{
     title: 'Repos',
