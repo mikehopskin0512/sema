@@ -19,11 +19,12 @@ fi
 ECR_URL="${AWS_ACCOUNT}".dkr.ecr."${AWS_REGION}".amazonaws.com
 NODE_ENV=production
 DOCKER_FILE=../.docker/"${NAME}"/Dockerfile.prod
+SHA1=$(git rev-parse HEAD)
+VERSION=$BRANCH-$SHA1-$NODE_ENV
+
 BASE_IMAGE=$ECR_URL/$NAME
 IMAGE=$BASE_IMAGE:$VERSION
 IMAGE_LATEST=$ECR_URL/$NAME:latest
-SHA1=$(git rev-parse HEAD)
-VERSION=$BRANCH-$SHA1-$NODE_ENV
 
 rm -f .env
 
