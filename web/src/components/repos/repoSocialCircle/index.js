@@ -23,6 +23,7 @@ export const SYNC_STATUSES = {
   ERRORED: 'errored',
   UNAUTHORIZED: 'unauthorized',
 }
+const REPO_UPDATE_INTERVAL = 30 * 1000;
 
 const RepoSocialCircle = ({ repoId }) => {
   const containerRef = useRef(null);
@@ -33,6 +34,7 @@ const RepoSocialCircle = ({ repoId }) => {
   const handle = user?.identities[0]?.username;
   const { overview } = repoData;
   const syncStatus = overview?.sync?.status;
+  const syncProgress = overview?.sync?.progress;
 
   const isRepoSynced = syncStatus === SYNC_STATUSES.COMPLETED;
   const isSyncingNow = syncStatus ===  SYNC_STATUSES.QUEUED || syncStatus === SYNC_STATUSES.STARTED;
@@ -41,13 +43,28 @@ const RepoSocialCircle = ({ repoId }) => {
 
   const [isCopied, changeIsCopied] = useState(false);
 
+
   useEffect(() => {
-    getRepoSocialGraph({ handle, repoId })
-      .then((res) => {
-        setInteractions(res?.data?.interactionsByUsers);
-        setRepoName(res?.data?.repoName);
-      });
-  }, [repoId]);
+    let isMounted = true;
+    const getInteractions = async () => {
+      try {
+        const { data } = await getRepoSocialGraph({ handle, repoId })
+        if (!isMounted || !data) {
+          return;
+        }
+        setInteractions(data.interactionsByUsers);
+        setRepoName(data.repoName);
+      } catch {
+        setTimeout(getInteractions, REPO_UPDATE_INTERVAL);x
+      }
+      if (isSyncingNow) {
+        setTimeout(getInteractions, REPO_UPDATE_INTERVAL);
+      }
+    }
+    getInteractions();
+
+    return () => isMounted = false;
+  }, [repoId, isSyncingNow]);
 
 
   useEffect(() => {
@@ -117,11 +134,7 @@ const RepoSocialCircle = ({ repoId }) => {
     return <PrivateRepoBanner />
   }
 
-  if (isSyncingNow) {
-    return <SyncInProgressRepoBanner />
-  }
-
-  if (!isRepoSynced) {
+  if (!isRepoSynced && !isSyncingNow) {
     return <NotSyncedRepoBanner />
   }
 
@@ -142,17 +155,26 @@ const RepoSocialCircle = ({ repoId }) => {
           </p>
         </div>
         <img src='/img/illustration_screen.png' className={styles.image} alt="bg-screen"/>
-        <div className={clsx('pr-30', styles.socials)}>
-          <span className={styles['socials-title']}>Share your Circle</span>
-          <div className="mt-16 is-flex is-justify-content-center">
-            {renderIcons(actions)}
-            <div className={styles.divider} />
-            {renderIcons(socials)}
+        {isRepoSynced && (
+          <div className={clsx('pr-30', styles.socials)}>
+            <span className={styles['socials-title']}>Share your Circle</span>
+            <div className="mt-16 is-flex is-justify-content-center">
+              {renderIcons(actions)}
+              <div className={styles.divider} />
+              {renderIcons(socials)}
+            </div>
           </div>
-        </div>
+        )}
       </div>
-      <div ref={containerRef} className={styles['graph-wrapper']}>
-        <InteractionCircleChart interactions={interactions} user={user} />
+      <div className='is-flex is-flex-direction-column' style={{width: '100%'}}>
+        {isSyncingNow && (
+          <div className={styles['circle-banner']}>
+            Generating your GitHub Social Circle. Check it out when your repo data finishes syncing.
+          </div>
+        )}
+        <div ref={containerRef}>
+          <InteractionCircleChart progress={syncProgress} interactions={interactions} user={user} />
+        </div>
       </div>
     </div>
 
