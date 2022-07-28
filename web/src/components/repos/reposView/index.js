@@ -36,7 +36,7 @@ function ReposView({
   const [page, setPage] = useState(1);
   const isMoreReposAvailable = repos.other.length > NUM_PER_PAGE && NUM_PER_PAGE * page < repos.other.length;
   const isEmptyRepo = (type === REPO_TYPES.USER && (!repositories.length && !repositories.isFetching)) ||
-    (type === REPO_TYPES.ORGANIZATION && (!organizations.isFetching && !organizations.organizations.length))
+    (type === REPO_TYPES.ORGANIZATION && (!repos.other.length))
 
   useEffect(() => {
     if (githubUser && type === 'user') {
