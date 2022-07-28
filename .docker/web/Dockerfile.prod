@@ -1,18 +1,23 @@
 FROM public.ecr.aws/docker/library/node:16-alpine3.14 AS builder
 
-COPY ./adonis /adonis
-COPY . /src
-
 RUN npm install -g npm@8.5.5
 
 WORKDIR /adonis
+COPY ./adonis/package*.json /adonis/
 RUN npm ci
+
+WORKDIR /src
+COPY package*.json /src/
+RUN npm ci
+
+WORKDIR /adonis
+COPY ./adonis /adonis
 RUN npm run build
 
 WORKDIR /src
-RUN npm ci
+COPY . /src
 RUN npm run build
-# Should be one RUN because npm prune depends on layers above
+
 RUN npm prune --production
 
 FROM public.ecr.aws/docker/library/node:16-alpine3.14
