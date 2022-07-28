@@ -20,6 +20,8 @@ RUN npm prune --production
 # ---------- Release ----------
 FROM base AS release
 
+RUN npm install -g pm2
+
 COPY --chown=node:node --from=builder /usr/app/node_modules ./node_modules
 COPY --chown=node:node --from=builder /usr/app/bin ./bin
 COPY --chown=node:node --from=builder /usr/app/dist ./dist
@@ -30,7 +32,6 @@ COPY --chown=node:node --from=builder /usr/app/package.json ./
 COPY --chown=node:node --from=builder /usr/app/package-lock.json ./
 COPY --chown=node:node --from=builder /usr/app/scripts ./scripts
 COPY --chown=node:node --from=builder /usr/app/migrate-mongo-config.js ./migrate-mongo-config.js
-RUN npm install -g pm2
 
 RUN ln -s dist src
 

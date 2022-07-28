@@ -1,0 +1,35 @@
+.progress-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.progress-background {
+  fill: none;
+  stroke: #C8EDF9;
+  stroke-width: 4px;
+}
+
+.circle-progress {
+  fill: none;
+  stroke: #2D9FC0;
+  stroke-width: 4px;
+}
+
+.percentage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: #000000;
+  font-weight: 600;
+  line-height: 24px;
+  border-radius: 100%;
+  background: rgba(255, 255, 255, 0.7);
+}
