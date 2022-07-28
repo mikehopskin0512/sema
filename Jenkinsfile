@@ -37,7 +37,7 @@ pipeline {
                     case ['qa', 'qa1']:
                             env.ENVIRONMENT = GIT_BRANCH
                             break
-                    case ['develop', "DVPS-356-apollo"]:
+                    case ['develop']:
                             env.ENVIRONMENT = 'staging'
                             break
                     case ~/$release_regex/:
