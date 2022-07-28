@@ -98,8 +98,8 @@ const ContentPage = ({
               {title}
             </p>
             {subtitle &&
-              subtitle.map((subtitleLine) => (
-                <p className="has-text-black-900">{subtitleLine}</p>
+              subtitle.map((subtitleLine, index) => (
+                <p className="has-text-black-900" key={index}>{subtitleLine}</p>
               ))}
             {page === EXTENSION_PAGE && (
               <ExtensionButton isInstalled={isPluginInstalled} />

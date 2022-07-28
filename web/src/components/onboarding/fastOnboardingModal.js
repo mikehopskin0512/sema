@@ -73,18 +73,18 @@ const FFOnboardingModal = ({
       {
         title: 'Choose a repo to get started',
         text: (
-          <div>Pick your favorite or your most important repo so you can <br /> get the most out of Sema.</div>
+          <span>Pick your favorite or your most important repo so you can <br /> get the most out of Sema.</span>
         ),
       } :
       {
         title: 'Wait, it seems you don’t have a public repo.',
         text: (
           <>
-            <div>For now, Sema can only work with public repo data. Don’t worry, we’re working on extending this to private repos too.</div>
+            <span>For now, Sema can only work with public repo data. Don’t worry, we’re working on extending this to private repos too.</span>
             <br />
-            <div className='mt-5'>
+            <span className='mt-5'>
               In the meantime, you can use Sema to write more meaningful code reviews or create a Developer Portfolio. <br /> Enjoy!
-            </div>
+            </span>
           </>
         ),
       };
@@ -119,7 +119,7 @@ const FFOnboardingModal = ({
                 </p>
                 <div className={styles['ffo-modal-repos-list']}>
                   {repositories?.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-                    ?.map((data) => <RepoListItem repoData={data} isSynced onModalClose={onClose} />)}
+                    ?.map((data, index) => <RepoListItem repoData={data} isSynced onModalClose={onClose} key={index} />)}
                 </div>
               </div>
             )}
