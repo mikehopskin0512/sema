@@ -1,5 +1,5 @@
 import InteractionCircleChart from '../../chart/InteractionCircleChart';
-import { DownloadIcon, FacebookIcon, LinkedinIcon, LinkIcon, TwitterIcon } from '../../Icons';
+import { DownloadIcon, LinkedinIcon, LinkIcon, TwitterIcon } from '../../Icons';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -12,7 +12,8 @@ import { SyncInProgressRepoBanner } from '../../repos/repoSocialCircle/banners/s
 import { createDataUrl, onDownloadImage } from '../../../utils/imageHelpers';
 import { uploadInfographicsImage } from '../../../state/features/auth/api';
 import { isEmpty } from 'lodash';
-import { shareWithFacebook, shareWithLinkedIn, shareWithTwitter } from '../../../utils/socialMedia';
+import { shareWithLinkedIn, shareWithTwitter } from '../../../utils/socialMedia';
+import Tooltip from '@/components/Tooltip';
 
 export const SYNC_STATUSES = {
   EMPTY: null,
@@ -71,6 +72,8 @@ const RepoSocialCircle = ({ repoId }) => {
       name: 'copy',
       icon: LinkIcon,
       onClick: () => onCopy(),
+      withTooltip: true,
+      tooltipText: 'Copied'
     },
   ];
 
@@ -88,16 +91,27 @@ const RepoSocialCircle = ({ repoId }) => {
   };
 
   const renderIcons = (iconsArray) => iconsArray.map(({
-      onClick,
-      icon,
-    }) => (
-      <div className={clsx('is-flex mr-16 is-clickable', styles['social-item'])} onClick={onClick}>
-        {icon({
+    onClick,
+    icon,
+    withTooltip,
+    tooltipText,
+  }) => (
+    <div className={clsx('is-flex mr-16 is-clickable', styles['social-item'])} onClick={onClick}>
+      {withTooltip ? (
+        <Tooltip text={tooltipText} isActive={isCopied} hideDelay={2000}>
+          {icon({
+            color: blue700,
+            size: 'medium',
+          })}
+        </Tooltip>
+      ) : (
+        icon({
           color: blue700,
           size: 'medium',
-        })}
-      </div>
-    ));
+        }))
+      }
+    </div>
+  ));
 
   if (isRepoPrivate) {
     return <PrivateRepoBanner />
