@@ -21,6 +21,7 @@ function OrgSwitcher({
   toggleOrgSwitcherItemsHoverColor,
 }) {
   const orgMenu = useRef(null);
+  const missingOrgsIntercomURL = 'https://intercom.help/sema-software/en/articles/6344622-what-is-github-sync-and-how-do-i-use-it';
 
   const renderNameOrClass = (className = false) => {
     switch (true) {
@@ -204,6 +205,26 @@ function OrgSwitcher({
               </div>
             </div>
           ))}
+
+          {/* Can't find an ORG text */}
+          <div
+            className={clsx(
+              styles['missing-orgs-item'],
+              'is-flex is-flex-direction-column is-justify-content-center'
+            )}
+          >
+            <span className='is-size-7 has-text-black-900 pl-20'>
+              {`Can’t find an Org? `}
+              <a
+                href={missingOrgsIntercomURL}
+                className='has-text-weight-semibold has-text-blue-700 is-underlined'
+                target="_blank"
+                rel="noreferrer"
+              >
+                Learn More
+              </a>
+            </span>
+          </div>
         </div>
       )}
     </div>

@@ -189,6 +189,11 @@
   text-overflow: ellipsis;
 }
 
+.missing-orgs-item {
+  height: 70px;
+  cursor: default;
+}
+
 @-webkit-keyframes fade-in {
   0% {
     opacity: 0;
