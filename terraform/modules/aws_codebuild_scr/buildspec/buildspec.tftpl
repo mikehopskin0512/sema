@@ -1,0 +1,32 @@
+version: 0.2
+%{ if  app == "phoenix" || app == "apollo" || app == "apollo-worker" }
+env:
+  variables:
+    DOCKER_BUILDKIT: 1
+%{ endif }
+phases:
+  build:
+%{ if app == "apollo-worker" }
+    commands:
+       - chmod +x apollo/worker-build.sh
+       - cd apollo
+       - ./worker-build.sh ${env}
+%{ endif }
+%{ if app == "phoenix" }
+    commands:
+       - chmod +x web/build.sh
+       - cd web
+       - ./build.sh ${env}
+%{ endif }
+%{ if app == "themis" || app == "apollo" }
+    commands:
+       - chmod +x ${app}/build.sh
+       - cd ${app}
+       - ./build.sh ${env}
+%{ endif }
+%{ if app == "themis" }
+artifacts:
+  files:
+    - 'Sema_Code_Review_Assistant_${env}_*'
+  base-directory: 'themis'
+%{ endif }
