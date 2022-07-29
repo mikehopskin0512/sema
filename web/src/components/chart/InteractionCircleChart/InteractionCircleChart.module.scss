@@ -1,21 +1,28 @@
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 500px;
-  width: 500px;
-}
+@import '../../../../styles/_colors.module.scss';
 
 .img {
-  width: inherit;
-  height: inherit;
+  width: 100%;
+  height: 100%;
   border-radius: 100px;
 }
 
 .circle-container {
-  height: 100%;
   width: 100%;
+  margin: 0 auto;
+  max-width: 625px;
   position: relative;
+
+  &:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+  }
+}
+
+.circle-inner-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .circle {
@@ -23,297 +30,285 @@
   position: absolute;
   top: 50%;
   left: 50%;
+  background: $gray-200;
+}
+
+@mixin circle--first-layer {
+  height: 12.5%;
+  width: 12.5%;
+}
+
+@mixin circle--second-layer {
+  height: 10.5%;
+  width: 10.5%;
+}
+
+@mixin circle--third-layer {
+  height: 8%;
+  width: 8%;
 }
 
 .user-0 {
-  height: 150px;
-  width: 150px;
+  height: 20%;
+  width: 20%;
   transform: translate(-50%, -50%);
 }
 
 /* 1st Layer */
 .user-1 {
-  height: 100px;
-  width: 100px;
-  transform: translate(-120%, -170%);
+  @include circle--first-layer;
+  transform: translate(-50%, -50%) translate(140%, 0%);
 }
 
 .user-2 {
-  height: 100px;
-  width: 100px;
-  transform: translate(20%, -170%);
+  @include circle--first-layer;
+  transform: translate(-50%, -50%) translate(90%, 110%);
 }
 
 .user-3 {
-  height: 100px;
-  width: 100px;
-  transform: translate(90%, -60%);
+  @include circle--first-layer;
+  transform: translate(-50%, -50%) translate(-35%, 135%);
 }
 
 .user-4 {
-  height: 100px;
-  width: 100px;
-  transform: translate(60%, 50%);
+  @include circle--first-layer;
+  transform: translate(-50%, -50%) translate(-130%, 60%);
 }
 
 .user-5 {
-  height: 100px;
-  width: 100px;
-  transform: translate(-50%, 90%);
+  @include circle--first-layer;
+  transform: translate(-50%, -50%) translate(-130%, -60%);
 }
 
 .user-6 {
-  height: 100px;
-  width: 100px;
-  transform: translate(-160%, 50%);
+  @include circle--first-layer;
+  transform: translate(-50%, -50%) translate(-30%, -135%);
 }
 
 .user-7 {
-  height: 100px;
-  width: 100px;
-  transform: translate(-190%, -60%);
+  @include circle--first-layer;
+  transform: translate(-50%, -50%) translate(90%, -110%);
 }
 
 /* 2nd Layer */
 .user-8 {
-  height: 70px;
-  width: 70px;
-  transform: translate(-400%, -80%);
+  @include circle--second-layer;
+  transform: translate(-50%, -50%) translate(-289%, -60%);
 }
 
 .user-9 {
-  height: 70px;
-  width: 70px;
-  transform: translate(-330%, -210%);
+  @include circle--second-layer;
+  transform: translate(-50%, -50%) translate(-293%, 68%);
 }
 
 .user-10 {
-  height: 70px;
-  width: 70px;
-  transform: translate(-220%, -340%);
+  @include circle--second-layer;
+  transform: translate(-50%, -50%) translate(-227%, -180%);
 }
 
 .user-11 {
-  height: 70px;
-  width: 70px;
-  transform: translate(-40%, -390%);
+  @include circle--second-layer;
+  transform: translate(-50%, -50%) translate(-118%, -258%);
 }
 
 .user-12 {
-  height: 70px;
-  width: 70px;
-  transform: translate(130%, -350%);
+  @include circle--second-layer;
+  transform: translate(-50%, -50%) translate(12%, -292%);
 }
 
 .user-13 {
-  height: 70px;
-  width: 70px;
-  transform: translate(230%, -210%);
+  @include circle--second-layer;
+  transform: translate(-50%, -50%) translate(141%, -253%);
+
 }
 
 .user-14 {
-  height: 70px;
-  width: 70px;
-  transform: translate(300%, -50%);
+  @include circle--second-layer;
+  transform: translate(-50%, -50%) translate(240%, -155%);
 }
 
 .user-15 {
-  height: 70px;
-  width: 70px;
-  transform: translate(280%, 90%);
+  @include circle--second-layer;
+  transform: translate(-50%, -50%) translate(295%, -40%);
 }
 
 .user-16 {
-  height: 70px;
-  width: 70px;
-  transform: translate(220%, 220%);
+  @include circle--second-layer;
+  transform: translate(-50%, -50%) translate(290%, 90%);
 }
 
 .user-17 {
-  height: 70px;
-  width: 70px;
-  transform: translate(90%, 290%);
+  @include circle--second-layer;
+  transform: translate(-50%, -50%) translate(232%, 195%);
 }
 
 .user-18 {
-  height: 70px;
-  width: 70px;
-  transform: translate(-60%, 310%);
+  @include circle--second-layer;
+  transform: translate(-50%, -50%) translate(124%, 261%);
 }
 
 
 .user-19 {
-  height: 70px;
-  width: 70px;
-  transform: translate(-200%, 270%);
+  @include circle--second-layer;
+  transform: translate(-50%, -50%) translate(-124%, 273%);
 }
 
 .user-20 {
-  height: 70px;
-  width: 70px;
-  transform: translate(-330%, 190%);
+  @include circle--second-layer;
+  transform: translate(-50%, -50%) translate(3%, 288%);
 }
 
 .user-21 {
-  height: 70px;
-  width: 70px;
-  transform: translate(-380%, 60%);
+  @include circle--second-layer;
+  transform: translate(-50%, -50%) translate(-234%, 190%);
 }
 
 /* =============== 3rd Layer ============== */
 
 /* 1st circle */
 .user-22 {
-  height: 50px;
-  width: 50px;
-  transform: translate(-680%, 40%);
+  @include circle--third-layer;
+
+  transform: translate(-605%, -20%);
 }
 
 .user-23 {
-  height: 50px;
-  width: 50px;
-  transform: translate(-690%, -110%);
+  @include circle--third-layer;
+
+  transform: translate(-590%, -165%);
 }
 
 .user-24 {
-  height: 50px;
-  width: 50px;
-  transform: translate(-650%, -260%);
+  @include circle--third-layer;
+
+  transform: translate(-522%, -295%);
 }
 
 /* 4th circle */
 .user-25 {
-  height: 50px;
-  width: 50px;
-  transform: translate(-570%, -400%);
+  @include circle--third-layer;
+
+  transform: translate(-440%, -401%);
 }
 
 .user-26 {
-  height: 50px;
-  width: 50px;
-  transform: translate(-450%, -520%);
+  @include circle--third-layer;
+  transform: translate(-50%, -50%) translate(-275%, -430%);
 }
 
 .user-27 {
-  height: 50px;
-  width: 50px;
-  transform: translate(-300%, -610%);
+  @include circle--third-layer;
+
+  transform: translate(-210%, -548%);
 }
 
 .user-28 {
-  height: 50px;
-  width: 50px;
-  transform: translate(-150%, -670%);
+  @include circle--third-layer;
+
+  transform: translate(-78%, -570%);
 }
 
 .user-29 {
-  height: 50px;
-  width: 50px;
-  transform: translate(10%, -670%);
+  @include circle--third-layer;
+
+  transform: translate(58%, -565%);
 }
 
 .user-30 {
-  height: 50px;
-  width: 50px;
-  transform: translate(150%, -650%);
+  @include circle--third-layer;
+
+  transform: translate(189%, -525%);
 }
 
 .user-31 {
-  height: 50px;
-  width: 50px;
-  transform: translate(290%, -610%);
+  @include circle--third-layer;
+
+  transform: translate(313%, -471%);
 }
 
 .user-32 {
-  height: 50px;
-  width: 50px;
-  transform: translate(410%, -500%);
+  @include circle--third-layer;
+
+  transform: translate(409%, -360%);
 }
 
 .user-33 {
-  height: 50px;
-  width: 50px;
-  transform: translate(500%, -370%);
+  @include circle--third-layer;
+
+  transform: translate(465%, -233%);
 }
 
 .user-34 {
-  height: 50px;
-  width: 50px;
-  transform: translate(570%, -200%);
+  @include circle--third-layer;
+
+  transform: translate(495%, -100%);
 }
 
 .user-35 {
-  height: 50px;
-  width: 50px;
-  transform: translate(590%, -40%);
+  @include circle--third-layer;
+
+  transform: translate(506%, 35%);
 }
 
 .user-36 {
-  height: 50px;
-  width: 50px;
-  transform: translate(580%, 120%);
+  @include circle--third-layer;
+
+  transform: translate(470%, 170%);
 }
 
 .user-37 {
-  height: 50px;
-  width: 50px;
-  transform: translate(540%, 280%);
+  @include circle--third-layer;
+
+  transform: translate(408%, 289%);
 }
 
 .user-38 {
-  height: 50px;
-  width: 50px;
-  transform: translate(450%, 420%);
+  @include circle--third-layer;
+
+  transform: translate(302%, 385%);
 }
 
 .user-39 {
-  height: 50px;
-  width: 50px;
-  transform: translate(300%, 520%);
+  @include circle--third-layer;
+
+  transform: translate(160%, 446%);
 }
 
 .user-40 {
-  height: 50px;
-  width: 50px;
-  transform: translate(140%, 590%);
+  @include circle--third-layer;
+
+  transform: translate(15%, 470%);
 }
 
 .user-41 {
-  height: 50px;
-  width: 50px;
-  transform: translate(-60%, 610%);
+  @include circle--third-layer;
+
+  transform: translate(-135%, 476%);
 }
 
 /* 21st circle */
 .user-42 {
-  height: 50px;
-  width: 50px;
-  transform: translate(-230%, 590%);
+  @include circle--third-layer;
+
+  transform: translate(-285%, 450%);
 }
 
 .user-43 {
-  height: 50px;
-  width: 50px;
-  transform: translate(-380%, 520%);
+  @include circle--third-layer;
+
+  transform: translate(-415%, 370%);
 }
 
 /* 23rd circle */
 .user-44 {
-  height: 50px;
-  width: 50px;
-  transform: translate(-520%, 440%);
+  @include circle--third-layer;
+
+  transform: translate(-511%, 260%);
 }
 
 /* 24th circle */
 .user-45 {
-  height: 50px;
-  width: 50px;
-  transform: translate(-610%, 310%);
-}
+  @include circle--third-layer;
 
-/* 25th circle */
-.user-46 {
-  height: 50px;
-  width: 50px;
-  transform: translate(-650%, 180%);
+  transform: translate(-579%, 123%);
 }

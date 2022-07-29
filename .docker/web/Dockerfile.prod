@@ -22,6 +22,8 @@ RUN npm prune --production
 
 FROM public.ecr.aws/docker/library/node:16-alpine3.14
 
+RUN npm install --global pm2@5.1.2
+
 WORKDIR /usr/app
 
 COPY --from=builder /adonis /usr/adonis
@@ -29,8 +31,6 @@ COPY --from=builder /src/node_modules /usr/app/node_modules
 COPY --from=builder /src/package.json /usr/app/package.json
 COPY --from=builder /src/public /usr/app/public
 COPY --from=builder /src/.next /usr/app/.next
-
-RUN npm install --global pm2@5.1.2
 
 USER node
 EXPOSE 3000
