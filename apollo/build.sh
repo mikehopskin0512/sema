@@ -38,6 +38,7 @@ docker build \
     --target builder \
     --cache-from ${ECR_URL}/${NAME}:builder \
     -t ${ECR_URL}/${NAME}:builder \
+    --build-arg BUILDKIT_INLINE_CACHE=1 \
     -f ${DOCKER_FILE} \
     .
 
@@ -45,6 +46,7 @@ docker build \
 echo "Building image..."
 docker build --cache-from ${BASE_IMAGE}:builder \
     --cache-from ${IMAGE_LATEST} \
+    --build-arg BUILDKIT_INLINE_CACHE=1 \
     -f $DOCKER_FILE -t $NAME:$VERSION .
 #docker build -t $NAME:$VERSION .
 echo "Tagging image..."
