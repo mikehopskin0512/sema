@@ -39,11 +39,11 @@ const maxTimeout = process.env.NODE_ENV === 'test' ? 10 : 3000;
 // Rate limit errors are retried with a new Octokit instance
 // from our pool (see getOctokitFromPool()).
 export async function withOctokit(repository, fn) {
-  await retry(
+  return await retry(
     async (bail) => {
       try {
         const octokit = await getOctokit(repository);
-        await fn(octokit);
+        return await fn(octokit);
       } catch (error) {
         // Retry immediately if we hit the rate limit
         // (using a different token from the pool).
@@ -51,6 +51,7 @@ export async function withOctokit(repository, fn) {
 
         // Actually throw other errors.
         bail(error);
+        return null;
       }
     },
     {

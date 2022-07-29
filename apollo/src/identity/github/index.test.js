@@ -2,6 +2,7 @@ import nock from 'nock';
 import { decode } from 'jsonwebtoken';
 import apollo from '../../../test/apolloClient';
 import User from '../../users/userModel';
+import Organization from '../../organizations/organizationModel';
 import { createGhostUser } from '../../users/userService';
 import { getRepoByUserIds } from '../../repositories/repositoryService';
 import { queue as importRepositoryQueue } from '../../repoSync/importRepositoryQueue';
@@ -13,6 +14,7 @@ describe('GET /identities/github/cb', () => {
   let status;
   let headers;
   let redirectUrl;
+  let organizations;
 
   beforeAll(() => {
     nock('https://github.com')
@@ -46,7 +48,6 @@ describe('GET /identities/github/cb', () => {
         per_page: 100,
         sort: 'pushed',
         visibility: 'public',
-        affiliation: 'owner,collaborator',
       })
       .reply(200, [
         {
@@ -149,6 +150,10 @@ describe('GET /identities/github/cb', () => {
       redirectUrl = new URL(headers.location);
     });
 
+    beforeAll(async () => {
+      organizations = await getOrganizationsByUser(user._id);
+    });
+
     it('should redirect to registration', () => {
       expect(status).toBe(302);
       expect(redirectUrl.pathname).toBe('/register');
@@ -167,7 +172,6 @@ describe('GET /identities/github/cb', () => {
     });
 
     it('should sync organizations', async () => {
-      const organizations = await getOrganizationsByUser(user._id);
       const organizationLogins = organizations
         .map((o) => o.organization.name)
         .sort();
@@ -204,6 +208,27 @@ describe('GET /identities/github/cb', () => {
       it('should be marked as public', () => {
         const visibility = [...new Set(repositories.map((r) => r.visibility))];
         expect(visibility).toEqual(['public']);
+      });
+    });
+
+    describe('repository that belongs to an organization', () => {
+      let astrobee;
+      let semaSandbox;
+
+      beforeAll(async () => {
+        const repositories = await getRepoByUserIds([user._id]);
+        astrobee = repositories.find((r) => r.name === 'astrobee');
+        semaSandbox = await Organization.findOne({
+          name: 'SemaSandbox',
+        });
+      });
+
+      it('should be linked to the organization', () => {
+        expect(astrobee.orgId).toEqualID(semaSandbox._id);
+      });
+
+      it('should be linked in the organization repos list', () => {
+        expect(semaSandbox.repos[0]).toEqualID(astrobee._id);
       });
     });
 
