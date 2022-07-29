@@ -90,7 +90,7 @@ function ReposView({
         >View More
         </button>
       </div>}
-      <RepoMissingBanner />
+      {!isEmptyRepo && <RepoMissingBanner />}
     </>
   )
 }

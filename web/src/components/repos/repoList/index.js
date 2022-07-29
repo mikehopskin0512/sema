@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { range } from 'lodash';
+import { range, isEmpty } from 'lodash';
 import { useRouter } from "next/router";
 import usePermission from '../../../hooks/usePermission';
 import RepoCard from '../repoCard';
@@ -26,12 +26,6 @@ import { PATHS } from "../../../utils/constants";
 
 const githubAppName = process.env.NEXT_PUBLIC_GITHUB_APP_NAME;
 
-const LIST_TYPE = {
-  FAVORITES: 'Favorite Repos',
-  MY_REPOS: 'My Repos',
-  REPOS: 'Repos',
-};
-
 const filterOptions = [
   { value: 'a-z', label: 'A - Z', placeholder: 'A - Z' },
   { value: 'z-a', label: 'Z - A', placeholder: 'Z - A' },
@@ -52,6 +46,11 @@ function RepoList({
 }) {
   const dispatch = useDispatch();
   const { token, selectedOrganization } = useSelector((state) => state.authState);
+  const LIST_TYPE = {
+    FAVORITES: 'Favorite Repos',
+    MY_REPOS: 'My Repos',
+    REPOS: !isEmpty(selectedOrganization) ? `${selectedOrganization.organization.name} Repos` : 'Repos',
+  };
   const { isLoading } = useSelector((state) => state.identitiesState);
   const [redirectUser, setRedirectUser] = useLocalStorage('redirect_user', false);
 
