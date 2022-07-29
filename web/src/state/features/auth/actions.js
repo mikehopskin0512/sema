@@ -281,9 +281,10 @@ export const setUser = function (user) {
   };
 };
 
-export const setSelectedOrganizationSuccess = (selectedOrganization) => ({
+export const setSelectedOrganizationSuccess = (selectedOrganization, isAllOrgsSelected) => ({
   type: types.SET_SELECTED_ORGANIZATION,
   selectedOrganization,
+  isAllOrgsSelected,
 });
 
 export const setProfileViewModeSuccess = (profileViewMode) => ({
@@ -307,9 +308,10 @@ export const toggleAppInstallBanner = (payload) => ({
 })
 
 
-export const setSelectedOrganization = (selectedOrganization) => (dispatch) => {
+export const setSelectedOrganization = (selectedOrganization, isAllOrgsSelected = false) => (dispatch) => {
   localStorage.setItem('sema_selected_organization', JSON.stringify(selectedOrganization));
-  dispatch(setSelectedOrganizationSuccess(selectedOrganization));
+  localStorage.setItem('sema_all_orgs', JSON.stringify(isAllOrgsSelected));
+  dispatch(setSelectedOrganizationSuccess(selectedOrganization, isAllOrgsSelected));
 };
 
 export const setProfileViewMode = (profileViewMode) => (dispatch) => {

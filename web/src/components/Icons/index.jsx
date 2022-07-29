@@ -70,6 +70,7 @@ import { ReactComponent as ResendSvg } from './img/resend.svg';
 import { ReactComponent as SaveSvg } from './img/save.svg';
 import { ReactComponent as SearchSvg } from './img/search.svg';
 import { ReactComponent as SemaSvg } from './img/sema.svg';
+import { ReactComponent as SemaInverseSvg } from './img/sema-inverse.svg';
 import { ReactComponent as SemaCircleLogoSvg } from './img/sema-circle-logo.svg';
 import { ReactComponent as SeparatorSvg } from './img/separator.svg';
 import { ReactComponent as SettingsSvg } from './img/settings.svg';
@@ -100,6 +101,8 @@ import { ReactComponent as DragTrigger } from './img/drag-icon.svg';
 import { ReactComponent as CopyIcon } from './img/copy.svg';
 import { ReactComponent as ReplayIcon } from './img/replay.svg';
 import { ReactComponent as UndoNewIcon } from './img/undo-icon.svg';
+import { ReactComponent as GithubSyncIcon } from './img/github-sync.svg';
+import { ReactComponent as GithubRefreshIcon } from './img/sync-refresh.svg';
 
 const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
 
@@ -579,6 +582,11 @@ export function SemaIcon(props) {
     <SemaSvg />
   </Icon>
 }
+export function SemaInverseIcon(props) {
+  return <Icon {...props}>
+    <SemaInverseSvg />
+  </Icon>
+}
 export function SemaCircleIcon(props) {
   return <Icon {...props}>
     <SemaCircleLogoSvg />
@@ -771,5 +779,17 @@ export function ReplayArrowIcon(props) {
 export function UndoIconNew(props) {
   return <Icon {...props}>
     <UndoNewIcon />
+  </Icon>
+}
+
+export function GhSyncIcon(props) {
+  return <Icon {...props}>
+    <GithubSyncIcon />
+  </Icon>
+}
+
+export function GhRefreshIcon(props) {
+  return <Icon {...props}>
+    <GithubRefreshIcon />
   </Icon>
 }

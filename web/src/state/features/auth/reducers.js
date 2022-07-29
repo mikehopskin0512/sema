@@ -11,6 +11,7 @@ const initialState = {
   user: {},
   userVoiceToken: null,
   selectedOrganization: {},
+  isAllOrgsSelected: false,
   profileViewMode: PROFILE_VIEW_MODE.INDIVIDUAL_VIEW,
   pinnedRepos: [],
   isSyncBannerPromo: false,
@@ -202,6 +203,7 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       selectedOrganization: action.selectedOrganization,
+      isAllOrgsSelected: action.isAllOrgsSelected,
     };
   case types.SET_PROFILE_VIEW_MODE:
     return {
