@@ -170,7 +170,7 @@ function RepoList({
   const [isRepoListOpen, setRepoListOpen] = useState(false);
   return (
     (repos.length > 0 || withSearch) ? (
-      <div className='mb-50'>
+      <div className='mb-20'>
         {isOrganizationAdmin() && (
           <OrganizationReposList
             isActive={isRepoListOpen}
