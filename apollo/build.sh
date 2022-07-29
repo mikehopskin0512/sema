@@ -38,20 +38,21 @@ docker build \
     --target builder \
     --cache-from ${ECR_URL}/${NAME}:builder \
     -t ${ECR_URL}/${NAME}:builder \
+    --build-arg BUILDKIT_INLINE_CACHE=1 \
     -f ${DOCKER_FILE} \
     .
 
 # Build and push the image
 echo "Building image..."
-docker build --cache-from ${BASE_IMAGE}:builder \
-    --cache-from ${IMAGE_LATEST} \
+docker build --cache-from ${BASE_IMAGE}:builder,${IMAGE_LATEST} \
+    --build-arg BUILDKIT_INLINE_CACHE=1 \
     -f $DOCKER_FILE -t $NAME:$VERSION .
 #docker build -t $NAME:$VERSION .
 echo "Tagging image..."
 docker tag $NAME:$VERSION $IMAGE
 docker tag $NAME:$VERSION $IMAGE_LATEST
 echo "Pushing image..."
-docker push $IMAGE
+docker push $BASE_IMAGE --all-tags
 echo "Delete image..."
 docker rmi $IMAGE
 docker rmi $NAME:$VERSION
