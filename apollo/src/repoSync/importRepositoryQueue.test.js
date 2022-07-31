@@ -4,6 +4,7 @@ import sample from 'lodash/sample';
 import nock from 'nock';
 import mongoose from 'mongoose';
 import resetNocks, { setDefaultNocks } from '../../test/nocks';
+import createUser from '../../test/helpers/userHelper';
 import * as userService from '../users/userService';
 import {
   findByExternalId as findSmartCommentsByExternalId,
@@ -29,20 +30,7 @@ describe('Import Repository Queue', () => {
   let repository;
 
   beforeAll(async () => {
-    user = await userService.create({
-      username: 'Ada',
-      password: 's3cr3t',
-      firstName: 'Ada',
-      lastName: 'Lovelace',
-      identities: [
-        {
-          email: 'ada@example.com',
-          provider: 'github',
-          repositories: [],
-        },
-      ],
-      terms: true,
-    });
+    user = await createUser();
   });
 
   describe('newly added repository', () => {

@@ -1,6 +1,6 @@
 import nock from 'nock';
+import createUser from '../../test/helpers/userHelper';
 import resetNocks from '../../test/nocks';
-import * as userService from '../users/userService';
 import { create as createRepository } from '../repositories/repositoryService';
 import Repository from '../repositories/repositoryModel';
 import SmartComment from '../comments/smartComments/smartCommentModel';
@@ -10,20 +10,7 @@ describe('Github Webhook Queue', () => {
   let repository;
 
   beforeAll(async () => {
-    await userService.create({
-      username: 'Ada',
-      password: 's3cr3t',
-      firstName: 'Ada',
-      lastName: 'Lovelace',
-      identities: [
-        {
-          email: 'ada@example.com',
-          provider: 'github',
-          repositories: [],
-        },
-      ],
-      terms: true,
-    });
+    await createUser();
   });
 
   beforeAll(async () => {

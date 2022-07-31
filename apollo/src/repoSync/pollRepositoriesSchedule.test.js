@@ -1,27 +1,14 @@
 import nock from 'nock';
-import * as userService from '../users/userService';
 import { create as createRepository } from '../repositories/repositoryService';
 import { queue as pollRepositoryQueue } from './pollRepositoryQueue';
 import handler from './pollRepositoriesSchedule';
+import createUser from '../../test/helpers/userHelper';
 
 describe('Poll Repositories Schedule', () => {
   let user;
 
   beforeAll(async () => {
-    user = await userService.create({
-      username: 'Ada',
-      password: 's3cr3t',
-      firstName: 'Ada',
-      lastName: 'Lovelace',
-      identities: [
-        {
-          email: 'ada@example.com',
-          provider: 'github',
-          repositories: [],
-        },
-      ],
-      terms: true,
-    });
+    user = await createUser();
   });
 
   let phoenix;

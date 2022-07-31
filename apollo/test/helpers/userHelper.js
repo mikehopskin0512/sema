@@ -10,6 +10,7 @@ export default async function createUser(attributes = {}) {
       {
         email: 'ada@example.com',
         provider: 'github',
+        id: '123456',
       },
     ],
     terms: true,

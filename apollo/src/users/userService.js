@@ -37,35 +37,48 @@ export const create = async (user, inviteToken) => {
       isWaitlist = false;
       origin = 'invitation';
     }
-    const { username: handle } =
-      identities.length &&
-      identities.find((item) => item?.provider === 'github');
+    const provider = 'github';
+    const githubIdentity = identities?.find(
+      (item) => item?.provider === provider
+    );
+    const handle = githubIdentity?.username;
+    const id = githubIdentity?.id;
 
-    const newUser = new User({
-      username: username.toLowerCase(),
-      password,
-      firstName,
-      lastName,
-      jobTitle,
-      avatarUrl,
-      handle,
-      identities,
-      isWaitlist,
-      origin,
-      verificationToken: token,
-      verificationExpires,
-      termsAccepted: terms,
-      termsAcceptedAt: new Date(),
-      collections,
-    });
+    const newUser = await User.findOrCreateByIdentity(
+      {
+        provider,
+        id,
+      },
+      {
+        username: username.toLowerCase(),
+        password,
+        firstName,
+        lastName,
+        jobTitle,
+        avatarUrl,
+        handle,
+        identities,
+        isWaitlist,
+        origin,
+        verificationToken: token,
+        verificationExpires,
+        termsAccepted: terms,
+        termsAcceptedAt: new Date(),
+        collections,
+      }
+    );
     const savedUser = await newUser.save();
 
     if (!!invitation && invitation.organization) {
-      await UserRole.create({
-        organization: invitation.organization,
-        user: savedUser._id,
-        role: invitation.role,
-      });
+      await UserRole.findOrCreate(
+        {
+          organization: invitation.organization,
+          user: savedUser._id,
+        },
+        {
+          role: invitation.role,
+        }
+      );
     }
 
     return savedUser;
@@ -738,32 +751,19 @@ export const findByHandle = async (handle) => {
 };
 
 export const createGhostUser = async (attributes) => {
-  const newUser = await User.create({
-    ...attributes,
-    isActive: false,
-    origin: 'sync',
-  });
-
-  // There is no unique index on the user's identity.
-  // Until https://semalab.atlassian.net/browse/WEST-1567
-  // gets fixed, we need to manually ensure uniqueness
-  // to prevent duplicate ghost users from being created.
-  const otherUser = await User.findOne({
-    identities: {
-      $elemMatch: {
-        id: newUser.identities[0].id,
-        provider: newUser.identities[0].provider,
-      },
-    },
-  }).sort({ _id: 1 });
-
-  const isDuplicate = otherUser._id.toString() !== newUser._id.toString();
-  if (isDuplicate) {
-    await newUser.remove();
-    return otherUser;
-  }
-
-  return newUser;
+  const provider = 'github';
+  const githubIdentity = attributes.identities?.find(
+    (item) => item?.provider === provider
+  );
+  const id = githubIdentity?.id;
+  return await User.findOrCreateByIdentity(
+    { provider, id },
+    {
+      ...attributes,
+      isActive: false,
+      origin: 'sync',
+    }
+  );
 };
 
 export const toggleUserRepoPinned = async (userId, repoId) => {

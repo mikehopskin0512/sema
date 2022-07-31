@@ -23,6 +23,7 @@ describe('GET /users/:id', () => {
         {
           email: 'ada@example.com',
           provider: 'github',
+          id: '123456',
         },
       ],
       terms: true,
@@ -75,10 +76,12 @@ describe('POST /users', () => {
   beforeAll(async () => {
     // For now not testing Mailchimp and Intercom.
     nock('https://us6.api.mailchimp.com')
+      .persist()
       .put(/./, () => true)
       .reply(200, {});
 
     nock('https://api.intercom.io')
+      .persist()
       .post(/./, () => true)
       .reply(200, {});
   });
@@ -227,6 +230,31 @@ describe('POST /users', () => {
     it('should be marked as public', () => {
       const visibility = [...new Set(repositories.map((r) => r.visibility))];
       expect(visibility).toEqual(['public']);
+    });
+  });
+
+  describe('under concurrency', () => {
+    beforeAll(async () => {
+      const auth = await getClientAuth();
+      await Promise.all(
+        new Array(10).fill(0).map((item, index) =>
+          apollo.post(
+            `/v1/users`,
+            {
+              ...body,
+              user: { ...body.user, username: `jrock17+${index}@gmail.com` },
+            },
+            { auth }
+          )
+        )
+      );
+    });
+
+    it('should create a single user', async () => {
+      const count = await User.countDocuments({
+        identities: { $elemMatch: { provider: 'github', id: '1270524' } },
+      });
+      expect(count).toBe(1);
     });
   });
 });
