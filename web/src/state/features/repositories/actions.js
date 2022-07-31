@@ -310,9 +310,9 @@ export const filterSemaRepositories = (externalIds, token) => async (dispatch) =
   }
 };
 
-export const fetchRepositoryOverview = (externalId, token, dates) => async (dispatch) => {
+export const fetchRepositoryOverview = (externalId, token, dates, isQuite = false) => async (dispatch) => {
   try {
-    dispatch(requestFetchRepositoryOverview());
+    !isQuite && dispatch(requestFetchRepositoryOverview())
     const { data } = await getRepositoryOverview({ externalId, ...dates }, token);
     if (data._id) {
       dispatch(requestFetchRepositoryOverviewSuccess(data));
@@ -355,9 +355,9 @@ export const fetchRepoDashboard = (query, token) => async (dispatch) => {
   }
 };
 
-export const fetchRepoFilters = (repoIds, dateRange, token) => async (dispatch) => {
+export const fetchRepoFilters = (repoIds, dateRange, token, isQuite = false) => async (dispatch) => {
   try {
-    dispatch(requestFetchRepoFilters());
+    !isQuite && dispatch(requestFetchRepoFilters())
     let dateObj = {}
     if (dateRange.startDate && dateRange.endDate) {
       dateObj = getDateSub(dateRange.startDate, dateRange.endDate);

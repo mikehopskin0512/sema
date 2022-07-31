@@ -82,6 +82,7 @@ function RepoPage() {
     endDate,
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialRefresh, setIsInitialRefresh] = useState(true);
 
   const [filter, setFilter] = useState(defaultFilterState);
   const [filterUserList, setFilterUserList] = useState([]);
@@ -131,7 +132,7 @@ function RepoPage() {
         (dates.startDate && dates.endDate) ||
         (!dates.startDate && !dates.endDate)
       ) {
-        await dispatch(fetchRepoFilters(repoId, dates, token));
+        await dispatch(fetchRepoFilters(repoId, dates, token, true));
         await dispatch(
           fetchRepositoryOverview(
             repoId,
@@ -139,11 +140,13 @@ function RepoPage() {
             dates.startDate && dates.endDate
               ? getDateSub(dates.startDate, dates.endDate)
               : null,
+            true
           ),
         );
       }
     } finally {
       setIsLoading(false);
+      setIsInitialRefresh(false);
     }
   }, [repoId, dates, dispatch, token]);
 
@@ -204,7 +207,7 @@ function RepoPage() {
 
   const { socialCircles } = useFlags();
 
-  const isSocialCyclesShown = socialCircles && selectedTab === 'stats' && !isLoading && !repositories.isFetching;
+  const isSocialCyclesShown = socialCircles && selectedTab === 'stats';
 
   return (
     <RepoPageLayout
@@ -216,11 +219,10 @@ function RepoPage() {
       refresh={refresh}
     >
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
-
       <div className={styles.wrapper}>
         {isSocialCyclesShown && (
           <div className="mb-32 px-8">
-            <RepoSocialCircle repoId={repoId} />
+            <RepoSocialCircle repoId={repoId} isLoading={repositories.isFetching || isInitialRefresh} />
           </div>
         )}
         <FilterBar
