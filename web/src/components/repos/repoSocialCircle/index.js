@@ -24,11 +24,11 @@ export const SYNC_STATUSES = {
 }
 const REPO_UPDATE_INTERVAL = 30 * 1000;
 
-const RepoSocialCircle = ({ repoId }) => {
+const RepoSocialCircle = ({ repoId, isLoading }) => {
   const containerRef = useRef(null);
   const [interactions, setInteractions] = useState([]);
   const { user, token } = useSelector((state) => state.authState);
-  const { data: repoData, isFetching } = useSelector((state) => state.repositoriesState);
+  const { data: repoData } = useSelector((state) => state.repositoriesState);
   const [repoName, setRepoName] = useState('');
   const handle = user?.identities[0]?.username;
   const { overview } = repoData;
@@ -36,7 +36,7 @@ const RepoSocialCircle = ({ repoId }) => {
   const syncProgress = overview?.sync?.progress;
 
   const isRepoSynced = syncStatus === SYNC_STATUSES.COMPLETED;
-  const isSyncingNow = syncStatus ===  SYNC_STATUSES.QUEUED || syncStatus === SYNC_STATUSES.STARTED;
+  const isSyncingNow = syncStatus ===  SYNC_STATUSES.QUEUED || syncStatus === SYNC_STATUSES.STARTED || isLoading;
   // TODO: add a real calculation
   const isRepoPrivate = false;
 
@@ -133,7 +133,11 @@ const RepoSocialCircle = ({ repoId }) => {
     return <PrivateRepoBanner />
   }
 
-  if (!isRepoSynced && !isSyncingNow) {
+  if (isSyncingNow) {
+    return <SyncInProgressRepoBanner isLoading={isLoading} />
+  }
+
+  if (!isRepoSynced) {
     return <NotSyncedRepoBanner />
   }
 
