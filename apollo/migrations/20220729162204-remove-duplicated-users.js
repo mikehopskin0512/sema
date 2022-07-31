@@ -1,108 +1,129 @@
-const mongoose = require('mongoose');
+/* eslint-disable no-await-in-loop */
+
 const { sortBy } = require('lodash');
+const { default: logger } = require('../src/shared/logger');
 
-const { Types: { ObjectId } } = mongoose;
+const findUsersToDelete = (dupUsers) => {
+  const activeUser = sortBy(dupUsers, (item) => item.lastLogin)
+    .reverse()
+    .find((item) => item.isActive && !item.isWaitlist && item.isOnboarded);
 
-const findInvalidUsers = (dupUsers) => {
-  // find only one valid User
-  let activeUserId = null;
-  const activeUsers = dupUsers.filter(item => item.isActive && !item.isWaitlist && item.isOnboarded);
-  if (activeUsers.length === 1) {
-    activeUserId = activeUsers[0]._id;
-  } else if (activeUsers.length > 1) {
-    // sort by lastLogin
-    const sortedByLastLogin = sortBy(activeUsers, (item) => item.lastLogin);
-    activeUserId = sortedByLastLogin[sortedByLastLogin.length - 1]._id;
-  } else {
-    // it means no active user yet, so we will exclude only 1
-    activeUserId = activeUsers[0]?._id;
-  }
-  
-  if (!activeUsers || activeUsers.length === 0) {
-    const syncUserIndex = dupUsers.findIndex(item => item.origin === 'sync');
-    if (syncUserIndex > -1) {
-      activeUserId = dupUsers[syncUserIndex]._id;
-    }
-  }
-  
-  return dupUsers.filter(dupUser => dupUser._id !== activeUserId);
-}
+  const userToKeep = activeUser || dupUsers[0];
+  const usersToDelete = dupUsers.filter(
+    (user) => !user._id.equals(userToKeep._id)
+  );
+  return [userToKeep, usersToDelete];
+};
 
-const deleteDefaultCollectionForUser = async (db, userId) => {
+const deleteDefaultCollectionForUsers = async (db, userIds) => {
   // find the default collection created for the user
-  const defaultCollections = await db.collection('collections').find({ createdBy: userId, name: 'My Snippets' }).toArray();
-  await Promise.all(defaultCollections.map(async (defaultCollection) => {
-    // delete all snippets under My Snippets collection
-    await db.collection('suggestedComments').deleteMany({ collectionId: defaultCollection._id });
-  }));
-  
-  // delete the default collection created by the user
-  await db.collection('collections').deleteMany({ createdBy: userId, name: 'My Snippets' });
-}
+  const defaultCollectionIds = await db
+    .collection('collections')
+    .find({ createdBy: { $in: userIds }, name: 'My Snippets' })
+    .toArray();
 
-const deleteUserRoleForUser = async (db, userId) => {
-  // delete userRole mapping for the user
-  await db.collection('userroles').deleteOne({ user: userId });
+  await db
+    .collection('suggestedComments')
+    .deleteMany({ collectionId: { $in: defaultCollectionIds } });
+
+  // delete the default collection created by the user
+  await db
+    .collection('collections')
+    .deleteMany({ _id: { $in: defaultCollectionIds } });
+};
+
+async function processDuplicateUsers(db, users) {
+  const [userToKeep, usersToDelete] = findUsersToDelete(users);
+  const userIdsToDelete = usersToDelete.map((user) => user._id);
+
+  logger.info(
+    `${userToKeep.handle}: User to keep: ${
+      userToKeep._id
+    }, deleting ${userIdsToDelete.join(', ')}`
+  );
+
+  await deleteDefaultCollectionForUsers(db, userIdsToDelete);
+
+  await db
+    .collection('userroles')
+    .updateMany(
+      { user: { $in: userIdsToDelete } },
+      { $set: { user: userToKeep._id } }
+    );
+
+  await db
+    .collection('smartComments')
+    .updateMany(
+      { userId: { $in: userIdsToDelete } },
+      { $set: { userId: userToKeep._id } }
+    );
+
+  await db
+    .collection('collections')
+    .updateMany(
+      { createdBy: { $in: userIdsToDelete } },
+      { $set: { createdBy: userToKeep._id } }
+    );
+
+  await db
+    .collection('repositories')
+    .updateMany(
+      {},
+      { $pull: { 'repoStats.userIds': { $in: userIdsToDelete } } }
+    );
+
+  await db.collection('snapshots').updateMany(
+    {
+      'componentData.smartComments': {
+        $elemMatch: { userId: { $in: userIdsToDelete } },
+      },
+    },
+    {
+      $set: {
+        'componentData.smartComments.$.userId': userToKeep._id,
+      },
+    }
+  );
+
+  await db.collection('users').deleteMany({ _id: { $in: userIdsToDelete } });
 }
 
 module.exports = {
-  async up(db, client) {
-    try {
-      const dupUserAggregation = await db.collection('users').aggregate([
-        {
-          $group: {
-            _id: "$username",
-            ids: { $push: "$_id" },
-            count: { $sum: 1 }
-          },
+  async up(db) {
+    const duplicateUsers = await db.collection('users').aggregate([
+      {
+        $group: {
+          _id: { provider: '$identities.provider', id: '$identities.id' },
+          ids: { $push: '$_id' },
+          handle: { $first: '$handle' },
+          count: { $sum: 1 },
         },
-        {
-          $match: {
-            count: { $gt: 1 }
-          },
+      },
+      {
+        $match: {
+          count: { $gt: 1 },
         },
-        {
-          $project: {
-            _id: false,
-            dupUserIds: '$ids',
-          },
+      },
+      {
+        $sort: { handle: 1 },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'ids',
+          foreignField: '_id',
+          as: 'users',
         },
-        {
-          $lookup: {
-            from: "users",
-            localField: "dupUserIds",
-            foreignField: "_id",
-            as: "dupUsers"
-          }
-        }
-      ]).toArray();
-      
-      console.log(`__ ${dupUserAggregation.length} duplicated user sets`);
-      // iterate the array of the duplicated user sets
-      await Promise.all(dupUserAggregation.map(async (dupUserSet) => {
-        // find and filter invalid users
-        const usersToRemove = findInvalidUsers(dupUserSet.dupUsers || []);
-        console.log(`__| Removing ${usersToRemove.length} users amount ${dupUserSet.dupUsers.length}...`);
-        
-        await Promise.all(usersToRemove.map(async (dupUser) => {
-          // remove My Snippets collections and snippets of these invalid users
-          await deleteDefaultCollectionForUser(db, dupUser._id);
+      },
+    ]);
 
-          // remove userRole mapping for the user
-          await deleteUserRoleForUser(db, dupUser._id);
-
-          // remove the user itself
-          await db.collection('users').deleteMany({ _id: new ObjectId(dupUser._id) });
-          console.log(`____> Removed ${dupUser._id} : ${dupUser.handle}`);
-        }));
-      }));
-      
-    } catch (error) {
-      console.log('error__', error);
+    while (await duplicateUsers.hasNext()) {
+      const { users } = await duplicateUsers.next();
+      await processDuplicateUsers(db, users);
     }
   },
-  
+
   async down() {
     // No rollback needed
-  }
+  },
 };
