@@ -8,12 +8,11 @@ import { getRepoSocialGraph } from '../../../state/features/repositories/api';
 import styles from './repoSocialCircle.module.scss';
 import { PrivateRepoBanner } from '../../repos/repoSocialCircle/banners/privateRepoBanner';
 import { NotSyncedRepoBanner } from '../../repos/repoSocialCircle/banners/notSyncedRepoBanner';
-import { SyncInProgressRepoBanner } from '../../repos/repoSocialCircle/banners/syncInProgressBanner';
 import { createDataUrl, onDownloadImage } from '../../../utils/imageHelpers';
 import { uploadInfographicsImage } from '../../../state/features/auth/api';
 import { isEmpty } from 'lodash';
 import { shareWithLinkedIn, shareWithTwitter } from '../../../utils/socialMedia';
-import Tooltip from '@/components/Tooltip';
+import Tooltip from '../../../components/Tooltip';
 
 export const SYNC_STATUSES = {
   EMPTY: null,
