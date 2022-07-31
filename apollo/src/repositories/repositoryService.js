@@ -23,6 +23,7 @@ import { metricsStartDate } from '../shared/utils';
 import publish from '../shared/sns';
 import { queue as importRepositoryQueue } from '../repoSync/importRepositoryQueue';
 import { DEFAULT_AVATAR } from '../constants';
+import { createNewOrgsFromGithub } from '../organizations/organizationService';
 
 const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
 
@@ -36,6 +37,8 @@ export const create = async ({
   visibility,
   created_at: repositoryCreatedAt,
   updated_at: repositoryUpdatedAt,
+  owner,
+  user,
 }) => {
   try {
     const repository = await Repositories.findOrCreate(
@@ -50,6 +53,15 @@ export const create = async ({
         repositoryUpdatedAt,
       }
     );
+
+    const isOrganization = owner?.type === 'Organization';
+    if (isOrganization) {
+      const [organization] = await createNewOrgsFromGithub([owner], user);
+      repository.set({ orgId: organization });
+      await repository.save();
+      organization.repos.push(repository._id);
+      await organization.save();
+    }
     return repository;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -57,6 +69,7 @@ export const create = async ({
     throw error;
   }
 };
+
 export const startSync = async ({ repository, user }) => {
   // eslint-disable-next-line no-param-reassign
   repository.sync = {

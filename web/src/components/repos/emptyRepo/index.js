@@ -4,25 +4,26 @@ import usePermission from '../../../hooks/usePermission';
 import { PROFILE_VIEW_MODE } from '../../../utils/constants';
 import HowItWorks from './HowItWorks';
 import * as analytics from '../../../utils/analytics';
-import OrganizationReposList from '../../../components/organizationReposList';
+import OrganizationReposList from "../../organizationReposList";
 
 const openGithub = () => {
   analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.ESR_CLICKED_START_REVIEWING_CODE_ON_GITHUB, {});
 };
 
-const EmptyRepo = () => {
+function EmptyRepo() {
   const [isRepoListOpen, setRepoListOpen] = useState(false);
   const { isOrganizationAdmin } = usePermission();
   const {
-    organizationsNewState: { organizations: organizations },
+    organizationsNewState: { organizations },
     authState: { profileViewMode },
   } = useSelector((state) => state);
   const isOrganizationView = profileViewMode === PROFILE_VIEW_MODE.ORGANIZATION_VIEW;
   const isAddRepoEnable = isOrganizationView && isOrganizationAdmin && organizations.length;
 
   return (
-    <div className="container">
-      {isAddRepoEnable && (
+    <div className="container is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+      {/* Commented for a future implementation */}
+      {/* {isAddRepoEnable && (
         <OrganizationReposList
           onClose={() => setRepoListOpen(false)}
           isActive={isRepoListOpen}
@@ -41,8 +42,7 @@ const EmptyRepo = () => {
           }
         </p>
         <div className="mx-auto">
-          {/** Return this code when design work will be finished */}
-          {/* {isAddRepoEnable && (
+          {isAddRepoEnable && (
             <button
               type="button"
               className="button is-primary has-text-weight-semibold is-fullwidth"
@@ -50,7 +50,7 @@ const EmptyRepo = () => {
             >
               Add a Repo to Organization
             </button>
-          )} */}
+          )}
           {!isOrganizationView && <a href="https://github.com" target="_blank">
             <button
               type="button"
@@ -62,9 +62,14 @@ const EmptyRepo = () => {
           </a>}
         </div>
       </div>
-      <HowItWorks />
+      <HowItWorks /> */}
+      <img src="/img/empty-page.svg" />
+      <p className='pt-32'>
+        Your public GitHub repos will automatically appear here. <br />
+        Syncing private GitHub repos is coming soon!
+      </p>
     </div>
   );
-};
+}
 
 export default EmptyRepo;

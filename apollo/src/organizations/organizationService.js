@@ -96,23 +96,18 @@ export const getOrganizationByGithubOrgId = async (githubOrgId) => {
 
 export const createNewOrgsFromGithub = async (githubOrgs, createdBy) => {
   try {
-    await Promise.all(
-      githubOrgs.map(async (githubOrg) => {
-        const existingOrg = await Organization.findOne({
-          'orgMeta.id': githubOrg.id,
-        });
-        if (!existingOrg) {
-          return await createOrganization({
+    return await Promise.all(
+      githubOrgs.map(
+        async (githubOrg) =>
+          await createOrganization({
             name: githubOrg.login,
             avatarUrl: githubOrg.avatar_url,
             createdBy,
             orgMeta: {
               ...githubOrg,
             },
-          });
-        }
-        return false;
-      })
+          })
+      )
     );
   } catch (err) {
     logger.error(err);
@@ -156,15 +151,21 @@ export const createOrganization = async (data) => {
       throw new Error(`The ${semaCorporateOrganizationName} name is reserved`);
     }
     const { members } = data;
-    const organization = new Organization(data);
-    await organization.save();
+    const organization = await Organization.findOrCreate(
+      {
+        'orgMeta.id': data.orgMeta.id,
+      },
+      data
+    );
 
-    const adminRole = await getRoleByName(ROLE_NAMES.ADMIN);
-    await createUserRole({
-      user: data.createdBy,
-      organization: organization._id,
-      role: adminRole._id,
-    });
+    if (data.createdBy) {
+      const adminRole = await getRoleByName(ROLE_NAMES.MEMBER);
+      await createUserRole({
+        user: data.createdBy,
+        organization: organization._id,
+        role: adminRole._id,
+      });
+    }
 
     if (members) {
       await createMembersRoles(members, organization._id);
@@ -353,7 +354,7 @@ export const updateOrganizationAvatar = async (
 export const toggleOrgRepoPinned = async (organizationId, repoId) => {
   const organization = await Organization.findById(organizationId);
   const newPinnedRepos = [...organization.pinnedRepos];
-  
+
   if (newPinnedRepos.includes(repoId)) {
     remove(newPinnedRepos, (id) => id === repoId);
   } else {

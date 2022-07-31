@@ -115,7 +115,6 @@ describe('POST /users', () => {
         per_page: 100,
         sort: 'pushed',
         visibility: 'public',
-        affiliation: 'owner,collaborator',
       })
       .reply(200, [
         {

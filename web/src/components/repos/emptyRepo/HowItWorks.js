@@ -37,10 +37,12 @@ function HowItWorks() {
         </p>
       </div>
     </div>
-      {/* Commented for a future video language implementation */}
-      {/* <div className="is-flex is-justify-content-flex-end is-align-items-center mb-15">
-        <p className="is-size-7 mr-10">Video Language</p>
-        <Select
+      <div className={`${styles['video-container']} mt-40`}>
+        <iframe src={language.url} key={language.url} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+      </div>
+      <div className="is-flex is-justify-content-center is-align-items-center mb-15 mt-30 is-flex-direction-column">
+        {/* Commented for a future video language implementation */}
+        {/* <Select
           selectProps={{
             options: SUPPORT_VIDEO_LANGUAGES,
             placeholder: 'Choose Language',
@@ -53,11 +55,19 @@ function HowItWorks() {
           outlined
           small
           width={150}
-        />
+        /> */}
+        <p className="is-size-6">Have more questions or want to get a personal demo? <br /> 
+          We'd love to show you.
+        </p>
+        <button 
+          className="button is-primary border-radius-4px mt-24"
+          type="button"
+          onClick={() => setSupportForm(true)}
+        >
+          <span>Contact Support</span>
+        </button>
+        {}
       </div>
-      <div className={styles['video-container']}>
-        <iframe src={language.url} key={language.url} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-      </div> */}
     </>
   )
 }

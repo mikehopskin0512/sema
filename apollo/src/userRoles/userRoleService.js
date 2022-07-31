@@ -2,22 +2,15 @@ import errors from '../shared/errors';
 import logger from '../shared/logger';
 import UserRole from './userRoleModel';
 
-export const createUserRole = async (data) => {
+export const createUserRole = async ({ user, organization, role }) => {
   try {
-    const existingUserRole = await findUserRole(data.user, data.organization);
-    if (existingUserRole) {
-      throw "User has existing roles for this organization.";
-    }
-    const userRole = new UserRole(data);
-    await userRole.save();
-
-    return userRole;
+    return await UserRole.findOrCreate({ user, organization }, { role });
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
-    return error;
+    throw error;
   }
-}
+};
 
 export const updateRole = async (userRoleId, data) => {
   try {
@@ -26,7 +19,7 @@ export const updateRole = async (userRoleId, data) => {
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
-    return error;
+    throw error;
   }
 };
 
@@ -36,24 +29,6 @@ export const deleteUserRole = async (userRoleId) => {
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
-    return error;
+    throw error;
   }
 };
-
-export const findUserRole = async (userId, organizationId) => {
-  try {
-    const condition = {};
-    if (userId) {
-      condition.user = userId
-    }
-    if (organizationId) {
-      condition.organization = organizationId
-    }
-    const role = await UserRole.findOne(condition)
-    return role;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
-}

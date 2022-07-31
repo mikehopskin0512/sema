@@ -111,7 +111,6 @@ export const syncUser = async ({ user, token }) => {
     per_page: 100,
     sort: 'pushed',
     visibility: 'public',
-    affiliation: ['owner', 'collaborator'],
   });
 
   const uniqueOrgs = getUniqueOrgsFromRepos(repos);
@@ -149,6 +148,8 @@ async function createRepositoryForUser({ repo, user, sync = false }) {
     repositoryCreatedAt: repo.created_at,
     repositoryUpdatedAt: repo.updated_at,
     visibility: repo.visibility,
+    owner: repo.owner,
+    user,
   });
   await repository.updateOne({ $addToSet: { 'repoStats.userIds': user._id } });
   await addRepositoryToIdentity(user, repository);
