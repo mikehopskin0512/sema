@@ -32,6 +32,10 @@
   background-size: cover;
 }
 
+.banner-wrapper-filtered {
+  filter: grayscale(0.85);
+}
+
 .banner-wrapper-private {
   background-image: url("/img/sync/private-repo-banner.png");
 }
