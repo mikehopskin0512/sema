@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 import styles from './tooltip.module.scss';
 
 function Tooltip({
-  isActive, children, direction, text, showDelay, hideDelay, className
+  isActive,
+  children,
+  direction,
+  text,
+  showDelay,
+  hideDelay
 }) {
   let timeout;
   const [active, setActive] = useState(false);
@@ -16,8 +21,10 @@ function Tooltip({
   };
 
   const hideTip = () => {
-    clearTimeout(timeout);
-    setActive(false);
+    setTimeout(() => {
+      clearTimeout(timeout);
+      setActive(false);
+    }, hideDelay ?? 0)
   };
 
   return (
