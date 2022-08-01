@@ -29,7 +29,7 @@ export const GithubAppInstallBanner = () => {
     <div className={styles['promo-banner-wrapper']}>
       <div className={clsx('is-flex is-align-items-center', styles['promo-banner-section'])}>
         <p className={styles['promo-banner-text']}>Make Sync Faster! </p>
-        <p className='has-text-black'>Improve the speed of Sema! Just Install Sema App!</p>
+        <p className='has-text-black'>Improve the speed of Sema! Just Install the Sema App!</p>
         <img src='/img/sync/sync-app-install.png' alt='Sync promo image'
              className={clsx(styles['promo-banner-img'], styles['promo-banner-img-app'])} />
       </div>
