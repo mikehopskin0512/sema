@@ -1,5 +1,7 @@
+import assert from 'assert';
 import nock from 'nock';
 import { getRepoByUserIds } from '../repositories/repositoryService';
+import { createGhostUser } from './userService';
 import { queue as importRepositoryQueue } from '../repoSync/importRepositoryQueue';
 import { getOrganizationsByUser } from '../organizations/organizationService';
 import apollo from '../../test/apolloClient';
@@ -255,6 +257,49 @@ describe('POST /users', () => {
         identities: { $elemMatch: { provider: 'github', id: '1270524' } },
       });
       expect(count).toBe(1);
+    });
+  });
+
+  describe('with an existing ghost user', () => {
+    beforeAll(async () => {
+      await User.deleteMany();
+    });
+
+    beforeAll(async () => {
+      user = await createGhostUser({
+        handle: 'jrock17',
+        username: 'jrock17',
+        identities: [
+          {
+            provider: 'github',
+            username: 'jrock17',
+            id: 1270524,
+          },
+        ],
+      });
+
+      // https://semalab.atlassian.net/browse/EAST-1627
+      assert.equal(user.username, 'jrock17');
+    });
+
+    beforeAll(async () => {
+      ({ data } = await apollo.post(`/v1/users`, body, {
+        auth: await getClientAuth(),
+      }));
+    });
+
+    describe('user', () => {
+      beforeAll(async () => {
+        user = await User.findById(user._id);
+      });
+
+      it('should have the email address as the username', () => {
+        expect(user.username).toBe('jrock17@gmail.com');
+      });
+
+      it('should be active', () => {
+        expect(user.isActive).toBe(true);
+      });
     });
   });
 });

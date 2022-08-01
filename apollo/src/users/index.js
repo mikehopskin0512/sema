@@ -15,7 +15,6 @@ import {
   create,
   update,
   patch,
-  findByUsername,
   findById,
   verifyUser,
   resetVerification,
@@ -80,21 +79,9 @@ export default (app, passport) => {
     async (req, res) => {
       const { user, invitation } = req.body;
       const { username } = user;
-      try {
-        const existingUser = await findByUsername(username);
-        if (existingUser) {
-          throw new errors.BadRequest(
-            'User with this email already exists. Please try again.'
-          );
-        }
-      } catch (error) {
-        logger.error(error);
-        return res.status(error.statusCode).send(error);
-      }
 
       try {
-        let newUser = await create(user, invitation?.token);
-        newUser = newUser.toJSON();
+        const newUser = await create(user, invitation?.token);
         if (!newUser) {
           throw new errors.BadRequest('User create error');
         }
@@ -110,11 +97,13 @@ export default (app, passport) => {
           }),
         ]);
 
-        delete newUser.password;
-        delete newUser.collections;
         return res.status(201).send({
           jwtToken: await createAuthToken(newUser),
-          user: newUser,
+          user: {
+            ...newUser.toJSON(),
+            password: undefined,
+            collections: undefined,
+          },
         });
       } catch (error) {
         logger.error(error);
