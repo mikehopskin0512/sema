@@ -16,10 +16,16 @@ http = urllib3.PoolManager()
 
 def lambda_handler(event, context):
     url = slack_url
+
+    alarm_name = event['Records'][0]['Sns']['Message']['AlarmName']
+
+    template = {"blocks": [{"type": "section", "text": {
+        "type": "mrkdwn", "text": f"{alarm_name} in alarm. Check the queue"}}]}
+
     msg = {
         "channel": slack_channel,
         "username": slack_user,
-        "text": event['Records'][0]['Sns']['Message'],
+        "text": template,
         "icon_emoji": ""
     }
 
