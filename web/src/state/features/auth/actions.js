@@ -4,8 +4,16 @@ import jwtDecode from 'jwt-decode';
 import * as types from './types';
 import { toggleActiveCollection } from '../comments/api';
 import {
-  auth, exchangeToken, getUser, createUser, putUser, patchUser,
-  postUserOrg, verifyUser, resetVerification, togglePinnedUserRepo,
+  auth,
+  exchangeToken,
+  getUser,
+  createUser,
+  putUser,
+  patchUser,
+  postUserOrg,
+  verifyUser,
+  resetVerification,
+  togglePinnedUserRepo,
 } from './api';
 
 import { alertOperations } from '../alerts';
@@ -100,8 +108,14 @@ export const authenticate = (username, password) => async (dispatch) => {
   dispatch(authenticateRequest());
   try {
     const res = await auth({ username, password });
-    const { data: { jwtToken } } = res;
-    const { _id: userId, isVerified, userVoiceToken } = jwtDecode(jwtToken) || {};
+    const {
+      data: { jwtToken },
+    } = res;
+    const {
+      _id: userId,
+      isVerified,
+      userVoiceToken,
+    } = jwtDecode(jwtToken) || {};
 
     if (userId) {
       const user = await dispatch(fetchCurrentUser(userId, jwtToken));
@@ -122,7 +136,11 @@ export const authenticate = (username, password) => async (dispatch) => {
       // logHeapAnalytics(userId, orgId);
     }
   } catch (err) {
-    const { response: { data: { message } } } = err;
+    const {
+      response: {
+        data: { message },
+      },
+    } = err;
     dispatch(authenticateError(err.response.data));
     dispatch(triggerAlert(message, 'error'));
   }
@@ -146,12 +164,22 @@ const fetchCurrentUser = (id, token) => async (dispatch) => {
   try {
     dispatch(fetchCurrentUserRequest());
     const payload = await getUser(id, token);
-    if (!payload) { return false; }
-    const { data: { user } } = payload;
+    if (!payload) {
+      return false;
+    }
+    const {
+      data: { user },
+    } = payload;
     dispatch(fetchCurrentUserSuccess(user));
     return user;
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(fetchCurrentUserError(errMessage));
   }
@@ -161,9 +189,17 @@ export const refreshJwt = (refreshToken) => async (dispatch) => {
   dispatch(requestRefreshToken());
   try {
     const res = await exchangeToken({ refreshToken });
-    if (!res) { return false; }
-    const { data: { jwtToken } } = res;
-    const { _id: userId, isVerified, userVoiceToken } = jwtDecode(jwtToken) || {};
+    if (!res) {
+      return false;
+    }
+    const {
+      data: { jwtToken },
+    } = res;
+    const {
+      _id: userId,
+      isVerified,
+      userVoiceToken,
+    } = jwtDecode(jwtToken) || {};
 
     // Send token to state
     dispatch(requestRefreshTokenSuccess(jwtToken));
@@ -174,16 +210,20 @@ export const refreshJwt = (refreshToken) => async (dispatch) => {
       const user = await dispatch(fetchCurrentUser(userId, jwtToken));
       dispatch(hydrateUser(user, userVoiceToken));
     } else {
-      dispatch(triggerAlert('User is not yet verified.', 'error'));
+      // dispatch(triggerAlert('User is not yet verified.', 'error'));
       dispatch(userNotVerifiedError(user));
       // Need server-side check since this is called from sentry
-      if (!isServer) { Router.push(PATHS.LOGIN); }
+      if (!isServer) {
+        Router.push(PATHS.LOGIN);
+      }
     }
 
     return { isVerified };
   } catch (err) {
     if (err.response) {
-      const { response: { data = {} } } = err;
+      const {
+        response: { data = {} },
+      } = err;
       dispatch(requestRefreshTokenError(data));
     } else {
       dispatch(requestRefreshTokenError(err));
@@ -281,7 +321,10 @@ export const setUser = function (user) {
   };
 };
 
-export const setSelectedOrganizationSuccess = (selectedOrganization, isAllOrgsSelected) => ({
+export const setSelectedOrganizationSuccess = (
+  selectedOrganization,
+  isAllOrgsSelected
+) => ({
   type: types.SET_SELECTED_ORGANIZATION,
   selectedOrganization,
   isAllOrgsSelected,
@@ -294,55 +337,75 @@ export const setProfileViewModeSuccess = (profileViewMode) => ({
 
 export const toggleFFOnboardingModal = (payload) => ({
   type: types.TOGGLE_FF_ONBOARDING_MODAL,
-  payload
-})
+  payload,
+});
 
 export const toggleSyncPromoBanner = (payload) => ({
   type: types.TOGGLE_SYNC_PROMO_BANNER,
-  payload
-})
+  payload,
+});
 
 export const toggleAppInstallBanner = (payload) => ({
   type: types.TOGGLE_APP_INSTALL_BANNER,
-  payload
-})
+  payload,
+});
 
-
-export const setSelectedOrganization = (selectedOrganization, isAllOrgsSelected = false) => (dispatch) => {
-  localStorage.setItem('sema_selected_organization', JSON.stringify(selectedOrganization));
-  localStorage.setItem('sema_all_orgs', JSON.stringify(isAllOrgsSelected));
-  dispatch(setSelectedOrganizationSuccess(selectedOrganization, isAllOrgsSelected));
-};
+export const setSelectedOrganization =
+  (selectedOrganization, isAllOrgsSelected = false) =>
+  (dispatch) => {
+    localStorage.setItem(
+      'sema_selected_organization',
+      JSON.stringify(selectedOrganization)
+    );
+    localStorage.setItem('sema_all_orgs', JSON.stringify(isAllOrgsSelected));
+    dispatch(
+      setSelectedOrganizationSuccess(selectedOrganization, isAllOrgsSelected)
+    );
+  };
 
 export const setProfileViewMode = (profileViewMode) => (dispatch) => {
   localStorage.setItem('sema_profile_view_mode', profileViewMode);
   dispatch(setProfileViewModeSuccess(profileViewMode));
 };
 
-export const registerUser = (user, invitation = {}) => async (dispatch) => {
-  try {
-    dispatch(requestRegistration());
-    const payload = await createUser({ user, invitation });
-    const { data: { jwtToken, user: newUser } } = payload;
-    analytics.segmentIdentify(newUser);
-    analytics.segmentTrack(analytics.SEGMENT_EVENTS.PRODUCT_SIGNUP, { email: newUser.username });
-    dispatch(registrationSuccess(jwtToken, newUser));
-    return payload;
-  } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
-    const errMessage = message || `${status} - ${statusText}`;
+export const registerUser =
+  (user, invitation = {}) =>
+  async (dispatch) => {
+    try {
+      dispatch(requestRegistration());
+      const payload = await createUser({ user, invitation });
+      const {
+        data: { jwtToken, user: newUser },
+      } = payload;
+      analytics.segmentIdentify(newUser);
+      analytics.segmentTrack(analytics.SEGMENT_EVENTS.PRODUCT_SIGNUP, {
+        email: newUser.username,
+      });
+      dispatch(registrationSuccess(jwtToken, newUser));
+      return payload;
+    } catch (error) {
+      const {
+        response: {
+          data: { message },
+          status,
+          statusText,
+        },
+      } = error;
+      const errMessage = message || `${status} - ${statusText}`;
 
-    dispatch(registrationError(errMessage));
-    dispatch(triggerAlert(errMessage, 'error'));
-    return error;
-  }
-};
+      dispatch(registrationError(errMessage));
+      dispatch(triggerAlert(errMessage, 'error'));
+      return error;
+    }
+  };
 
 export const joinOrg = (userId, org, token) => async (dispatch) => {
   try {
     dispatch(requestJoinOrg());
     const payload = await postUserOrg(userId, { org }, token);
-    const { data: { jwtToken } } = payload;
+    const {
+      data: { jwtToken },
+    } = payload;
     const { user: updatedUser } = jwtDecode(jwtToken) || {};
 
     // Send user to reports page after registration & joinOrg
@@ -350,7 +413,13 @@ export const joinOrg = (userId, org, token) => async (dispatch) => {
 
     dispatch(requestJoinOrgSuccess(jwtToken, updatedUser));
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestJoinOrgError(errMessage));
@@ -364,8 +433,14 @@ export const activateUser = (verifyToken) => async (dispatch) => {
     const payload = await verifyUser({}, verifyToken);
 
     // Auto login user
-    const { data: { jwtToken, user } } = payload;
-    const { _id: userId, isVerified, userVoiceToken } = jwtDecode(jwtToken) || {};
+    const {
+      data: { jwtToken, user },
+    } = payload;
+    const {
+      _id: userId,
+      isVerified,
+      userVoiceToken,
+    } = jwtDecode(jwtToken) || {};
 
     if (userId) {
       const orgId = null; // TEMP: Until orgs are linked up
@@ -380,7 +455,12 @@ export const activateUser = (verifyToken) => async (dispatch) => {
     dispatch(verifyUserSuccess(user));
   } catch (error) {
     dispatch(verifyUserError(error.response));
-    dispatch(triggerAlert('Invalid verification token. Please request a new one below.', 'error'));
+    dispatch(
+      triggerAlert(
+        'Invalid verification token. Please request a new one below.',
+        'error'
+      )
+    );
   }
 };
 
@@ -390,68 +470,82 @@ export const resendVerification = (username) => async (dispatch) => {
     await resetVerification({ username });
 
     dispatch(resetVerificationSuccess());
-    dispatch(triggerAlert('Verification Email resent. Please check your email.', 'success'));
+    dispatch(
+      triggerAlert(
+        'Verification Email resent. Please check your email.',
+        'success'
+      )
+    );
     dispatch(clearAlert());
   } catch (error) {
     dispatch(resetVerificationError(error.response.data));
   }
 };
 
-export const updateUser = (userItem = {}, token) => async (dispatch) => {
-  try {
-    dispatch(requestUpdateUser());
-    const { _id: userId } = userItem;
-    const payload = await putUser(userId, { user: userItem }, token);
-    const { data: { user = {} } } = payload;
+export const updateUser =
+  (userItem = {}, token) =>
+  async (dispatch) => {
+    try {
+      dispatch(requestUpdateUser());
+      const { _id: userId } = userItem;
+      const payload = await putUser(userId, { user: userItem }, token);
+      const {
+        data: { user = {} },
+      } = payload;
 
-    dispatch(requestUpdateUserSuccess(user));
-    return user;
-  } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
-    const errMessage = message || `${status} - ${statusText}`;
+      dispatch(requestUpdateUserSuccess(user));
+      return user;
+    } catch (error) {
+      const {
+        response: {
+          data: { message },
+          status,
+          statusText,
+        },
+      } = error;
+      const errMessage = message || `${status} - ${statusText}`;
 
-    dispatch(requestUpdateUserError(errMessage));
-  }
-};
+      dispatch(requestUpdateUserError(errMessage));
+    }
+  };
 
-export const partialUpdateUser = (userId, fields = {}, token) => async (dispatch) => {
-  try {
-    dispatch(requestUpdateUser());
-    const payload = await patchUser(userId, { fields }, token);
-    const { data: { user = {} } } = payload;
+export const partialUpdateUser =
+  (userId, fields = {}, token) =>
+  async (dispatch) => {
+    try {
+      dispatch(requestUpdateUser());
+      const payload = await patchUser(userId, { fields }, token);
+      const {
+        data: { user = {} },
+      } = payload;
 
-    dispatch(requestUpdateUserSuccess(user));
-  } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
-    const errMessage = message || `${status} - ${statusText}`;
+      dispatch(requestUpdateUserSuccess(user));
+    } catch (error) {
+      const {
+        response: {
+          data: { message },
+          status,
+          statusText,
+        },
+      } = error;
+      const errMessage = message || `${status} - ${statusText}`;
 
-    dispatch(requestUpdateUserError(errMessage));
-  }
-};
+      dispatch(requestUpdateUserError(errMessage));
+    }
+  };
 
 export const setActiveUserCollections = (id, token) => async (dispatch) => {
   try {
     dispatch(toggleUserCollectionActive());
     dispatch(optimisticToggleCollectionActive(id));
     const response = await toggleActiveCollection(id, {}, token);
-    const { data: { user } } = response;
+    const {
+      data: { user },
+    } = response;
     dispatch(toggleUserCollectionActiveSuccess(user, id));
     return response.status || 200;
   } catch (error) {
     dispatch(optimisticToggleCollectionActive(id));
-    const { response: { data: { message }, status, statusText } } = error;
-    const errMessage = message || `${status} - ${statusText}`;
-    dispatch(toggleUserCollectionActiveError(errMessage));
-    return status || '401';
-  }
-};
-
-export const toggleUserRepoPinned = ({ userId, repoId, token }) => async (dispatch) => {
-  try {
-    dispatch(requestTogglePinnedUserRepo(repoId));
-    await togglePinnedUserRepo(userId, { repoId }, token);
-
-  } catch (error) {
     const {
       response: {
         data: { message },
@@ -460,7 +554,27 @@ export const toggleUserRepoPinned = ({ userId, repoId, token }) => async (dispat
       },
     } = error;
     const errMessage = message || `${status} - ${statusText}`;
-
-    dispatch(requestTogglePinnedUserRepoError(errMessage, repoId));
+    dispatch(toggleUserCollectionActiveError(errMessage));
+    return status || '401';
   }
 };
+
+export const toggleUserRepoPinned =
+  ({ userId, repoId, token }) =>
+  async (dispatch) => {
+    try {
+      dispatch(requestTogglePinnedUserRepo(repoId));
+      await togglePinnedUserRepo(userId, { repoId }, token);
+    } catch (error) {
+      const {
+        response: {
+          data: { message },
+          status,
+          statusText,
+        },
+      } = error;
+      const errMessage = message || `${status} - ${statusText}`;
+
+      dispatch(requestTogglePinnedUserRepoError(errMessage, repoId));
+    }
+  };

@@ -174,7 +174,7 @@ userSchema.statics.findOrCreateByIdentity =
     const existing = await this.findOne({
       identities: { $elemMatch: { provider, id } },
     });
-    if (existing) return existing;
+    if (existing) return await updateDocument(existing, attrs);
 
     try {
       return await this.create(attrs);
@@ -184,12 +184,23 @@ userSchema.statics.findOrCreateByIdentity =
         Object.keys(error.keyPattern).sort().join(',') ===
           'identities.id,identities.provider';
       if (isDuplicateOnThisKey) {
-        return await this.findOne({
+        const other = await this.findOne({
           identities: { $elemMatch: { provider, id } },
         });
+        return await updateDocument(other, attrs);
       }
       throw error;
     }
   };
+
+async function updateDocument(doc, attrs) {
+  try {
+    doc.set(attrs);
+    return await doc.save();
+  } catch (error) {
+    if (error.name !== 'VersionError') throw error;
+    return doc;
+  }
+}
 
 export default mongoose.model('User', userSchema);

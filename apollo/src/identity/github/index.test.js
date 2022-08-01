@@ -307,6 +307,7 @@ describe('GET /identities/github/cb', () => {
     beforeAll(async () => {
       user = await createGhostUser({
         handle: 'jrock17',
+        username: 'jrock17',
         identities: [
           {
             provider: 'github',

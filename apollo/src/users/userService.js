@@ -45,10 +45,7 @@ export const create = async (user, inviteToken) => {
     const id = githubIdentity?.id;
 
     const newUser = await User.findOrCreateByIdentity(
-      {
-        provider,
-        id,
-      },
+      { provider, id },
       {
         username: username.toLowerCase(),
         password,
@@ -65,15 +62,15 @@ export const create = async (user, inviteToken) => {
         termsAccepted: terms,
         termsAcceptedAt: new Date(),
         collections,
+        isActive: true, // Activates ghost users.
       }
     );
-    const savedUser = await newUser.save();
 
     if (!!invitation && invitation.organization) {
       await UserRole.findOrCreate(
         {
           organization: invitation.organization,
-          user: savedUser._id,
+          user: newUser._id,
         },
         {
           role: invitation.role,
@@ -81,7 +78,7 @@ export const create = async (user, inviteToken) => {
       );
     }
 
-    return savedUser;
+    return newUser;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
