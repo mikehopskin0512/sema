@@ -233,6 +233,8 @@ describe('GET /identities/github/cb', () => {
     });
 
     describe('log in again', () => {
+      let semaSandbox;
+
       beforeAll(async () => {
         await importRepositoryQueue.purgeQueue();
       });
@@ -243,9 +245,21 @@ describe('GET /identities/github/cb', () => {
         ));
       });
 
+      beforeAll(async () => {
+        semaSandbox = await Organization.findOne({
+          name: 'SemaSandbox',
+        });
+      });
+
       describe('repositories', () => {
         it('should not be queued for sync', () => {
           expect(importRepositoryQueue.jobs).toHaveLength(0);
+        });
+      });
+
+      describe('organization', () => {
+        it('should have one repository', () => {
+          expect(semaSandbox.repos).toHaveLength(1);
         });
       });
     });

@@ -42,7 +42,7 @@ async function migrateRepository(repository) {
 
     repository.orgId = organization;
     await repository.save();
-    organization.repos.push(repository._id);
+    organization.repos.addToSet(repository._id);
     await organization.save();
 
     await User.find({ _id: { $in: repository.repoStats.userIds } })

@@ -59,7 +59,7 @@ export const create = async ({
       const [organization] = await createNewOrgsFromGithub([owner], user);
       repository.set({ orgId: organization });
       await repository.save();
-      organization.repos.push(repository._id);
+      organization.repos.addToSet(repository._id);
       await organization.save();
     }
     return repository;
