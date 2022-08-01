@@ -128,7 +128,7 @@ Feature: Repo
         And  I expect that element "toFilter" becomes not displayed
         And  I expect that element "summariesFilter" becomes displayed
         And  I expect that element "tagsFilter" becomes displayed
-        And  I expect that element "pullRequestsFilter" becomes displayed
+        And  I expect that element "pullRequestsFilter" becomes not displayed
         And  I expect that element "searchFilterBtn" becomes not displayed
         And  I expect that element "searchFilterInput" becomes not displayed
         And  I expect that element "smartCodeReviewsIndicator" becomes displayed
@@ -170,7 +170,7 @@ Feature: Repo
         And  I click on the element "dateRangeFilter"
         And  I expect that element "summariesFilter" becomes displayed
         And  I expect that element "tagsFilter" becomes displayed
-        And  I expect that element "pullRequestsFilter" becomes displayed
+        And  I expect that element "pullRequestsFilter" becomes not displayed
         And  I expect that element "searchFilterBtn" becomes displayed
         And  I expect that element "searchFilterInput" becomes not displayed
 

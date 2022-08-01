@@ -7,7 +7,8 @@
 ##    When I click on the element "companyDropdown"
 ##    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
 ##    When I hover over element "semaCorporateOrganizationLogo"
-##    And  I click on the element "highlightedTeam"
+##    Then I expect that element "highlightedTeam" becomes displayed
+#    When I click on the element "highlightedTeam"
 ##
 ##        Then I expect that element "createOrganizationNameInput" becomes displayed
 ##        And  I expect that element "createOrganizationURLInput" becomes displayed
@@ -47,7 +48,8 @@
 #        When I click on the element "companyDropdown"
 #        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
 #        When I hover over element "semaCorporateOrganizationLogo"
-#        And  I click on the element "highlightedTeam"
+#        Then I expect that element "highlightedTeam" becomes displayed
+#    When I click on the element "highlightedTeam"
 #        Then I expect that element "dashboard" becomes displayed
 #        When I click on the element "dashboard"
 #
@@ -71,7 +73,9 @@
 #        When I click on the element "companyDropdown"
 #        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
 #        When I hover over element "semaCorporateOrganizationLogo"
-#        And  I click on the element "highlightedTeam"
+#        Then I expect that element "highlightedTeam" becomes displayed
+    #    When I click on the element "highlightedTeam"
+
 #        Then I expect that element "dashboard" becomes displayed
 #        When I click on the element "dashboard"
 #        Then I expect that element "dashboardInviteNewMembersBtn" becomes displayed
@@ -111,7 +115,9 @@
 ##        When I click on the element "companyDropdown"
 ##        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
 ##        When I hover over element "semaCorporateOrganizationLogo"
-##        And  I click on the element "highlightedTeam"
+##        Then I expect that element "highlightedTeam" becomes displayed
+    #    When I click on the element "highlightedTeam"
+
 ##        Then I expect that element "dashboard" becomes displayed
 ##        When I click on the element "dashboard"
 ##        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
@@ -139,7 +145,9 @@
 #        When I click on the element "companyDropdown"
 #        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
 #        When I hover over element "semaCorporateOrganizationLogo"
-#        And  I click on the element "highlightedTeam"
+#        Then I expect that element "highlightedTeam" becomes displayed
+    #    When I click on the element "highlightedTeam"
+
 #        Then I expect that element "dashboard" becomes displayed
 #        When I click on the element "dashboard"
 #        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed
@@ -182,7 +190,9 @@
 #        When I click on the element "companyDropdown"
 #        Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
 #        When I hover over element "semaCorporateOrganizationLogo"
-#        And  I click on the element "highlightedTeam"
+#        Then I expect that element "highlightedTeam" becomes displayed
+    #    When I click on the element "highlightedTeam"
+
 #        Then I expect that element "dashboard" becomes displayed
 #        When I click on the element "dashboard"
 #        Then I expect that element "viewAllOrganizationMembersBtn" becomes displayed

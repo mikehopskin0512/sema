@@ -100,6 +100,7 @@ export const hooks = {
       await browser.maximizeWindow();
 
       await browser.url('/login');
+      await browser.pause(2000);
       const signupBtn = await browser
         .$$("//button/span[contains(text(), 'Sign in with GitHub')]")
         .find((el) => el.isClickable());

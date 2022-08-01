@@ -1126,9 +1126,9 @@ Feature: Portfolios
 
     When I click on the element "portfolioListNames"
     Then I expect that element "portfoliosName" becomes displayed
-    And  I expect that element "portfoliosEditNameBtn" becomes displayed
     And  I expect that element "portfoliosInputName" becomes not displayed
-
+    And  I pause for 2000ms
+    And  I expect that element "portfoliosEditNameBtn" becomes displayed
     When I click on the element "portfoliosEditNameBtn"
     Then I expect that element "portfoliosInputName" becomes displayed
 

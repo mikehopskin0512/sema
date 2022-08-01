@@ -1,9 +1,14 @@
 @snippets @regression
 Feature: Snippets
 
+  Background: Starting test from dashboard page
+    When I open the site "/dashboard"
+    And  I pause for 3000ms
+
   @C1704 @smoke
   Scenario: Snippets collection can be turned on and turned off
     #    C2787  C1737
+    Then I expect that element "snippetsTab" becomes displayed
     When I click on the element "snippetsTab"
     And  I wait on element "firstInActiveCollectionToggle" for 10000ms to be enabled
     And  I scroll to element "firstInActiveCollectionToggle"
@@ -98,7 +103,8 @@ Feature: Snippets
     When I click on the element "companyDropdown"
     Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
     When I hover over element "semaCorporateOrganizationLogo"
-    And  I click on the element "highlightedTeam"
+    Then I expect that element "highlightedTeam" becomes displayed
+    When I click on the element "highlightedTeam"
     Then I expect that element "snippetsTab" becomes displayed
     #------------------
     When I click on the element "snippetsTab"
@@ -249,7 +255,8 @@ Feature: Snippets
     When I click on the element "companyDropdown"
     Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
     When I hover over element "semaCorporateOrganizationLogo"
-    And  I click on the element "highlightedTeam"
+    Then I expect that element "highlightedTeam" becomes displayed
+    When I click on the element "highlightedTeam"
 
     When I click on the element "snippetsTab"
     Then I expect that element "addNewCollectionBtn" becomes displayed
@@ -293,7 +300,8 @@ Feature: Snippets
     When I click on the element "companyDropdown"
     Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
     When I hover over element "semaCorporateOrganizationLogo"
-    And  I click on the element "highlightedTeam"
+    Then I expect that element "highlightedTeam" becomes displayed
+    When I click on the element "highlightedTeam"
     Then I expect that element "snippetsTab" becomes displayed
 
     When I click on the element "snippetsTab"
@@ -436,7 +444,8 @@ Feature: Snippets
     When I click on the element "companyDropdown"
     Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
     When I hover over element "semaCorporateOrganizationLogo"
-    And  I click on the element "highlightedTeam"
+    Then I expect that element "highlightedTeam" becomes displayed
+    When I click on the element "highlightedTeam"
 
     And  I click on the element "snippetsTab"
     Then I expect that element "addNewCollectionBtn" becomes displayed
@@ -485,7 +494,9 @@ Feature: Snippets
 #    When I click on the element "companyDropdown"
 #    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
 #    When I hover over element "semaCorporateOrganizationLogo"
-#    And  I click on the element "highlightedTeam"
+#    Then I expect that element "highlightedTeam" becomes displayed
+    #    When I click on the element "highlightedTeam"
+
 #
 #    And  I click on the element "snippetsTab"
 #    Then I expect that element "addNewCollectionBtn" becomes displayed
@@ -541,7 +552,9 @@ Feature: Snippets
 #    When I click on the element "companyDropdown"
 #    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
 #    When I hover over element "semaCorporateOrganizationLogo"
-#    And  I click on the element "highlightedTeam"
+#    Then I expect that element "highlightedTeam" becomes displayed
+    #    When I click on the element "highlightedTeam"
+
 #
 #    And  I click on the element "snippetsTab"
 #    Then I expect that element "addNewCollectionBtn" becomes displayed
