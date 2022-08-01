@@ -35,7 +35,7 @@ const {
   fetchAllUserCollections,
 } = collectionsOperations;
 
-const MENU_ITEMS_TYPES = {
+export const MENU_ITEMS_TYPES = {
   EDIT: 'edit',
   ARCHIVE: 'archive',
 };
