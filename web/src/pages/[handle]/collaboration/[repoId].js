@@ -38,21 +38,6 @@ const CollaborationPublicPage = () => {
     await push(`${PATHS.LOGIN}?isFastForwardOnboarding=true`);
   };
 
-  const scaling = useMemo(() => {
-    const commonWidthSize = 800;
-    const commonHeightSize = 900;
-    const minimalScaleValue = 0.3;
-    const windowHeight = window.innerHeight;
-    const isFitSize = width > commonWidthSize && windowHeight > commonHeightSize;
-
-    if (isFitSize) return 1;
-    const result = ((100 * width) / commonWidthSize).toFixed(2) / 100;
-    const heightOffset = (1 - (((100 * windowHeight) / commonHeightSize).toFixed(2) / 100)) * 2;
-    const calculatedScale =  (result > 1 ? 1 : result) - (heightOffset  > 0 ? heightOffset : 0) ;
-
-    return calculatedScale > minimalScaleValue ? calculatedScale : minimalScaleValue;
-  }, [graphWrapperRef, width, height])
-
   return (
     <div className={styles['collaboration-page-wrapper']}>
       <div className={styles['collaboration-page-header']}>

@@ -120,10 +120,6 @@ const RepoSocialCircle = ({ repoId, isLoading }) => {
     return <PrivateRepoBanner />
   }
 
-  if (isSyncingNow) {
-    return <SyncInProgressRepoBanner isLoading={isLoading} />
-  }
-
   if (!isRepoSynced) {
     return <NotSyncedRepoBanner />
   }
