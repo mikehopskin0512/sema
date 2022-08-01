@@ -231,7 +231,7 @@
     "######### PORTFOLIOS LOCATORS ###########################" : "",
     "portfoliosName"                            : "//div[contains(@class,'portfoliosDashboard_portfolio')]//div[@class='is-size-4 has-text-weight-semi-bold']",
     "portfoliosInputName"                       : "//div[contains(@class,'portfoliosDashboard_portfolio')]//div/form/input",
-    "portfoliosEditNameBtn"                     : "//div[contains(@class,'portfoliosDashboard_portfolio')]//div[@class='is-size-4 has-text-weight-semi-bold']/..//*[name()='svg']/*[name()='path'][2]",
+    "portfoliosEditNameBtn"                     : "//div[contains(@class,'portfoliosDashboard_portfolio')]//div[@class='is-size-4 has-text-weight-semi-bold']/..//*[name()='svg']/*[name()='path'][2]/../..",
     "portfoliosUserName"                        : "//div[contains(@class,'portfoliosDashboard_username__3FIpp')]//div[contains(@class,'has-text-weight-semibold')]",
     "portfoliosUserGitHubLink"                  : "//div[contains(@class,'portfoliosDashboard_username__3FIpp')]//div/span/a[@href]",
     "portfoliosChangePersonalOverviewBtn"       : "//button[contains(@class,'portfoliosDashboard_edit-icon__2TqWp')]",
