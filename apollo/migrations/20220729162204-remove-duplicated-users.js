@@ -127,6 +127,10 @@ module.exports = {
       const { users } = await duplicateUsers.next();
       await processDuplicateUsers(db, users);
     }
+
+    require('../src/shared/mongo');
+    const { default: User } = require('../src/users/userModel');
+    await User.ensureIndexes();
   },
 
   async down() {
