@@ -171,7 +171,6 @@ userSchema.index(
 
 userSchema.statics.findOrCreateByIdentity =
   async function findOrCreateByIdentity({ provider, id }, attrs) {
-    console.log({ provider, id });
     const existing = await this.findOne({
       identities: { $elemMatch: { provider, id } },
     });
@@ -180,7 +179,6 @@ userSchema.statics.findOrCreateByIdentity =
     try {
       return await this.create(attrs);
     } catch (error) {
-      console.log(error.keyPattern);
       const isDuplicateOnThisKey =
         error.code === 11000 &&
         Object.keys(error.keyPattern).sort().join(',') ===
