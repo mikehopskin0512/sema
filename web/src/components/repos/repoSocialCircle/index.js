@@ -158,7 +158,7 @@ const RepoSocialCircle = ({ repoId, isLoading }) => {
             tagging them on your social network.
           </p>
         </div>
-        <img src={'/img/illustration-screen.png'} className={styles.image} alt="bg-screen"/>
+        <img src={'/img/Illustration-screen.png'} className={styles.image} alt="bg-screen"/>
         {isRepoSynced && (
           <div className={clsx('pr-30', styles.socials)}>
             <span className={styles['socials-title']}>Share your Circle</span>
