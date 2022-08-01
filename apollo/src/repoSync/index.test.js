@@ -1,8 +1,8 @@
 import { create as createRepository } from '../repositories/repositoryService';
 import apollo from '../../test/apolloClient';
-import * as userService from '../users/userService';
 import Repository from '../repositories/repositoryModel';
 import { createAuthToken } from '../auth/authService';
+import createUser from '../../test/helpers/userHelper';
 import { queue as importRepositoryQueue } from './importRepositoryQueue';
 
 describe('POST /repo-sync', () => {
@@ -10,19 +10,7 @@ describe('POST /repo-sync', () => {
   let token;
 
   beforeAll(async () => {
-    user = await userService.create({
-      username: 'Ada',
-      password: 's3cr3t',
-      firstName: 'Ada',
-      lastName: 'Lovelace',
-      identities: [
-        {
-          email: 'ada@example.com',
-          provider: 'github',
-        },
-      ],
-      terms: true,
-    });
+    user = await createUser();
   });
 
   describe('unauthenticated', () => {

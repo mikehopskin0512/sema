@@ -31,7 +31,7 @@ const repositoryScheme = mongoose.Schema(
     fullName: String,
     githubUrl: String,
     isFavorite: { type: Boolean, default: false },
-    previewImgLink: { type: String, default: ''},
+    previewImgLink: { type: String, default: '' },
   },
   { _id: false }
 );
@@ -39,7 +39,7 @@ const repositoryScheme = mongoose.Schema(
 const identitySchema = mongoose.Schema(
   {
     provider: String,
-    id: String,
+    id: { type: String, required: true },
     username: String,
     email: String,
     emails: [],
@@ -158,5 +158,38 @@ userSchema.methods.validatePassword = async function validatePassword(data) {
 
 userSchema.index({ 'username': 1, 'identities.id': 1 });
 userSchema.index({ orgId: 1 });
+userSchema.index(
+  { 'identities.provider': 1, 'identities.id': 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      'identities.provider': { $exists: true },
+      'identities.id': { $exists: true },
+    },
+  }
+);
+
+userSchema.statics.findOrCreateByIdentity =
+  async function findOrCreateByIdentity({ provider, id }, attrs) {
+    const existing = await this.findOne({
+      identities: { $elemMatch: { provider, id } },
+    });
+    if (existing) return existing;
+
+    try {
+      return await this.create(attrs);
+    } catch (error) {
+      const isDuplicateOnThisKey =
+        error.code === 11000 &&
+        Object.keys(error.keyPattern).sort().join(',') ===
+          'identities.id,identities.provider';
+      if (isDuplicateOnThisKey) {
+        return await this.findOne({
+          identities: { $elemMatch: { provider, id } },
+        });
+      }
+      throw error;
+    }
+  };
 
 export default mongoose.model('User', userSchema);

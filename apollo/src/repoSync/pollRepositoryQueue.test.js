@@ -1,7 +1,7 @@
 import nock from 'nock';
 import assert from 'assert';
 import resetNocks from '../../test/nocks';
-import * as userService from '../users/userService';
+import createUser from '../../test/helpers/userHelper';
 import { create as createSmartComment } from '../comments/smartComments/smartCommentService';
 import { create as createRepository } from '../repositories/repositoryService';
 import Repository from '../repositories/repositoryModel';
@@ -13,20 +13,7 @@ describe('Poll Repository Queue', () => {
   let repository;
 
   beforeAll(async () => {
-    user = await userService.create({
-      username: 'Ada',
-      password: 's3cr3t',
-      firstName: 'Ada',
-      lastName: 'Lovelace',
-      identities: [
-        {
-          email: 'ada@example.com',
-          provider: 'github',
-          repositories: [],
-        },
-      ],
-      terms: true,
-    });
+    user = await createUser();
   });
 
   beforeAll(async () => {

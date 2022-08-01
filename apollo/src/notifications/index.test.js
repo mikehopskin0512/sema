@@ -1,33 +1,21 @@
 import apollo from '../../test/apolloClient';
-import * as userService from '../users/userService';
 import { createAuthToken } from '../auth/authService';
+import createUser from '../../test/helpers/userHelper';
 
 describe('GET /notification-token', () => {
   let user;
   let token;
 
   beforeAll(async () => {
-    user = await userService.create({
-      username: 'Ada',
-      password: 's3cr3t',
-      firstName: 'Ada',
-      lastName: 'Lovelace',
-      identities: [
-        {
-          email: 'ada@example.com',
-          provider: 'github'
-        }
-      ],
-      terms: true
-    });
+    user = await createUser();
     token = await createAuthToken(user);
   });
 
   it('User should get a token for notifications', async () => {
     const { status, data } = await apollo.get('/v1/notifications/token', {
       headers: {
-        authorization: `Bearer ${token}`
-      }
+        authorization: `Bearer ${token}`,
+      },
     });
 
     expect(status).toBe(200);
