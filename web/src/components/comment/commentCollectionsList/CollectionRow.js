@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useEffect, useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
@@ -6,36 +6,51 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { collectionsOperations } from '../../../state/features/collections';
 import { organizationsOperations } from '../../../state/features/organizations[new]';
-import { PATHS, SEMA_CORPORATE_ORGANIZATION_ID, COLLECTION_TYPES } from '../../../utils/constants';
+import { COLLECTION_TYPES, DEFAULT_COLLECTION_NAME, PATHS } from '../../../utils/constants';
 import { PlusIcon } from '../../Icons';
 import ActionMenu from '../actionMenu';
 import usePermission from '../../../hooks/usePermission';
 import { isEmpty } from 'lodash';
-import { isSemaDefaultCollection, isOrganizationDefaultCollection } from "../../../utils";
+import { isSemaDefaultCollection } from '../../../utils';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
-import styles from "./commentCollectionsList.module.scss";
+import styles from './commentCollectionsList.module.scss';
+import { notify } from '../../../components/toaster/index';
+import { MENU_ITEMS_TYPES } from '../../../components/comment/card';
 
 const { updateCollectionIsActiveAndFetchCollections } = collectionsOperations;
-const { updateOrganizationCollectionIsActiveAndFetchCollections } = organizationsOperations;
+const { updateorganizationCollectionIsActiveAndFetchCollections } = organizationsOperations;
 
 const CollectionRow = ({ data }) => {
   const titleRef = useRef();
   const dispatch = useDispatch();
   const router = useRouter();
-  const { token, selectedOrganization } = useSelector((state) => state.authState);
+  const { token, selectedOrganization, user } = useSelector((state) => state.authState);
   const { collectionData, isActive } = data ?? {};
   const { _id, name, description, source, author, commentsCount, isActive: isNotArchived, type } = collectionData;
-  const { checkAccess, checkOrganizationPermission } = usePermission();
+  const {
+    checkOrganizationPermission,
+    isOrganizationAdmin,
+    isOrganizationAdminOrLibraryEditor,
+    isSemaAdmin,
+    isIndividualUser,
+  } = usePermission();
+  const isMyComments =
+    name.toLowerCase() === DEFAULT_COLLECTION_NAME ||
+    name.toLowerCase() === 'custom snippets';
+
 
   const isOrganizationSnippet = selectedOrganization?.organization?.name?.toLowerCase() === author?.toLowerCase() || false
 
   const onChangeToggle = (e) => {
     e.stopPropagation();
-    // TODO: would be great to add error handling here in case of network error
-    if (!isEmpty(selectedOrganization)) {
-      dispatch(updateOrganizationCollectionIsActiveAndFetchCollections(_id, selectedOrganization.organization?._id, token));
-    } else {
-      dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));
+    try {
+      if (!isEmpty(selectedOrganization)) {
+        dispatch(updateorganizationCollectionIsActiveAndFetchCollections(_id, selectedOrganization.organization?._id, token));
+      } else {
+        dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));
+      }
+    } catch (err) {
+      notify('Organization update failed', { type: 'error', duration: 2500 })
     }
   };
 
@@ -48,8 +63,36 @@ const CollectionRow = ({ data }) => {
     router.push(`${PATHS.SNIPPETS.ADD}?cid=${_id}`)
   };
 
-  const canEdit = checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canEditCollections');
-  const canEditSnippets = checkOrganizationPermission('canEditSnippets') || isSemaDefaultCollection(name) || isOrganizationDefaultCollection(selectedOrganization, { name })
+  const actionMenuItems = useMemo(() => {
+    const isDefaultUserCollection =
+      isIndividualUser() &&
+      collectionData.author.toLowerCase() === user.username.toLowerCase() &&
+      isSemaDefaultCollection(name);
+    const isOrganizationSnippet =
+      selectedOrganization?.organization?.name?.toLowerCase() ===
+      author?.toLowerCase() || false;
+    const canArchive = isSemaAdmin();
+    const canEdit =
+      (isOrganizationAdminOrLibraryEditor() && isOrganizationSnippet) ||
+      (isOrganizationAdmin() && isOrganizationSnippet) ||
+      isDefaultUserCollection ||
+      isSemaAdmin();
+    const items = [];
+    if (canEdit) {
+      items.push(MENU_ITEMS_TYPES.EDIT);
+    }
+    if (canArchive) {
+      items.push(MENU_ITEMS_TYPES.ARCHIVE);
+    }
+    return items;
+  }, [selectedOrganization, collectionData, user]);
+
+  const canEdit = actionMenuItems.includes(MENU_ITEMS_TYPES.EDIT);
+
+  const isAddButtonNeeded = isOrganizationAdminOrLibraryEditor() || isSemaAdmin();
+
+  const canAddSnippets = isMyComments || (isOrganizationSnippet && checkOrganizationPermission('canCreateSnippets') && isAddButtonNeeded)
+
   const isHighlightNeeded = type === COLLECTION_TYPES.PERSONAL || type === COLLECTION_TYPES.ORGANIZATION;
 
   return (
@@ -79,7 +122,7 @@ const CollectionRow = ({ data }) => {
                 {name}
               </p>
             </OverflowTooltip>
-            {canEditSnippets && (
+            {canAddSnippets && (
               <div
                 className={'button is-primary is-outlined is-clickable has-text-weight-semibold is-size-7'}
                 onClick={onClickAddComment}
@@ -128,11 +171,11 @@ const CollectionRow = ({ data }) => {
             </p>
           </div>
         </td>
-        { canEdit && (
-          <td className="py-15 has-background-white px-10 is-hidden-mobile" width={"10%"}>
+        <td className='py-15 has-background-white px-10 is-hidden-mobile' width={'10%'}>
+          {canEdit && (
             <ActionMenu collectionData={collectionData} collectionActive={isActive} />
-          </td>
-        )}
+          )}
+        </td>
       </tr>
     </Link>
   );
