@@ -6,22 +6,38 @@ import styles from './InteractionCircleChart.module.scss';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 
 const MAX_PEOPLE = 45;
+const CIRCLES_LENGTH = {
+  FIRST: 7,
+  SECOND: 14,
+  THIRD: 24,
+}
+const getPlaceholdersCount = (interactionsCount) => {
+  if (interactionsCount <= CIRCLES_LENGTH.FIRST) {
+    return CIRCLES_LENGTH.FIRST - interactionsCount;
+  }
+  if (interactionsCount <= (CIRCLES_LENGTH.FIRST + CIRCLES_LENGTH.SECOND)) {
+    return (CIRCLES_LENGTH.FIRST + CIRCLES_LENGTH.SECOND) - interactionsCount;
+  }
+  return MAX_PEOPLE - interactionsCount;
+}
+const getPlaceholders = (interactionsCount) => {
+  return Array.from(
+    { length: getPlaceholdersCount(interactionsCount)},
+    () => ({ isPlaceholder: true })
+  )
+}
 
 const InteractionCircleChart = ({
-  interactions = {},
+  interactions = [],
   user,
   progress,
 }) => {
   if (!interactions) {
     return null;
   }
-
   const progressPercent = Math.round(progress?.overall * 100);
   const isNotCompleted = progressPercent < 100;
-  const placeholders = isNotCompleted ? Array.from(
-    { length: MAX_PEOPLE - interactions.length },
-    () => ({ isPlaceholder: true })
-  ) : [];
+  const placeholders = isNotCompleted ? getPlaceholders(interactions.length) : [];
   const users = [
     user,
     ...interactions?.sort((a, b) => b.count - a.count).slice(0, MAX_PEOPLE),
