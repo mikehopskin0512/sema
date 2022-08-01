@@ -44,12 +44,18 @@ async function processDuplicateUsers(db, users) {
 
   await deleteDefaultCollectionForUsers(db, userIdsToDelete);
 
-  await db
-    .collection('userroles')
-    .updateMany(
-      { user: { $in: userIdsToDelete } },
-      { $set: { user: userToKeep._id } }
-    );
+  for (const userIdToDelete of userIdsToDelete) {
+    try {
+      await db
+        .collection('userroles')
+        .updateMany(
+          { user: userIdToDelete },
+          { $set: { user: userToKeep._id } }
+        );
+    } catch (error) {
+      if (error.code !== 11000) throw error;
+    }
+  }
 
   await db
     .collection('smartComments')
