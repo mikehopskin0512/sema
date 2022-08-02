@@ -103,6 +103,7 @@ import { ReactComponent as ReplayIcon } from './img/replay.svg';
 import { ReactComponent as UndoNewIcon } from './img/undo-icon.svg';
 import { ReactComponent as GithubSyncIcon } from './img/github-sync.svg';
 import { ReactComponent as GithubRefreshIcon } from './img/sync-refresh.svg';
+import { ReactComponent as DiscordSvg } from './img/Discord.svg';
 
 const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
 
@@ -791,5 +792,11 @@ export function GhSyncIcon(props) {
 export function GhRefreshIcon(props) {
   return <Icon {...props}>
     <GithubRefreshIcon />
+  </Icon>
+}
+
+export function DiscordIcon(props) {
+  return <Icon {...props}>
+    <DiscordSvg />
   </Icon>
 }

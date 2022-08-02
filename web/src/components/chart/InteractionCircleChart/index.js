@@ -1,7 +1,8 @@
 import ProgressBar from './progressBar';
-import React from 'react';
+import React, { useMemo } from 'react';
 import ReactTooltip from 'react-tooltip';
 import clsx from 'clsx';
+import { useRouter } from 'next/router';
 import styles from './InteractionCircleChart.module.scss';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 
@@ -35,9 +36,12 @@ const InteractionCircleChart = ({
   if (!interactions) {
     return null;
   }
+  const router = useRouter();
+  const { pathname } = router;
+  const isNegativeColors = pathname.includes('collaboration');
   const progressPercent = Math.round(progress?.overall * 100);
   const isNotCompleted = progressPercent < 100;
-  const placeholders = isNotCompleted ? getPlaceholders(interactions.length) : [];
+  const placeholders = useMemo(() => getPlaceholders(interactions.length), [interactions]);
   const users = [
     user,
     ...interactions?.sort((a, b) => b.count - a.count).slice(0, MAX_PEOPLE),
@@ -55,21 +59,23 @@ const InteractionCircleChart = ({
           const name = user.name ?? user.handle;
           const isUserItself = index === 0;
           const isPlaceholder = user.isPlaceholder;
+          const circleStyle = !isPlaceholder ? 'circle' : isNegativeColors ? 'empty-negative-circle' : 'empty-circle';
           const isPercentageShown = isUserItself && isNotCompleted;
           return (
             <>
+              {!isPlaceholder && <ReactTooltip id={isUserItself ? 'first-item' : name}/>}
               <div
                 onClick={() => !isPlaceholder && onCircleClick(name)}
-                className={clsx(styles['circle'], styles[`user-${index}`])}
-                key={name}
-                data-for={name}
-                data-tip={name}>
+                className={clsx(styles[circleStyle], styles[`user-${index}`])}
+                key={isUserItself  ? 'first-item' : name}
+                data-for={isUserItself ? 'first-item' : name}
+                data-tip={name ? `${name}`: null}
+                >
                 {isPercentageShown && <ProgressBar percent={progressPercent} />}
                 {!isPlaceholder && (
                   <img src={user.avatarUrl || DEFAULT_AVATAR} alt='user' className={clsx(styles.img)} />
                 )}
               </div>
-              <ReactTooltip id={name}/>
             </>
           );
         })}

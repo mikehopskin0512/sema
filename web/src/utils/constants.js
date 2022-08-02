@@ -137,7 +137,8 @@ export const SEMA_CORPORATE_ORGANIZATION_NAME = 'Sema Corporate Organization';
 
 export const SEMA_CORPORATE_ORGANIZATION_ID = '614f2fe7811ae802fc08e36e';
 
-export const SEMA_FAQ_URL = 'https://semasoftware.com/content/faqs';
+export const SEMA_MAIN_URL = 'https://semasoftware.com';
+export const SEMA_FAQ_URL = `${SEMA_MAIN_URL}/content/faqs`;
 export const SEMA_INTERCOM_FAQ_URL = 'https://intercom.help/sema-software/en';
 
 export const SEMA_APP_URL = 'https://app.semasoftware.com';
@@ -153,6 +154,8 @@ export const SEMA_FAQ_SLUGS = {
     'articles/6147206-what-are-snippets',
   LEARN_MORE_ABOUT_SNAPSHOTS:
     'collections/3428417-developer-portfolio-and-snapshots',
+  LEARN_MORE_ABOUT_SOCIAL_CIRCLES:
+    'articles/6383375-introducing-github-social-circle',
   LEARN_MORE: 'is-there-a-manager-dashboard-of-all-developers',
   SUMMARIES: 'what-do-summaries-mean',
   ORGANIZATION_INSIGHTS: 'team-insights-who-can-see-what',

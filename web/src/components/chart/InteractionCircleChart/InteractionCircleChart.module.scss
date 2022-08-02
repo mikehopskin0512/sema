@@ -25,12 +25,28 @@
   height: 100%;
 }
 
-.circle {
+@mixin circle-base {
   border-radius: 100px;
   position: absolute;
   top: 50%;
   left: 50%;
+}
+
+.circle {
+  @include circle-base;
   background: $gray-200;
+  cursor: pointer;
+}
+
+.empty-circle {
+  @include circle-base;
+  background: $gray-200;
+}
+
+.empty-negative-circle {
+  @include circle-base;
+  border: 1px solid $gray-700;
+  opacity: 0.5;
 }
 
 @mixin circle--first-layer {
