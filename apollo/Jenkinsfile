@@ -61,19 +61,19 @@ pipeline {
             steps {
                 script {
                     withAWS(role:'jenkins-role-to-assume') {
-                        sh(script: "aws lambda invoke \
+                        sh(script: "aws --cli-read-timeout 600 --cli-connect-timeout 600 lambda invoke \
                                   --function-name release-backups-auto-restore-lambda \
                                   --log-type Tail \
                                   --invocation-type RequestResponse \
                                   --payload '{ \"connection_string\":\"${env.STAGING_MONGOOSE_URI}\",\"database_name\":\"${env.STAGING_MONGODB_NAME}\",\"db_webserver_password\":\"${env.BACKUP_SERVER_PASS}\",\"db_webserver_user\":\"${env.BACKUP_SERVER_USER}\"}' \
                                   outputfile.txt")
-                        sh """
-                          LAMBDA_STATUS_CODE="\$(<outputfile.txt)"
+                        sh '''
+                          LAMBDA_STATUS_CODE=$(<outputfile.txt)
                           
-                          if [ "\${LAMBDA_STATUS_CODE}" -eq 1 ]; then  
+                          if [[ "${LAMBDA_STATUS_CODE}" -eq 1 ]]; then  
                              exit 1
                           fi
-                        """
+                        '''
                     }
                 }
             }
