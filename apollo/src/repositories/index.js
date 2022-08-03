@@ -196,7 +196,7 @@ export default (app, passport) => {
           dateRange
         );
         if (repositories.length > 0) {
-          return res.status(201).send(repositories[0]);
+          return res.status(200).send(repositories[0]);
         }
         return res.status(404).send({
           message: 'Not found',
