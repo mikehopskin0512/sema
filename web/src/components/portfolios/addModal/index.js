@@ -9,6 +9,7 @@ import Table from '../../../components/table';
 import Checkbox from '../../../components/checkbox';
 import { addSnapshotsToPortfolio } from '../../../state/features/portfolios/actions';
 import { notify } from '../../../components/toaster/index';
+import { MONTH_DAY_YEAR_FORMAT } from '../../../utils/constants/date';
 
 const AddModal = ({
   isModalActive,
@@ -40,7 +41,7 @@ const AddModal = ({
       .filter(item => !portfolio?.snapshots?.find(snap => snap.id?._id === item._id))
       ?.map((snapshot) => ({
         title: snapshot.title,
-        updatedAt: format(new Date(snapshot.updatedAt), 'MMM dd, yyyy'),
+        updatedAt: format(new Date(snapshot.updatedAt), MONTH_DAY_YEAR_FORMAT),
         id: snapshot._id,
       }))
       .sort((a, b) => a.title.localeCompare(b.title)), [snapshots, portfolio, isModalActive]);

@@ -25,8 +25,8 @@ describe('Smart Comment Service', () => {
     await createRepository({
       name: 'astrobee',
       type: 'github',
-      id: '447888431',
-      cloneUrl: 'https://github.com/Semalab/astrobee',
+      id: '391620249',
+      cloneUrl: 'https://github.com/SemaSandbox/astrobee',
     });
   });
 

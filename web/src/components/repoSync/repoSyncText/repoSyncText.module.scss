@@ -1,0 +1,36 @@
+@import "../../../../styles/colors.module";
+
+.completed {
+    color: $green-300;
+    &:hover {
+        color: $green-700;
+    }
+}
+
+.started {
+    color: $green-600;
+}
+
+.errored, .unauthorized {
+    color: $red-500;
+}
+
+.queued {
+    color: $orange-600;
+}
+
+.notsynced {
+    color: $gray-900;
+}
+
+.info-icon {
+    &:hover {
+        color: $blue-700;
+    }
+}
+
+.tooltip-wrapper {
+    cursor: default;
+    display: flex;
+    align-items: center;
+}

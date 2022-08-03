@@ -1,6 +1,8 @@
+import { remove } from 'lodash';
 import * as types from './types';
 import { REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS } from '../suggest-snippets/types';
 import { PROFILE_VIEW_MODE } from '../../../utils/constants';
+import { REQUEST_TOGGLE_PINNED_ORG_REPO, REQUEST_TOGGLE_PINNED_ORG_REPO_ERROR } from '../organizations[new]/types';
 
 const initialState = {
   isFetching: false,
@@ -9,7 +11,14 @@ const initialState = {
   user: {},
   userVoiceToken: null,
   selectedOrganization: {},
+  isAllOrgsSelected: false,
   profileViewMode: PROFILE_VIEW_MODE.INDIVIDUAL_VIEW,
+  pinnedRepos: [],
+  isSyncBannerPromo: false,
+  isAppInstallBanner: false,
+  ffOnboarding: {
+    isModalOpen: false
+  }
 };
 
 const reducer = (state = initialState, action) => {
@@ -194,11 +203,64 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       selectedOrganization: action.selectedOrganization,
+      isAllOrgsSelected: action.isAllOrgsSelected,
     };
   case types.SET_PROFILE_VIEW_MODE:
     return {
       ...state,
       profileViewMode: action.profileViewMode,
+      };
+    case types.REQUEST_TOGGLE_PINNED_USER_REPO:
+    case types.REQUEST_TOGGLE_PINNED_USER_REPO_ERROR:
+        const userPinnedRepos = state.user.pinnedRepos ? [...state.user.pinnedRepos] : [];
+        if (userPinnedRepos.includes(action.repoId)) {
+          remove(userPinnedRepos, (id) => id === action.repoId);
+        } else {
+          userPinnedRepos.push(action.repoId);
+        }
+        return {
+          ...state,
+          user: {
+            ...state.user,
+            pinnedRepos: userPinnedRepos,
+          },
+      };
+    case REQUEST_TOGGLE_PINNED_ORG_REPO:
+    case REQUEST_TOGGLE_PINNED_ORG_REPO_ERROR:
+      const orgPinnedRepos = [...state.selectedOrganization.organization.pinnedRepos];
+      const { repoId } = action.payload;
+      if (orgPinnedRepos.includes(repoId)) {
+        remove(orgPinnedRepos, (id) => id === repoId);
+      } else {
+        orgPinnedRepos.push(repoId);
+      }
+      return {
+        ...state,
+        selectedOrganization: {
+          ...state.selectedOrganization,
+          organization: {
+            ...state.selectedOrganization.organization,
+            pinnedRepos: orgPinnedRepos,
+          }
+        }
+      };
+  case types.TOGGLE_FF_ONBOARDING_MODAL:
+    return {
+      ...state,
+      ffOnboarding: {
+        ...state.ffOnboarding,
+        isModalOpen: action.payload
+      },
+    };
+  case types.TOGGLE_SYNC_PROMO_BANNER:
+    return  {
+      ...state,
+      isSyncBannerPromo: action.payload
+    };
+  case types.TOGGLE_APP_INSTALL_BANNER:
+    return {
+      ...state,
+      isAppInstallBanner: action.payload,
     };
   default:
     return state;

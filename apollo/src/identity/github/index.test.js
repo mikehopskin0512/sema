@@ -1,22 +1,20 @@
 import nock from 'nock';
 import { decode } from 'jsonwebtoken';
-import path from 'path';
-import fs from 'fs';
 import apollo from '../../../test/apolloClient';
 import User from '../../users/userModel';
+import Organization from '../../organizations/organizationModel';
 import { createGhostUser } from '../../users/userService';
+import { getRepoByUserIds } from '../../repositories/repositoryService';
+import { queue as importRepositoryQueue } from '../../repoSync/importRepositoryQueue';
+import { getOrganizationsByUser } from '../../organizations/organizationService';
 import createUser from '../../../test/helpers/userHelper';
-
-const justin = JSON.parse(
-  fs.readFileSync(
-    path.join(__dirname, '../../../test/fixtures/github/users/jrock17.json')
-  )
-);
+import { fixtures as githubFixtures } from '../../../test/nocks/github';
 
 describe('GET /identities/github/cb', () => {
   let status;
   let headers;
   let redirectUrl;
+  let organizations;
 
   beforeAll(() => {
     nock('https://github.com')
@@ -35,7 +33,7 @@ describe('GET /identities/github/cb', () => {
     nock('https://api.github.com')
       .persist()
       .get('/user')
-      .reply(200, justin)
+      .reply(200, githubFixtures.users.get('jrock17'))
       .get('/user/emails')
       .reply(200, [
         {
@@ -43,6 +41,47 @@ describe('GET /identities/github/cb', () => {
           verified: true,
           primary: true,
           visibility: 'public',
+        },
+      ])
+      .get('/user/repos')
+      .query({
+        per_page: 100,
+        sort: 'pushed',
+        visibility: 'public',
+      })
+      .reply(200, [
+        {
+          id: 175071530,
+          name: 'reactivesearch',
+          clone_url: 'https://github.com/jrock17/reactivesearch.git',
+          visibility: 'public',
+          owner: {
+            id: 1270524,
+            login: 'jrock17',
+            type: 'User',
+          },
+        },
+        {
+          id: 237888452,
+          name: 'phoenix',
+          clone_url: 'https://github.com/Semalab/phoenix.git',
+          visibility: 'public',
+          owner: {
+            id: 31629704,
+            login: 'Semalab',
+            type: 'Organization',
+          },
+        },
+        {
+          id: 391620249,
+          name: 'astrobee',
+          clone_url: 'https://github.com/SemaSandbox/astrobee.git',
+          visibility: 'public',
+          owner: {
+            id: 80909084,
+            login: 'SemaSandbox',
+            type: 'Organization',
+          },
         },
       ]);
   });
@@ -76,6 +115,21 @@ describe('GET /identities/github/cb', () => {
     let user;
 
     beforeAll(async () => {
+      // Just entroy
+      await createUser({
+        handle: 'pangeaware',
+        identities: [
+          {
+            provider: 'github',
+            username: 'pangeaware',
+            id: 1045023,
+          },
+        ],
+        isWaitlist: true,
+      });
+    });
+
+    beforeAll(async () => {
       user = await createUser({
         handle: 'jrock17',
         identities: [
@@ -96,6 +150,10 @@ describe('GET /identities/github/cb', () => {
       redirectUrl = new URL(headers.location);
     });
 
+    beforeAll(async () => {
+      organizations = await getOrganizationsByUser(user._id);
+    });
+
     it('should redirect to registration', () => {
       expect(status).toBe(302);
       expect(redirectUrl.pathname).toBe('/register');
@@ -109,8 +167,101 @@ describe('GET /identities/github/cb', () => {
 
     it('should set the refresh token in a cookie', () => {
       const cookies = getCookies(headers['set-cookie']);
-      const jwt = decode(cookies.get('_phoenix'));
+      const jwt = decode(cookies.get('_sema'));
       expect(jwt._id).toEqualID(user._id);
+    });
+
+    it('should sync organizations', async () => {
+      const organizationLogins = organizations
+        .map((o) => o.organization.name)
+        .sort();
+      expect(organizationLogins).toEqual(['SemaSandbox', 'Semalab']);
+    });
+
+    describe('repositories', () => {
+      let repositories;
+
+      beforeAll(async () => {
+        repositories = await getRepoByUserIds([user._id]);
+        user = await User.findById(user._id);
+      });
+
+      it('should exist in the database', () => {
+        const names = repositories.map((r) => r.fullName).sort();
+        expect(names).toEqual([
+          'SemaSandbox/astrobee',
+          'Semalab/phoenix',
+          'jrock17/reactivesearch',
+        ]);
+      });
+
+      it('should be queued for sync', () => {
+        const jobs = importRepositoryQueue.jobs.map((job) => job.id).sort();
+        expect(jobs).toEqual(repositories.map((r) => r.id).sort());
+      });
+
+      it('should be added to the identity', () => {
+        const ids = user.identities[0].repositories.map((r) => r.id).sort();
+        expect([...ids]).toEqual(['175071530', '237888452', '391620249']);
+      });
+
+      it('should be marked as public', () => {
+        const visibility = [...new Set(repositories.map((r) => r.visibility))];
+        expect(visibility).toEqual(['public']);
+      });
+    });
+
+    describe('repository that belongs to an organization', () => {
+      let astrobee;
+      let semaSandbox;
+
+      beforeAll(async () => {
+        const repositories = await getRepoByUserIds([user._id]);
+        astrobee = repositories.find((r) => r.name === 'astrobee');
+        semaSandbox = await Organization.findOne({
+          name: 'SemaSandbox',
+        });
+      });
+
+      it('should be linked to the organization', () => {
+        expect(astrobee.orgId).toEqualID(semaSandbox._id);
+      });
+
+      it('should be linked in the organization repos list', () => {
+        expect(semaSandbox.repos[0]).toEqualID(astrobee._id);
+      });
+    });
+
+    describe('log in again', () => {
+      let semaSandbox;
+
+      beforeAll(async () => {
+        await importRepositoryQueue.purgeQueue();
+      });
+
+      beforeAll(async () => {
+        ({ status, headers } = await apollo.get(
+          '/v1/identities/github/cb?code=629e18f54c8605'
+        ));
+      });
+
+      beforeAll(async () => {
+        semaSandbox = await Organization.findOne({
+          name: 'SemaSandbox',
+        });
+      });
+
+      describe('repositories', () => {
+        it('should not be queued for sync', () => {
+          expect(importRepositoryQueue.jobs).toHaveLength(0);
+        });
+      });
+
+      describe('organization', () => {
+        it('should have one repository', () => {
+          expect(semaSandbox.repos).toHaveLength(1);
+        });
+      });
     });
   });
 
@@ -156,6 +307,7 @@ describe('GET /identities/github/cb', () => {
     beforeAll(async () => {
       user = await createGhostUser({
         handle: 'jrock17',
+        username: 'jrock17',
         identities: [
           {
             provider: 'github',
@@ -186,7 +338,7 @@ describe('GET /identities/github/cb', () => {
 
     it('should set the refresh token in a cookie', () => {
       const cookies = getCookies(headers['set-cookie']);
-      const jwt = decode(cookies.get('_phoenix'));
+      const jwt = decode(cookies.get('_sema'));
       expect(jwt._id).toEqualID(user._id);
     });
   });

@@ -29,15 +29,13 @@ Header {
 
   .navbar {
     height: 5rem;
-  }
-
-  .navbar-brand {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .navbar-item {
-
+    .menu-item {
+      border-radius: 4px;
+      height: 52px;
+      &:hover {
+        opacity: .8;
+      }
+    }
   }
 
   img {
@@ -56,7 +54,7 @@ Footer {
   min-height: 100vh;
   position: relative;
   width: 100%;
-  background-color: $white-50;
+  background-color: $gray-100;
 }
 
 .navbar {

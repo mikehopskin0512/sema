@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import Table from '../../table';
 import { smartCommentsOperations } from '../../../state/features/smart-comments';
 import ExportButton from '../exportButton';
-import { YEAR_MONTH_DAY_FORMAT } from '../../../utils/constants';
+import { YEAR_MONTH_DAY_FORMAT } from '../../../utils/constants/date';
 
 const { fetchGrowthOfRepositoryMetrics, exportGrowthOfRepository } = smartCommentsOperations;
 

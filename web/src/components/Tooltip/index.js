@@ -3,9 +3,14 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import styles from './tooltip.module.scss';
 
-const Tooltip = ({
-  isActive, children, direction, text, showDelay, hideDelay, className
-}) => {
+function Tooltip({
+  isActive,
+  children,
+  direction,
+  text,
+  showDelay,
+  hideDelay
+}) {
   let timeout;
   const [active, setActive] = useState(false);
 
@@ -16,8 +21,10 @@ const Tooltip = ({
   };
 
   const hideTip = () => {
-    clearTimeout(timeout);
-    setActive(false);
+    setTimeout(() => {
+      clearTimeout(timeout);
+      setActive(false);
+    }, hideDelay ?? 0)
   };
 
   return (
@@ -29,14 +36,11 @@ const Tooltip = ({
       {/* Wrapping */}
       {children}
       {isActive && active && (
-        <div className={clsx(styles['Tooltip-Tip'], styles[direction])}>
-          {/* Content */}
-          {text}
-        </div>
+        <div className={clsx(styles['Tooltip-Tip'], styles[direction])} dangerouslySetInnerHTML={{ __html: text }} />
       )}
     </div>
   );
-};
+}
 
 Tooltip.defaultProps = {
   showDelay: 400,

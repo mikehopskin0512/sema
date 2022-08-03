@@ -9,6 +9,7 @@ require('dotenv').config({ path: configPath });
 module.exports = {
   ...getMongoDBConnectionDetails(),
   port: getPort(),
+  rollbarToken: process.env.ROLLBAR_TOKEN || '287621bca5b04e17a889aba8a328ca10',
   version: process.env.VERSION,
   tokenLife: process.env.TOKENLIFE || 2592000,
   orgDomain: process.env.ORG_DOMAIN,
@@ -69,7 +70,7 @@ module.exports = {
     tagsApi:
       process.env.JAXON_TAGS_API || 'https://hephaestus-tags.semasoftware.com',
   },
-  isWaitListEnabled: Boolean(parseInt(process.env.WAITLIST_ENABLED))
+  isWaitListEnabled: Boolean(parseInt(process.env.WAITLIST_ENABLED, 10)),
 };
 
 function getPort() {

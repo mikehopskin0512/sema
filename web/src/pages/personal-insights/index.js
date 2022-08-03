@@ -16,7 +16,7 @@ import {
   DEFAULT_AVATAR,
   SEMA_INTERCOM_FAQ_URL,
   SEMA_FAQ_SLUGS,
-  EMOJIS
+  EMOJIS,
 } from '../../utils/constants';
 import {
   getEmoji,
@@ -24,12 +24,12 @@ import {
   setSmartCommentsDateRange,
   getReactionTagsChartData,
   filterSmartComments,
-  getEmojiLabel
+  getEmojiLabel,
 } from '../../utils/parsing';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { gray500 } from '../../../styles/_colors.module.scss';
 import SnapshotModal, {
-  SNAPSHOT_DATA_TYPES
+  SNAPSHOT_DATA_TYPES,
 } from '../../components/snapshots/modalWindow';
 import SnapshotButton from '../../components/snapshots/snapshotButton';
 import styles from './personal-insights.module.scss';
@@ -45,7 +45,6 @@ const PersonalInsights = () => {
   const dispatch = useDispatch();
   const { auth, comments, searchResults, pagination } = useSelector(state => ({
     auth: state.authState,
-    //
     comments: state.commentsState,
     searchResults: state.commentsState.searchResults,
     pagination: state.commentsState.pagination,
@@ -80,7 +79,7 @@ const PersonalInsights = () => {
     groupBy: '',
     startDate: null,
     endDate: null,
-    dateDiff: 0
+    dateDiff: 0,
   });
 
   const [openReactionsModal, setOpenReactionsModal] = useState(false);
@@ -88,7 +87,7 @@ const PersonalInsights = () => {
   const [openCommentsModal, setOpenCommentsModal] = useState(false);
   const [componentData, setComponentData] = useState({ yAxisType: 'total' });
 
-  const getUserSummary = async username => {
+  const getUserSummary = async (username) => {
     const params = {
       user: username,
       individual: true,
@@ -96,12 +95,12 @@ const PersonalInsights = () => {
     dispatch(fetchSmartCommentSummary(params, token));
   };
 
-  const getCommentsOverview = async filter => {
+  const getCommentsOverview = async (filter) => {
     const { username } = githubUser;
     const { startDate, endDate, repo } = filter;
     const params = {
       startDate: startDate ? startOfDay(new Date(startDate)) : undefined,
-      endDate: endDate ? endOfDay(new Date(endDate)) : undefined
+      endDate: endDate ? endOfDay(new Date(endDate)) : undefined,
     };
     if (commentView === 'given') {
       params.reviewer = username;
@@ -119,42 +118,42 @@ const PersonalInsights = () => {
     }
   };
 
-  const getTopReactions = reactions => {
+  const getTopReactions = (reactions) => {
     let data = [];
     if (reactions) {
-      const sorted = Object.keys(reactions).sort(function(a, b) {
+      const sorted = Object.keys(reactions).sort(function (a, b) {
         return reactions[b] - reactions[a];
       });
-      data = sorted.map(reaction => {
+      data = sorted.map((reaction) => {
         const emoji = getEmoji(reaction);
         const label = getEmojiLabel(reaction);
         return {
           emoji: emoji,
           reactions: reactions[reaction],
-          label
+          label,
         };
       });
     }
     setTopReactions(data);
   };
 
-  const getTopTags = tags => {
+  const getTopTags = (tags) => {
     let data = [];
     if (tags) {
-      const sorted = Object.keys(tags).sort(function(a, b) {
+      const sorted = Object.keys(tags).sort(function (a, b) {
         return tags[b] - tags[a];
       });
-      data = sorted.map(tag => {
+      data = sorted.map((tag) => {
         const label = getTagLabel(tag);
         return {
-          [label]: tags[tag]
+          [label]: tags[tag],
         };
       });
     }
     setTopTags(data);
   };
 
-  const handleFilter = value => {
+  const handleFilter = (value) => {
     setFilter(value);
   };
 
@@ -172,7 +171,7 @@ const PersonalInsights = () => {
         dateDiff,
         groupBy,
         startDate: new Date(startDay),
-        endDate: endDay
+        endDate: endDay,
       });
     }
   }, [searchResults, filter]);
@@ -182,14 +181,14 @@ const PersonalInsights = () => {
     if (startDate && endDate && groupBy) {
       const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
         ...dateData,
-        smartComments: [...filteredComments, ...outOfRangeComments]
+        smartComments: [...filteredComments, ...outOfRangeComments],
       });
       setReactionChartData(reactionsChartData);
       setTagsChartData(tagsChartData);
-      setComponentData(oldState => ({
+      setComponentData((oldState) => ({
         ...oldState,
         smartComments: [...filteredComments, ...outOfRangeComments],
-        ...dateData
+        ...dateData,
       }));
     }
   }, [dateData, filteredComments]);
@@ -197,18 +196,12 @@ const PersonalInsights = () => {
   const filterComments = smartComments => {
     if (smartComments) {
       const { startDate, endDate } = filter;
-      // const filtered = filterSmartComments({
-      //   filter,
-      //   smartComments: overview.smartComments,
-      //   startDate: startDate,
-      //   endDate: endDate
-      // });
       const isDateRange = startDate && endDate;
       const outOfRangeCommentsFilter = isDateRange
         ? smartComments.filter(comment => {
             return !isWithinInterval(new Date(comment.createdAt), {
               start: startOfDay(new Date(startDate)),
-              end: endOfDay(new Date(endDate))
+              end: endOfDay(new Date(endDate)),
             });
           })
         : [];
@@ -248,7 +241,7 @@ const PersonalInsights = () => {
 
   const renderTopReactions = () => {
     const iterate = topReactions.length >= 1 ? topReactions : EMOJIS;
-    return iterate.map(reaction => {
+    return iterate.map((reaction) => {
       const { emoji, reactions = 0, label } = reaction;
       return (
         <>
@@ -266,7 +259,7 @@ const PersonalInsights = () => {
 
   const renderTopTags = () => {
     if (topTags.length >= 1) {
-      return topTags.map(tag => {
+      return topTags.map((tag) => {
         const label = Object.keys(tag);
         return (
           <>
@@ -407,8 +400,19 @@ const PersonalInsights = () => {
           <ReactionChart
             className="ml-neg10"
             reactions={reactionChartData}
-            yAxisType="total" groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)} isLoading={isFetching} />
-          <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)} dateOption={filter.dateOption} isLoading={isFetching} />
+            yAxisType="total"
+            groupBy={dateData.groupBy}
+            onClick={() => setOpenReactionsModal(true)}
+            isLoading={isFetching}
+          />
+          <TagsChart
+            className="mr-neg10"
+            tags={tagsChartData}
+            groupBy={dateData.groupBy}
+            onClick={() => setOpenTagsModal(true)}
+            dateOption={filter.dateOption}
+            isLoading={isFetching}
+          />
         </div>
         {openReactionsModal && (
           <SnapshotModal

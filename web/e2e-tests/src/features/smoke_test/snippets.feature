@@ -1,9 +1,14 @@
 @snippets @regression
 Feature: Snippets
 
+  Background: Starting test from dashboard page
+    When I open the site "/dashboard"
+    And  I pause for 3000ms
+
   @C1704 @smoke
   Scenario: Snippets collection can be turned on and turned off
     #    C2787  C1737
+    Then I expect that element "snippetsTab" becomes displayed
     When I click on the element "snippetsTab"
     And  I wait on element "firstInActiveCollectionToggle" for 10000ms to be enabled
     And  I scroll to element "firstInActiveCollectionToggle"
@@ -92,40 +97,97 @@ Feature: Snippets
     Then I expect that element "allSnippetsNames" becomes displayed
     And  I expect that new item "allSnippetsNames" is added to snippets
 
-#  @C2795  @smoke
-#  https://semalab.atlassian.net/browse/EAST-1457
-#  Scenario: Snippet collection can be edited
-#    Then I expect that element "userLogo" becomes displayed
-#    When I click on the element "userLogo"
-#    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
-#    When I click on the element "semaCorporateOrganizationLogo"
-#    Then I expect that element "snippetsTab" becomes displayed
-#    #------------------
-#    When I click on the element "snippetsTab"
-#    Then I expect that element "threeDotsCollectionBtn" becomes displayed
-#    #  C2324
-#    When I click on the "1st" element "threeDotsCollectionBtn"
-#    Then I expect that element "editCollectionBtn" becomes displayed
-#    When I click on the element "editCollectionBtn"
-#
-#    Then I expect that element "newCollectionTitleInput" becomes displayed
-#    When I set "edited" with timestamp to the inputfield "newCollectionTitleInput"
-#    When I click on the element "newCollectionLanguagesInput"
-#    And  I set "go" to the inputfield "newCollectionLanguagesInput"
-#    And  I pause for 3000ms
-#    When I press "Enter"
-#    Then I expect that element "newCollectionOtherLabelInput" becomes displayed
-#    When I click on the element "newCollectionOtherLabelInput"
-#    And  I set "prop" to the inputfield "newCollectionOtherLabelInput"
-#    And  I pause for 2000ms
-#    When I press "Enter"
-#    And  I set "test author name" to the inputfield "newCollectionAuthorInput"
-#    And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
-#    And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
-#    When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
-#    Then I expect that element "saveNewCollectionBtn" becomes displayed
-#    When I click on the button "saveNewCollectionBtn"
-#    Then I expect that new item "allCollectionsNames" is added to collections
+  @C2795  @smoke
+  Scenario: Snippet collection can be edited
+    Then I expect that element "companyDropdown" becomes displayed
+    When I click on the element "companyDropdown"
+    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
+    When I hover over element "semaCorporateOrganizationLogo"
+    Then I expect that element "highlightedTeam" becomes displayed
+    When I click on the element "highlightedTeam"
+    Then I expect that element "snippetsTab" becomes displayed
+    #------------------
+    When I click on the element "snippetsTab"
+    Then I expect that element "addNewCollectionBtn" becomes displayed
+    When I click on the element "addNewCollectionBtn"
+    Then I expect that element "newCollectionTitleInput" becomes displayed
+    When I set "Test Collection for editing" to the inputfield "newCollectionTitleInput"
+    And  I click on the element "newCollectionLanguagesInput"
+    And  I set "all" to the inputfield "newCollectionLanguagesInput"
+    And  I pause for 3000ms
+    And  I press "Enter"
+    Then I expect that element "newCollectionOtherLabelInput" becomes displayed
+    When I click on the element "newCollectionOtherLabelInput"
+    And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
+    And  I pause for 3000ms
+    And  I press "Enter"
+    And  I set "test author name" to the inputfield "newCollectionAuthorInput"
+    And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+    And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
+    When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
+    Then I expect that element "saveNewCollectionBtn" becomes displayed
+    When I click on the button "saveNewCollectionBtn"
+    Then I expect that new item "allCollectionsNames" is added to collections
+
+    Then I expect that element "searchIconBtn" becomes displayed
+    When I click on the button "searchIconBtn"
+    And  I set "Test Collection for editing" to the inputfield "searchCollectionInput"
+    Then I expect that element "threeDotsCollectionBtn" becomes displayed
+    #  C2324
+    When I click on the "1st" element "threeDotsCollectionBtn"
+    Then I expect that element "editCollectionBtn" becomes displayed
+    When I click on the element "editCollectionBtn"
+
+    Then I expect that element "newCollectionTitleInput" becomes displayed
+    When I set "Test Collection edited" to the inputfield "newCollectionTitleInput"
+    And  I pause for 1000ms
+    Then I expect that element "newCollectionLanguagesCleanInputBtn" becomes displayed
+    And  I click on the element "newCollectionLanguagesCleanInputBtn"
+    And  I pause for 1000ms
+    Then I expect that element "newCollectionOtherLabelCleanInputBtn" becomes displayed
+    When I click on the element "newCollectionOtherLabelCleanInputBtn"
+
+    Then I expect that element "newCollectionLanguagesValue" becomes not displayed
+    When I click on the element "newCollectionLanguagesInput"
+    When I set "go" to the inputfield "newCollectionLanguagesInput"
+    And  I pause for 3000ms
+    When I press "Enter"
+    Then I expect that element "newCollectionOtherLabelInput" becomes displayed
+    When I click on the element "newCollectionOtherLabelInput"
+    Then I expect that element "newCollectionOtherLabelValue" becomes not displayed
+
+    And  I set "prop" to the inputfield "newCollectionOtherLabelInput"
+    And  I pause for 2000ms
+    When I press "Enter"
+    And  I set "test author edit" to the inputfield "newCollectionAuthorInput"
+    And  I set "Source name edit" to the inputfield "newCollectionSourceNameInput"
+    And  I set "https://testSourceedit.com" to the inputfield "newCollectionSourceLinkInput"
+    When I set "Body text test edit" to the inputfield "newCollectionDescriptionInput"
+    Then I expect that element "saveNewCollectionBtn" becomes displayed
+    When I click on the button "saveNewCollectionBtn"
+    Then I expect that new item "allCollectionsNames" is added to collections
+
+    Then I expect that element "searchIconBtn" becomes displayed
+    When I click on the button "searchIconBtn"
+    And  I set "Test Collection edited" to the inputfield "searchCollectionInput"
+    Then I expect that element "threeDotsCollectionBtn" becomes displayed
+    When I click on the "1st" element "threeDotsCollectionBtn"
+    Then I expect that element "editCollectionBtn" becomes displayed
+    When I click on the element "editCollectionBtn"
+
+    Then I expect that element "newCollectionTitleInput" becomes displayed
+    When I set "Test Finish Collection" with timestamp to the inputfield "newCollectionTitleInput"
+    Then I expect that element "newCollectionLanguagesCleanInputBtn" becomes displayed
+    And I expect that element "newCollectionLanguagesValue" becomes displayed
+    And  I expect that element "newCollectionOtherLabelCleanInputBtn" becomes displayed
+    And  I expect that element "newCollectionOtherLabelValue" becomes displayed
+
+    And  I expect that element "newCollectionAuthorInput" matches the text "test author edit"
+    And  I expect that element "newCollectionSourceNameInput" matches the text "Source name edit"
+    And  I expect that element "newCollectionSourceLinkInput" matches the text "https://testSourceedit.com"
+    Then I expect that element "saveNewCollectionBtn" becomes displayed
+    When I click on the button "saveNewCollectionBtn"
+    Then I expect that new item "allCollectionsNames" is added to collections
 
   @C1706 @smoke
   Scenario: Search for existing snippet works
@@ -189,10 +251,12 @@ Feature: Snippets
 
   @C2790 @smoke
   Scenario: Adding new snippet collection
-    Then I expect that element "userLogo" becomes displayed
-    When I click on the element "userLogo"
+    Then I expect that element "companyDropdown" becomes displayed
+    When I click on the element "companyDropdown"
     Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
-    When I click on the element "semaCorporateOrganizationLogo"
+    When I hover over element "semaCorporateOrganizationLogo"
+    Then I expect that element "highlightedTeam" becomes displayed
+    When I click on the element "highlightedTeam"
 
     When I click on the element "snippetsTab"
     Then I expect that element "addNewCollectionBtn" becomes displayed
@@ -232,10 +296,12 @@ Feature: Snippets
 
   @C2442
   Scenario: The default tags for collection is added to snippet
-    Then I expect that element "userLogo" becomes displayed
-    When I click on the element "userLogo"
+    Then I expect that element "companyDropdown" becomes displayed
+    When I click on the element "companyDropdown"
     Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
-    When I click on the element "semaCorporateOrganizationLogo"
+    When I hover over element "semaCorporateOrganizationLogo"
+    Then I expect that element "highlightedTeam" becomes displayed
+    When I click on the element "highlightedTeam"
     Then I expect that element "snippetsTab" becomes displayed
 
     When I click on the element "snippetsTab"
@@ -374,10 +440,12 @@ Feature: Snippets
   #      C2741  C2742
   @C2741
   Scenario: Field validation for creating collection
-    Then I expect that element "userLogo" becomes displayed
-    When I click on the element "userLogo"
+    Then I expect that element "companyDropdown" becomes displayed
+    When I click on the element "companyDropdown"
     Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
-    When I click on the element "semaCorporateOrganizationLogo"
+    When I hover over element "semaCorporateOrganizationLogo"
+    Then I expect that element "highlightedTeam" becomes displayed
+    When I click on the element "highlightedTeam"
 
     And  I click on the element "snippetsTab"
     Then I expect that element "addNewCollectionBtn" becomes displayed
@@ -422,10 +490,13 @@ Feature: Snippets
 
 #  @C2786
 #  Scenario: Populate this collection to all users checkbox is marked
-#    Then I expect that element "userLogo" becomes displayed
-#    When I click on the element "userLogo"
+#    Then I expect that element "companyDropdown" becomes displayed
+#    When I click on the element "companyDropdown"
 #    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
-#    When I click on the element "semaCorporateOrganizationLogo"
+#    When I hover over element "semaCorporateOrganizationLogo"
+#    Then I expect that element "highlightedTeam" becomes displayed
+    #    When I click on the element "highlightedTeam"
+
 #
 #    And  I click on the element "snippetsTab"
 #    Then I expect that element "addNewCollectionBtn" becomes displayed
@@ -453,7 +524,7 @@ Feature: Snippets
 #    When I click on the button "saveNewCollectionBtn"
 #    Then I expect that new item "allCollectionsNames" is added to collections
 #    #      logout       todo   acme login
-#    When I click on the element "userLogo"
+#    When I click on the element "companyDropdown"
 #    Then I expect that element "signOutBtn" becomes displayed
 #    When I click on the element "signOutBtn"
 #    Then I expect that element "confirmBtn" becomes displayed
@@ -477,10 +548,13 @@ Feature: Snippets
 
 #  @C2786000
 #  Scenario: Populate this collection to all users checkbox is not marked
-#    Then I expect that element "userLogo" becomes displayed
-#    When I click on the element "userLogo"
+#    Then I expect that element "companyDropdown" becomes displayed
+#    When I click on the element "companyDropdown"
 #    Then I expect that element "semaCorporateOrganizationLogo" becomes displayed
-#    When I click on the element "semaCorporateOrganizationLogo"
+#    When I hover over element "semaCorporateOrganizationLogo"
+#    Then I expect that element "highlightedTeam" becomes displayed
+    #    When I click on the element "highlightedTeam"
+
 #
 #    And  I click on the element "snippetsTab"
 #    Then I expect that element "addNewCollectionBtn" becomes displayed
@@ -511,7 +585,7 @@ Feature: Snippets
 #    When I click on the button "saveNewCollectionBtn"
 #    Then I expect that new item "allCollectionsNames" is added to collections
 #    #        logout     todo   acme login
-#    When I click on the element "userLogo"
+#    When I click on the element "companyDropdown"
 #    Then I expect that element "signOutBtn" becomes displayed
 #    When I click on the element "signOutBtn"
 #    Then I expect that element "confirmBtn" becomes displayed

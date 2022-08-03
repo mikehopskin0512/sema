@@ -2,6 +2,7 @@
 
 .footer {
     background-color: $white-0;
+    z-index: 10;
 }
 
 .tile {
@@ -10,17 +11,30 @@
 
 .social-icon-wrapper {
     width: 150px;
+    margin-left: 100px;
     @media only screen and (max-width: 1407px) {
+        margin-left: 20px;
+    }
+    @media only screen and (max-width: 1023px) {
+        margin-left: 0;
         margin-top: 16px;
     }
 }
 
 .responsive-footer {
-    @media only screen and (max-width: 1407px) {
+    @media only screen and (max-width: 1023px) {
         > div {
             flex-direction: column !important;
             justify-content: center !important;
             width: 100%;
         }
+    }
+}
+
+.social-container {
+    @media only screen and (max-width: 1023px) {
+        flex-direction: column !important;
+        justify-content: center !important;
+        width: 100%;
     }
 }

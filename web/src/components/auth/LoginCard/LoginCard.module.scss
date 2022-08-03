@@ -63,7 +63,8 @@
   margin-top: 80px;
   a {
     color: $login-title;
-    text-decoration: none;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 }
 

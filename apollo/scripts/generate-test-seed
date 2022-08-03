@@ -1,0 +1,98 @@
+#!/usr/bin/env node
+
+/* eslint-disable no-console */
+
+const mongoose = require('mongoose');
+const fs = require('fs');
+const path = require('path');
+const prettier = require('prettier');
+
+const SEED_PATH = path.resolve(`${__dirname}/../test/seed`);
+
+// For some collections (e.g. smart comments), retrieve documents
+// which are newer than this arbitrary timestamp.
+const cutoff = new Date('2022-05-01T00:00:00.000Z');
+
+async function main() {
+  await mongoose.connect(process.env.MONGOOSE_URI);
+
+  await seed('repositories', (collection) =>
+    collection.find({
+      fullName: {
+        $in: ['Semalab/phoenix', 'SemaSandbox/astrobee'],
+      },
+    })
+  );
+
+  const users = await seed('users', (collection) =>
+    collection.find({
+      handle: {
+        $in: ['codykenb', 'jrock17', 'mattvanitallie'],
+      },
+    })
+  );
+
+  await seed('userroles', (collection) =>
+    collection.find({
+      user: {
+        $in: users.map((user) => user._id),
+      },
+    })
+  );
+
+  await seed('suggestedComments', (collection) => collection.find().limit(10));
+  await seed('snapshots', (collection) =>
+    collection
+      .find({
+        userId: {
+          $in: users.map((user) => user._id),
+        },
+        createdAt: { $gt: cutoff },
+      })
+      .limit(20)
+  );
+
+  await seed('portfolios', (collection) =>
+    collection
+      .find({
+        userId: {
+          $in: users.map((user) => user._id),
+        },
+      })
+      .limit(20)
+  );
+
+  await seed('smartComments', (collection) =>
+    collection
+      .find({
+        userId: {
+          $in: users.map((user) => user._id),
+        },
+        createdAt: { $gt: cutoff },
+      })
+      .limit(20)
+  );
+}
+
+async function seed(name, finder) {
+  const filename = `${SEED_PATH}/${name}.json`;
+  const collection = mongoose.connection.collection(name);
+  const documents = await finder(collection).toArray();
+  const serialized = JSON.stringify(documents);
+  const formatted = prettier.format(serialized, { filepath: filename });
+
+  fs.writeFileSync(filename, Buffer.from(formatted));
+
+  const kb = Math.round(formatted.length / 1024);
+  console.log(
+    `Saved ${documents.length} documents (${kb} KB) of seed data to ${filename}`
+  );
+  return documents;
+}
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

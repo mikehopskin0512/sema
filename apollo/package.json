@@ -23,13 +23,16 @@
     "@octokit/auth-app": "^3.6.1",
     "@octokit/rest": "^18.12.0",
     "@sendgrid/mail": "^7.2.1",
+    "async-retry": "^1.3.3",
     "aws-sdk": "^2.796.0",
     "axios": "^0.21.1",
     "axios-request-throttle": "^1.0.0",
+    "axios-retry": "^3.3.1",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "bunyan": "^1.8.12",
+    "bunyan-rollbar-stream": "^1.0.3",
     "caching-map": "^1.0.2",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
@@ -63,11 +66,14 @@
     "passport-http-bearer": "^1.0.1",
     "pg": "^8.2.1",
     "request": "^2.88.2",
+    "rollbar": "^2.25.0",
+    "set-interval-async": "^2.0.3",
     "speakingurl": "^14.0.1",
     "string-similarity": "^4.0.4",
     "swagger-ui-express": "^4.3.0",
     "text-clipper": "^2.1.0",
     "uuid": "^8.1.0",
+    "validate-github-token": "^1.1.1",
     "xlsx": "^0.15.5",
     "yamljs": "^0.3.0"
   },
@@ -83,6 +89,8 @@
     "eslint-plugin-jest": "^26.1.5",
     "jest": "^27.5.1",
     "nock": "^13.2.4",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "prettier": "^2.7.1",
+    "timekeeper": "^2.2.0"
   }
 }

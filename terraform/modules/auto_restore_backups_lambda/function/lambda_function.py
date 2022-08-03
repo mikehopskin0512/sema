@@ -5,6 +5,7 @@ import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
 from time import sleep
+from subprocess import Popen, call, PIPE
 
 
 def drop_old_documents(conn):
@@ -17,7 +18,7 @@ def drop_old_documents(conn):
 def download_latest_backup(url, auth):
     """
     Download latest backup from web server
-    :param url: URL of the web server with backups 
+    :param url: URL of the web server with backups
     :param auth: A tuple (username, password) for authentication in web server
     :return: Path of downloaded backup
     """
@@ -44,13 +45,14 @@ def download_latest_backup(url, auth):
 def extract_tar(tar_url, extract_path='.'):
     print(tar_url)
     tar = tarfile.open(tar_url, 'r')
-    for item in tar:
-        tar.extract(item, extract_path)
-        if item.name.find(".tgz") != -1 or item.name.find(".tar") != -1:
-            extract(item.name, "./" + item.name[:item.name.rfind('/')])
+
+    tar.extractall(extract_path)
+
+    # close file
+    tar.close()
 
 
-def db_restore(path, conn, db_name):
+def db_restore(path, connection_string, db_name):
     """
     MongoDB Restore
     :param path: Database dumped path
@@ -64,12 +66,9 @@ def db_restore(path, conn, db_name):
     >>> restore(DB_BACKUP_DIR, conn, db_name)
 
     """
-    for coll in os.listdir(path):
-        if coll.endswith('.bson') and os.stat(path+"/"+coll).st_size != 0:
-            with open(os.path.join(path, coll), 'rb+') as f:
-                conn[coll.split('.')[0]].insert_many(
-                    bson.decode_all(f.read()), ordered=True)
-                sleep(1)
+    process = call(
+        ["./mongorestore", "--db", db_name, "--uri", connection_string, path], stdout=PIPE, universal_newlines=True
+    )
 
     return True
 
@@ -95,14 +94,14 @@ def lambda_handler(event, context):
     connection_string = event["connection_string"]
     auth = (event["db_webserver_user"], event["db_webserver_password"])
     database_name = event["database_name"]
-    extracted_backup_path = "/tmp/phoenix"
+    extracted_backup_path = "/tmp/phoenix/"
 
     try:
         db = get_database(connection_string, database_name)
         drop_old_documents(db)
         backup_path = download_latest_backup(url, auth)
         extract_tar(f'{backup_path}', "/tmp")
-        db_restore(extracted_backup_path, db, database_name)
+        db_restore(extracted_backup_path, connection_string, database_name)
     except:
         return 1
 

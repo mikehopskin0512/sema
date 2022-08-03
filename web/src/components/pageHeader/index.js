@@ -29,7 +29,7 @@ const defaultMenus = [
   },
 ];
 
-const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) => {
+function PageHeader({ menus = defaultMenus, userRole = {}, type = 'normal' }) {
   const router = useRouter();
   const { isOrganizationAdmin } = usePermission();
   const { organization } = userRole;
@@ -57,22 +57,10 @@ const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) =>
             <div className="has-text-gray-600">{organization?.description}</div>
           </div>
         </div>
-        {isOrganizationAdmin() && (
-          <div className='is-flex'>
-            <button
-              className="button has-background-white has-text-primary border-none border-radius-4px outline-none"
-              type="button"
-              onClick={goToEditPage}
-            >
-              <EditIcon size="small" />
-              <span className="ml-10">Edit Organization Profile</span>
-            </button>
-          </div>
-        )}
       </div>
       <PageTabs tabs={menus} />
     </div>
   );
-};
+}
 
 export default PageHeader;

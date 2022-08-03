@@ -42,38 +42,19 @@ data "aws_secretsmanager_secret_version" "apollo" {
   ]
 }
 
-data "aws_iam_policy_document" "s3_scr_avatars" {
+data "aws_iam_policy_document" "this" {
   statement {
-    sid = "PublicReadGetObject"
-    principals {
-      type        = "AWS"
-      identifiers = ["*"]
-    }
     effect = "Allow"
     actions = [
-      "s3:GetObject"
+      "sqs:ChangeMessageVisibility",
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes",
+      "sqs:GetQueueUrl",
+      "sqs:ListQueues",
+      "sqs:ReceiveMessage",
+      "sqs:SendMessage"
     ]
 
-    resources = [
-      "arn:aws:s3:::${local.s3_scr_avatars}/*",
-    ]
-  }
-
-  statement {
-    sid = "PutObject"
-    principals {
-      type = "AWS"
-      identifiers = [
-        module.phoenix.execution_role_arn,
-        module.apollo.execution_role_arn
-      ]
-    }
-    effect = "Allow"
-    actions = [
-      "s3:PutObject"
-    ]
-    resources = [
-      "arn:aws:s3:::${local.s3_scr_avatars}/*",
-    ]
+    resources = local.sqs_queues_arn
   }
 }

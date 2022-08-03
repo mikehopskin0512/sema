@@ -37,38 +37,48 @@ export const create = async (user, inviteToken) => {
       isWaitlist = false;
       origin = 'invitation';
     }
-    const { username: handle } =
-      identities.length &&
-      identities.find((item) => item?.provider === 'github');
+    const provider = 'github';
+    const githubIdentity = identities?.find(
+      (item) => item?.provider === provider
+    );
+    const handle = githubIdentity?.username;
+    const id = githubIdentity?.id;
 
-    const newUser = new User({
-      username: username.toLowerCase(),
-      password,
-      firstName,
-      lastName,
-      jobTitle,
-      avatarUrl,
-      handle,
-      identities,
-      isWaitlist,
-      origin,
-      verificationToken: token,
-      verificationExpires,
-      termsAccepted: terms,
-      termsAcceptedAt: new Date(),
-      collections,
-    });
-    const savedUser = await newUser.save();
+    const newUser = await User.findOrCreateByIdentity(
+      { provider, id },
+      {
+        username: username.toLowerCase(),
+        password,
+        firstName,
+        lastName,
+        jobTitle,
+        avatarUrl,
+        handle,
+        identities,
+        isWaitlist,
+        origin,
+        verificationToken: token,
+        verificationExpires,
+        termsAccepted: terms,
+        termsAcceptedAt: new Date(),
+        collections,
+        isActive: true, // Activates ghost users.
+      }
+    );
 
     if (!!invitation && invitation.organization) {
-      await UserRole.create({
-        organization: invitation.organization,
-        user: savedUser._id,
-        role: invitation.role,
-      });
+      await UserRole.findOrCreate(
+        {
+          organization: invitation.organization,
+          user: newUser._id,
+        },
+        {
+          role: invitation.role,
+        }
+      );
     }
 
-    return savedUser;
+    return newUser;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
@@ -116,24 +126,13 @@ export const patch = async (id, fields) => {
 };
 
 export const updateIdentity = async (user, identity) => {
-  const { _id } = user;
-  const { provider } = identity;
-
   try {
-    // In order to handle both insert and update
-    // need to pull old identity and then push new one
-    const queryPull = User.updateOne(
-      { _id: new ObjectId(_id) },
-      { $pull: { identities: { provider } } }
+    const userDocument = await User.findById(user._id);
+    await userDocument.findOrCreateInArray(
+      'identities',
+      { provider: identity.provider },
+      identity
     );
-
-    const queryAdd = User.updateOne(
-      { _id: new ObjectId(_id) },
-      { $addToSet: { identities: identity } }
-    );
-
-    await queryPull.exec();
-    await queryAdd.exec();
     return true;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -489,20 +488,52 @@ export const updateUserRepositoryList = async (user, repos, identity) => {
   }
 };
 
+export const updatePreviewImgLink = async (userId, repoId, imgUrl) => {
+  try {
+    const user = await findById(userId);
+    const identityRepos = user.identities[0].repositories || [];
+    const updatedRepo = identityRepos.find((repo) => repo.id === repoId);
+    updatedRepo.previewImgLink = imgUrl;
+    const newIdentity = Object.assign(user.identities[0], {
+      repositories: identityRepos,
+    });
+    await updateIdentity(user, newIdentity);
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
 export const addRepositoryToIdentity = async (user, repository) => {
   try {
-    const identity = user.identities?.[0];
-    if (!identity) return false;
-    const identityRepo = identity.repositories || [];
-    if (_.findIndex(identityRepo, { id: repository.id }) !== -1) {
-      return true;
-    }
-    const newIdentity = {
-      ...identity,
-      repositories: [...identityRepo, repository],
-    };
-    await updateIdentity(user, newIdentity);
-    return true;
+    const id = repository.externalId;
+
+    // This MongoDB query ensures that we don't add the same
+    // repository twice under concurrency.
+    await User.updateOne(
+      {
+        _id: user._id,
+        identities: {
+          $elemMatch: {
+            provider: 'github',
+            repositories: {
+              $not: { $elemMatch: { id } },
+            },
+          },
+        },
+      },
+      {
+        $addToSet: {
+          'identities.$.repositories': {
+            id,
+            name: repository.name,
+            fullName: repository.fullName,
+            githubUrl: repository.cloneUrl,
+          },
+        },
+      }
+    );
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(err);
@@ -689,6 +720,20 @@ export async function getOrganizationUsersMetrics(organizationId) {
   return doc;
 }
 
+export const findUsersByGitHubHandle = async (handles) => {
+  try {
+    return User.find({
+      identities: { $elemMatch: { username: { $in: handles } } },
+    })
+      .lean()
+      .exec();
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
 export const findByHandle = async (handle) => {
   try {
     const query = User.findOne({ handle });
@@ -702,9 +747,42 @@ export const findByHandle = async (handle) => {
   }
 };
 
-export const createGhostUser = async (attributes) =>
-  await User.create({
-    ...attributes,
-    isActive: false,
-    origin: 'sync',
-  });
+export const createGhostUser = async (attributes) => {
+  const provider = 'github';
+  const githubIdentity = attributes.identities?.find(
+    (item) => item?.provider === provider
+  );
+  const id = githubIdentity?.id;
+  return await User.findOrCreateByIdentity(
+    { provider, id },
+    {
+      ...attributes,
+      isActive: false,
+      origin: 'sync',
+    }
+  );
+};
+
+export const toggleUserRepoPinned = async (userId, repoId) => {
+  await User.updateOne({ _id: userId }, [
+    {
+      $set: {
+        pinnedRepos: {
+          $cond: [
+            { $ifNull: ['$pinnedRepos', false] },
+            {
+              $cond: [
+                { $in: [repoId, '$pinnedRepos'] },
+                { $setDifference: ['$pinnedRepos', [repoId]] },
+                { $concatArrays: ['$pinnedRepos', [repoId]] },
+              ],
+            },
+            [repoId],
+          ],
+        },
+      },
+    },
+  ]);
+
+  return true;
+};

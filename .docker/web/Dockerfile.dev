@@ -1,4 +1,4 @@
-FROM node:16-alpine3.14 AS build
+FROM public.ecr.aws/docker/library/node:16-alpine3.14 AS build
 
 WORKDIR /usr/adonis
 COPY  ./adonis /usr/adonis

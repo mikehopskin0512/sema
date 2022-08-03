@@ -1,195 +1,266 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
-import clsx from 'clsx';
+import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
-import styles from "../header.module.scss";
-import { PATHS } from '../../../utils/constants';
 import { isEmpty } from 'lodash';
+import { setProfileViewMode } from '../../../state/features/auth/actions';
+import { authOperations } from '../../../state/features/auth';
+import { PATHS, PROFILE_VIEW_MODE, renderMenuItems } from '../../../utils/constants';
 import { useFlags } from '../../launchDarkly';
+import { InviteModal } from "../InviteModal";
+import OrgSwitcher from '../OrganizationSwitcher';
+import * as analytics from '../../../utils/analytics';
+import { invitationsOperations } from '../../../state/features/invitations';
+import { blue50, white0 } from '../../../../styles/_colors.module.scss';
+import { COLORS_ARRAY } from './constants';
 
-const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, selectedOrganization }) => {
-  const { pathname } = useRouter();
-  const { auth } = useSelector((state) => ({
+const { createInviteAndHydrateUser, trackSendInvite } = invitationsOperations;
+const { setSelectedOrganization } = authOperations;
+
+function UserHeaderNav({
+  toggleHamburger,
+  type = 'desktop'
+}) {
+  const router = useRouter();
+  const { pathname } = router;
+  const dispatch = useDispatch();
+  const [isInviteModal, setInviteModal] = useState(false);
+
+  const {
+    auth: { user: userData, token, isAllOrgsSelected, selectedOrganization },
+    organizations,
+    repositories,
+  } = useSelector((state) => ({
     auth: state.authState,
+    organizations: state.organizationsNewState,
+    repositories: state.repositoriesState,
   }));
-  const { user: { isSemaAdmin } } = auth;
+
+  const { _id: userId  } = userData;
+  const {organizations: orgs} = organizations;
+  orgs.sort((a, b) => a.organization.name.localeCompare(b.organization.name))
+
+  const onInvitationsSend = async (email) => {
+    const invitation = {
+      recipient: email,
+      sender: userId,
+      isMagicLink: false,
+    };
+    const { status } = await dispatch(
+      createInviteAndHydrateUser(invitation, token)
+    );
+    analytics.fireAmplitudeEvent(
+      analytics.AMPLITUDE_EVENTS.CLICKED_SEND_INVITATION,
+      { recipient: email }
+    );
+    trackSendInvite(
+      email,
+      invitation.senderName,
+      invitation.senderEmail,
+      'user'
+    );
+    return status === 201;
+  };
 
   const { personalDashboard } = useFlags();
+  const [orgIndex, setOrgIndex] = useState(null);
+  const [openOrgSwitcher, setOpenOrgSwitcher] = useState(false);
 
-  const renderDesktopNav = () => {
-    return (
-      <>
-        {personalDashboard && isEmpty(selectedOrganization) && <Link href={PATHS.PERSONAL}>
-          <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname === PATHS.PERSONAL && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
-            Dashboard
-          </a>
-        </Link>}
-        {
-          !isEmpty(selectedOrganization) ? (
-            <Link href={`${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`}>
-              <a
-                aria-hidden="true"
-                className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.DASHBOARD}` && 'has-text-weight-semibold'}`}
-              >
-                Dashboard
-              </a>
-            </Link>
-          ) : (
-            <Link href={PATHS.DASHBOARD}>
-              <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname === PATHS.DASHBOARD && 'has-text-weight-semibold'}`}>
-                Repos
-              </a>
-            </Link>
-          )
-        }
-        {
-          !isEmpty(selectedOrganization) ? (
-          <>
-            <Link href={`${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.REPOS}`}>
-            <a
-              aria-hidden="true"
-              className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.REPOS}` && 'has-text-weight-semibold'}`}
-            >
-              Repos
-            </a>
-            </Link>
-            <Link href={`${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.ORGANIZATION_INSIGHTS}`}>
-              <a
-                aria-hidden="true"
-                className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.ORGANIZATION_INSIGHTS}` && 'has-text-weight-semibold'}`}
-              >
-              Organization Insights
-              </a>
-            </Link>
-          </>
-          ) : (
-            <Link href={PATHS.PERSONAL_INSIGHTS}>
-              <a aria-hidden="true" className={`navbar-item has-text-black-950 mx-10 ${pathname === PATHS.PERSONAL_INSIGHTS && 'has-text-weight-semibold'}`}>
-                Personal Insights
-              </a>
-            </Link>
-          )
-        }
-        <Link href={PATHS.SNIPPETS._}>
-          <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname.includes(PATHS.SNIPPETS._) || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
-            Snippets
-          </a>
-        </Link>
-        {/* TODO: Activate if we ever need Community Engineering Guides again */}
-        {/*
-        <Link href="/guides">
-          <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname.includes('/guides') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
-            Community Eng Guides
-          </a>
-        </Link>
-        */}
-        <Link href={PATHS.INVITATIONS}>
-          <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 pr-20 ${pathname === PATHS.INVITATIONS && 'has-text-weight-semibold'}`}>
-            <div className="is-flex is-flex-wrap-wrap">
-              Invitations
-              <div className={clsx("ml-3 has-background-blue-700 is-size-9 has-text-white has-text-centered has-text-weight-semibold border-radius-8px", styles.badge)}>{isSemaAdmin ? 'ꝏ' : inviteCount}</div>
-            </div>
-          </a>
-        </Link>
-        <Link href={PATHS.SUPPORT}>
-          <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname === PATHS.SUPPORT && 'has-text-weight-semibold'}`}>
-            Support
-          </a>
-        </Link>
-        {/* TODO: Activate if we ever need Support form */}
-        {/*
-        <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
-          <a aria-hidden="true" className="navbar-item has-text-black-950 mr-15" onClick={toggleHamburger}>
-            Support
-          </a>
-        </div>
-        */}
-      </>
-    )
+  const setSelectedOrgColourOrClass = (toggleClass = false) => {
+    switch (true) {
+      case orgIndex === null:
+        return white0;
+      case isAllOrgsSelected:
+        return toggleClass ? 'org-colour-allorgs' : blue50;
+      case !isAllOrgsSelected && isEmpty(selectedOrganization):
+        return toggleClass ? 'org-colour-personal' : COLORS_ARRAY[COLORS_ARRAY.length - 1];
+      case !isAllOrgsSelected && !isEmpty(selectedOrganization):
+        return toggleClass ? `org-colour-${orgIndex % 15}` : COLORS_ARRAY[orgIndex % COLORS_ARRAY.length];
+      default:
+        break;
+    }
   }
 
-  const renderMobileNav = () => {
-    return (
-      <>
-        {
-          !isEmpty(selectedOrganization) ? (
-            <Link href={`${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`}>
-              <a
-                aria-hidden="true"
-                className="navbar-item has-text-weight-semibold is-uppercase"
-              >
-                Dashboard
-              </a>
-            </Link>
-          ) : (
-            <Link href={PATHS.DASHBOARD}>
-              <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                Repos
-              </a>
-            </Link>
-          )
-        }
-        <Link href={PATHS.PERSONAL_INSIGHTS}>
-          <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-            Personal Insights
+  const selectedMenuItem = () => ({
+    backgroundColor: setSelectedOrgColourOrClass()
+  });
+
+  const setMenuItemStyle = (matchPath) => pathname === matchPath ? selectedMenuItem() : {};
+
+  const setOrganization = (org, allOrgs) => {
+    let viewMode = PROFILE_VIEW_MODE.INDIVIDUAL_VIEW;
+    if (org?.organization?._id) {
+      viewMode = PROFILE_VIEW_MODE.ORGANIZATION_VIEW;
+    }
+    dispatch(setSelectedOrganization((org || {}), allOrgs));
+    dispatch(setProfileViewMode(viewMode));
+  };
+
+  const handleOnOrganizationClick = (org, allOrgs = false) => {
+    setOrganization(org, allOrgs);
+    router.push(
+      org
+        ? `${PATHS.ORGANIZATIONS._}/${org?.organization?._id}${PATHS.REPOS}`
+        : PATHS.DASHBOARD
+    );
+  };
+
+  const toggleOrgSwitcherItemsHoverColor = (e) => {
+    const el = e.target;
+    el.classList.toggle(setSelectedOrgColourOrClass(true));
+  };
+
+  useEffect(() => {
+    if (
+      typeof selectedOrganization === 'object' &&
+      organizations.organizations.length > 0
+    ) {
+      setOrgIndex(
+        organizations.organizations.findIndex(
+          (element) => element._id === selectedOrganization._id
+        )
+      );
+    }
+  }, [selectedOrganization, organizations]);
+
+  const renderDesktopNav = () => (
+    <>
+      {organizations.organizations.length > 0 && 
+        <OrgSwitcher 
+          organizations={organizations}
+          selectedOrganization={selectedOrganization}
+          isAllOrgsSelected={isAllOrgsSelected}
+          userData={userData}
+          repositories={repositories}
+          openOrgSwitcher={openOrgSwitcher}
+          setOpenOrgSwitcher={setOpenOrgSwitcher}
+          orgIndex={orgIndex}
+          handleOnOrganizationClick={handleOnOrganizationClick}
+          toggleOrgSwitcherItemsHoverColor={toggleOrgSwitcherItemsHoverColor}
+        />
+      }
+      {
+        renderMenuItems(personalDashboard, isEmpty, selectedOrganization).map((item, idx) => <Link key={idx} href={item.path}>
+            <a
+              aria-hidden="true"
+              className={item.className}
+              style={setMenuItemStyle(
+                item.stylePath ? item.stylePath : item.path
+              )}
+              onMouseEnter={toggleOrgSwitcherItemsHoverColor}
+              onMouseLeave={toggleOrgSwitcherItemsHoverColor}
+            >
+              {item.title}
+            </a>
+          </Link>
+        )
+      }
+    </>
+  );
+
+  const renderMobileNav = () => (
+    <>
+      {!isEmpty(selectedOrganization) ? (
+        <Link
+          href={`${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`}
+        >
+          <a
+            aria-hidden="true"
+            className="navbar-item has-text-weight-semibold is-uppercase"
+          >
+            Dashboard
           </a>
         </Link>
-        {
-          !isEmpty(selectedOrganization) && (
-            <Link href={`${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.REPOS}`}>
-              <a
-                aria-hidden="true"
-                className="navbar-item has-text-weight-semibold is-uppercase"
-              >
-                Repos
-              </a>
-            </Link>
-          )
-        }
-        <Link href={PATHS.SNIPPETS._}>
-          <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-            Snippets
+      ) : (
+        <Link href={PATHS.DASHBOARD}>
+          <a
+            aria-hidden="true"
+            className="navbar-item has-text-weight-semibold is-uppercase"
+            onClick={toggleHamburger}
+          >
+            Repos
           </a>
         </Link>
-        {/* TODO: Activate if we ever need Community Engineering Guides again */}
-        {/*
+      )}
+      <Link href={PATHS.PERSONAL_INSIGHTS}>
+        <a
+          aria-hidden="true"
+          className="navbar-item has-text-weight-semibold is-uppercase"
+          onClick={toggleHamburger}
+        >
+          Personal Insights
+        </a>
+      </Link>
+
+      <a
+        aria-hidden="true"
+        className="navbar-item has-text-weight-semibold is-uppercase"
+        onClick={() => {
+          setInviteModal(true);
+        }}
+      >
+        Recommend a Friend
+      </a>
+
+      {!isEmpty(selectedOrganization) && (
+        <Link
+          href={`${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.REPOS}`}
+        >
+          <a
+            aria-hidden="true"
+            className="navbar-item has-text-weight-semibold is-uppercase"
+          >
+            Repos
+          </a>
+        </Link>
+      )}
+      <Link href={PATHS.SNIPPETS._}>
+        <a
+          aria-hidden="true"
+          className="navbar-item has-text-weight-semibold is-uppercase"
+          onClick={toggleHamburger}
+        >
+          Snippets
+        </a>
+      </Link>
+      {/* TODO: Activate if we ever need Community Engineering Guides again */}
+      {/*
         <Link href="/guides">
           <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
             Community Engineering Guides
           </a>
         </Link>
         */}
-        <Link href={PATHS.INVITATIONS}>
-          <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-            Invitations
-            <span className="badge mr-50 is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin ? 'ꝏ' : inviteCount}</span>
-          </a>
-        </Link>
-        <Link href={PATHS.SUPPORT}>
-          <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-            Support
-          </a>
-        </Link>
-        {/* TODO: Activate if we ever need Support Forms */}
-        {/*
+      <Link href={PATHS.SUPPORT}>
+        <a
+          aria-hidden="true"
+          className="navbar-item has-text-weight-semibold is-uppercase"
+          onClick={toggleHamburger}
+        >
+          Support
+        </a>
+      </Link>
+      {/* TODO: Activate if we ever need Support Forms */}
+      {/*
         <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
           <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
             Support
           </a>
         </div>
         */}
-      </>
-    )
-  };
+    </>
+  );
 
   return (
     <>
-      {
-        type === 'desktop' ? renderDesktopNav() : renderMobileNav()
-      }
+      {type === 'desktop' ? renderDesktopNav() : renderMobileNav()}
+      <InviteModal
+        isActive={isInviteModal}
+        onClose={setInviteModal}
+        onSubmit={onInvitationsSend}
+      />
     </>
-  )
+  );
 }
 
-export default UserHeaderNav
+export default UserHeaderNav;

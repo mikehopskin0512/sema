@@ -1,36 +1,41 @@
-FROM node:16-alpine3.14 AS build
-
-COPY ./adonis /adonis
-COPY . /src
+FROM public.ecr.aws/docker/library/node:16-alpine3.14 AS builder
 
 RUN npm install -g npm@8.5.5
 
 WORKDIR /adonis
-RUN npm ci
+COPY ./adonis/package.json ./adonis/package-lock.json* /adonis/
+RUN npm ci && npm cache clean --force
+
+WORKDIR /src
+COPY package.json package-lock.json* /src/
+RUN npm ci && npm cache clean --force
+
+WORKDIR /adonis
+COPY ./adonis /adonis
 RUN npm run build
 
 WORKDIR /src
-RUN npm ci
+COPY . /src
 RUN npm run build
-# Should be one RUN because npm prune depends on layers above
+
 RUN npm prune --production
 
-FROM node:16-alpine3.14
+FROM public.ecr.aws/docker/library/node:16-alpine3.14
 
-WORKDIR /usr/app
-
-COPY --from=build /adonis /usr/adonis
-COPY --from=build /src/node_modules /usr/app/node_modules
-COPY --from=build /src/package.json /usr/app/package.json
-COPY --from=build /src/public /usr/app/public
-COPY --from=build /src/.next /usr/app/.next
+ENV NODE_ENV production
 
 RUN npm install --global pm2@5.1.2
 
+WORKDIR /usr/app
+
+COPY --from=builder /adonis /usr/adonis
+COPY --from=builder /src/node_modules /usr/app/node_modules
+COPY --from=builder /src/package.json /usr/app/package.json
+COPY --from=builder /src/public /usr/app/public
+COPY --from=builder /src/.next /usr/app/.next
+
 USER node
 EXPOSE 3000
-
-ENV NODE_ENV production
 
 # Run npm start script with PM2 when container starts
 CMD [ "pm2-runtime", "npm", "--", "start" ]
