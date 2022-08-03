@@ -30,6 +30,15 @@ export const fullName = (user) => {
   return `${firstName} ${lastName}`;
 };
 
+export const getRepoCardTitle = (handle, repo = { name: '', fullName: null }) => {
+  if (!handle) return '';
+  if (!repo?.fullName) return repo.name || '';
+  
+  const nameSlices = repo.fullName.split('/');
+  if (nameSlices && nameSlices.length > 1 && nameSlices[0] === handle) return nameSlices[1];
+  return repo.fullName;
+}
+
 export const dummy = () => {};
 
 export const getUserStatus = (user) => {

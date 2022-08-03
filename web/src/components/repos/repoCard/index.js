@@ -19,14 +19,19 @@ import RepoSyncText from '../../repoSync/repoSyncText';
 import { useFlags } from '../../launchDarkly';
 
 const statLabels = {
-  smartCodeReviews: 'Sema Code Reviews',
-  smartComments: 'Sema Comments',
-  smartCommenters: 'Sema Commenters',
+  smartCodeReviews: 'Pull Requests',
+  smartComments: 'Comments',
+  smartCommenters: 'Commenters',
 };
 
 function RepoCard(props) {
+  const { auth: {token, user}, organizations } = useSelector(
+    (state) => ({
+      organizations: state.organizationsNewState.organizations,
+      auth: state.authState
+    }),
+  );
   const dispatch = useDispatch();
-  const { token, user } = useSelector((state) => state.authState);
   const titleRef = useRef(null);
   const { repoSyncTab } = useFlags();
   const {
@@ -68,11 +73,10 @@ function RepoCard(props) {
       }));
   }
 
-  const hasSelectedOrganization = () => Object.getOwnPropertyDescriptor(selectedOrganization, 'organization');
-
-  const renderUserName = () => hasSelectedOrganization() ? selectedOrganization.organization?.name : fullName;
-
-  const renderAvatar = () => hasSelectedOrganization() ? selectedOrganization.organization?.avatarUrl : user.avatarUrl;
+  const getRepoOwner = () => organizations.find((org) => org.organization.repos.includes(repoId))?.organization || {
+    ...user,
+    name: fullName,
+  };
 
   return (
   <>
@@ -115,14 +119,14 @@ function RepoCard(props) {
           </div>
           <div className='mx-12 py-10 is-flex is-align-items-center'>
             <Avatar
-              name={renderUserName()}
-              src={renderAvatar()}
+              name={getRepoOwner()?.name}
+              src={getRepoOwner()?.avatarUrl}
               size="20" 
               textSizeRatio={2.5}
               maxInitials={2}
               round
             />
-            <span className='is-size-8 ml-8 has-text-black'>{renderUserName()}</span>
+            <span className='is-size-8 ml-8 has-text-black'>{getRepoOwner()?.name}</span>
           </div>
         </div>
         {isOrganizationAdmin() && (
