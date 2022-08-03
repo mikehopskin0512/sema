@@ -42,6 +42,10 @@ const initialState = {
     },
   },
   lastUserSmartComment: null,
+  snippetSaved: {
+    isSaved: false,
+    semabarContainerId: null,
+  },
 };
 
 export default initialState;

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { remove } from 'lodash';
 import Organization from './organizationModel';
 import errors from '../shared/errors';
 import logger from '../shared/logger';
@@ -14,7 +15,10 @@ import {
 import { createUserRole } from '../userRoles/userRoleService';
 import { getRoleByName } from '../roles/roleService';
 import { semaCorporateOrganizationName } from '../config';
-import { findByUsername, getOrganizationUsersMetrics } from '../users/userService';
+import {
+  findByUsername,
+  getOrganizationUsersMetrics,
+} from '../users/userService';
 import { uploadImage } from '../utils';
 
 const {
@@ -77,6 +81,41 @@ export const getOrganizationByUrl = async (url) => {
   }
 };
 
+export const getOrganizationByGithubOrgId = async (githubOrgId) => {
+  try {
+    const organization = await Organization.findOne({
+      'orgMeta.id': githubOrgId,
+    }).exec();
+    return organization || null;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const createNewOrgsFromGithub = async (githubOrgs, createdBy) => {
+  try {
+    return await Promise.all(
+      githubOrgs.map(
+        async (githubOrg) =>
+          await createOrganization({
+            name: githubOrg.login,
+            avatarUrl: githubOrg.avatar_url,
+            createdBy,
+            orgMeta: {
+              ...githubOrg,
+            },
+          })
+      )
+    );
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    throw error;
+  }
+};
+
 export const getOrganizationById = async (id) => {
   try {
     const query = Organization.findOne({ _id: new ObjectId(id) });
@@ -112,15 +151,21 @@ export const createOrganization = async (data) => {
       throw new Error(`The ${semaCorporateOrganizationName} name is reserved`);
     }
     const { members } = data;
-    const organization = new Organization(data);
-    await organization.save();
+    const organization = await Organization.findOrCreate(
+      {
+        'orgMeta.id': data.orgMeta.id,
+      },
+      data
+    );
 
-    const adminRole = await getRoleByName(ROLE_NAMES.ADMIN);
-    await createUserRole({
-      user: data.createdBy,
-      organization: organization._id,
-      role: adminRole._id,
-    });
+    if (data.createdBy) {
+      const adminRole = await getRoleByName(ROLE_NAMES.MEMBER);
+      await createUserRole({
+        user: data.createdBy,
+        organization: organization._id,
+        role: adminRole._id,
+      });
+    }
 
     if (members) {
       await createMembersRoles(members, organization._id);
@@ -130,7 +175,7 @@ export const createOrganization = async (data) => {
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
-    return error;
+    throw error;
   }
 };
 
@@ -175,7 +220,9 @@ export const updateOrganizationRepos = async (organizationId, repoIds) => {
 export const getOrganizationRepos = async (organizationId, params = {}) => {
   try {
     const { searchQuery = '' } = params;
-    const [organization] = await Organization.find({ _id: organizationId }).select('repos').exec();
+    const [organization] = await Organization.find({ _id: organizationId })
+      .select('repos')
+      .exec();
     const ids = organization?.repos.map((repo) => repo._id.toString()) || [];
     return getRepositories({ ids, searchQuery }, true);
   } catch (err) {
@@ -187,7 +234,9 @@ export const getOrganizationRepos = async (organizationId, params = {}) => {
 
 export async function getOrganizationMetrics(organizationId) {
   const userMetrics = await getOrganizationUsersMetrics(organizationId);
-  const commentsMetrics = await getOrganizationSmartCommentsMetrics(organizationId);
+  const commentsMetrics = await getOrganizationSmartCommentsMetrics(
+    organizationId
+  );
   let metrics = [];
   const auxDate = new Date(metricsStartDate);
   const today = new Date();
@@ -236,11 +285,17 @@ export const getOrganizationMembers = async (
       options.skip = perPage * (page - 1);
       options.limit = perPage;
     }
-    const members = await UserRole.find({ organization: organizationId }, {}, options)
+    const members = await UserRole.find(
+      { organization: organizationId },
+      {},
+      options
+    )
       .populate('user')
       .populate('role');
 
-    const totalCount = await UserRole.countDocuments({ organization: organizationId });
+    const totalCount = await UserRole.countDocuments({
+      organization: organizationId,
+    });
 
     return { members, totalCount };
   } catch (err) {
@@ -274,7 +329,11 @@ export const addOrganizationMembers = async (organization, users, role) => {
   }
 };
 
-export const updateOrganizationAvatar = async (organizationId, userId, file) => {
+export const updateOrganizationAvatar = async (
+  organizationId,
+  userId,
+  file
+) => {
   const organization = await Organization.findById(organizationId);
 
   const uploadedImage = await uploadImage(file);
@@ -290,4 +349,22 @@ export const updateOrganizationAvatar = async (organizationId, userId, file) => 
     .populate('role');
 
   return role;
+};
+
+export const toggleOrgRepoPinned = async (organizationId, repoId) => {
+  const organization = await Organization.findById(organizationId);
+  const newPinnedRepos = [...organization.pinnedRepos];
+
+  if (newPinnedRepos.includes(repoId)) {
+    remove(newPinnedRepos, (id) => id === repoId);
+  } else {
+    newPinnedRepos.push(repoId);
+  }
+
+  await Organization.findOneAndUpdate(
+    { _id: organizationId },
+    { $set: { pinnedRepos: newPinnedRepos } }
+  );
+
+  return true;
 };

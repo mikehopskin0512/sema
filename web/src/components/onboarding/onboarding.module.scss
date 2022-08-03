@@ -157,3 +157,160 @@
 .skip-btn {
     border-width: 2px;
 }
+
+.ffo-modal-image-section {
+    width: 50%;
+    height: 100%;
+    background-image: url('/img/onboarding/ffo_onboarding_bg.jpg');
+    background-size: cover;
+
+    @media screen and (max-width: 1040px) {
+        display: none;
+    }
+}
+
+.ffo-modal-close-icon {
+    position: absolute;
+    top: 42px;
+    right: 45px;
+    svg {
+        opacity: 0.5;
+    }
+}
+
+.ffo-modal-wrapper {
+    width: 1025px;
+    height: 550px;
+    border-radius: 8px;
+
+    @media screen and (max-width: 1040px) {
+        width: 800px;
+    }
+
+    @media only screen and (max-width: 768px) {
+        width: auto;
+        height: auto;
+    }
+}
+
+.ffo-modal-repos-list-section {
+    padding: 40px;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    width: 50%;
+
+    @media screen and (max-width: 1040px) {
+        width: 100%;
+    }
+}
+
+.ffo-modal-repos-list-section-title {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 28px;
+    color: $black-950;
+    margin-bottom: 10px;
+}
+
+.ffo-modal-repos-list-section-text {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+}
+
+.ffo-modal-repos-list-section-button {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    border: 2px solid $blue-700;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 12px;
+}
+
+.ffo-modal-repos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: inherit;
+    overflow: scroll;
+    max-height: 60%;
+    padding-bottom: 5px;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.repo-list-item-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    border: 1px solid $gray-200;
+    padding: 16px;
+    box-shadow: 0 2px 3px rgba(32, 32, 32, 0.2);
+    border-radius: 8px;
+
+    &:hover {
+        border: 1px solid $blue-200;
+        background-color: $blue-50;
+    }
+}
+
+.repo-list-item-img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.repo-list-item-name-wrapper {
+    flex-grow: 1;
+}
+
+.repo-list-item-name {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    margin-right: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px;
+}
+
+.repo-list-item-button {
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    outline: none;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: -0.02em;
+    color: $green-700;
+}
+
+.ffo-modal-missing-repos-block {
+    font-family: 'Inter', 'sans-serif';
+    font-style: italic;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+    color: $gray-700;
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+
+    @media only screen and (max-width: 768px) {
+        right: 15px;
+        left: 15px;
+    }
+}

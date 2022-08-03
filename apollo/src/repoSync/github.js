@@ -2,13 +2,10 @@ import assert from 'assert';
 import Cache from 'caching-map';
 import { findBestMatch } from 'string-similarity';
 import logger from '../shared/logger';
-import * as jaxon from '../shared/apiJaxon';
-import {
-  findOneByTitle as findReactionByTitle,
-  findById as findReactionById,
-} from '../comments/reaction/reactionService';
+import { findById as findReactionById } from '../comments/reaction/reactionService';
 import { findOneByLabel as findTagByLabel } from '../comments/tags/tagService';
 import SmartComment from '../comments/smartComments/smartCommentModel';
+import User from '../users/userModel';
 import Repository from '../repositories/repositoryModel';
 import {
   findByUsernameOrIdentity,
@@ -21,7 +18,7 @@ export default function createGitHubImporter(octokit) {
   const unmatchedComments = getUnmatchedCommentsCache();
   const pullRequestCache = getPullRequestCache(octokit);
   const userCache = getUserCache(octokit);
-  const repositoryIdCache = getRepositoryIdCache();
+  const repositoryCache = getRepositoryCache();
 
   return async function importComment(githubComment) {
     if (!githubComment.body) return null;
@@ -44,9 +41,9 @@ export default function createGitHubImporter(octokit) {
     // e.g. https://api.github.com/repos/SemaSandbox/astrobee/pulls/comments/702432867
     if (!pullRequest) return null;
 
-    const { repo } = pullRequest.base;
-    const repositoryId = await repositoryIdCache.get(repo.id);
-    const otherComments = await unmatchedComments.get(repositoryId);
+    const { repo, user } = pullRequest.base;
+    const repository = await repositoryCache.get(repo.id);
+    const otherComments = await unmatchedComments.get(repository._id);
     const existingComment = await findDuplicate(githubComment, otherComments);
 
     if (existingComment) {
@@ -56,12 +53,31 @@ export default function createGitHubImporter(octokit) {
         userCache,
       });
     }
+    const existingUser = await User.find({
+      'identities.id': user.id,
+      'identities.provider': 'github',
+    });
+    if (!existingUser.length) {
+      await createGhostUser({
+        handle: user.login,
+        username: user.login,
+        identities: [
+          {
+            provider: 'github',
+            id: user.id.toString(),
+            username: user.login,
+            avatarUrl: user.avatar_url,
+          },
+        ],
+        avatarUrl: user.avatar_url,
+      });
+    }
 
     return await createNewSmartComment({
       githubComment,
       pullRequest,
       userCache,
-      repositoryId,
+      repository,
     });
   };
 }
@@ -106,7 +122,7 @@ async function createNewSmartComment({
   githubComment,
   pullRequest,
   userCache,
-  repositoryId,
+  repository,
 }) {
   const type = getType(githubComment);
   const text = githubComment.body;
@@ -149,11 +165,12 @@ async function createNewSmartComment({
     {
       'comment': sanitizedText,
       'userId': user,
-      repositoryId,
+      'repositoryId': repository,
       githubMetadata,
       'reaction': reaction?._id ?? SmartComment.schema.paths.reaction.default(),
       'tags': tags.map((t) => t._id),
       'source.origin': 'sync',
+      'analyzedAt': null  // we will set right timestamp of Jaxon api call in the future
     }
   );
 }
@@ -161,7 +178,7 @@ async function createNewSmartComment({
 async function getTags(text) {
   const textTags = looksLikeSemaComment(text)
     ? extractTagsFromSemaComment(text)
-    : await jaxon.getTags(text);
+    : [];
   const tags = await Promise.all(
     textTags.map((tag) => findTagByLabel(tag, 'smartComment'))
   );
@@ -172,10 +189,6 @@ async function getReaction(text) {
   if (looksLikeSemaComment(text))
     return await extractReactionFromSemaComment(text);
 
-  const [textReaction] = await jaxon.getSummaries(text);
-  if (textReaction) {
-    return await findReactionByTitle(textReaction);
-  }
   return null;
 }
 
@@ -375,15 +388,13 @@ function getUserCache(octokit) {
   return cache;
 }
 
-// Cache of repository external ID → MongoDB ID.
-function getRepositoryIdCache() {
+// Cache of repository external ID → MongoDB document.
+function getRepositoryCache() {
   const cache = new Cache(50);
-  cache.materialize = async (externalId) => {
-    const { _id } = await Repository.findOne({
+  cache.materialize = async (externalId) =>
+    await Repository.findOne({
       type: 'github',
       externalId,
-    }).select('_id');
-    return _id;
-  };
+    }).select('-repoStats');
   return cache;
 }

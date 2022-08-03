@@ -1,8 +1,8 @@
-import assert from 'assert';
+import { create as createRepository } from '../repositories/repositoryService';
 import apollo from '../../test/apolloClient';
-import * as userService from '../users/userService';
 import Repository from '../repositories/repositoryModel';
 import { createAuthToken } from '../auth/authService';
+import createUser from '../../test/helpers/userHelper';
 import { queue as importRepositoryQueue } from './importRepositoryQueue';
 
 describe('POST /repo-sync', () => {
@@ -10,19 +10,7 @@ describe('POST /repo-sync', () => {
   let token;
 
   beforeAll(async () => {
-    user = await userService.create({
-      username: 'Ada',
-      password: 's3cr3t',
-      firstName: 'Ada',
-      lastName: 'Lovelace',
-      identities: [
-        {
-          email: 'ada@example.com',
-          provider: 'github',
-        },
-      ],
-      terms: true,
-    });
+    user = await createUser();
   });
 
   describe('unauthenticated', () => {
@@ -44,25 +32,19 @@ describe('POST /repo-sync', () => {
   describe('authenticated', () => {
     let status;
     let data;
-    let importRepositoryJobs;
     let repository;
-
-    beforeAll(() => {
-      importRepositoryJobs = [];
-      importRepositoryQueue.eachJob(async (payload) => {
-        importRepositoryJobs.push(payload);
-      });
-    });
 
     beforeAll(async () => {
       token = await createAuthToken(user);
     });
 
     beforeAll(async () => {
-      // This is an assertion on the state of the database
-      // before running the test, thus not using expect().
-      const count = await Repository.countDocuments();
-      assert(count === 0);
+      await createRepository({
+        name: 'phoenix',
+        type: 'github',
+        id: '237888452',
+        cloneUrl: 'https://github.com/Semalab/phoenix',
+      });
     });
 
     beforeAll(async () => {
@@ -70,7 +52,7 @@ describe('POST /repo-sync', () => {
         '/v1/repo-sync/',
         {
           type: 'github',
-          externalId: '123456',
+          externalId: '237888452',
         },
         {
           headers: {
@@ -79,7 +61,6 @@ describe('POST /repo-sync', () => {
         }
       ));
 
-      await importRepositoryQueue.runOnce();
       repository = await Repository.findOne();
     });
 
@@ -90,15 +71,15 @@ describe('POST /repo-sync', () => {
     it('should add a repository for sync', async () => {
       expect(data._id).toBe(repository._id.toString());
       expect(repository.type).toBe('github');
-      expect(repository.externalId).toBe('123456');
+      expect(repository.externalId).toBe('237888452');
       expect(repository.sync.status).toBe('queued');
       expect(repository.sync.queuedAt).toBeCloseToDate(new Date());
       expect(repository.sync.addedBy).toEqualID(user);
     });
 
     it('should queue a job to start the sync', () => {
-      expect(importRepositoryJobs.length).toBe(1);
-      expect(importRepositoryJobs[0]).toEqual({ id: repository.id });
+      expect(importRepositoryQueue.jobs).toHaveLength(1);
+      expect(importRepositoryQueue.jobs[0]).toEqual({ id: repository.id });
     });
 
     describe('adding the same repo again', () => {
@@ -107,7 +88,7 @@ describe('POST /repo-sync', () => {
           '/v1/repo-sync/',
           {
             type: 'github',
-            externalId: '123456',
+            externalId: '237888452',
           },
           {
             headers: {
@@ -116,7 +97,6 @@ describe('POST /repo-sync', () => {
           }
         ));
 
-        await importRepositoryQueue.runOnce();
         repository = await Repository.findOne();
       });
 
@@ -128,8 +108,8 @@ describe('POST /repo-sync', () => {
       });
 
       it('should queue a job to start the sync', () => {
-        expect(importRepositoryJobs.length).toBe(2);
-        expect(importRepositoryJobs[1]).toEqual({ id: repository.id });
+        expect(importRepositoryQueue.jobs).toHaveLength(2);
+        expect(importRepositoryQueue.jobs[1]).toEqual({ id: repository.id });
       });
     });
 
@@ -137,7 +117,7 @@ describe('POST /repo-sync', () => {
       beforeAll(async () => {
         repository.sync = {};
         await repository.save();
-        importRepositoryJobs.splice(0);
+        await importRepositoryQueue.purgeQueue();
       });
 
       beforeAll(async () => {
@@ -145,7 +125,7 @@ describe('POST /repo-sync', () => {
           '/v1/repo-sync/',
           {
             type: 'github',
-            externalId: '123456',
+            externalId: '237888452',
           },
           {
             headers: {
@@ -154,7 +134,6 @@ describe('POST /repo-sync', () => {
           }
         ));
 
-        await importRepositoryQueue.runOnce();
         repository = await Repository.findOne();
       });
 
@@ -165,15 +144,15 @@ describe('POST /repo-sync', () => {
       it('should add a repository for sync', async () => {
         expect(data._id).toBe(repository._id.toString());
         expect(repository.type).toBe('github');
-        expect(repository.externalId).toBe('123456');
+        expect(repository.externalId).toBe('237888452');
         expect(repository.sync.status).toBe('queued');
         expect(repository.sync.queuedAt).toBeCloseToDate(new Date());
         expect(repository.sync.addedBy).toEqualID(user);
       });
 
       it('should queue a job to start the sync', () => {
-        expect(importRepositoryJobs.length).toBe(1);
-        expect(importRepositoryJobs[0]).toEqual({ id: repository.id });
+        expect(importRepositoryQueue.jobs).toHaveLength(1);
+        expect(importRepositoryQueue.jobs[0]).toEqual({ id: repository.id });
       });
     });
   });

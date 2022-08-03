@@ -43,6 +43,9 @@ mongoose.plugin((schema) => {
   //
   // eslint-disable-next-line no-param-reassign
   schema.statics.findOrCreate = async function findOrCreate(key, attrs) {
+    const existing = await this.findOne(key);
+    if (existing) return existing;
+
     try {
       return await this.create({ ...attrs, ...key });
     } catch (error) {

@@ -23,6 +23,7 @@ import { metricsStartDate } from '../shared/utils';
 import publish from '../shared/sns';
 import { queue as importRepositoryQueue } from '../repoSync/importRepositoryQueue';
 import { DEFAULT_AVATAR } from '../constants';
+import { createNewOrgsFromGithub } from '../organizations/organizationService';
 
 const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
 
@@ -33,8 +34,11 @@ export const create = async ({
   description,
   type,
   cloneUrl,
+  visibility,
   created_at: repositoryCreatedAt,
   updated_at: repositoryUpdatedAt,
+  owner,
+  user,
 }) => {
   try {
     const repository = await Repositories.findOrCreate(
@@ -44,10 +48,20 @@ export const create = async ({
         description,
         language,
         cloneUrl,
+        visibility,
         repositoryCreatedAt,
         repositoryUpdatedAt,
       }
     );
+
+    const isOrganization = owner?.type === 'Organization';
+    if (isOrganization) {
+      const [organization] = await createNewOrgsFromGithub([owner], user);
+      repository.set({ orgId: organization });
+      await repository.save();
+      organization.repos.addToSet(repository._id);
+      await organization.save();
+    }
     return repository;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -55,6 +69,7 @@ export const create = async ({
     throw error;
   }
 };
+
 export const startSync = async ({ repository, user }) => {
   // eslint-disable-next-line no-param-reassign
   repository.sync = {
@@ -80,6 +95,36 @@ export const createMany = async (repositories) => {
       return insertedDocs;
     }
 
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
+export const createAndSyncReposFromGithub = async (
+  reposFroGithub,
+  createdBy
+) => {
+  try {
+    await Promise.all(
+      reposFroGithub.map(async (repoFromGithub) => {
+        const existingRepo = await Repositories.findOne({
+          externalId: repoFromGithub.repoId,
+        });
+        if (!existingRepo) {
+          // create and add to sync queue
+          return create({
+            id: repoFromGithub.repoId,
+            name: repoFromGithub.repoName,
+            description: repoFromGithub.description,
+            addedBy: createdBy,
+            type: 'github',
+          });
+        }
+        return false;
+      })
+    );
+  } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
     throw error;
@@ -271,7 +316,8 @@ export const aggregateRepositories = async (
             createdAt,
             users: repo.repoStats.userIds,
             updatedAt,
-            sync,
+            sync: getSyncResponse(sync),
+            visibility: repo.visibility,
             smartcomments: includeSmartComments
               ? await findSmartCommentsByExternalId(
                   externalId,
@@ -486,24 +532,31 @@ export const getRepoByUserIds = async (userIds = [], populateUsers = false) => {
   }
 };
 
-/* 
+/*
   Return the values for the filters.
   From - authors
   To - requesters
   Pull requests - pullRequests
   Repos - repos
 */
-export const getReposFilterValues = async (repos = [], startDate, endDate, filterFields = {}) => {
+export const getReposFilterValues = async (
+  repos,
+  startDate,
+  endDate,
+  filterFields = {}
+) => {
   try {
-    const filterValues = {}
+    const filterValues = {};
     if (isEmpty(filterFields)) {
-      return {}
+      return {};
     }
 
     if (filterFields.authors) {
       const authors = await getUniqueCommenters(repos, startDate, endDate);
       filterValues.authors = authors.map((author) => {
-        const { user: { firstName, lastName, _id, avatarUrl, username } } = author;
+        const {
+          user: { firstName, lastName, _id, avatarUrl, username },
+        } = author;
         return {
           label:
             isEmpty(firstName) && isEmpty(lastName)
@@ -519,21 +572,22 @@ export const getReposFilterValues = async (repos = [], startDate, endDate, filte
       const requesters = await getUniqueRequesters(repos, startDate, endDate);
       filterValues.requesters = requesters.map((el) => {
         const {
-          githubMetadata: {
-            requester,
-            requesterAvatarUrl
-          },
+          githubMetadata: { requester, requesterAvatarUrl },
         } = el;
         return {
           label: requester,
           value: requester,
-          img: requesterAvatarUrl || DEFAULT_AVATAR
+          img: requesterAvatarUrl || DEFAULT_AVATAR,
         };
       });
     }
 
     if (filterFields.pullRequests) {
-      const pullRequests = await getUniquePullRequests(repos, startDate, endDate);
+      const pullRequests = await getUniquePullRequests(
+        repos,
+        startDate,
+        endDate
+      );
       filterValues.pullRequests = pullRequests.map((pr) => {
         const {
           githubMetadata: {
@@ -559,3 +613,28 @@ export const getReposFilterValues = async (repos = [], startDate, endDate, filte
     return error;
   }
 };
+
+function getSyncResponse(sync) {
+  if (!sync?.progress) return sync;
+
+  const { progress } = sync;
+
+  const current = Object.keys(progress)
+    .map((key) => progress[key].currentPage || 0)
+    .reduce((a, b) => a + b, 0);
+
+  const total = Object.keys(progress)
+    .map((key) => progress[key].lastPage || 0)
+    .reduce((a, b) => a + b, 0);
+
+  // Deal with some data inconsistency where the lastPage is not set.
+  const overall = Math.min(1, current / total).toFixed(2);
+
+  return {
+    ...sync,
+    progress: {
+      overall,
+      ...sync.progress,
+    },
+  };
+}

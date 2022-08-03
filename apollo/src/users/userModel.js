@@ -31,6 +31,7 @@ const repositoryScheme = mongoose.Schema(
     fullName: String,
     githubUrl: String,
     isFavorite: { type: Boolean, default: false },
+    previewImgLink: { type: String, default: '' },
   },
   { _id: false }
 );
@@ -38,7 +39,7 @@ const repositoryScheme = mongoose.Schema(
 const identitySchema = mongoose.Schema(
   {
     provider: String,
-    id: String,
+    id: { type: String, required: true },
     username: String,
     email: String,
     emails: [],
@@ -47,6 +48,7 @@ const identitySchema = mongoose.Schema(
     profileUrl: String,
     avatarUrl: String,
     repositories: [repositoryScheme],
+    accessToken: String,
   },
   { _id: false }
 );
@@ -68,6 +70,7 @@ const userSchema = mongoose.Schema(
     isActive: { type: Boolean, default: true },
     isVerified: { type: Boolean, default: false },
     isWaitlist: { type: Boolean, default: false },
+    isFastForwardOnboarding: { type: Boolean, default: false },
     isOnboarded: { type: Date, default: null },
     banners: {
       organizationCreate: { type: Boolean, default: true },
@@ -99,6 +102,7 @@ const userSchema = mongoose.Schema(
     cohort: String,
     notes: String,
     hasExtension: { type: Boolean, default: false },
+    pinnedRepos: { type: [String], default: [] },
   },
   { timestamps: true }
 );
@@ -154,5 +158,49 @@ userSchema.methods.validatePassword = async function validatePassword(data) {
 
 userSchema.index({ 'username': 1, 'identities.id': 1 });
 userSchema.index({ orgId: 1 });
+userSchema.index(
+  { 'identities.provider': 1, 'identities.id': 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      'identities.provider': { $exists: true },
+      'identities.id': { $exists: true },
+    },
+  }
+);
+
+userSchema.statics.findOrCreateByIdentity =
+  async function findOrCreateByIdentity({ provider, id }, attrs) {
+    const existing = await this.findOne({
+      identities: { $elemMatch: { provider, id } },
+    });
+    if (existing) return await updateDocument(existing, attrs);
+
+    try {
+      return await this.create(attrs);
+    } catch (error) {
+      const isDuplicateOnThisKey =
+        error.code === 11000 &&
+        Object.keys(error.keyPattern).sort().join(',') ===
+          'identities.id,identities.provider';
+      if (isDuplicateOnThisKey) {
+        const other = await this.findOne({
+          identities: { $elemMatch: { provider, id } },
+        });
+        return await updateDocument(other, attrs);
+      }
+      throw error;
+    }
+  };
+
+async function updateDocument(doc, attrs) {
+  try {
+    doc.set(attrs);
+    return await doc.save();
+  } catch (error) {
+    if (error.name !== 'VersionError') throw error;
+    return doc;
+  }
+}
 
 export default mongoose.model('User', userSchema);

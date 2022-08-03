@@ -5,11 +5,11 @@ import { OptionsIcon } from '../../Icons';
 import { PATHS } from '../../../utils/constants';
 import { collectionsOperations } from '../../../state/features/collections';
 import { alertOperations } from '../../../state/features/alerts';
-import { isSemaDefaultCollection } from '../../../utils';
 import useOutsideClick from '../../../utils/useOutsideClick';
 import usePopup from "../../../hooks/usePopup";
 import { fetchOrganizationCollections } from '../../../state/features/organizations[new]/actions';
 import { updateOrganizationCollectionIsActiveAndFetchCollections } from '../../../state/features/organizations[new]/operations';
+import usePermission from '../../../hooks/usePermission';
 
 const { triggerAlert } = alertOperations;
 const { updateCollection, fetchAllUserCollections } = collectionsOperations;
@@ -18,8 +18,9 @@ const ActionMenu = ({ collectionData, collectionActive }) => {
   const popupRef = useRef(null);
   const { isOpen, toggleMenu, closeMenu } = usePopup(popupRef);
   const dispatch = useDispatch();
-  const { _id = '', isActive, name } = collectionData || {};
+  const { _id = '', isActive } = collectionData || {};
   const { token, selectedOrganization } = useSelector((state) => state.authState);
+  const { isSemaAdmin } = usePermission();
 
   const onClickChild = (e) => {
     e.stopPropagation();
@@ -43,6 +44,8 @@ const ActionMenu = ({ collectionData, collectionActive }) => {
     if (isOpen) closeMenu();
   });
 
+  const canArchive = isSemaAdmin();
+
   return (
     <div className={clsx('dropdown is-right', isOpen ? 'is-active' : '')} onClick={onClickChild} ref={popupRef}>
       <div className="dropdown-trigger">
@@ -56,7 +59,7 @@ const ActionMenu = ({ collectionData, collectionActive }) => {
             Edit Collection
           </a>
           {
-            !isSemaDefaultCollection(name) && (
+            canArchive && (
               <div className="dropdown-item is-clickable" onClick={() => toggleArchiveCollection(!isActive)}>
                 {isActive ? 'Archive' : 'Unarchive'} Collection
               </div>

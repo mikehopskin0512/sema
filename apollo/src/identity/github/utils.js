@@ -1,8 +1,15 @@
 import { Octokit } from '@octokit/rest';
 import { createAppAuth } from '@octokit/auth';
 import { github } from '../../config';
-
+import uniqBy from '../../shared/uniqBy';
+import logger from '../../shared/logger';
+import { createNewOrgsFromGithub } from '../../organizations/organizationService';
+import {
+  create as createRepository,
+  startSync,
+} from '../../repositories/repositoryService';
 import errors from '../../shared/errors';
+import { addRepositoryToIdentity } from '../../users/userService';
 
 export const getProfile = async (token) => {
   const octokit = new Octokit({ auth: `token ${token}` });
@@ -62,22 +69,12 @@ export const getGithubOrgsForAuthenticatedUser = async (
   page = 1
 ) => {
   const octokit = new Octokit({ auth: `token ${token}` });
-  const { data } = await octokit.orgs.listForAuthenticatedUser({
+  const { data: repos } = await octokit.repos.listForAuthenticatedUser({
     per_page: perPage,
     page,
   });
 
-  const orgList =
-    data && data.length
-      ? data.map((orgItem) => ({
-          id: orgItem.id,
-          name: orgItem.login,
-          description: orgItem.description,
-          avatarUrl: orgItem.avatar_url,
-        }))
-      : [];
-
-  return orgList;
+  return getUniqueOrgsFromRepos(repos);
 };
 
 export const getRepositoriesForAuthenticatedUser = async (
@@ -105,3 +102,67 @@ export const getRepositoriesForAuthenticatedUser = async (
 
   return repositories;
 };
+
+const AMOUNT_OF_REPOS_TO_SYNC_AUTOMATICALLY = 10;
+
+export const syncUser = async ({ user, token }) => {
+  const octokit = new Octokit({ auth: `token ${token}` });
+  const repos = await octokit.paginate(octokit.repos.listForAuthenticatedUser, {
+    per_page: 100,
+    sort: 'pushed',
+    visibility: 'public',
+  });
+
+  const uniqueOrgs = getUniqueOrgsFromRepos(repos);
+
+  // Wait for recent repositories to be created,
+  // and queue these for sync.
+  // Other repos get created in the background, without
+  // blocking login.
+  const recentRepos = repos.slice(0, AMOUNT_OF_REPOS_TO_SYNC_AUTOMATICALLY);
+  const nonRecentRepos = repos.slice(recentRepos.length);
+
+  await Promise.all([
+    createNewOrgsFromGithub(uniqueOrgs, user._id),
+    ...recentRepos.map((repo) =>
+      createRepositoryForUser({ repo, user, sync: true })
+    ),
+  ]);
+
+  // Intentionally not awaiting for this promise.
+  Promise.all([
+    nonRecentRepos.map((repo) =>
+      createRepositoryForUser({ repo, user, sync: false })
+    ),
+  ]).catch(logger.error);
+};
+
+async function createRepositoryForUser({ repo, user, sync = false }) {
+  const repository = await createRepository({
+    type: 'github',
+    id: repo.id,
+    name: repo.name,
+    description: repo.description,
+    language: repo.language,
+    cloneUrl: repo.clone_url,
+    repositoryCreatedAt: repo.created_at,
+    repositoryUpdatedAt: repo.updated_at,
+    visibility: repo.visibility,
+    owner: repo.owner,
+    user,
+  });
+  await repository.updateOne({ $addToSet: { 'repoStats.userIds': user._id } });
+  await addRepositoryToIdentity(user, repository);
+  const shouldSync = sync && !repository.sync.status;
+  if (shouldSync) {
+    await startSync({ repository, user });
+  }
+}
+
+function getUniqueOrgsFromRepos(repos) {
+  const orgs = repos
+    .map((repo) => repo.owner)
+    .filter((owner) => owner.type === 'Organization');
+  const uniqueOrgs = uniqBy(orgs, (o) => o.login);
+  return uniqueOrgs;
+}

@@ -1,0 +1,2 @@
+export const COLORS_ARRAY = ['#FFE0AB', '#CFF1D6', '#FEB69C', '#D8C9AF', '#FFAEAE', '#FFCBAE', 
+'#AEF0FF', '#D2AEFF', '#B0AEFF', '#AED8FF', '#F9FFAE', '#AEFFE7', '#AEFFBB', '#FAF1D9', '#87B9E7'];

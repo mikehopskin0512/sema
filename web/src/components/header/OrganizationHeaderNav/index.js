@@ -4,7 +4,7 @@ import Link from 'next/link';
 import styles from "../header.module.scss";
 import { PATHS } from '../../../utils/constants';
 
-const OrganizationHeaderNav = ({ organizationId = '', type = 'desktop' }) => {
+function OrganizationHeaderNav({ organizationId = '', type = 'desktop' }) {
   const { pathname } = useRouter();
 
   const renderDesktopNav = () => {

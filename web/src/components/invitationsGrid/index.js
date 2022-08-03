@@ -7,7 +7,7 @@ import { fullName } from '../../utils';
 import styles from './invitationsGrid.module.scss';
 import { CloseIcon, UndoIcon } from '../Icons';
 import { isInvitationPending } from '../../utils/invitations';
-import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants';
+import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants/date';
 
 const InvitationsGrid = ({
   type,

@@ -1,5 +1,6 @@
 import apollo from '../../test/apolloClient';
 import { create as createRepository } from './repositoryService';
+import Repository from './repositoryModel';
 import { create as createSmartComment } from '../comments/smartComments/smartCommentService';
 import { createAuthToken } from '../auth/authService';
 import createUser from '../../test/helpers/userHelper';
@@ -17,7 +18,7 @@ describe('GET /repositories/overview', () => {
     it('should return 401 Unauthorized', async () => {
       await expect(async () => {
         await apollo.get('/v1/repositories/overview', {
-          params: { externalId: '123456' },
+          params: { externalId: '237888452' },
           headers: {
             authorization: 'Bearer 123',
           },
@@ -37,7 +38,7 @@ describe('GET /repositories/overview', () => {
       await createRepository({
         name: 'phoenix',
         type: 'github',
-        id: '123456',
+        id: '237888452',
       });
 
       await createSmartComment({
@@ -45,7 +46,7 @@ describe('GET /repositories/overview', () => {
         userId: user._id,
         location: 'files changed',
         githubMetadata: {
-          repo_id: '123456',
+          repo_id: '237888452',
           commentId: 'r690362133',
           url: 'https://github.com/Semalab/phoenix',
           created_at: '2020-12-18T20:30:00Z',
@@ -57,7 +58,7 @@ describe('GET /repositories/overview', () => {
         userId: user._id,
         location: 'files changed',
         githubMetadata: {
-          repo_id: '123456',
+          repo_id: '237888452',
           commentId: 'r730362118',
           url: 'https://github.com/Semalab/phoenix',
           created_at: '2020-12-17T20:30:00Z',
@@ -67,7 +68,7 @@ describe('GET /repositories/overview', () => {
 
     beforeAll(async () => {
       ({ data } = await apollo.get('/v1/repositories/overview', {
-        params: { externalId: '123456' },
+        params: { externalId: '237888452' },
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -76,10 +77,86 @@ describe('GET /repositories/overview', () => {
 
     it.todo('should respond with 200 OK');
 
+    it('should have visibility', () => {
+      expect(data.visibility).toBe('private');
+    });
+
     it('should include smart comments', () => {
       expect(data.smartcomments.length).toBe(2);
       expect(data.smartcomments[0].comment).toBe('The later comment');
       expect(data.smartcomments[1].comment).toBe('The earlier comment');
+    });
+  });
+
+  describe('partially-synced repository', () => {
+    let data;
+
+    beforeAll(async () => {
+      token = await createAuthToken(user);
+    });
+
+    beforeAll(async () => {
+      const repository = await Repository.findOne({ externalId: '237888452' });
+      repository.sync = {
+        progress: {
+          pullRequestComment: {
+            currentPage: 1,
+            lastPage: 1,
+          },
+          pullRequestReview: {
+            currentPage: 2,
+            lastPage: 3,
+          },
+          issueComment: {
+            currentPage: 1,
+            lastPage: 7,
+          },
+        },
+      };
+      await repository.save();
+    });
+
+    beforeAll(async () => {
+      ({ data } = await apollo.get('/v1/repositories/overview', {
+        params: { externalId: '237888452' },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }));
+    });
+
+    it.todo('should respond with 200 OK');
+
+    it('should include progress', () => {
+      expect(data.sync.progress.overall).toBe('0.36');
+    });
+  });
+
+  describe('repository with no sync', () => {
+    let data;
+
+    beforeAll(async () => {
+      token = await createAuthToken(user);
+    });
+
+    beforeAll(async () => {
+      const repository = await Repository.findOne({ externalId: '237888452' });
+      await repository.updateOne({ sync: null });
+    });
+
+    beforeAll(async () => {
+      ({ data } = await apollo.get('/v1/repositories/overview', {
+        params: { externalId: '237888452' },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }));
+    });
+
+    it.todo('should respond with 200 OK');
+
+    it('should not have sync attribute', () => {
+      expect(data.sync).toBeFalsy();
     });
   });
 });
@@ -95,9 +172,9 @@ describe('POST /repositories/:id/sync', () => {
 
   beforeAll(async () => {
     repository = await createRepository({
-      name: 'phoenix',
+      name: 'astrobee',
       type: 'github',
-      id: '234567',
+      id: '391620249',
     });
   });
 

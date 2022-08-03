@@ -2,6 +2,7 @@ import glob from 'glob';
 import path from 'path';
 import Ironium from 'ironium';
 import AWS from 'aws-sdk';
+import mongoose from 'mongoose';
 import { environment } from './config';
 import logger from './shared/logger';
 
@@ -17,6 +18,7 @@ if (isProduction) {
   );
   Ironium.configure({
     credentials: new AWS.RemoteCredentials(),
+    canScheduleJob,
     region,
   });
 }
@@ -31,15 +33,28 @@ Ironium.onerror = logger.error;
 
 async function loadQueues() {
   const srcRoot = __dirname;
-  const files = glob.sync(`${srcRoot}/**/*Queue.js`);
-  await Promise.all(files.map(loadQueueFile));
+  const queueFiles = glob.sync(`${srcRoot}/**/*Queue.js`);
+  await Promise.all(queueFiles.map(loadQueueFile));
+  const scheduleFiles = glob.sync(`${srcRoot}/**/*Schedule.js`);
+  await Promise.all(scheduleFiles.map(loadScheduleFile));
 }
 
 async function loadQueueFile(filename) {
   const queueName = getQueueNameFromFile(filename);
   const { default: handler } = await import(filename);
   Ironium.queue(queueName).eachJob(handler);
-  logger.info(`Registered ${filename} to handle ${queueName}`);
+  logger.info(
+    `Registered ${path.relative(__dirname, filename)} to handle ${queueName}`
+  );
+}
+
+async function loadScheduleFile(filename) {
+  const scheduleName = getQueueNameFromFile(filename);
+  const { default: handler, schedule } = await import(filename);
+  Ironium.scheduleJob(scheduleName, schedule, handler);
+  logger.info(
+    `Registered ${path.relative(__dirname, filename)} to handle ${scheduleName}`
+  );
 }
 
 const queues = {
@@ -71,10 +86,42 @@ function getQueueNameFromFile(filename) {
   const prefix = 'apollo';
   const suffix = path
     .basename(filename)
-    .replace(/Queue\.js$/, '')
+    .replace(/(Queue|Schedule)\.js$/, '')
     .split(/(?=[A-Z])/)
     .join('-')
     .toLowerCase();
   const queueName = `${prefix}-${environment}-${suffix}`;
   return queueName;
+}
+
+let ironiumCollectionPromise;
+
+// Coordinate Ironium workers to prevent duplicate scheduled jobs.
+async function canScheduleJob(jobName, timestamp) {
+  if (!ironiumCollectionPromise) {
+    ironiumCollectionPromise = getIroniumCollection();
+  }
+  const collection = await ironiumCollectionPromise;
+  try {
+    const { insertedCount } = await collection.insertOne({
+      jobName,
+      timestamp,
+    });
+    const acquiredLock = insertedCount === 1;
+    return acquiredLock;
+  } catch (error) {
+    if (error.code === 11000) {
+      return false;
+    }
+    throw error;
+  }
+}
+
+async function getIroniumCollection() {
+  const collection = mongoose.connection.collection('ironium');
+  await Promise.all([
+    collection.createIndex({ jobName: 1 }, { unique: true }),
+    collection.createIndex({ timestamp: 1 }, { expireAfterSeconds: 59 }),
+  ]);
+  return collection;
 }

@@ -11,6 +11,7 @@ import './auth/passport';
 
 import logger from './shared/logger';
 import errors from './shared/errors';
+import rollbar from './shared/rollbar';
 
 import attachRoutes from './index';
 import './queues';
@@ -44,11 +45,10 @@ app.disable('x-powered-by');
 
 app.use('/static', express.static('./uploads'));
 
-if (process.env.NODE_ENV === 'development')
-  app.use((req, res, next) => {
-    logger.info(`${req.method} ${req.url}`);
-    next();
-  });
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.url}`);
+  next();
+});
 
 // Attach routes
 attachRoutes(app, passport);
@@ -57,6 +57,8 @@ app.all('*', (req, res, next) => {
   const ans = new errors.Unauthorized('Unauthorized API route');
   res.status(ans.statusCode).send(ans);
 });
+
+app.use(rollbar.errorHandler());
 
 app.use((error, req, res, next) => {
   // Sets HTTP status code

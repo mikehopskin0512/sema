@@ -2,19 +2,24 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-const userRoleSchema = new Schema({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
+const userRoleSchema = new Schema(
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    organization: {
+      type: Schema.Types.ObjectId,
+      ref: 'Organization',
+    },
+    role: {
+      type: Schema.Types.ObjectId,
+      ref: 'Role',
+    },
   },
-  organization: {
-    type: Schema.Types.ObjectId,
-    ref: 'Organization',
-  },
-  role: {
-    type: Schema.Types.ObjectId,
-    ref: 'Role',
-  },
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('UserRole', userRoleSchema);
+userRoleSchema.index({ user: 1, organization: 1 }, { unique: true });
+
+export default mongoose.model('UserRole', userRoleSchema);

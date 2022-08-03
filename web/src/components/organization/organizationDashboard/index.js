@@ -5,10 +5,11 @@ import Metrics from '../../metrics';
 import RepoCard from '../../repos/repoCard';
 import MinimalOrganizationTable from '../minimalOrganizationTable';
 import { PATHS, TAB } from '../../../utils/constants';
+import { useSelector } from 'react-redux';
 
 const MAX_REPOS = 6;
 
-const OrganizationDashboard = ({ organization }) => {
+function OrganizationDashboard({ organization, selectedOrganization }) {
   const { metrics, members, repos, membersCount } = organization;
   const router = useRouter();
   const { checkAccess } = usePermission();
@@ -37,9 +38,13 @@ const OrganizationDashboard = ({ organization }) => {
             <button className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.ORGANIZATIONS._}/${organizationId}${PATHS.REPOS}`)}>View All</button>
           </div>
           <div className="is-flex is-flex-wrap-wrap is-align-content-stretch">
-            {repos.slice(0, MAX_REPOS).map((child, i) => (
-              <RepoCard {...child} isOrganizationView key={`card-${i}`} column={2} />
-            ))}
+            {repos.slice(0, MAX_REPOS).map((child, i) => {
+              let isPinned = false;
+              if (selectedOrganization.organization.pinnedRepos?.includes(child._id.toString())) {
+                isPinned = true;
+              }
+              return (<RepoCard {...child} isOrganizationView key={`card-${i}`} column={2} isPinned={isPinned} selectedOrganization={selectedOrganization}/>);
+            })}
           </div>
         </div>
         <div className="column is-4">

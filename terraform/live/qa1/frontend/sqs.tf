@@ -1,6 +1,7 @@
 locals {
-  sqs_queues     = ["import-repository", "github-webhook"]
-  sqs_queues_arn = [for queue in aws_sqs_queue.this : queue.arn]
+  sqs_queues        = ["import-repository", "github-webhook", "poll-repository", "poll-repositories"]
+  sqs_queues_alarms = ["poll-repository"]
+  sqs_queues_arn    = [for queue in aws_sqs_queue.this : queue.arn]
 }
 
 resource "aws_sqs_queue" "this" {
@@ -45,21 +46,4 @@ resource "aws_sqs_queue_policy" "this" {
   depends_on = [
     aws_sqs_queue.this
   ]
-}
-
-data "aws_iam_policy_document" "this" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "sqs:ChangeMessageVisibility",
-      "sqs:DeleteMessage",
-      "sqs:GetQueueAttributes",
-      "sqs:GetQueueUrl",
-      "sqs:ListQueues",
-      "sqs:ReceiveMessage",
-      "sqs:SendMessage"
-    ]
-
-    resources = local.sqs_queues_arn
-  }
 }

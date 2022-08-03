@@ -11,6 +11,7 @@ import {
   getAllOrganizationCollections,
   inviteToOrganization,
   uploadAvatar,
+  togglePinnedOrgRepo,
 } from './api';
 import { toggleActiveCollection, getSmartCommentOverview, getSmartCommentSummary } from '../comments/api';
 import * as types from './types';
@@ -186,6 +187,16 @@ export const requestFetchOrganizationReposFiltersSuccess = (filters) => ({
 export const requestFetchOrganizationReposFiltersError = (errors) => ({
   type: types.REQUEST_FETCH_ORGANIZATION_REPOS_FILTERS_ERROR,
   errors,
+});
+
+export const requestTogglePinnedOrgRepo = (payload) => ({
+  type: types.REQUEST_TOGGLE_PINNED_ORG_REPO,
+  payload,
+});
+
+export const requestTogglePinnedOrgRepoError = (payload) => ({
+  type: types.REQUEST_TOGGLE_PINNED_ORG_REPO_ERROR,
+  payload,
 });
 
 export const fetchOrganizationsOfUser = (token) => async (dispatch) => {
@@ -377,5 +388,24 @@ export const uploadOrganizationAvatar = (organizationId, body, token) => async (
     dispatch(fetchOrganizationsOfUser(token));
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const toggleOrgRepoPinned = ({ orgId, repoId, token }) => async (dispatch) => {
+  try {
+    dispatch(requestTogglePinnedOrgRepo({ orgId, repoId }));
+    await togglePinnedOrgRepo(orgId, { repoId }, token);
+
+  } catch (error) {
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestTogglePinnedOrgRepoError({ errMessage, orgId, repoId }));
   }
 };

@@ -126,10 +126,6 @@ export const COLLECTION_TYPE = {
   ORGANIZATION: 'organization'
 };
 
-export const DAYS_IN_WEEK = 7;
-export const DAYS_IN_MONTH = 30;
-export const DAYS_IN_YEAR = 365;
-export const YEAR_MONTH_DAY_FORMAT = `yyyy-MM-dd`;
 
 export const DEFAULT_AVATAR = '/img/default-avatar.jpg';
 
@@ -141,7 +137,8 @@ export const SEMA_CORPORATE_ORGANIZATION_NAME = 'Sema Corporate Organization';
 
 export const SEMA_CORPORATE_ORGANIZATION_ID = '614f2fe7811ae802fc08e36e';
 
-export const SEMA_FAQ_URL = 'https://semasoftware.com/content/faqs';
+export const SEMA_MAIN_URL = 'https://semasoftware.com';
+export const SEMA_FAQ_URL = `${SEMA_MAIN_URL}/content/faqs`;
 export const SEMA_INTERCOM_FAQ_URL = 'https://intercom.help/sema-software/en';
 
 export const SEMA_APP_URL = 'https://app.semasoftware.com';
@@ -157,6 +154,8 @@ export const SEMA_FAQ_SLUGS = {
     'articles/6147206-what-are-snippets',
   LEARN_MORE_ABOUT_SNAPSHOTS:
     'collections/3428417-developer-portfolio-and-snapshots',
+  LEARN_MORE_ABOUT_SOCIAL_CIRCLES:
+    'articles/6383375-introducing-github-social-circle',
   LEARN_MORE: 'is-there-a-manager-dashboard-of-all-developers',
   SUMMARIES: 'what-do-summaries-mean',
   ORGANIZATION_INSIGHTS: 'team-insights-who-can-see-what',
@@ -207,6 +206,7 @@ export const PATHS = {
   ONBOARDING: '/onboarding',
   REGISTER: '/register',
   PASSWORD_RESET: '/password-reset',
+  COLLABORATION: '/collaboration',
   REPORTS: '/reports',
   SETTINGS: '/settings',
   ORGANIZATION_CREATE: '/organizations/add',
@@ -396,3 +396,104 @@ export const DROPDOWN_SORTING_TYPES = {
   ALPHABETICAL_USER_PRIORIY_SORT: 'alphabetical_user_priority',
   CHRONOLOGICAL_SORT: 'chronological_sort'
 };
+
+export const renderMenuItems = (personalDashboard, isEmpty, selectedOrganization) => {
+  const standardClass = 'navbar-item menu-item has-text-black-950 mr-10 has-text-weight-semibold border-radius-4';
+
+  return [
+  /* Commented for a future implementation */
+  /*
+  ... personalDashboard && isEmpty(selectedOrganization) ? [{
+    title: 'Dashboard Hidden',
+    className : standardClass,
+    path: PATHS.PERSONAL,
+  }] : [],
+  ... !isEmpty(selectedOrganization) ? [{
+    title: 'Dashboard',
+    className : standardClass,
+    path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.DASHBOARD}`,
+    stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.DASHBOARD}`,
+  }] : [],
+  */
+  ... !isEmpty(selectedOrganization) ? [{
+    title: 'Repos',
+    className : standardClass,
+    path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.REPOS}`,
+    stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.REPOS}`,
+  }] : [{
+    title: 'Repos',
+    className : standardClass,
+    path: PATHS.DASHBOARD
+  }],
+  ... !isEmpty(selectedOrganization) ? [{
+    title: 'Insights',
+    className : standardClass,
+    path: `${PATHS.ORGANIZATIONS._}/${selectedOrganization.organization._id}${PATHS.ORGANIZATION_INSIGHTS}`,
+    stylePath: `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.ORGANIZATION_INSIGHTS}`,
+  }] : [{
+    title: 'Personal Insights',
+    className : standardClass,
+    path: PATHS.PERSONAL_INSIGHTS
+  }],
+  {
+    title: 'Snippets',
+    className : standardClass,
+    path: PATHS.SNIPPETS._
+  },
+  {
+    title: 'Support',
+    className : standardClass,
+    path: PATHS.SUPPORT
+  },
+]};
+export const SYNC_STATUS = {
+  started: {
+    status: 'started',
+    label: 'Syncing',
+  },
+  completed: {
+    status: 'completed',
+    tooltip: 'Syncing is complete',
+    label: 'Synced',
+  },
+  errored: {
+    status: 'errored',
+    tooltip: 'An error occurred - please <u>retry activating GitHub Sync for this repo.</u>',
+    label: 'Sync Error',
+  },
+  unauthorized: {
+    status: 'unauthorized',
+    tooltip: 'You are not authorized. Please authorize in GitHub first',
+    label: 'Sync Error',
+  },
+  queued: {
+    status: 'queued',
+    tooltip: 'This repo is queued and will begin syncing from GitHub.',
+    label: 'Queued for sync',
+  },
+  notsynced: {
+    status: 'notsynced',
+    tooltip: '<u>Activate GitHub Sync</u> to unlock the full power of Sema for this repo.',
+    label: 'Sync Inactive',
+  }
+}
+
+export const getStatusLabels = (status, progress = null) => {
+  switch (status) {
+    case 'started':
+      return {
+        ...SYNC_STATUS.started,
+        tooltip: `${Math.round(parseFloat(progress?.overall || '0', 10) * 100)}% Synced`,
+      }
+    case 'completed':
+      return SYNC_STATUS.completed
+    case 'errored':
+      return SYNC_STATUS.errored
+    case 'unauthorized':
+      return SYNC_STATUS.unauthorized
+    case 'queued':
+      return SYNC_STATUS.queued
+    default:
+      return SYNC_STATUS.notsynced
+  }
+}

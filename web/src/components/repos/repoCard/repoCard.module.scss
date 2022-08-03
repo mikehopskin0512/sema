@@ -3,6 +3,7 @@
 .card {
   width: calc(100%/3);
   max-width: calc(100%/3);
+  min-width: 375px;
   @media only screen and (max-width: 769px) {
     min-width: 100% !important;
     flex: 1;
@@ -13,21 +14,25 @@
 .card-width-3c {
   width: calc(100%/3);
   max-width: calc(100%/3);
+  min-width: 375px;
+  position: relative;
+  z-index: 1;
 
   @media only screen and (max-width: 1280px) {
     width: calc(100%/2);
-    max-width: 420px;
+    max-width: 100%;
   }
 
   @media only screen and (max-width: 768px) {
     width: 100%;
-    max-width: 420px;
+    max-width: 100%;
   }
 }
 
 .card-width-2c {
   width: calc(100%/2);
   max-width: calc(100%/2);
+  min-width: 375px;
   @media only screen and (max-width: 769px) {
     min-width: 100% !important;
     flex: 1;
@@ -36,7 +41,7 @@
 }
 
 .stat {
-  width: calc(95%/4);
+  width: calc(95%/3);
   @media only screen and (max-width: 769px) {
     width: calc(95%/2);
   }
@@ -68,8 +73,7 @@
 }
 
 .stat-title {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 10px;
 }
 
 .title {
@@ -80,7 +84,7 @@
 }
 
 .tooltip-wrapper {
-  max-width: 80%;
+  max-width: 70%;
   > div {
     width: 100%;
   }
@@ -89,4 +93,33 @@
 .repo-skeleton-background {
   background-color: rgba($skeleton-back, 0.3);
   width: '100%';
+}
+
+.card-wrapper {
+  filter: drop-shadow(0px 2px 3px rgba(32, 32, 32, 0.2));
+}
+
+.card-bottom {
+  border-radius: 0 0 8px 8px;
+}
+
+.started, .completed {
+  background-color: $green-0;
+}
+
+.errored, .unauthorized {
+  background-color: #F5EAEA;
+}
+
+.queued {
+  background-color: $orange-50;
+}
+
+.notsynced {
+  color: $gray-900;
+}
+
+.repo-card-header {
+  height: 48px;
+  border-radius: 8px 8px 0 0;
 }

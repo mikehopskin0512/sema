@@ -6,7 +6,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { DEFAULT_COLLECTION_NAME, SEGMENT_EVENTS } from '../../constants';
 import {
   addNotification,
+  changeIsSnippetSaved,
   changeSnippetComment,
+  toggleSnippetForSave,
 } from '../../modules/redux/action';
 import Button from '../inputs/Button';
 import InputField from '../inputs/InputField';
@@ -25,7 +27,7 @@ import schema from './validationSchema';
 
 const semaLogo = chrome.runtime.getURL('img/sema-logo.svg');
 
-const CreateSnippetModal = () => {
+const CreateSnippetModal = ({ semabarContainerId }) => {
   const dispatch = useDispatch();
   const { control, handleSubmit, formState: { errors }, reset } = useForm({
     defaultValues: {
@@ -46,7 +48,8 @@ const CreateSnippetModal = () => {
   } = useSelector((state) => state);
 
   const snippetComment = useSelector((state) => state.snippetComment);
-  const isActive = !!snippetComment;
+  const isSnippetForSave = useSelector((state) => state.semabars[`${semabarContainerId}`].isSnippetForSave);
+  const isActive = !!isSnippetForSave;
   const [selectedCollectionId, setSelectedCollectionId] = useState('');
   const [languagesOptions, setLanguagesOptions] = useState([]);
   const [labelsOptions, setLabelsOptions] = useState([]);
@@ -83,6 +86,7 @@ const CreateSnippetModal = () => {
 
   const onClose = () => {
     dispatch(changeSnippetComment({ comment: '' }));
+    dispatch(toggleSnippetForSave({ semabarContainerId }));
   };
   const onSubmit = async (formData) => {
 
@@ -97,6 +101,7 @@ const CreateSnippetModal = () => {
           tags: { existingTags },
         }],
       });
+      dispatch(changeIsSnippetSaved({ isSaved: true, semabarContainerId }));
       dispatch(
         addNotification({
           type: 'success',
