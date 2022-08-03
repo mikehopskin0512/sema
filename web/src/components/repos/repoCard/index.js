@@ -19,9 +19,9 @@ import RepoSyncText from '../../repoSync/repoSyncText';
 import { useFlags } from '../../launchDarkly';
 
 const statLabels = {
-  smartCodeReviews: 'Sema Code Reviews',
-  smartComments: 'Sema Comments',
-  smartCommenters: 'Sema Commenters',
+  smartCodeReviews: 'Pull Requests',
+  smartComments: 'Comments',
+  smartCommenters: 'Commenters',
 };
 
 function RepoCard(props) {

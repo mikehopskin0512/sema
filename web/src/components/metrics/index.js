@@ -6,10 +6,10 @@ export default function Metrics({ metrics, totalMetrics, isLastThirtyDays }) {
   if (!metrics || !totalMetrics) return null;
 
   const meta = [
-    { key: 'pullRequests', title: 'sema code reviews', tooltip: 'Pull Request reviewed using Sema' },
-    { key: 'comments', title: 'sema comments', tooltip: 'Comment made in a Code Review using Sema' },
-    { key: 'commenters', title: 'sema commenters', tooltip: 'Number of Code Reviewers using Sema' },
-    { key: 'users', title: 'sema users', tooltip: 'Number of people with a Sema account' },
+    { key: 'pullRequests', title: 'pull requests', tooltip: 'Pull requests made within this repo' },
+    { key: 'comments', title: 'comments', tooltip: 'Number of code review comments made on GitHub within this repo' },
+    { key: 'commenters', title: 'commenters', tooltip: 'Number of users who have made comments in this organization' },
+    { key: 'users', title: 'sema users', tooltip: 'Sema users who have made code review comments' },
   ];
   return (
     <>
@@ -22,9 +22,7 @@ export default function Metrics({ metrics, totalMetrics, isLastThirtyDays }) {
         {/* <button className="button is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push('')}>View All</button> */}
       </div>
       <div className={`mt-20 pb-10 columns m-0 ${styles["metrics-container"]}`}>
-        {meta.map(({ title, key, tooltip }) => {
-          return <MetricsCard key={key} total={totalMetrics[key]} title={title} tooltip={tooltip} dataPoints={metrics.map(metric => metric[key])} />
-        })}
+        {meta.map(({ title, key, tooltip }) => <MetricsCard key={key} total={totalMetrics[key]} title={title} tooltip={tooltip} dataPoints={metrics.map(metric => metric[key])} />)}
       </div>
     </>
   );
