@@ -4,7 +4,7 @@ import { createOAuthAppAuth } from '@octokit/auth';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
-import { validateGitHubToken, ValidationError } from 'validate-github-token';
+import { validateGitHubToken } from 'validate-github-token';
 import logger from '../../shared/logger';
 import { github, isWaitListEnabled, orgDomain, version } from '../../config';
 import {
@@ -115,8 +115,10 @@ export default (app, passport) => {
       if (user) {
         const { isWaitlist = isWaitListEnabled } = user;
         const { isActive = true } = user;
-        identity.repositories = user.identities[0].repositories || [];
-        await updateIdentity(user, identity);
+        await updateIdentity(user, {
+          ...identity,
+          repositories: user.identities[0].repositories || [],
+        });
 
         const tokenData = await getTokenData(user);
 
@@ -204,48 +206,56 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-  
-  route.post('/connect-orgs', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    try {
-      const { identities } = req.user;
-      const [ identity ] = identities;
-      
-      // check if there is valid github auth token
-      if (!identity || !identity.accessToken) {
-        return res.status(400).json({ reason: 'invalid_token' });
-      }
-      
+
+  route.post(
+    '/connect-orgs',
+    passport.authenticate(['bearer'], { session: false }),
+    async (req, res) => {
       try {
-        // check if the token is still valid
-        const validated = await validateGitHubToken(identity.accessToken);
-        if (!validated || validated?.scope?.length === 0) {
+        const { identities } = req.user;
+        const [identity] = identities;
+
+        // check if there is valid github auth token
+        if (!identity || !identity.accessToken) {
           return res.status(400).json({ reason: 'invalid_token' });
         }
-      } catch (err) {
-        logger.error(err);
-        return res.status(400).json({ reason: 'invalid_token' });
+
+        try {
+          // check if the token is still valid
+          const validated = await validateGitHubToken(identity.accessToken);
+          if (!validated || validated?.scope?.length === 0) {
+            return res.status(400).json({ reason: 'invalid_token' });
+          }
+        } catch (err) {
+          logger.error(err);
+          return res.status(400).json({ reason: 'invalid_token' });
+        }
+
+        // fetch user orgs
+        const orgs = await getGithubOrgsForAuthenticatedUser(
+          identity.accessToken
+        );
+        if (orgs && orgs.length) {
+          await createNewOrgsFromGithub(orgs, req.user._id);
+        }
+
+        // fetch user repos
+        const repositories = await getRepositoriesForAuthenticatedUser(
+          identity.accessToken
+        );
+        if (repositories && repositories.length) {
+          await createAndSyncReposFromGithub(repositories, req.user._id);
+          return res.status(200).json('Connected Orgs');
+        }
+
+        // return success
+        return res.status(400).json({ reason: 'installation' });
+      } catch (error) {
+        logger.error(error);
+        return res.status(error.statusCode).send(error);
       }
-  
-      // fetch user orgs
-      const orgs = await getGithubOrgsForAuthenticatedUser(identity.accessToken);
-      if (orgs && orgs.length) {
-        await createNewOrgsFromGithub(orgs, req.user._id);
-      }
-  
-      // fetch user repos
-      const repositories = await getRepositoriesForAuthenticatedUser(identity.accessToken);
-      if (repositories && repositories.length) {
-        await createAndSyncReposFromGithub(repositories, req.user._id);
-        return res.status(200).json('Connected Orgs');
-      }
-  
-      // return success
-      return res.status(400).json({ reason: 'installation' });
-    } catch (error) {
-      logger.error(error);
-      return res.status(error.statusCode).send(error);
     }
-  });
+  );
 
   // Swagger route
   app.use(

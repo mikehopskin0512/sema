@@ -103,6 +103,7 @@ describe('GET /identities/github/cb', () => {
       const jwt = decode(redirectUrl.searchParams.get('token'));
       expect(jwt.identity.provider).toBe('github');
       expect(jwt.identity.id).toBe(1270524);
+      expect(jwt.identity).not.toHaveProperty('repositories');
     });
 
     it('should not create a user in the database', async () => {
@@ -163,6 +164,7 @@ describe('GET /identities/github/cb', () => {
       const jwt = decode(redirectUrl.searchParams.get('token'));
       expect(jwt.identity.provider).toBe('github');
       expect(jwt.identity.id).toBe(1270524);
+      expect(jwt.identity).not.toHaveProperty('repositories');
     });
 
     it('should set the refresh token in a cookie', () => {
