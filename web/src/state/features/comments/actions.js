@@ -177,10 +177,11 @@ export const fetchSmartCommentOverview = (params, token) => async (dispatch) => 
   }
 };
 
-export const filterRepoSmartComments = (externalId, token, filter) => async (dispatch) => {
+export const filterRepoSmartComments = (externalIds, token, filter) => async (dispatch) => {
   try {
     dispatch(requestFilterRepoSmartComments());
-    const { data } = await searchSmartComments({ repoId: externalId, ...filter }, token);
+    const repos = Array.isArray(externalIds) && externalIds.length >= 1 ? externalIds : [externalIds]
+    const { data } = await searchSmartComments({ repoIds: repos, ...filter }, token);
     dispatch(requestFilterRepoSmartCommentsSuccess(data));
   } catch (error) {
     const {
