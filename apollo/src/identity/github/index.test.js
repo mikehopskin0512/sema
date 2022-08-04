@@ -9,6 +9,7 @@ import { queue as importRepositoryQueue } from '../../repoSync/importRepositoryQ
 import { getOrganizationsByUser } from '../../organizations/organizationService';
 import createUser from '../../../test/helpers/userHelper';
 import { fixtures as githubFixtures } from '../../../test/nocks/github';
+import waitFor from '../../../test/helpers/waitFor';
 
 describe('GET /identities/github/cb', () => {
   let status;
@@ -43,9 +44,18 @@ describe('GET /identities/github/cb', () => {
           visibility: 'public',
         },
       ])
+      .get('/user/orgs')
+      .query({ per_page: 100 })
+      .reply(200, [
+        {
+          login: 'SemaBigCorp',
+          id: 110566960,
+          type: 'Organization',
+        },
+      ])
       .get('/user/repos')
       .query({
-        per_page: 100,
+        per_page: 20,
         sort: 'pushed',
         visibility: 'public',
       })
@@ -83,7 +93,14 @@ describe('GET /identities/github/cb', () => {
             type: 'Organization',
           },
         },
-      ]);
+      ])
+      .get('/user/repos')
+      .query({
+        per_page: 100,
+        sort: 'pushed',
+        visibility: 'public',
+      })
+      .reply(200, []);
   });
 
   describe('new user signup', () => {
@@ -152,6 +169,18 @@ describe('GET /identities/github/cb', () => {
     });
 
     beforeAll(async () => {
+      // Wait for all async background stuff to finish.
+      await waitFor(async () => {
+        const orgs = await getOrganizationsByUser(user._id);
+        return orgs.length === 3;
+      });
+      await waitFor(async () => {
+        const repos = await getRepoByUserIds([user._id]);
+        return repos.length === 3;
+      });
+    });
+
+    beforeAll(async () => {
       organizations = await getOrganizationsByUser(user._id);
     });
 
@@ -177,7 +206,11 @@ describe('GET /identities/github/cb', () => {
       const organizationLogins = organizations
         .map((o) => o.organization.name)
         .sort();
-      expect(organizationLogins).toEqual(['SemaSandbox', 'Semalab']);
+      expect(organizationLogins).toEqual([
+        'SemaBigCorp',
+        'SemaSandbox',
+        'Semalab',
+      ]);
     });
 
     describe('repositories', () => {
