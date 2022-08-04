@@ -12,6 +12,8 @@ def drop_old_documents(conn):
     collection_names = conn.list_collection_names()
 
     for collection in collection_names:
+        if collection == "system.views":
+            continue
         conn[collection].delete_many({})
 
 
@@ -102,7 +104,8 @@ def lambda_handler(event, context):
         backup_path = download_latest_backup(url, auth)
         extract_tar(f'{backup_path}', "/tmp")
         db_restore(extracted_backup_path, connection_string, database_name)
-    except:
+    except Exception as e:
+        print(e)
         return 1
 
     return 0
