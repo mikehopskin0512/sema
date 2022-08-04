@@ -147,10 +147,10 @@ const fullUserSync = async ({ user, octokit }) => {
 
     await Promise.all([
       createNewOrgsFromGithub(uniqueOrgs, user._id),
-      Bluebird.resolve(repos).map((repo) =>
-        createRepositoryForUser({ repo, user, sync: false })
+      Bluebird.resolve(repos).map(
+        (repo) => createRepositoryForUser({ repo, user, sync: false }),
+        { concurrency: 10 }
       ),
-      { concurrency: 10 },
     ]);
   }
 };
