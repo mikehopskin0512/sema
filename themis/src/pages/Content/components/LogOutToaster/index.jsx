@@ -5,7 +5,7 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { detectURLChange, isPRPage } from '../../modules/content-util';
 import { closeLoginReminder } from '../../modules/redux/action';
-import { SEGMENT_EVENTS, SEMA_LANDING_FAQ, SEMA_UI_URL } from '../../constants';
+import { SEGMENT_EVENTS, SEMA_INTERCOM_HELP_URL, SEMA_LANDING_FAQ, SEMA_UI_URL } from '../../constants';
 import { segmentReset, segmentTrack } from '../../modules/segment';
 import { getActiveTheme } from '../../../../../utils/theme';
 import { SEMA_LOGOUT_ICON, SEMA_LOGOUT_PLACEHOLDER } from './constants';
@@ -78,7 +78,7 @@ const LogOutToaster = () => {
         </button>
         <a
           target="_blank"
-          href={SEMA_LANDING_FAQ}
+          href={SEMA_INTERCOM_HELP_URL}
           rel="noreferrer"
           className="no-login-modal-link"
         >
