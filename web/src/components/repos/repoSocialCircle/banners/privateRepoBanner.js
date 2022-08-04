@@ -1,14 +1,15 @@
 import React from 'react';
-import styles from './banners.module.scss';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
+import styles from './banners.module.scss';
 
-export const PrivateRepoBanner = () => {
+export function PrivateRepoBanner() {
   const { user } = useSelector(state => state.authState);
   const { avatarUrl } = user;
 
   return (
     <div className={clsx(styles['banner-wrapper'], styles['banner-wrapper-private'],
+      'border-radius-8px',
       'is-flex-direction-row',
       'is-justify-content-space-between',
       'is-align-items-center',

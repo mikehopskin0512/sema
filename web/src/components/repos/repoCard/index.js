@@ -9,7 +9,7 @@ import { OptionsIcon, StarFilledIcon, StarOutlineScg } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
 import DeleteRepoModal from "./deleteRepoModal";
 import styles from './repoCard.module.scss';
-import { PATHS } from '../../../utils/constants';
+import { PATHS, REPO_VISIBILITY } from '../../../utils/constants';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 import { black900, orange400 } from '../../../../styles/_colors.module.scss';
 import Tooltip from '../../Tooltip';
@@ -36,7 +36,7 @@ function RepoCard(props) {
   const { repoSyncTab } = useFlags();
   const {
     name, externalId, _id: repoId, repoStats, users = [], column = 3, isOrganizationView = false, onRemoveRepo,
-    sync, idx, reposLength, selectedOrganization, isPinned = false,
+    sync, idx, reposLength, selectedOrganization, isPinned = false, visibility
   } = props;
   const { isOrganizationAdmin } = usePermission();
   const [repoStatus] = useState(sync?.status || 'notsynced');
@@ -87,19 +87,20 @@ function RepoCard(props) {
         aria-hidden
       >
         <div className={clsx('box has-background-white is-full-width p-0 border-radius-8px is-flex is-flex-direction-column', styles['card-wrapper'])}>
-          <div className={clsx("is-flex is-justify-content-space-between is-align-items-center px-16", styles[repoStatus], styles['repo-card-header'])}>
+          <div className={clsx("is-flex is-justify-content-space-between is-align-items-center px-16", visibility === REPO_VISIBILITY.PUBLIC && styles[repoStatus], styles['repo-card-header'])}>
             <div className='is-flex is-justify-content-space-between is-full-width'>
               <Tooltip direction='top-right' text={isPinned ? 'Remove from Pinned Repos' : 'Pin this Repo'} isActive showDelay={0}>
                 <div onClick={onToggleIsPinned} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
                   {isPinned ? <StarFilledIcon color={orange400} /> : <StarOutlineScg color={hovered ? orange400 : black900} />}
                 </div>
               </Tooltip>
-              <div className={`${styles['tooltip-wrapper']} is-flex`}>
+              <div className={`${styles['tooltip-wrapper']} is-flex ${(visibility === REPO_VISIBILITY.PRIVATE || !visibility) && 'is-flex-grow-1'}`}>
                 <OverflowTooltip ref={titleRef} text={name}>
                   <p ref={titleRef} className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
                 </OverflowTooltip>
               </div>
-              {repoSyncTab &&
+              {/* GH Sync actions will only be shown for public repos -for the time being- */}
+              {repoSyncTab && visibility === REPO_VISIBILITY.PUBLIC && 
                 <RepoSyncText
                   repoStatus={repoStatus}
                   progress={progress}

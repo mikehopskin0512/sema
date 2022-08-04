@@ -497,3 +497,7 @@ export const getStatusLabels = (status, progress = null) => {
       return SYNC_STATUS.notsynced
   }
 }
+
+export const REPO_VISIBILITY = {
+  ...PORTFOLIO_TYPES
+};
