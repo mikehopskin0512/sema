@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { findIndex, isEmpty, uniqBy } from 'lodash';
-import { endOfDay, isWithinInterval, startOfDay } from 'date-fns';
+import { isEmpty } from 'lodash';
+import { endOfDay, startOfDay, subDays } from 'date-fns';
 import Avatar from 'react-avatar';
 import Helmet, { OrganizationInsightsHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
@@ -11,15 +11,8 @@ import TagsChart from '../../../../components/stats/tagsChart';
 import ActivityItemList from '../../../../components/activity/itemList';
 import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import { repositoriesOperations } from '../../../../state/features/repositories';
-import { DEFAULT_AVATAR, SEMA_FAQ_SLUGS, SEMA_INTERCOM_FAQ_URL } from '../../../../utils/constants';
-import {
-  filterSmartComments,
-  getEmoji,
-  getEmojiLabel,
-  getReactionTagsChartData,
-  getTagLabel,
-  setSmartCommentsDateRange,
-} from '../../../../utils/parsing';
+import { SEMA_FAQ_SLUGS, SEMA_INTERCOM_FAQ_URL } from '../../../../utils/constants';
+import { getDateSub, getEmoji, getEmojiLabel, getReactionTagsChartData, getTagLabel, setSmartCommentsDateRange } from '../../../../utils/parsing';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import { blue600, blue700, gray500 } from '../../../../../styles/_colors.module.scss';
 import { AuthorIcon, InfoFilledIcon, TeamIcon } from '../../../../components/Icons';
@@ -27,6 +20,8 @@ import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../../../components/snaps
 import SnapshotButton from '../../../../components/snapshots/snapshotButton';
 import ReactionLineChart from '../../../../components/stats/reactionLineChart';
 import styles from '../../../../components/organization/organizationInsights/organizationInsights.module.scss';
+import { filterRepoSmartComments } from '../../../../state/features/organizations[new]/actions';
+import { useRouter } from 'next/router';
 
 const {
   fetchOrganizationSmartCommentSummary,
@@ -35,38 +30,42 @@ const {
 } = organizationsOperations;
 const { fetchReposByIds } = repositoriesOperations;
 
+const FILTER_DEFAULT_STATE = {
+  startDate: null,
+  endDate: null,
+  search: '',
+  from: [],
+  to: [],
+  reactions: [],
+  tags: [],
+  pr: [],
+  repo: [],
+  dateOption: '',
+  pageNumber: 1,
+  pageSize: 10
+};
+
 const OrganizationInsights = () => {
   const dispatch = useDispatch();
+  const { query } = useRouter();
   const { auth, organizations } = useSelector(state => ({
     auth: state.authState,
     organizations: state.organizationsNewState
   }))
   const { token, user, selectedOrganization } = auth;
-  const { isFetching } = organizations;
+  const { isFetching, insightsData: { searchResults: filteredComments } } = organizations;
   const githubUser = user.identities?.[0];
   const fullName = `${user.firstName} ${user.lastName}`;
+  const userId = user._id;
 
   const [totalSmartComments, setTotalSmartComments] = useState(0);
   const [topTags, setTopTags] = useState([]);
   const [topReactions, setTopReactions] = useState([]);
   const [reactionChartData, setReactionChartData] = useState([]);
   const [tagsChartData, setTagsChartData] = useState({});
-  const [filter, setFilter] = useState({
-    startDate: null,
-    endDate: null,
-    search: '',
-    from: [],
-    to: [],
-    reactions: [],
-    tags: [],
-    pr: [],
-    repo: [],
-    dateOption: ''
-  });
+  const [filter, setFilter] = useState(FILTER_DEFAULT_STATE);
+
   const [commentView, setCommentView] = useState('received');
-  const [filterRepoList, setFilterRepoList] = useState([]);
-  const [filteredComments, setFilteredComments] = useState([]);
-  const [outOfRangeComments, setOutOfRangeComments] = useState([]);
   const [openReactionsModal, setOpenReactionsModal] = useState(false);
   const [openTagsModal, setOpenTagsModal] = useState(false);
   const [openCommentsModal, setOpenCommentsModal] = useState(false);
@@ -169,42 +168,6 @@ const OrganizationInsights = () => {
     setFilter(value);
   };
 
-  useEffect(() => {
-    const { overview } = organizations;
-    const { startDate, endDate } = filter;
-    if (overview?.smartComments && overview?.smartComments.length > 0) {
-      const dates = setSmartCommentsDateRange(
-        overview.smartComments,
-        startDate,
-        endDate
-      );
-      const { startDay, endDay, dateDiff, groupBy } = dates;
-      setDateData({
-        dateDiff,
-        groupBy,
-        startDate: new Date(startDay),
-        endDate: endDay
-      });
-    }
-  }, [organizations, filter]);
-
-  useEffect(() => {
-    const { startDate, endDate, groupBy } = dateData;
-    if (startDate && endDate && groupBy) {
-      const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
-        ...dateData,
-        smartComments: [...filteredComments, ...outOfRangeComments]
-      });
-      setReactionChartData(reactionsChartData);
-      setTagsChartData(tagsChartData);
-      setComponentData(oldState => ({
-        ...oldState,
-        smartComments: [...filteredComments, ...outOfRangeComments],
-        ...dateData
-      }));
-    }
-  }, [dateData, filteredComments]);
-
   useAuthEffect(() => {
     getUserSummary(githubUser?.username);
   }, [auth, isActive]);
@@ -214,16 +177,6 @@ const OrganizationInsights = () => {
       dispatch(fetchOrganizationRepos({ organizationId: selectedOrganization.organization._id }, token));
     }
   }, []);
-
-  useEffect(() => {
-    const reposList =
-      organizations?.repos.map(({ name, externalId }) => ({
-        name,
-        label: name,
-        value: externalId
-      })) || [];
-    setFilterRepoList([...reposList]);
-  }, [organizations]);
 
   useEffect(() => {
     const { summary } = organizations;
@@ -247,33 +200,90 @@ const OrganizationInsights = () => {
     }
   }, [selectedOrganization]);
 
-  const filterComments = overview => {
-    if (overview && overview.smartComments) {
-      const { startDate, endDate } = filter;
-      const filtered = filterSmartComments({
-        filter,
-        smartComments: overview.smartComments,
-        startDate: startDate,
-        endDate: endDate
-      });
-      const isDateRange = startDate && endDate;
-      const outOfRangeCommentsFilter = isDateRange
-        ? overview.smartComments.filter(comment => {
-            return !isWithinInterval(new Date(comment.source.createdAt), {
-              start: startOfDay(new Date(startDate)),
-              end: endOfDay(new Date(endDate))
-            });
-          })
-        : [];
-      setFilteredComments(filtered);
-      setOutOfRangeComments(outOfRangeCommentsFilter);
+  const mapFilterValuesToAPI = (filter) => {
+    return {
+      ...getDateSub(filter.startDate, filter.endDate),
+      fromUserList: filter.from.map((f) => (f.value)),
+      toUserList: filter.to.map((t) => (t.value)),
+      summaries: filter.reactions.map((r) => (r.value)),
+      tags: filter.tags.map((t) => (t.value)),
+      pullRequests: filter.pr.map((p) => (p.value)),
+      repo: filter.repo.map((p) => (p.value)),
+      searchQuery: filter.search,
+      pageNumber: filter.pageNumber,
+      pageSize: filter.pageSize
     }
+  }
+
+  const searchSmartComments = (filterData) => {
+    const filter = {
+      ...mapFilterValuesToAPI(filterData)
+    }
+    dispatch(
+      filterRepoSmartComments(
+        query.organizationId,
+        token,
+        filter
+      )
+    )
   };
 
+  const getCommentsBounds = (comments) => {
+    const sorted = comments.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)) ?? [];
+    return { start: sorted[0]?.createdAt, finish: sorted[sorted.length - 1]?.createdAt }
+  }
+
   useEffect(() => {
-    const { overview } = organizations;
-    filterComments(overview);
-  }, [JSON.stringify(filter), organizations]);
+    searchSmartComments(filter);
+  }, [filter]);
+
+  useEffect(() => {
+    const { start, finish } = getCommentsBounds(filteredComments);
+    const dates = setSmartCommentsDateRange(
+      filteredComments,
+      filter?.startDate ?? start,
+      filter?.endDate ?? finish,
+    );
+    const {
+      startDay,
+      endDay,
+      dateDiff,
+      groupBy,
+    } = dates;
+    setDateData({
+      dateDiff,
+      groupBy,
+      startDate: new Date(startDay),
+      endDate: endDay,
+    });
+  }, [filteredComments])
+
+  useEffect(() => {
+    const { startDate, endDate, groupBy } = dateData;
+    if (startDate && endDate && groupBy) {
+      const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
+        ...dateData,
+        smartComments: [...filteredComments]
+      });
+      setReactionChartData(reactionsChartData);
+      setTagsChartData(tagsChartData);
+      setComponentData(oldState => ({
+        ...oldState,
+        smartComments: [...filteredComments],
+        ...dateData
+      }));
+    }
+  }, [dateData, filteredComments]);
+
+  useEffect(() => {
+    if (isActive && commentView === 'received') {
+      setFilter({ ...FILTER_DEFAULT_STATE, to: [{ value: userId }] });
+    } else if (isActive && commentView === 'given') {
+      setFilter({ ...FILTER_DEFAULT_STATE, from: [{ value: userId }] });
+    } else {
+     setFilter(FILTER_DEFAULT_STATE)
+    }
+  }, [isActive, commentView])
 
   const renderTopReactions = () => {
     return topReactions.map(reaction => {
@@ -539,7 +549,7 @@ const OrganizationInsights = () => {
             </div>
           )}
         </div>
-        <ActivityItemList comments={filteredComments} isLoading={isFetching} />
+          <ActivityItemList comments={filteredComments} isLoading={isFetching} setFilter={setFilter} isPaginationNeeded />
         </div>
       </div>
     </div>

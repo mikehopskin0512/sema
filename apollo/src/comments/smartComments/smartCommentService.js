@@ -676,7 +676,9 @@ export const searchSmartComments = async ({
   pageNumber,
   pageSize,
   reviewer,
-  author
+  author,
+  orgId,
+  repo = []
 }) => {
   try {
     let findQuery = {
@@ -1082,7 +1084,8 @@ export const getUniqueCommenters = async (repoIds, startDate, endDate) => {
           'user.username': 1,
           'user.avatarUrl': 1,
         },
-      },
+      }
+,
     ]).exec();
     return values;
   } catch (err) {
@@ -1115,7 +1118,8 @@ export const getUniqueRequesters = async (repoIds, startDate, endDate) => {
           'githubMetadata.requesterAvatarUrl': 1,
           '_id': 0,
         },
-      },
+      }
+,
     ]).exec();
     return values;
   } catch (err) {

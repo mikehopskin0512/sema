@@ -172,6 +172,7 @@ export default (app, passport) => {
     async (req, res) => {
       const {
         repoIds,
+        orgId,
         startDate,
         endDate,
         fromUserList,
@@ -182,6 +183,7 @@ export default (app, passport) => {
         searchQuery,
         pageNumber = 1,
         pageSize = 10,
+        repo,
         requester: author,
         reviewer
       } = req.body;
@@ -190,7 +192,7 @@ export default (app, passport) => {
       if (startDate && endDate) {
         dateRange = { startDate, endDate };
       }
-      if (!repoIds) {
+      if (!repoIds && !orgId) {
         return res.status(401).send({
           message: 'Repo ID is required.'
         })
@@ -210,13 +212,15 @@ export default (app, passport) => {
           pageSize,
           reviewer,
           author,
+          orgId,
+          repo
         });
 
         const totalPage = Math.ceil(total/pageSize);
         return res.status(201).send({
           paginationData: {
             pageSize,
-            pageNumber,
+            pageNumber: pageNumber > totalPage ? 1 : pageNumber,
             totalPage,
             total,
             hasNextPage: pageNumber < totalPage,
@@ -286,7 +290,7 @@ export default (app, passport) => {
       res.sendStatus(200);
     }
   );
-  
+
   route.get(
     '/filter-values',
     passport.authenticate(['bearer'], { session: false }),

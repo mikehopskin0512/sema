@@ -12,6 +12,17 @@ const initialState = {
   smartComments: [],
   summary: {},
   overview: {},
+  insightsData: {
+    searchResults: [],
+    pagination: {
+      pageSize: 1,
+      pageNumber: 1,
+      totalPage: 0,
+      total: 0,
+      hasNextPage: false,
+      hasPreviousPage: false
+    },
+  },
   invalidEmails: [],
   fetchedOrganizations: false,
   filterValues: {
@@ -212,26 +223,47 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       error: action.errors,
-      };
-    case types.REQUEST_TOGGLE_PINNED_ORG_REPO:
-    case types.REQUEST_TOGGLE_PINNED_ORG_REPO_ERROR:
-      const { repoId, orgId } = action.payload;
-      const orgs = state.organizations.map(org => {
-        if (org.organization._id === orgId) {
-          const orgPinnedRepos = [...org.organization.pinnedRepos];
-          if (orgPinnedRepos.includes(repoId)) {
-            remove(orgPinnedRepos, (id) => id === repoId);
-          } else {
-            orgPinnedRepos.push(repoId);
-          }
-          org.organization.pinnedRepos = orgPinnedRepos;
+    };
+  case types.REQUEST_TOGGLE_PINNED_ORG_REPO:
+  case types.REQUEST_TOGGLE_PINNED_ORG_REPO_ERROR:
+    const { repoId, orgId } = action.payload;
+    const orgs = state.organizations.map(org => {
+      if (org.organization._id === orgId) {
+        const orgPinnedRepos = [...org.organization.pinnedRepos];
+        if (orgPinnedRepos.includes(repoId)) {
+          remove(orgPinnedRepos, (id) => id === repoId);
+        } else {
+          orgPinnedRepos.push(repoId);
         }
-        return org;
-      });
-      return {
-        ...state,
-        organizations: orgs,
-      };
+        org.organization.pinnedRepos = orgPinnedRepos;
+      }
+      return org;
+    });
+    return {
+      ...state,
+      organizations: orgs,
+    };
+  case types.REQUEST_FETCH_ORG_INSIGHTS_COMMENTS:
+    return {
+      ...state,
+      isFetching: true,
+    }
+  case types.REQUEST_FETCH_ORG_INSIGHTS_COMMENTS_SUCCESS:
+    return {
+      ...state,
+      insightsData: {
+        ...state.insightsData,
+        searchResults: action.results.smartComments,
+        pagination: action.results.paginationData,
+      },
+      isFetching: false,
+    }
+  case types.REQUEST_FETCH_ORG_INSIGHTS_COMMENTS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.error
+    }
   default:
     return state;
   }

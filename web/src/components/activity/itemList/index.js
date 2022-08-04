@@ -2,11 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ActivityItem from '../item';
 import styles from '../../../components/skeletons/charts.module.scss';
-import { CommentSnapTitleSkeleton } from '../../skeletons/commentSnapTitleSkeleton';
 import CommentSnapSkeleton from '../../skeletons/commentSnapSkeleton';
 import Pagination from '../../pagination';
 
-const ActivityItemList = ({ comments, pagination, isLoading, setFilter }) => {
+const ActivityItemList = ({ comments, isLoading, setFilter, isPaginationNeeded, pagination }) => {
   if (isLoading) {
     return (
       <div>
@@ -51,6 +50,15 @@ const ActivityItemList = ({ comments, pagination, isLoading, setFilter }) => {
         <div className="my-10 p-20 has-background-white">
           <p>No activity found!</p>
         </div>
+      )}
+      {isPaginationNeeded && (
+        <Pagination
+          currentPage={pagination.pageNumber}
+          totalCount={pagination.total}
+          pageSize={pagination.pageSize}
+          setPageSize={(pageSize) => setFilter((oldState) => ({ ...oldState, pageSize }))}
+          onPageChange={(page) => setFilter((oldState) => ({ ...oldState, pageNumber: page }))}
+        />
       )}
     </>
   );
