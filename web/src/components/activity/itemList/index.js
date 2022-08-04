@@ -3,9 +3,16 @@ import PropTypes from 'prop-types';
 import ActivityItem from '../item';
 import styles from '../../../components/skeletons/charts.module.scss';
 import CommentSnapSkeleton from '../../skeletons/commentSnapSkeleton';
+import { useSelector } from 'react-redux';
 import Pagination from '../../pagination';
 
-const ActivityItemList = ({ comments, isLoading, setFilter, isPaginationNeeded, pagination }) => {
+const ActivityItemList = ({ comments, isLoading, setFilter, isPaginationNeeded }) => {
+  const { organizations } = useSelector(state => ({
+    organizations: state.organizationsNewState
+  }))
+
+  const { insightsData: { pagination } } = organizations;
+
   if (isLoading) {
     return (
       <div>
@@ -50,15 +57,6 @@ const ActivityItemList = ({ comments, isLoading, setFilter, isPaginationNeeded, 
         <div className="my-10 p-20 has-background-white">
           <p>No activity found!</p>
         </div>
-      )}
-      {isPaginationNeeded && (
-        <Pagination
-          currentPage={pagination.pageNumber}
-          totalCount={pagination.total}
-          pageSize={pagination.pageSize}
-          setPageSize={(pageSize) => setFilter((oldState) => ({ ...oldState, pageSize }))}
-          onPageChange={(page) => setFilter((oldState) => ({ ...oldState, pageNumber: page }))}
-        />
       )}
     </>
   );

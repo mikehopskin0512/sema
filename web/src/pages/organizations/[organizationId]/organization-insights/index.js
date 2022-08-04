@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { isEmpty } from 'lodash';
-import { endOfDay, startOfDay, subDays } from 'date-fns';
+import { endOfDay, startOfDay } from 'date-fns';
 import Avatar from 'react-avatar';
 import Helmet, { OrganizationInsightsHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
@@ -549,7 +549,7 @@ const OrganizationInsights = () => {
             </div>
           )}
         </div>
-          <ActivityItemList comments={filteredComments} isLoading={isFetching} setFilter={setFilter} isPaginationNeeded />
+          <ActivityItemList comments={filteredComments} isLoading={isFetching} setFilter={setFilter} isPaginationNeeded  />
         </div>
       </div>
     </div>

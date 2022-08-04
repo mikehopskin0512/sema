@@ -676,9 +676,7 @@ export const searchSmartComments = async ({
   pageNumber,
   pageSize,
   reviewer,
-  author,
-  orgId,
-  repo = []
+  author
 }) => {
   try {
     let findQuery = {
