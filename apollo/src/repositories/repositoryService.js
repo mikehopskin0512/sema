@@ -1,4 +1,5 @@
 import _, { isEmpty } from 'lodash';
+import Bluebird from 'bluebird';
 import {
   endOfDay,
   toDate,
@@ -6,12 +7,12 @@ import {
   format,
   sub,
 } from 'date-fns';
-import Repositories from './repositoryModel';
+import Repository from './repositoryModel';
 import Users from '../users/userModel';
 import { getReactionIdKeys } from '../comments/reaction/reactionService';
 import { getRepoUsersMetrics } from '../users/userService';
 import {
-  findByExternalId as findSmartCommentsByExternalId,
+  findByRepositoryId as findSmartCommentsByRepositoryId,
   getRepoSmartCommentsMetrics,
   getUniqueCommenters,
   getUniquePullRequests,
@@ -41,7 +42,7 @@ export const create = async ({
   user,
 }) => {
   try {
-    const repository = await Repositories.findOrCreate(
+    const repository = await Repository.findOrCreate(
       { type, externalId },
       {
         name,
@@ -83,7 +84,7 @@ export const startSync = async ({ repository, user }) => {
 
 export const createMany = async (repositories) => {
   try {
-    const updatedRepositories = await Repositories.insertMany(repositories, {
+    const updatedRepositories = await Repository.insertMany(repositories, {
       ordered: false,
     });
     return updatedRepositories;
@@ -108,7 +109,7 @@ export const createAndSyncReposFromGithub = async (
   try {
     await Promise.all(
       reposFroGithub.map(async (repoFromGithub) => {
-        const existingRepo = await Repositories.findOne({
+        const existingRepo = await Repository.findOne({
           externalId: repoFromGithub.repoId,
         });
         if (!existingRepo) {
@@ -133,7 +134,7 @@ export const createAndSyncReposFromGithub = async (
 
 export const get = async (_id) => {
   try {
-    const query = Repositories.find({ _id });
+    const query = Repository.find({ _id });
     const repository = await query
       .lean()
       .populate('sourceId', 'externalSourceId')
@@ -149,7 +150,7 @@ export const get = async (_id) => {
 
 export const findByOrg = async (orgId) => {
   try {
-    const query = Repositories.find({ orgId });
+    const query = Repository.find({ orgId });
     const repositories = await query
       .lean()
       .populate('sourceId', 'externalSourceId')
@@ -180,7 +181,7 @@ export const sendNotification = async (msg) => {
 export const findByExternalId = async (externalId) => {
   // externalId is github id
   try {
-    const query = Repositories.findOne({ externalId });
+    const query = Repository.findOne({ externalId });
     const repository = await query.lean().exec();
 
     return repository;
@@ -193,7 +194,7 @@ export const findByExternalId = async (externalId) => {
 
 export const getRepository = async (_id) => {
   try {
-    const query = Repositories.findOne({ _id });
+    const query = Repository.findOne({ _id });
     return await query.exec();
   } catch (err) {
     logger.error(err);
@@ -207,7 +208,7 @@ export const getRepositories = async (params, populateUsers) => {
   try {
     const searchRegEx = new RegExp(searchQuery, 'ig');
 
-    const query = Repositories.find({
+    const query = Repository.find({
       _id: { $in: ids },
       name: { $regex: searchRegEx },
     });
@@ -232,7 +233,7 @@ export const findByExternalIds = async (params, populateUsers) => {
   const searchRegEx = new RegExp(searchQuery, 'ig');
 
   try {
-    const query = Repositories.find({
+    const query = Repository.find({
       externalId: { $in: externalIds },
       name: { $regex: searchRegEx },
     });
@@ -321,8 +322,8 @@ export const aggregateRepositories = async (
             sync: getSyncResponse(sync),
             visibility: repo.visibility,
             smartcomments: includeSmartComments
-              ? await findSmartCommentsByExternalId(
-                  externalId,
+              ? await findSmartCommentsByRepositoryId(
+                  _id,
                   true,
                   date
                     ? {
@@ -361,7 +362,7 @@ export const aggregateReactions = async (externalId, dateFrom, dateTo) => {
     if (dateTo) {
       condition.$and.push({ $lt: ['$$el.createdAt', to] });
     }
-    const repositories = await Repositories.aggregate([
+    const repositories = await Repository.aggregate([
       { $match: { externalId } },
       {
         $project: {
@@ -438,7 +439,7 @@ export const aggregateTags = async (externalId, dateFrom, dateTo) => {
     if (dateTo) {
       condition.$and.push({ $lt: ['$$el.createdAt', to] });
     }
-    const repositories = await Repositories.aggregate([
+    const repositories = await Repository.aggregate([
       { $match: { externalId } },
       {
         $project: {
@@ -521,7 +522,7 @@ export const getSemaUsersOfRepo = async (externalId) => {
 
 export const getRepoByUserIds = async (userIds = [], populateUsers = false) => {
   try {
-    const query = Repositories.find({ 'repoStats.userIds': { $in: userIds } });
+    const query = Repository.find({ 'repoStats.userIds': { $in: userIds } });
     if (populateUsers) {
       query.populate({ path: 'repoStats.userIds', model: 'User' });
     }
@@ -548,73 +549,93 @@ export const getReposFilterValues = async (
   filterFields = {}
 ) => {
   try {
-    const filterValues = {};
     if (isEmpty(filterFields)) {
       return {};
     }
 
-    if (filterFields.authors) {
-      const authors = await getUniqueCommenters(repos, startDate, endDate);
-      filterValues.authors = authors.map((author) => {
-        const {
-          user: { firstName, lastName, _id, avatarUrl, username },
-        } = author;
-        return {
-          label:
-            isEmpty(firstName) && isEmpty(lastName)
-              ? username.split('@')[0]
-              : `${firstName} ${lastName}`,
-          value: _id,
-          img: avatarUrl || DEFAULT_AVATAR,
-        };
-      });
-    }
+    const repositoryIds = (
+      await Repository.find({ externalId: repos }).select('_id').lean()
+    ).map((o) => o._id);
 
-    if (filterFields.requesters) {
-      const requesters = await getUniqueRequesters(repos, startDate, endDate);
-      filterValues.requesters = requesters.map((el) => {
-        const {
-          githubMetadata: { requester, requesterAvatarUrl },
-        } = el;
-        return {
-          label: requester,
-          value: requester,
-          img: requesterAvatarUrl || DEFAULT_AVATAR,
-        };
-      });
-    }
-
-    if (filterFields.pullRequests) {
-      const pullRequests = await getUniquePullRequests(
-        repos,
-        startDate,
-        endDate
-      );
-      filterValues.pullRequests = pullRequests.map((pr) => {
-        const {
-          githubMetadata: {
-            head,
-            title = '',
-            pull_number: pullNum = '',
-            updated_at,
-          },
-        } = pr;
-        const prName = title || head || 'Pull Request';
-        return {
-          updated_at: new Date(updated_at),
-          label: `${prName} (#${pullNum || '0'})`,
-          value: pullNum,
-          name: prName,
-        };
-      });
-    }
-    return filterValues;
+    return await Bluebird.props({
+      authors: filterFields.authors
+        ? await getAuthorFilterValues(repositoryIds, startDate, endDate)
+        : undefined,
+      requesters: filterFields.requesters
+        ? await getRequesterFilterValues(repositoryIds, startDate, endDate)
+        : undefined,
+      pullRequests: filterFields.pullRequests
+        ? await getPullRequestFilterValues(repositoryIds, startDate, endDate)
+        : undefined,
+    });
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
     return error;
   }
 };
+
+async function getAuthorFilterValues(repos, startDate, endDate) {
+  const authors = await getUniqueCommenters(repos, startDate, endDate);
+  return authors
+    .map((author) => {
+      const {
+        user: { firstName, lastName, _id, avatarUrl, username },
+      } = author;
+      return {
+        label:
+          isEmpty(firstName) && isEmpty(lastName)
+            ? username.split('@')[0]
+            : `${firstName} ${lastName}`,
+        value: _id,
+        img: avatarUrl || DEFAULT_AVATAR,
+      };
+    })
+    .sort(compareBy('label'));
+}
+
+async function getRequesterFilterValues(repos, startDate, endDate) {
+  const requesters = await getUniqueRequesters(repos, startDate, endDate);
+  return requesters
+    .map((el) => {
+      const {
+        githubMetadata: { requester, requesterAvatarUrl },
+      } = el;
+      return {
+        label: requester,
+        value: requester,
+        img: requesterAvatarUrl || DEFAULT_AVATAR,
+      };
+    })
+    .sort(compareBy('label'));
+}
+
+async function getPullRequestFilterValues(repos, startDate, endDate) {
+  const pullRequests = await getUniquePullRequests(repos, startDate, endDate);
+  return pullRequests
+    .map((pr) => {
+      const {
+        githubMetadata: {
+          head,
+          title = '',
+          pull_number: pullNum = '',
+          updated_at,
+        },
+      } = pr;
+      const prName = title || head || 'Pull Request';
+      return {
+        updated_at: new Date(updated_at),
+        label: `${prName} (#${pullNum || '0'})`,
+        value: pullNum,
+        name: prName,
+      };
+    })
+    .sort((a, b) => parseInt(b.value, 10) - parseInt(a.value, 10));
+}
+
+function compareBy(field) {
+  return (a, b) => a[field].localeCompare(b[field]);
+}
 
 function getSyncResponse(sync) {
   if (!sync?.progress) return sync;

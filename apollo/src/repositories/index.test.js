@@ -1,6 +1,8 @@
 import apollo from '../../test/apolloClient';
+import { seed } from '../../test/seed';
 import { create as createRepository } from './repositoryService';
 import Repository from './repositoryModel';
+import User from '../users/userModel';
 import { create as createSmartComment } from '../comments/smartComments/smartCommentService';
 import { createAuthToken } from '../auth/authService';
 import createUser from '../../test/helpers/userHelper';
@@ -220,5 +222,87 @@ describe('POST /repositories/:id/sync', () => {
     it('should queue the repository for sync', () => {
       expect(importRepositoryQueue.jobs[0]).toEqual({ id: repository.id });
     });
+  });
+});
+
+describe('GET /repositories/filter-values', () => {
+  let user;
+  let data;
+  let status;
+  let token;
+
+  beforeAll(async () => {
+    await User.deleteMany();
+    await Repository.deleteMany();
+    await seed();
+    user = await User.findOne();
+    token = await createAuthToken(user);
+  });
+
+  beforeAll(async () => {
+    ({ status, data } = await apollo.get('/v1/repositories/filter-values', {
+      params: {
+        externalIds: JSON.stringify(['237888452', '391620249']),
+        filterFields: JSON.stringify({
+          authors: 1,
+          requesters: 1,
+          pullRequests: true,
+        }),
+      },
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    }));
+  });
+
+  it('should respond with 200 OK', () => {
+    expect(status).toBe(200);
+  });
+
+  it('should have authors', () => {
+    expect(data.filter.authors).toEqual([
+      {
+        label: 'Brendan Cody-Kenny',
+        value: '61041e153e90570022942e58',
+        img: 'https://avatars.githubusercontent.com/u/6106595?v=4',
+      },
+      {
+        label: 'Matt Van Itallie',
+        value: '60b20ec1ad927f001e3f4f7e',
+        img: 'https://avatars.githubusercontent.com/u/31629621?v=4',
+      },
+    ]);
+  });
+
+  it('should have requesters', () => {
+    expect(data.filter.requesters).toEqual([
+      {
+        label: 'Andrew-B3901',
+        value: 'Andrew-B3901',
+        img: '/img/default-avatar.jpg',
+      },
+      {
+        label: 'ArtsemMaliutsin',
+        value: 'ArtsemMaliutsin',
+        img: '/img/default-avatar.jpg',
+      },
+    ]);
+  });
+
+  it('should have pull requests', () => {
+    expect(data.filter.pullRequests).toEqual([
+      {
+        updated_at: '2022-05-05T16:03:46.000Z',
+        label: 'Pull Request (#1665)',
+        value: '1665',
+        name: 'Pull Request',
+      },
+      {
+        updated_at: '2022-05-03T19:34:22.000Z',
+        label: 'Pull Request (#3)',
+        value: '3',
+        name: 'Pull Request',
+      },
+    ]);
   });
 });
