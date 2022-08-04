@@ -591,6 +591,7 @@ async function getAuthorFilterValues(repos, startDate, endDate) {
         img: avatarUrl || DEFAULT_AVATAR,
       };
     })
+    .filter((element) => element.label)
     .sort(compareBy('label'));
 }
 
@@ -607,6 +608,7 @@ async function getRequesterFilterValues(repos, startDate, endDate) {
         img: requesterAvatarUrl || DEFAULT_AVATAR,
       };
     })
+    .filter((element) => element.label)
     .sort(compareBy('label'));
 }
 
@@ -630,6 +632,7 @@ async function getPullRequestFilterValues(repos, startDate, endDate) {
         name: prName,
       };
     })
+    .filter((element) => element.label)
     .sort((a, b) => parseInt(b.value, 10) - parseInt(a.value, 10));
 }
 
