@@ -598,6 +598,7 @@ async function getAuthorFilterValues(repos, startDate, endDate) {
 async function getRequesterFilterValues(repos, startDate, endDate) {
   const requesters = await getUniqueRequesters(repos, startDate, endDate);
   return requesters
+    .filter((item) => item.githubMetadata.requester)
     .map((el) => {
       const {
         githubMetadata: { requester, requesterAvatarUrl },

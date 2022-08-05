@@ -193,7 +193,7 @@ const PersonalInsights = () => {
 
   useEffect(() => {
     const reposList =
-      githubUser.repositories?.map((item) => ({
+      githubUser.repositories?.filter((item) => item.fullName).map((item) => ({
         name: item.fullName,
         label: item.fullName,
         value: item.id,
