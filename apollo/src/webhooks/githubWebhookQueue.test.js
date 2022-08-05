@@ -76,12 +76,12 @@ describe('Github Webhook Queue', () => {
           .reply(200, getPullRequestDetailPR3());
         await handler(payload);
         comments = await SmartComment.find({
-          'githubMetadata.repo_id': repository.externalId,
+          repositoryId: repository,
         });
       });
 
       it('should create a smart comment from the issue comment', () => {
-        expect(comments.length).toBe(1);
+        expect(comments).toHaveLength(1);
       });
     });
   });

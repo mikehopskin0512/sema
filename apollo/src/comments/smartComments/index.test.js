@@ -5,7 +5,7 @@ import createUser from '../../../test/helpers/userHelper';
 import SmartComment from './smartCommentModel';
 import Repository from '../../repositories/repositoryModel';
 
-describe('GET /comments/smart', () => {
+describe('GET /comments/smart/overview', () => {
   let user;
   let token;
 
@@ -16,7 +16,7 @@ describe('GET /comments/smart', () => {
   describe('unauthenticated', () => {
     it('should return 401 Unauthorized', async () => {
       await expect(async () => {
-        await apollo.get('/v1/comments/smart', {
+        await apollo.get('/v1/comments/smart/overview', {
           headers: {
             authorization: 'Bearer 123',
           },
@@ -85,7 +85,7 @@ describe('GET /comments/smart', () => {
       assert(earlierComment.createdAt > laterComment.createdAt);
       assert(earlierComment.source.createdAt < laterComment.source.createdAt);
 
-      ({ data } = await apollo.get('/v1/comments/smart', {
+      ({ data } = await apollo.get('/v1/comments/smart/overview', {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -96,8 +96,12 @@ describe('GET /comments/smart', () => {
 
     describe('list of comments', () => {
       it('should be sorted by creation date at the source, descending', () => {
-        expect(data.comments[0].comment).toBe('The later comment');
-        expect(data.comments[1].comment).toBe('The earlier comment');
+        expect(data.overview.smartComments[0].comment).toBe(
+          'The later comment'
+        );
+        expect(data.overview.smartComments[1].comment).toBe(
+          'The earlier comment'
+        );
       });
     });
   });

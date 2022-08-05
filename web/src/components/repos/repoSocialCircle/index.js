@@ -1,19 +1,20 @@
-import InteractionCircleChart from '../../chart/InteractionCircleChart';
-import { DownloadIcon, LinkedinIcon, LinkIcon, TwitterIcon } from '../../Icons';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { isEmpty } from 'lodash';
+import { REPO_VISIBILITY } from '../../../utils/constants';
+import InteractionCircleChart from '../../chart/InteractionCircleChart';
+import { DownloadIcon, LinkedinIcon, LinkIcon, TwitterIcon } from '../../Icons';
 import { blue700 } from '../../../../styles/_colors.module.scss';
 import { getRepoSocialGraph } from '../../../state/features/repositories/api';
 import styles from './repoSocialCircle.module.scss';
-import { PrivateRepoBanner } from '../../repos/repoSocialCircle/banners/privateRepoBanner';
-import { NotSyncedRepoBanner } from '../../repos/repoSocialCircle/banners/notSyncedRepoBanner';
-import { SyncInProgressRepoBanner } from '../../repos/repoSocialCircle/banners/syncInProgressBanner';
+import { PrivateRepoBanner } from "./banners/privateRepoBanner";
+import { NotSyncedRepoBanner } from "./banners/notSyncedRepoBanner";
+import { SyncInProgressRepoBanner } from "./banners/syncInProgressBanner";
 import { createDataUrl, onDownloadImage } from '../../../utils/imageHelpers';
 import { uploadInfographicsImage } from '../../../state/features/auth/api';
-import { isEmpty } from 'lodash';
 import { shareWithLinkedIn, shareWithTwitter } from '../../../utils/socialMedia';
-import Tooltip from '../../../components/Tooltip';
+import Tooltip from "../../Tooltip";
 
 export const SYNC_STATUSES = {
   EMPTY: null,
@@ -25,7 +26,7 @@ export const SYNC_STATUSES = {
 }
 const REPO_UPDATE_INTERVAL = 30 * 1000;
 
-const RepoSocialCircle = ({ repoId, isLoading }) => {
+function RepoSocialCircle({ repoId, isLoading }) {
   const containerRef = useRef(null);
   const [interactions, setInteractions] = useState([]);
   const { user, token } = useSelector((state) => state.authState);
@@ -35,11 +36,10 @@ const RepoSocialCircle = ({ repoId, isLoading }) => {
   const { overview } = repoData;
   const syncStatus = overview?.sync?.status;
   const syncProgress = overview?.sync?.progress;
+  const isRepoPrivate = overview?.visibility === REPO_VISIBILITY.PRIVATE;
 
   const isRepoSynced = syncStatus === SYNC_STATUSES.COMPLETED;
   const isSyncingNow = syncStatus ===  SYNC_STATUSES.QUEUED || syncStatus === SYNC_STATUSES.STARTED || isLoading;
-  // TODO: add a real calculation
-  const isRepoPrivate = false;
 
   const [isCopied, changeIsCopied] = useState(false);
 
@@ -96,8 +96,8 @@ const RepoSocialCircle = ({ repoId, isLoading }) => {
 
   const socials = [
     { name: 'twitter', icon: TwitterIcon, onClick: () => shareWithTwitter({ text: 'Check out my Github Social Circle!', url: socialCircleUrl })},
-    //ToDo: return this code when facebook sharing will be fixed
-    //{ name: 'facebook', icon: FacebookIcon, onClick: () => shareWithFacebook({ url: socialCircleUrl })},
+    // ToDo: return this code when facebook sharing will be fixed
+    // { name: 'facebook', icon: FacebookIcon, onClick: () => shareWithFacebook({ url: socialCircleUrl })},
     { name: 'linkedin', icon: LinkedinIcon, onClick: () => shareWithLinkedIn({ url: socialCircleUrl })},
   ];
 
@@ -154,7 +154,7 @@ const RepoSocialCircle = ({ repoId, isLoading }) => {
             tagging them on your social network.
           </p>
         </div>
-        <img src={'/img/illustration.png'} className={styles.image} alt="bg-screen"/>
+        <img src="/img/illustration.png" className={styles.image} alt="bg-screen"/>
         {isRepoSynced && (
           <div className={clsx('pr-30', styles.socials)}>
             <span className={styles['socials-title']}>Share your Circle</span>

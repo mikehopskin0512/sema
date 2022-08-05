@@ -1,0 +1,924 @@
+[
+  {
+    "_id": "614f2fe7811ae802fc08e36e",
+    "name": "Sema Corporate Team",
+    "avatarUrl": "undefined/static/avatar-1649872298660.png",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "628fa16fa4fe6f001e3982f9",
+        "collectionData": "625ed104f6950b4285f1888a"
+      },
+      {
+        "isActive": true,
+        "_id": "62b1cd6c27c38f001e51141c",
+        "collectionData": "62a9b420a6fd79002080741b"
+      },
+      {
+        "isActive": true,
+        "_id": "62bc1a97b2f4ea001e4343ee",
+        "collectionData": "62a984bd2e9ebe001ff0fdce"
+      },
+      {
+        "isActive": true,
+        "_id": "62e3b6d8153ccc001f2c61fa",
+        "collectionData": "62e3b6c605945c0022c3ae55"
+      },
+      {
+        "isActive": true,
+        "_id": "62e90ac44cc7a1001f778904",
+        "collectionData": "62e90a954cc7a1001f7788f2"
+      }
+    ],
+    "updatedAt": "2022-08-02T11:30:38.278Z",
+    "repos": [
+      "6165b3e9ebcc42001f3ccbf6",
+      "6165b7e1ebcc42001f3cd4e3",
+      "6166e567f8b91f001dd5b4c2",
+      "61e08291b09c8b001ed29173",
+      "629f3a6d879442001d74d9cb",
+      "62ab6513a84b06001f4b2c41",
+      "62b4432e90a2a0001fe3c664",
+      "62d052ce8a6d4f001ed22ae6",
+      "62d5df704be2250336229461"
+    ],
+    "description": "The awesome team for Sema and all its crew.",
+    "url": "614f2fe7811ae802fc08e36e",
+    "__v": 2,
+    "createdAt": "2022-04-13T15:56:36.108Z",
+    "pinnedRepos": []
+  },
+  {
+    "_id": "61c22d84e069b7001e74641c",
+    "name": "MVI Test",
+    "description": "MVI Test",
+    "createdBy": "60b20ec1ad927f001e3f4f7e",
+    "createdAt": "2021-12-21T19:39:48.154Z",
+    "updatedAt": "2022-04-08T15:49:54.637Z",
+    "__v": 0,
+    "collections": [
+      {
+        "collectionData": "625ed104f6950b4285f1888d",
+        "isActive": true,
+        "_id": "625ed104c157b5fd0e424ff0"
+      },
+      {
+        "collectionData": "60f74df6b83864106f28bb0e",
+        "isActive": true,
+        "_id": "6272bd6df21c3100d03a3938"
+      }
+    ],
+    "url": "61c22d84e069b7001e74641c",
+    "pinnedRepos": []
+  },
+  {
+    "_id": "61f440a56c55c600207bd706",
+    "repos": [
+      "610401853e90570022942da8",
+      "61041e1d025147001d0cf277",
+      "613a57b1efe65b001d055b1b",
+      "61448ac6d1195e001e00e7a9",
+      "6144de09db50a1001e0171a9",
+      "6165993bebcc42001f3cc1e7",
+      "61f011f77bc6dd001f8bbdab"
+    ],
+    "name": "MVI Test 2",
+    "description": "MVI Test 2",
+    "createdBy": "60b20ec1ad927f001e3f4f7e",
+    "collections": [
+      {
+        "collectionData": "625ed104f6950b4285f1889e",
+        "isActive": true,
+        "_id": "625ed104c157b5fd0e425008"
+      },
+      {
+        "collectionData": "60f74df6b83864106f28bb0e",
+        "isActive": true,
+        "_id": "6272bd6df21c3100d03a3949"
+      }
+    ],
+    "createdAt": "2022-01-28T19:14:45.936Z",
+    "updatedAt": "2022-04-08T15:49:54.637Z",
+    "__v": 0,
+    "url": "61f440a56c55c600207bd706",
+    "pinnedRepos": []
+  },
+  {
+    "_id": "61f96cd07880d0001eb36c86",
+    "repos": ["61041e1d025147001d0cf277"],
+    "name": "Sema Smart Code Reviews",
+    "description": "Sema team members working on Smart Code Reviews",
+    "createdBy": "6109140ed8123100226f675c",
+    "collections": [
+      {
+        "collectionData": "625ed104f6950b4285f1889f",
+        "isActive": true,
+        "_id": "625ed104c157b5fd0e424ffd"
+      },
+      {
+        "collectionData": "60f74df6b83864106f28bb0e",
+        "isActive": true,
+        "_id": "6272bd6df21c3100d03a394a"
+      }
+    ],
+    "createdAt": "2022-02-01T17:24:32.944Z",
+    "updatedAt": "2022-07-27T09:36:41.635Z",
+    "__v": 0,
+    "url": "61f96cd07880d0001eb36c86",
+    "pinnedRepos": []
+  },
+  {
+    "_id": "61fad0951ab0e5001ea3805c",
+    "repos": [
+      "61041e1d025147001d0cf277",
+      "61059c00b655d7001e16e939",
+      "613a57b1efe65b001d055b1b"
+    ],
+    "name": "Team Sandbox",
+    "description": "This is to ramp up Param.",
+    "createdBy": "60b20ec1ad927f001e3f4f7e",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "62758b0b9db6420206f9f10f",
+        "collectionData": "625ed104f6950b4285f188a1"
+      },
+      {
+        "isActive": true,
+        "_id": "62829b8835edf7001ed60360",
+        "collectionData": "618bf5cc33faf5001fd763c7"
+      },
+      {
+        "isActive": true,
+        "_id": "62832f660e2c46001dc286f8",
+        "collectionData": "619e3f24ae6726001f6741bd"
+      },
+      {
+        "isActive": true,
+        "_id": "628412cb28d64201988b5770",
+        "collectionData": "618be2a4811a25001f877c57"
+      },
+      {
+        "isActive": true,
+        "_id": "6297978e7c5c4b002043fbb4",
+        "collectionData": "618bf9be578ece0020565ddb"
+      },
+      {
+        "isActive": true,
+        "_id": "62a9413258e5c9001d699624",
+        "collectionData": "623da30296a025001e237e77"
+      },
+      {
+        "isActive": true,
+        "_id": "62a94136c3d5a300a86aa96f",
+        "collectionData": "6290a5f999982b001fd43183"
+      },
+      {
+        "isActive": true,
+        "_id": "62a9413ada282f00225f4183",
+        "collectionData": "6201562d31e03a0020b6915b"
+      },
+      {
+        "isActive": true,
+        "_id": "62a9413b58e5c9001d699639",
+        "collectionData": "6278d23020f49f001d3ea117"
+      },
+      {
+        "isActive": true,
+        "_id": "62a9413cda282f00225f4199",
+        "collectionData": "62a306c395da340020ae90bb"
+      },
+      {
+        "isActive": true,
+        "_id": "62a9413d64b405001efd05da",
+        "collectionData": "61eff9e87bc6dd001f8bb18d"
+      },
+      {
+        "isActive": true,
+        "_id": "62a9413fc3d5a300a86aa998",
+        "collectionData": "62a1a2a0acac79001ea35093"
+      },
+      {
+        "isActive": true,
+        "_id": "62b004a539ffff001e8559fd",
+        "collectionData": "619e9b6992edec001e82603b"
+      },
+      {
+        "isActive": true,
+        "_id": "62b004be23041e00208ba8bd",
+        "collectionData": "619e9e28ac2b74001ef5e5c2"
+      }
+    ],
+    "createdAt": "2022-02-02T18:42:29.413Z",
+    "updatedAt": "2022-06-29T15:22:45.788Z",
+    "__v": 0,
+    "url": "61fad0951ab0e5001ea3805c",
+    "pinnedRepos": []
+  },
+  {
+    "_id": "6207805e353f6a001f8ed860",
+    "repos": [],
+    "name": "MVI Test 4",
+    "description": "mvi test 4",
+    "createdBy": "60b20ec1ad927f001e3f4f7e",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "625ed104c157b5fd0e425003",
+        "collectionData": "625ed104f6950b4285f188a5"
+      },
+      {
+        "isActive": true,
+        "_id": "625efd0eaf00bc001d697456",
+        "collectionData": "625efcb1164ad2001e6f5291"
+      },
+      {
+        "collectionData": "60f74df6b83864106f28bb0e",
+        "isActive": true,
+        "_id": "6272bd6df21c3100d03a3950"
+      }
+    ],
+    "createdAt": "2022-02-12T09:39:42.977Z",
+    "updatedAt": "2022-04-19T18:18:54.088Z",
+    "__v": 0,
+    "url": "6207805e353f6a001f8ed860",
+    "pinnedRepos": []
+  },
+  {
+    "_id": "620d81112015cd001e4c6666",
+    "repos": [],
+    "name": "MVI Test 6",
+    "description": "MVI Test 6",
+    "createdBy": "60b20ec1ad927f001e3f4f7e",
+    "collections": [
+      {
+        "collectionData": "625ed104f6950b4285f188a7",
+        "isActive": true,
+        "_id": "625ed104c157b5fd0e424fff"
+      },
+      {
+        "collectionData": "60f74df6b83864106f28bb0e",
+        "isActive": true,
+        "_id": "6272bd6df21c3100d03a3952"
+      }
+    ],
+    "createdAt": "2022-02-16T22:56:17.683Z",
+    "updatedAt": "2022-04-08T15:49:54.637Z",
+    "__v": 0,
+    "url": "620d81112015cd001e4c6666",
+    "pinnedRepos": []
+  },
+  {
+    "_id": "6214e0768695d6001eb46463",
+    "repos": [
+      "61152499b90a82001c1d875c",
+      "6130ddb9d832f8001f1f1fef",
+      "61375f4af4ff4a001f29bf84",
+      "613b4ddd0ce1ef001e7215c8",
+      "613b4ed30ce1ef001e7215ea",
+      "615d87923e4bf8001eb501e7",
+      "61641ad7c39ccf001e7c258f",
+      "61ee8803e97fc2001c444507",
+      "621775a7711e530025988658"
+    ],
+    "name": "SCQP2 engineering",
+    "description": "All things SCQP2 engineering! Including scripting, backend, frontend, devops. ",
+    "createdBy": "61041e153e90570022942e58",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "625ed104c157b5fd0e42500d",
+        "collectionData": "625ed104f6950b4285f188a8"
+      },
+      {
+        "isActive": true,
+        "_id": "6267f962ad7677001df801c5",
+        "collectionData": "619e9962799496001d1c2758"
+      },
+      {
+        "isActive": true,
+        "_id": "6267fa17df35b60023070910",
+        "collectionData": "619ea6c492edec001e8283fb"
+      },
+      {
+        "collectionData": "60f74df6b83864106f28bb0e",
+        "isActive": true,
+        "_id": "6272bd6df21c3100d03a3953"
+      }
+    ],
+    "createdAt": "2022-02-22T13:09:10.318Z",
+    "updatedAt": "2022-04-26T13:56:39.846Z",
+    "__v": 1,
+    "url": "6214e0768695d6001eb46463",
+    "avatarUrl": "undefined/static/avatar-1649864761150.png",
+    "pinnedRepos": []
+  },
+  {
+    "_id": "6218ba25e429ee0020c85c1a",
+    "repos": [],
+    "name": "MVI Test 7",
+    "description": "MVI Test 7",
+    "createdBy": "60b20ec1ad927f001e3f4f7e",
+    "collections": [
+      {
+        "collectionData": "625ed104f6950b4285f188a9",
+        "isActive": true,
+        "_id": "625ed104c157b5fd0e425006"
+      },
+      {
+        "collectionData": "60f74df6b83864106f28bb0e",
+        "isActive": true,
+        "_id": "6272bd6df21c3100d03a3954"
+      }
+    ],
+    "createdAt": "2022-02-25T11:14:45.703Z",
+    "updatedAt": "2022-04-08T15:49:54.637Z",
+    "__v": 0,
+    "url": "6218ba25e429ee0020c85c1a",
+    "pinnedRepos": []
+  },
+  {
+    "_id": "6228c773e00be1001d04a263",
+    "repos": [],
+    "name": "Toptal",
+    "description": "All of Toptal's best practices across all languages and frameworks.\n\nComing soon, freely sharable demonstration projects from the Toptal team.",
+    "createdBy": "60b20ec1ad927f001e3f4f7e",
+    "collections": [
+      {
+        "collectionData": "625ed104f6950b4285f188b0",
+        "isActive": true,
+        "_id": "625ed104c157b5fd0e425012"
+      },
+      {
+        "collectionData": "60f74df6b83864106f28bb0e",
+        "isActive": true,
+        "_id": "6272bd6df21c3100d03a395b"
+      }
+    ],
+    "createdAt": "2022-03-09T15:27:47.630Z",
+    "updatedAt": "2022-04-08T15:49:54.637Z",
+    "__v": 0,
+    "url": "6228c773e00be1001d04a263",
+    "pinnedRepos": []
+  },
+  {
+    "_id": "6256aff16f4d140021441a7f",
+    "repos": [],
+    "name": "Community Classroom",
+    "url": "6256aff16f4d140021441a7f",
+    "description": "This is the team within the Sema platform for Community Classroom members.\n\nCommunity Classroom believes that every student, irrespective of their college or branch, can make it big. Community Classroom is an initiative built on this thought.\n\nThe organisation is founded by Kunal Kushwaha. We provide hands-on training, mentorship for FREE and have an inclusive community.\n\nGet expert guidance with career, Open Source, and internships, jobs around the world.",
+    "createdBy": "60b20ec1ad927f001e3f4f7e",
+    "collections": [
+      {
+        "collectionData": "625ed104f6950b4285f188c4",
+        "isActive": true,
+        "_id": "625ed104c157b5fd0e425026"
+      },
+      {
+        "collectionData": "60f74df6b83864106f28bb0e",
+        "isActive": true,
+        "_id": "6272bd6df21c3100d03a3970"
+      }
+    ],
+    "createdAt": "2022-04-13T11:11:45.752Z",
+    "updatedAt": "2022-04-13T11:11:45.752Z",
+    "__v": 0,
+    "pinnedRepos": []
+  },
+  {
+    "_id": "62715be53660ce001ed71c6b",
+    "repos": [],
+    "name": "SV4U- Python",
+    "url": "62715be53660ce001ed71c6b",
+    "description": "SiliconValley4U Python Class",
+    "createdBy": "60b20ec1ad927f001e3f4f7e",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "627cdd34f70bea0021799e4a",
+        "collectionData": "62715be53660ce001ed71c6c"
+      },
+      {
+        "isActive": true,
+        "_id": "627cdd34f70bea0021799e4b",
+        "collectionData": "60f74df6b83864106f28bb0e"
+      },
+      {
+        "isActive": true,
+        "_id": "627cdd34f70bea0021799e4c",
+        "collectionData": "618e4200392868001f0df0a0"
+      },
+      {
+        "isActive": true,
+        "_id": "627cdd34f70bea0021799e4d",
+        "collectionData": "619e3f24ae6726001f6741bd"
+      }
+    ],
+    "createdAt": "2022-05-03T16:44:21.670Z",
+    "updatedAt": "2022-05-12T10:11:00.461Z",
+    "__v": 0,
+    "pinnedRepos": []
+  },
+  {
+    "_id": "62717c46bfda570311f96d7b",
+    "repos": [],
+    "name": "SiliconValley4U OLD",
+    "url": "62717c46bfda570311f96d7b",
+    "description": "SiliconValley4U",
+    "createdBy": "60b20ec1ad927f001e3f4f7e",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "62717c46bfda570311f96d7e",
+        "collectionData": "62717c46bfda570311f96d7c"
+      },
+      {
+        "collectionData": "60f74df6b83864106f28bb0e",
+        "isActive": true,
+        "_id": "6272bd6df21c3100d03a398c"
+      }
+    ],
+    "createdAt": "2022-05-03T19:02:30.195Z",
+    "updatedAt": "2022-05-03T21:39:39.453Z",
+    "__v": 0,
+    "pinnedRepos": []
+  },
+  {
+    "_id": "627a63c71099d800a4ed8ccf",
+    "repos": [],
+    "name": "Team Test 10",
+    "url": "test10",
+    "description": "",
+    "createdBy": "60b20ec1ad927f001e3f4f7e",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "627a63c71099d800a4ed8cd3",
+        "collectionData": "627a63c71099d800a4ed8cd0"
+      },
+      {
+        "isActive": true,
+        "_id": "627a63c71099d800a4ed8cd4",
+        "collectionData": "60f74df6b83864106f28bb0e"
+      }
+    ],
+    "createdAt": "2022-05-10T13:08:23.051Z",
+    "updatedAt": "2022-05-10T13:08:23.051Z",
+    "__v": 0,
+    "pinnedRepos": []
+  },
+  {
+    "_id": "62c910dfcdbd7d005811fe04",
+    "orgMeta": {
+      "login": "Semalab",
+      "node_id": "MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0",
+      "url": "https://api.github.com/users/Semalab",
+      "repos_url": "https://api.github.com/users/Semalab/repos",
+      "events_url": "https://api.github.com/users/Semalab/events{/privacy}",
+      "hooks_url": "",
+      "issues_url": "",
+      "members_url": "",
+      "public_members_url": "",
+      "avatar_url": "https://avatars.githubusercontent.com/u/31629704?v=4",
+      "description": "",
+      "name": "",
+      "company": "",
+      "blog": "",
+      "location": "",
+      "email": "",
+      "twitter_username": "",
+      "is_verified": "",
+      "has_organization_projects": "",
+      "has_repository_projects": "",
+      "public_repos": 0,
+      "public_gists": 0,
+      "followers": 0,
+      "following": 0,
+      "html_url": "https://github.com/Semalab",
+      "type": "Organization",
+      "id": "31629704"
+    },
+    "avatarUrl": "https://avatars.githubusercontent.com/u/31629704?v=4",
+    "description": "",
+    "users": [],
+    "repos": [
+      "620a5361046e4f001e20b2dc",
+      "623b2da6f3ddc8002442bf6a",
+      "62417faa40eedc001f472bcc",
+      "61041df6025147001d0cf262",
+      "613b4ddd0ce1ef001e7215c8",
+      "6284e31f7753e8001c2a6710",
+      "613b4ed30ce1ef001e7215ea",
+      "615d87923e4bf8001eb501e7",
+      "626282bcfc5390001f6fcba0",
+      "61152499b90a82001c1d875c",
+      "62432185297622001d2d3406",
+      "624af1c03023e0001e99df12",
+      "621775a7711e530025988658",
+      "61641ad7c39ccf001e7c258f",
+      "61375f4af4ff4a001f29bf84",
+      "61ee8803e97fc2001c444507",
+      "6130ddb9d832f8001f1f1fef",
+      "61041e1d025147001d0cf277",
+      "62a638c3dd1bbe001fb52c47",
+      "62a9a18d6d0449001ea661d6",
+      "62ab6977369034001ebadc3b",
+      "62ab558a35ca42001d3699ce",
+      "62ab5568d2a407001d961df3",
+      "62d48c9da87dd40436fab527",
+      "62d48c9da87dd40436fab523",
+      "62d48c9da87dd40436fab51f",
+      "627a607692334e00a4c35d02",
+      "62726b7a064ccd0080f99192",
+      "625ec50beb4cd10026b6adf1"
+    ],
+    "url": "62c910dfcdbd7d005811fe04",
+    "createdBy": "60d2deb83fe380001ecc0199",
+    "name": "Semalab",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "62c910e0cdbd7d005811fe12",
+        "collectionData": "62c910dfcdbd7d005811fe05"
+      },
+      {
+        "isActive": true,
+        "_id": "62c910e0cdbd7d005811fe13",
+        "collectionData": "60f74df6b83864106f28bb0e"
+      }
+    ],
+    "createdAt": "2022-07-09T05:23:43.772Z",
+    "updatedAt": "2022-08-01T15:20:04.231Z",
+    "__v": 29,
+    "pinnedRepos": []
+  },
+  {
+    "_id": "62c910dfcdbd7d005811fe08",
+    "orgMeta": {
+      "login": "SemaSandbox",
+      "node_id": "MDEyOk9yZ2FuaXphdGlvbjgwOTA5MDg0",
+      "url": "https://api.github.com/users/SemaSandbox",
+      "repos_url": "https://api.github.com/users/SemaSandbox/repos",
+      "events_url": "https://api.github.com/users/SemaSandbox/events{/privacy}",
+      "hooks_url": "",
+      "issues_url": "",
+      "members_url": "",
+      "public_members_url": "",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80909084?v=4",
+      "description": "",
+      "name": "",
+      "company": "",
+      "blog": "",
+      "location": "",
+      "email": "",
+      "twitter_username": "",
+      "is_verified": "",
+      "has_organization_projects": "",
+      "has_repository_projects": "",
+      "public_repos": 0,
+      "public_gists": 0,
+      "followers": 0,
+      "following": 0,
+      "html_url": "https://github.com/SemaSandbox",
+      "type": "Organization",
+      "id": "80909084"
+    },
+    "avatarUrl": "https://avatars.githubusercontent.com/u/80909084?v=4",
+    "description": "",
+    "users": [],
+    "repos": [
+      "6165993bebcc42001f3cc1e7",
+      "613a57b1efe65b001d055b1b",
+      "6165b7e1ebcc42001f3cd4e3",
+      "61c5fecf9f35ea001e128728",
+      "6166e567f8b91f001dd5b4c2",
+      "62d5df704be2250336229461",
+      "61687486c3827d00206ad99f",
+      "61670fd443420b001e9dad3f",
+      "6166e96f1f29ca0021de20bd",
+      "6165b3e9ebcc42001f3ccbf6",
+      "616df37f50e6d1001f93b030",
+      "6144de09db50a1001e0171a9",
+      "6106d5c6a38404001f44831b",
+      "61059c00b655d7001e16e939",
+      "6106d7a9a38404001f448357"
+    ],
+    "url": "62c910dfcdbd7d005811fe08",
+    "createdBy": "60d2deb83fe380001ecc0199",
+    "name": "SemaSandbox",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "62c910e0cdbd7d005811fe0d",
+        "collectionData": "62c910dfcdbd7d005811fe09"
+      },
+      {
+        "isActive": true,
+        "_id": "62c910e0cdbd7d005811fe0e",
+        "collectionData": "60f74df6b83864106f28bb0e"
+      }
+    ],
+    "createdAt": "2022-07-09T05:23:43.784Z",
+    "updatedAt": "2022-08-01T15:21:49.271Z",
+    "__v": 15,
+    "pinnedRepos": []
+  },
+  {
+    "_id": "62d06fcf57dbae001e773327",
+    "orgMeta": {
+      "login": "TheAlgorithms",
+      "node_id": "MDEyOk9yZ2FuaXphdGlvbjIwNDg3NzI1",
+      "url": "https://api.github.com/users/TheAlgorithms",
+      "repos_url": "https://api.github.com/users/TheAlgorithms/repos",
+      "events_url": "https://api.github.com/users/TheAlgorithms/events{/privacy}",
+      "hooks_url": "",
+      "issues_url": "",
+      "members_url": "",
+      "public_members_url": "",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20487725?v=4",
+      "description": "",
+      "name": "",
+      "company": "",
+      "blog": "",
+      "location": "",
+      "email": "",
+      "twitter_username": "",
+      "is_verified": "",
+      "has_organization_projects": "",
+      "has_repository_projects": "",
+      "public_repos": 0,
+      "public_gists": 0,
+      "followers": 0,
+      "following": 0,
+      "html_url": "https://github.com/TheAlgorithms",
+      "type": "Organization",
+      "id": "20487725"
+    },
+    "avatarUrl": "https://avatars.githubusercontent.com/u/20487725?v=4",
+    "description": "",
+    "users": [],
+    "repos": [
+      "62d06fd057dbae001e773656",
+      "62d06fd157dbae001e7737f3",
+      "61763ee9dc470a001e988844",
+      "62d06fd257dbae001e773993",
+      "62d06fd157dbae001e7736c9",
+      "62d06fd157dbae001e773735",
+      "62d06fd157dbae001e773717",
+      "62d06fd157dbae001e773703",
+      "62d06fd157dbae001e773887",
+      "62d06fd157dbae001e77387d",
+      "62d06fd157dbae001e7738f5",
+      "62d06fd057dbae001e77363b",
+      "62d06fd157dbae001e773670",
+      "62d06fd157dbae001e7736c1",
+      "62d06fd157dbae001e773691",
+      "62d06fd057dbae001e773668",
+      "62d06fd157dbae001e7737c9",
+      "62af5b2d39ffff001e853057",
+      "62ae6b893a1ad7001f55e3fc",
+      "62ae6abf3a1ad7001f55e3d6",
+      "61799816ab7993001f2a681c",
+      "61763ac3cf26ba001faba818"
+    ],
+    "url": "62d06fcf57dbae001e773327",
+    "createdBy": "62ab5ef3a84b06001f4b26ed",
+    "name": "TheAlgorithms",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "62d06fcf57dbae001e773370",
+        "collectionData": "62d06fcf57dbae001e773328"
+      },
+      {
+        "isActive": true,
+        "_id": "62d06fcf57dbae001e773371",
+        "collectionData": "60f74df6b83864106f28bb0e"
+      }
+    ],
+    "createdAt": "2022-07-14T19:34:39.715Z",
+    "updatedAt": "2022-08-01T15:21:36.854Z",
+    "__v": 22,
+    "pinnedRepos": []
+  },
+  {
+    "_id": "62d5df5950adbb0090131ca2",
+    "orgMeta": {
+      "login": "gintool",
+      "node_id": "MDEyOk9yZ2FuaXphdGlvbjMyMDU5MTM2",
+      "url": "https://api.github.com/users/gintool",
+      "repos_url": "https://api.github.com/users/gintool/repos",
+      "events_url": "https://api.github.com/users/gintool/events{/privacy}",
+      "hooks_url": "",
+      "issues_url": "",
+      "members_url": "",
+      "public_members_url": "",
+      "avatar_url": "https://avatars.githubusercontent.com/u/32059136?v=4",
+      "description": "",
+      "name": "",
+      "company": "",
+      "blog": "",
+      "location": "",
+      "email": "",
+      "twitter_username": "",
+      "is_verified": "",
+      "has_organization_projects": "",
+      "has_repository_projects": "",
+      "public_repos": 0,
+      "public_gists": 0,
+      "followers": 0,
+      "following": 0,
+      "html_url": "https://github.com/gintool",
+      "type": "Organization",
+      "id": "32059136"
+    },
+    "avatarUrl": "https://avatars.githubusercontent.com/u/32059136?v=4",
+    "description": "",
+    "users": [],
+    "repos": ["62d5df5950adbb0090131ca5"],
+    "url": "62d5df5950adbb0090131ca2",
+    "createdBy": "61041e153e90570022942e58",
+    "name": "gintool",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "62d5df5950adbb0090131cbc",
+        "collectionData": "62d5df5950adbb0090131ca3"
+      },
+      {
+        "isActive": true,
+        "_id": "62d5df5950adbb0090131cbd",
+        "collectionData": "60f74df6b83864106f28bb0e"
+      }
+    ],
+    "createdAt": "2022-07-18T22:31:53.539Z",
+    "updatedAt": "2022-08-01T15:00:15.968Z",
+    "__v": 1,
+    "pinnedRepos": []
+  },
+  {
+    "_id": "62e7ef1972ea7d5c5eeb01ea",
+    "orgMeta": {
+      "login": "teamvibe",
+      "node_id": "MDEyOk9yZ2FuaXphdGlvbjg3ODI5Mjk=",
+      "url": "https://api.github.com/orgs/teamvibe",
+      "repos_url": "https://api.github.com/orgs/teamvibe/repos",
+      "events_url": "https://api.github.com/orgs/teamvibe/events",
+      "hooks_url": "https://api.github.com/orgs/teamvibe/hooks",
+      "issues_url": "https://api.github.com/orgs/teamvibe/issues",
+      "members_url": "https://api.github.com/orgs/teamvibe/members{/member}",
+      "public_members_url": "https://api.github.com/orgs/teamvibe/public_members{/member}",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8782929?v=4",
+      "description": "",
+      "name": "Teamvibe",
+      "company": null,
+      "blog": "http://teamvibe.com",
+      "location": "San Diego, CA",
+      "email": "info@teamvibe.com",
+      "twitter_username": null,
+      "is_verified": "false",
+      "has_organization_projects": "true",
+      "has_repository_projects": "true",
+      "public_repos": 1,
+      "public_gists": 0,
+      "followers": 0,
+      "following": 0,
+      "html_url": "https://github.com/teamvibe",
+      "type": "Organization",
+      "id": "8782929"
+    },
+    "avatarUrl": "https://avatars.githubusercontent.com/u/8782929?v=4",
+    "description": "",
+    "users": [],
+    "repos": ["6284165974b44b01a189e685"],
+    "pinnedRepos": [],
+    "url": "62e7ef1972ea7d5c5eeb01ea",
+    "createdBy": null,
+    "name": "teamvibe",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "62e7ef1972ea7d5c5eeb01f6",
+        "collectionData": "62e7ef1972ea7d5c5eeb01ec"
+      },
+      {
+        "isActive": true,
+        "_id": "62e7ef1972ea7d5c5eeb01f7",
+        "collectionData": "60f74df6b83864106f28bb0e"
+      }
+    ],
+    "createdAt": "2022-08-01T15:19:53.115Z",
+    "updatedAt": "2022-08-01T15:19:54.165Z",
+    "__v": 1
+  },
+  {
+    "_id": "62e7f40d37a437001dc3041d",
+    "orgMeta": {
+      "login": "JubelHealth",
+      "node_id": "MDEyOk9yZ2FuaXphdGlvbjYzNjc1NTMy",
+      "url": "https://api.github.com/users/JubelHealth",
+      "repos_url": "https://api.github.com/users/JubelHealth/repos",
+      "events_url": "https://api.github.com/users/JubelHealth/events{/privacy}",
+      "hooks_url": "",
+      "issues_url": "",
+      "members_url": "",
+      "public_members_url": "",
+      "avatar_url": "https://avatars.githubusercontent.com/u/63675532?v=4",
+      "description": "",
+      "name": "",
+      "company": "",
+      "blog": "",
+      "location": "",
+      "email": "",
+      "twitter_username": "",
+      "is_verified": "",
+      "has_organization_projects": "",
+      "has_repository_projects": "",
+      "public_repos": 0,
+      "public_gists": 0,
+      "followers": 0,
+      "following": 0,
+      "html_url": "https://github.com/JubelHealth",
+      "type": "Organization",
+      "id": "63675532"
+    },
+    "avatarUrl": "https://avatars.githubusercontent.com/u/63675532?v=4",
+    "description": "",
+    "users": [],
+    "repos": ["62e7f40e37a437001dc3049b"],
+    "pinnedRepos": [],
+    "url": "62e7f40d37a437001dc3041d",
+    "createdBy": "60b727b6ad927f001e3f4fb2",
+    "name": "JubelHealth",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "62e7f40e37a437001dc30438",
+        "collectionData": "62e7f40d37a437001dc3041e"
+      },
+      {
+        "isActive": true,
+        "_id": "62e7f40e37a437001dc30439",
+        "collectionData": "60f74df6b83864106f28bb0e"
+      }
+    ],
+    "createdAt": "2022-08-01T15:41:01.935Z",
+    "updatedAt": "2022-08-01T15:41:03.805Z",
+    "__v": 1
+  },
+  {
+    "_id": "62e7f40d37a437001dc30421",
+    "orgMeta": {
+      "login": "mytotalhealth",
+      "node_id": "MDEyOk9yZ2FuaXphdGlvbjEwMDc5NzQ2",
+      "url": "https://api.github.com/users/mytotalhealth",
+      "repos_url": "https://api.github.com/users/mytotalhealth/repos",
+      "events_url": "https://api.github.com/users/mytotalhealth/events{/privacy}",
+      "hooks_url": "",
+      "issues_url": "",
+      "members_url": "",
+      "public_members_url": "",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10079746?v=4",
+      "description": "",
+      "name": "",
+      "company": "",
+      "blog": "",
+      "location": "",
+      "email": "",
+      "twitter_username": "",
+      "is_verified": "",
+      "has_organization_projects": "",
+      "has_repository_projects": "",
+      "public_repos": 0,
+      "public_gists": 0,
+      "followers": 0,
+      "following": 0,
+      "html_url": "https://github.com/mytotalhealth",
+      "type": "Organization",
+      "id": "10079746"
+    },
+    "avatarUrl": "https://avatars.githubusercontent.com/u/10079746?v=4",
+    "description": "",
+    "users": [],
+    "repos": ["62e7f40e37a437001dc3049e"],
+    "pinnedRepos": [],
+    "url": "62e7f40d37a437001dc30421",
+    "createdBy": "60b727b6ad927f001e3f4fb2",
+    "name": "mytotalhealth",
+    "collections": [
+      {
+        "isActive": true,
+        "_id": "62e7f40e37a437001dc3043d",
+        "collectionData": "62e7f40d37a437001dc30422"
+      },
+      {
+        "isActive": true,
+        "_id": "62e7f40e37a437001dc3043e",
+        "collectionData": "60f74df6b83864106f28bb0e"
+      }
+    ],
+    "createdAt": "2022-08-01T15:41:01.942Z",
+    "updatedAt": "2022-08-01T15:41:03.808Z",
+    "__v": 1
+  }
+]

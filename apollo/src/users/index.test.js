@@ -10,6 +10,7 @@ import { createAuthToken } from '../auth/authService';
 import getClientAuth from '../../test/helpers/authHelper';
 import { fixtures as githubFixtures } from '../../test/nocks/github';
 import User from './userModel';
+import waitFor from '../../test/helpers/waitFor';
 
 describe('GET /users/:id', () => {
   let user;
@@ -115,9 +116,18 @@ describe('POST /users', () => {
           visibility: 'public',
         },
       ])
+      .get('/user/orgs')
+      .query({ per_page: 100 })
+      .reply(200, [
+        {
+          login: 'SemaBigCorp',
+          id: 110566960,
+          type: 'Organization',
+        },
+      ])
       .get('/user/repos')
       .query({
-        per_page: 100,
+        per_page: 20,
         sort: 'pushed',
         visibility: 'public',
       })
@@ -155,7 +165,14 @@ describe('POST /users', () => {
             type: 'Organization',
           },
         },
-      ]);
+      ])
+      .get('/user/repos')
+      .query({
+        per_page: 100,
+        sort: 'pushed',
+        visibility: 'public',
+      })
+      .reply(200, []);
   });
 
   const body = {
@@ -189,8 +206,21 @@ describe('POST /users', () => {
     }));
   });
 
-  it('should create a user', async () => {
+  beforeAll(async () => {
+    // Wait for all async background stuff to finish.
     user = await User.findById(data.user._id);
+
+    await waitFor(async () => {
+      const orgs = await getOrganizationsByUser(user._id);
+      return orgs.length === 3;
+    });
+    await waitFor(async () => {
+      const repos = await getRepoByUserIds([user._id]);
+      return repos.length === 3;
+    });
+  });
+
+  it('should create a user', async () => {
     expect(user).toBeTruthy();
   });
 
@@ -199,7 +229,11 @@ describe('POST /users', () => {
     const organizationLogins = organizations
       .map((o) => o.organization.name)
       .sort();
-    expect(organizationLogins).toEqual(['SemaSandbox', 'Semalab']);
+    expect(organizationLogins).toEqual([
+      'SemaBigCorp',
+      'SemaSandbox',
+      'Semalab',
+    ]);
   });
 
   describe('repositories', () => {

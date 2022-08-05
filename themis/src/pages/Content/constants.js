@@ -8,10 +8,9 @@ export const { SEMA_CLIENT_ID } = process.env;
 export const { SEMA_CLIENT_SECRET } = process.env;
 export const { SEGMENT_API_KEY } = process.env;
 
-export const SEMA_INTERCOM_HELP_URL =
-  'https://intercom.help/sema-software/en/articles';
-export const SEMA_FAQ_TAGS = `${SEMA_INTERCOM_HELP_URL}/6147189-how-do-i-use-tags-in-the-chrome-extension`;
-export const SEMA_FAQ_SUMMARIES = `${SEMA_INTERCOM_HELP_URL}/6147171-how-do-i-use-summaries-in-the-chrome-extension`;
+export const SEMA_INTERCOM_HELP_URL = 'https://intercom.help/sema-software/en';
+export const SEMA_FAQ_TAGS = `${SEMA_INTERCOM_HELP_URL}/articles/6147189-how-do-i-use-tags-in-the-chrome-extension`;
+export const SEMA_FAQ_SUMMARIES = `${SEMA_INTERCOM_HELP_URL}/articles/6147171-how-do-i-use-summaries-in-the-chrome-extension`;
 
 export const SEMA_LOGO_URL = `${SEMA_PRODUCTION_URL}/img/sema-tray-logo.gif`;
 export const SEMA_LANDING_FAQ = `${SEMA_LANDING_URL}/faq`;

@@ -5,10 +5,10 @@ import errors from '../shared/errors';
 import logger from '../shared/logger';
 import { metricsStartDate } from '../shared/utils';
 import UserRole from '../userRoles/userRoleModel';
+import SmartComment from '../comments/smartComments/smartCommentModel';
 import { getRepositories } from '../repositories/repositoryService';
 import {
   getOrganizationSmartCommentsMetrics,
-  getSmartCommentsByExternalId,
   getPullRequests,
   getSmartCommentersCount,
 } from '../comments/smartComments/smartCommentService';
@@ -262,11 +262,9 @@ export async function getOrganizationTotalMetrics(organizationId) {
     semaUsers: 0,
   };
   const organizationRepos = await getOrganizationRepos(organizationId);
-  const repoExternalIds = organizationRepos.map((repo) => repo.externalId);
-  let smartComments = await Promise.all(
-    repoExternalIds.map(async (id) => await getSmartCommentsByExternalId(id))
-  );
-  smartComments = smartComments.flat();
+  const smartComments = await SmartComment.find({
+    repositoryId: organizationRepos.map((r) => r._id),
+  }).lean();
   totalMetrics.smartComments = smartComments.length || 0;
   totalMetrics.smartCodeReviews = getSmartCommentersCount(smartComments);
   totalMetrics.smartCommenters = getPullRequests(smartComments);

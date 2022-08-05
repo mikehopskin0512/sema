@@ -242,6 +242,7 @@ function RepoPage() {
       onDateChange={onDateChange}
       isOrganizationRepo={isOrganizationRepo}
       refresh={refresh}
+      isLoading={isLoading}
     >
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
       <div className={styles.wrapper}>

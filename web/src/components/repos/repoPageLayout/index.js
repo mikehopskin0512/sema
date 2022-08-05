@@ -13,6 +13,7 @@ import HoverSelect from '../../select/hoverSelect';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import RepoSyncButton from '../../repoSync/repoSyncButton';
 import { useFlags } from '../../launchDarkly';
+import { REPO_VISIBILITY } from '../../../utils/constants';
 
 const { getUserRepositories, fetchReposByIds } = repositoriesOperations;
 
@@ -21,6 +22,7 @@ function RepoPageLayout({
   dates,
   isOrganizationRepo,
   refresh,
+  isLoading,
   ...sidebarProps
 }) {
   const router = useRouter();
@@ -34,7 +36,7 @@ function RepoPageLayout({
   const {
     data: { overview = {} },
   } = repositories;
-  const { name = '', fullName = null, smartcomments = [] } = overview;
+  const { name = '', fullName = null, smartcomments = [], visibility } = overview;
   const {
     query: { repoId = '' },
     pathname = '',
@@ -113,8 +115,11 @@ function RepoPageLayout({
           </div>
         ) : (
           <>
-            <div className="is-flex is-justify-content-space-between is-align-items-center container pt-25 is-flex-wrap-wrap">
-              <div className="is-flex-grow-1">
+            <div className={clsx(
+              "is-flex is-align-items-center container pt-25 is-flex-wrap-wrap",
+              visibility === REPO_VISIBILITY.PUBLIC && 'is-justify-content-space-between' 
+            )}>
+              <div className={clsx("is-flex-grow-1", visibility === REPO_VISIBILITY.PRIVATE && styles['select-container'])}>
                 {repoOptions.length > 1 ? (
                   <HoverSelect
                     onChange={onChangeSelect}
@@ -136,7 +141,17 @@ function RepoPageLayout({
                   </p>
                 )}
               </div>
-              {repoSyncTab && (
+              {!isLoading && visibility === REPO_VISIBILITY.PRIVATE && 
+                <div className='is-flex is-align-items-center'>
+                  <div className={clsx('border-radius-4px has-background-gray-300 px-16 py-8')}>
+                    <span className='has-text-gray-700 has-text-weight-semibold'>Private</span>
+                  </div>
+                  <p className='has-text-gray-700 ml-16'>Only public repos can be synced with Sema for now. Private repo sync is coming soon!</p>
+                </div>
+              }
+
+              {/* GH Sync actions will only be shown for public repos -for the time being- */}
+              {repoSyncTab && visibility === REPO_VISIBILITY.PUBLIC && (
                 <div>
                   <RepoSyncButton refresh={refresh} />
                 </div>

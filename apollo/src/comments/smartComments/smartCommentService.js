@@ -67,34 +67,18 @@ export const create = async ({
   }
 };
 
-export const getSmartComments = async ({ repo }) => {
-  try {
-    const query = SmartComment.find();
-    query.where('githubMetadata.repo_id', repo);
-    const smartComments = await query
-      .lean()
-      .populate('userId', 'firstName lastName avatarUrl')
-      .exec();
-    return smartComments;
-  } catch (err) {
-    const error = new errors.BadRequest(err);
-    logger.error(error);
-    throw error;
-  }
-};
-
 export const getCollaborativeSmartComments = async ({ repoId, handle }) => {
   try {
     const [givenComments, receivedComments] = await Promise.all([
       SmartComment.find({
-        'githubMetadata.repo_id': repoId,
+        'repositoryId': repoId,
         'githubMetadata.user.login': handle,
         'githubMetadata.requester': { $ne: handle },
       })
         .lean()
         .exec(),
       SmartComment.find({
-        'githubMetadata.repo_id': repoId,
+        'repositoryId': repoId,
         'githubMetadata.requester': handle,
         'githubMetadata.user.login': { $ne: handle },
       })
@@ -122,16 +106,16 @@ export const filterSmartComments = async ({
   try {
     let filter = {};
     let dateFilter = { source: { createdAt: {} } };
+    if (repoIds) {
+      filter = Object.assign(filter, {
+        repositoryId: { $in: repoIds },
+      });
+    }
     if (reviewer) {
       filter = Object.assign(filter, { 'githubMetadata.user.login': reviewer });
     }
     if (author) {
       filter = Object.assign(filter, { 'githubMetadata.requester': author });
-    }
-    if (repoIds) {
-      filter = Object.assign(filter, {
-        'githubMetadata.repo_id': { $in: repoIds },
-      });
     }
     if (user && individual === true) {
       filter = Object.assign(filter, {
@@ -636,10 +620,10 @@ export const exportGrowthRepositoryMetrics = async () => {
   return csv;
 };
 
-export const findByExternalId = async (repoId, populate, createdAt) => {
+export const findByRepositoryId = async (repoId, populate, createdAt) => {
   try {
     let findQuery = {
-      'githubMetadata.repo_id': repoId,
+      repositoryId: repoId,
     };
     if (createdAt) {
       findQuery = {
@@ -955,34 +939,6 @@ export async function getRepoSmartCommentsMetrics(repoExternalId) {
   return doc;
 }
 
-export const getSmartCommentsByExternalId = async (externalId) => {
-  try {
-    const smartComments = SmartComment.find({
-      'githubMetadata.repo_id': externalId,
-    }).exec();
-    return smartComments;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
-};
-
-export const getSmartCommentersByExternalId = async (externalId) => {
-  try {
-    const smartComments = SmartComment.find({
-      'githubMetadata.repo_id': externalId,
-    })
-      .distinct('githubMetadata.user.login')
-      .exec();
-    return smartComments;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
-};
-
 export const getSmartCommentsTagsReactions = async ({
   author,
   reviewer,
@@ -1009,7 +965,7 @@ export const getSmartCommentsTagsReactions = async ({
 
     if (organizationId) {
       const organizationRepos = await getOrganizationRepos(organizationId);
-      filter.repoIds = organizationRepos.map((repo) => repo.externalId);
+      filter.repoIds = organizationRepos.map((repo) => repo._id);
     }
 
     const smartComments = await filterSmartComments(filter);
@@ -1069,10 +1025,10 @@ export const getUniqueCommenters = async (repoIds, startDate, endDate) => {
     const values = await SmartComment.aggregate([
       {
         $match: {
-          'githubMetadata.repo_id': {
+          repositoryId: {
             $in: repoIds,
           },
-          ...dateRangeFilterPipeline('createdAt', startDate, endDate),
+          ...dateRangeFilterPipeline('source.createdAt', startDate, endDate),
         },
       },
       {
@@ -1115,10 +1071,10 @@ export const getUniqueRequesters = async (repoIds, startDate, endDate) => {
     const values = await SmartComment.aggregate([
       {
         $match: {
-          'githubMetadata.repo_id': {
+          repositoryId: {
             $in: repoIds,
           },
-          ...dateRangeFilterPipeline('createdAt', startDate, endDate),
+          ...dateRangeFilterPipeline('source.createdAt', startDate, endDate),
         },
       },
       {
@@ -1149,10 +1105,10 @@ export const getUniquePullRequests = async (repoIds, startDate, endDate) => {
     const values = await SmartComment.aggregate([
       {
         $match: {
-          'githubMetadata.repo_id': {
+          repositoryId: {
             $in: repoIds,
           },
-          ...dateRangeFilterPipeline('createdAt', startDate, endDate),
+          ...dateRangeFilterPipeline('source.createdAt', startDate, endDate),
         },
       },
       {

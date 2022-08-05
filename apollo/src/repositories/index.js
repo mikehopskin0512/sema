@@ -295,15 +295,13 @@ export default (app, passport) => {
     async (req, res) => {
       try {
         const { externalIds, startDate, endDate, filterFields } = req.query;
-        const values = await getReposFilterValues(
+        const filter = await getReposFilterValues(
           JSON.parse(externalIds),
           startDate,
           endDate,
           { ...JSON.parse(filterFields) }
         );
-        return res.status(200).send({
-          filter: { ...values },
-        });
+        return res.send({ filter });
       } catch (error) {
         logger.error(error);
         return res.status(error.statusCode).send(error);
@@ -314,8 +312,9 @@ export default (app, passport) => {
   route.get('/collaboration/:handle/:repoId', async (req, res) => {
     try {
       const { repoId, handle } = req.params;
+      const repo = await findByExternalId(repoId);
       const { givenComments, receivedComments } =
-        await getCollaborativeSmartComments({ repoId, handle });
+        await getCollaborativeSmartComments({ repoId: repo._id, handle });
       const totalInteractionsCount =
         receivedComments.length + givenComments.length;
       const requesters = groupBy(givenComments, 'githubMetadata.requester');
@@ -323,7 +322,6 @@ export default (app, passport) => {
         receivedComments,
         'githubMetadata.user.login'
       );
-      const repo = await findByExternalId(repoId);
       const users = await findUsersByGitHubHandle([
         ...Object.keys(commentators),
         ...Object.keys(requesters),

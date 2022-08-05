@@ -6,10 +6,7 @@ import mongoose from 'mongoose';
 import resetNocks, { setDefaultNocks } from '../../test/nocks';
 import createUser from '../../test/helpers/userHelper';
 import * as userService from '../users/userService';
-import {
-  findByExternalId as findSmartCommentsByExternalId,
-  create as createSmartComment,
-} from '../comments/smartComments/smartCommentService';
+import { create as createSmartComment } from '../comments/smartComments/smartCommentService';
 import {
   create as createRepository,
   startSync,
@@ -121,7 +118,7 @@ describe('Import Repository Queue', () => {
       });
 
       beforeAll(async () => {
-        comments = await findSmartCommentsByExternalId(repository.externalId);
+        comments = await SmartComment.find({ repositoryId: repository });
       });
 
       it('should import seven comments', () => {
@@ -238,7 +235,7 @@ describe('Import Repository Queue', () => {
         });
 
         it('should have no tags', () => {
-          expect(comment.tags).toEqual([]);
+          expect(comment.tags).toHaveLength(0);
         });
 
         describe('GitHub metadata', () => {
@@ -324,7 +321,7 @@ describe('Import Repository Queue', () => {
         });
 
         it('should have no tags', () => {
-          expect(comment.tags).toEqual([]);
+          expect(comment.tags).toHaveLength(0);
         });
 
         describe('GitHub metadata', () => {
@@ -492,7 +489,7 @@ describe('Import Repository Queue', () => {
       });
 
       beforeAll(async () => {
-        comments = await findSmartCommentsByExternalId(repository.externalId);
+        comments = await SmartComment.find({ repositoryId: repository });
       });
 
       it('should import seven comments', () => {
@@ -558,7 +555,7 @@ describe('Import Repository Queue', () => {
       });
 
       beforeAll(async () => {
-        comments = await findSmartCommentsByExternalId(repository.externalId);
+        comments = await SmartComment.find({ repositoryId: repository });
       });
 
       it('should fail', () => {
@@ -645,7 +642,7 @@ describe('Import Repository Queue', () => {
         });
 
         beforeAll(async () => {
-          comments = await findSmartCommentsByExternalId(repository.externalId);
+          comments = await SmartComment.find({ repositoryId: repository });
         });
 
         it('should import all pull request comments', () => {
@@ -729,7 +726,7 @@ describe('Import Repository Queue', () => {
       });
 
       beforeAll(async () => {
-        comments = await findSmartCommentsByExternalId(repository.externalId);
+        comments = await SmartComment.find({ repositoryId: repository });
       });
 
       it('should fail', () => {
@@ -811,7 +808,7 @@ describe('Import Repository Queue', () => {
         });
 
         beforeAll(async () => {
-          comments = await findSmartCommentsByExternalId(repository.externalId);
+          comments = await SmartComment.find({ repositoryId: repository });
         });
 
         it('should import all issue comments', () => {
@@ -952,7 +949,7 @@ describe('Import Repository Queue', () => {
       });
 
       beforeAll(async () => {
-        comments = await findSmartCommentsByExternalId(repository.externalId);
+        comments = await SmartComment.find({ repositoryId: repository });
       });
 
       it('should fail', () => {
@@ -1041,7 +1038,7 @@ describe('Import Repository Queue', () => {
         });
 
         beforeAll(async () => {
-          comments = await findSmartCommentsByExternalId(repository.externalId);
+          comments = await SmartComment.find({ repositoryId: repository });
         });
 
         it('should import all pull request reviews', () => {
@@ -1261,7 +1258,7 @@ describe('Import Repository Queue', () => {
       });
 
       beforeAll(async () => {
-        comments = await findSmartCommentsByExternalId(repository.externalId);
+        comments = await SmartComment.find({ repositoryId: repository });
       });
 
       describe('imported comment', () => {
@@ -2386,7 +2383,7 @@ describe('Import Repository Queue', () => {
     });
 
     beforeAll(async () => {
-      comments = await findSmartCommentsByExternalId(repository.externalId);
+      comments = await SmartComment.find({ repositoryId: repository });
     });
 
     describe('imported comment', () => {
@@ -2463,7 +2460,7 @@ describe('Import Repository Queue', () => {
     });
 
     beforeAll(async () => {
-      comments = await findSmartCommentsByExternalId(repository.externalId);
+      comments = await SmartComment.find({ repositoryId: repository });
     });
 
     it('should not import the comment', async () => {
@@ -2545,7 +2542,7 @@ describe('Import Repository Queue', () => {
       });
 
       beforeAll(async () => {
-        comments = await findSmartCommentsByExternalId(repository.externalId);
+        comments = await SmartComment.find({ repositoryId: repository });
       });
 
       it('should import comments', () => {
@@ -2621,7 +2618,7 @@ describe('Import Repository Queue', () => {
         });
 
         beforeAll(async () => {
-          comments = await findSmartCommentsByExternalId(repository.externalId);
+          comments = await SmartComment.find({ repositoryId: repository });
         });
 
         it('should import comments', () => {
@@ -2808,7 +2805,7 @@ describe('Import Repository Queue', () => {
         });
 
         beforeAll(async () => {
-          comments = await findSmartCommentsByExternalId(repository.externalId);
+          comments = await SmartComment.find({ repositoryId: repository });
         });
 
         it('should import comments', () => {
@@ -3031,7 +3028,7 @@ describe('Import Repository Queue', () => {
       });
 
       beforeAll(async () => {
-        comments = await findSmartCommentsByExternalId(repository.externalId);
+        comments = await SmartComment.find({ repositoryId: repository });
       });
 
       it('should import comments', () => {
@@ -3106,7 +3103,7 @@ describe('Import Repository Queue', () => {
       });
 
       beforeAll(async () => {
-        comments = await findSmartCommentsByExternalId(repository.externalId);
+        comments = await SmartComment.find({ repositoryId: repository });
       });
 
       it('should import comments', () => {

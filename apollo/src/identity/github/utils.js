@@ -1,4 +1,5 @@
 import { Octokit } from '@octokit/rest';
+import Bluebird from 'bluebird';
 import { createAppAuth } from '@octokit/auth';
 import { github } from '../../config';
 import uniqBy from '../../shared/uniqBy';
@@ -103,38 +104,55 @@ export const getRepositoriesForAuthenticatedUser = async (
   return repositories;
 };
 
-const AMOUNT_OF_REPOS_TO_SYNC_AUTOMATICALLY = 10;
+const AMOUNT_OF_REPOS_TO_SYNC_AUTOMATICALLY = 20;
 
 export const syncUser = async ({ user, token }) => {
   const octokit = new Octokit({ auth: `token ${token}` });
-  const repos = await octokit.paginate(octokit.repos.listForAuthenticatedUser, {
-    per_page: 100,
-    sort: 'pushed',
-    visibility: 'public',
-  });
 
-  const uniqueOrgs = getUniqueOrgsFromRepos(repos);
+  await quickUserSync({ user, octokit });
 
-  // Wait for recent repositories to be created,
-  // and queue these for sync.
-  // Other repos get created in the background, without
-  // blocking login.
-  const recentRepos = repos.slice(0, AMOUNT_OF_REPOS_TO_SYNC_AUTOMATICALLY);
-  const nonRecentRepos = repos.slice(recentRepos.length);
+  fullUserSync({ user, octokit }).catch(logger.error);
+};
 
-  await Promise.all([
-    createNewOrgsFromGithub(uniqueOrgs, user._id),
-    ...recentRepos.map((repo) =>
-      createRepositoryForUser({ repo, user, sync: true })
-    ),
+const quickUserSync = async ({ user, octokit }) => {
+  const [{ data: repos }, { data: orgs }] = await Promise.all([
+    octokit.repos.listForAuthenticatedUser({
+      per_page: AMOUNT_OF_REPOS_TO_SYNC_AUTOMATICALLY,
+      sort: 'pushed',
+      visibility: 'public',
+    }),
+    octokit.orgs.listForAuthenticatedUser({
+      per_page: 100,
+    }),
   ]);
 
-  // Intentionally not awaiting for this promise.
-  Promise.all([
-    nonRecentRepos.map((repo) =>
-      createRepositoryForUser({ repo, user, sync: false })
-    ),
-  ]).catch(logger.error);
+  await Promise.all([
+    createNewOrgsFromGithub(orgs, user._id),
+    ...repos.map((repo) => createRepositoryForUser({ repo, user, sync: true })),
+  ]);
+};
+
+const fullUserSync = async ({ user, octokit }) => {
+  const pages = octokit.paginate.iterator(
+    octokit.repos.listForAuthenticatedUser,
+    {
+      per_page: 100,
+      sort: 'pushed',
+      visibility: 'public',
+    }
+  );
+
+  for await (const { data: repos } of pages) {
+    const uniqueOrgs = getUniqueOrgsFromRepos(repos);
+
+    await Promise.all([
+      createNewOrgsFromGithub(uniqueOrgs, user._id),
+      Bluebird.resolve(repos).map(
+        (repo) => createRepositoryForUser({ repo, user, sync: false }),
+        { concurrency: 10 }
+      ),
+    ]);
+  }
 };
 
 async function createRepositoryForUser({ repo, user, sync = false }) {
