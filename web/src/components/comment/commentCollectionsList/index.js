@@ -334,10 +334,10 @@ const CommentCollectionsList = () => {
             </div>
           </>
         )}
-        {view === 'grid' && !isLoaderNeeded ? (
-          <CardList collections={activeCollections || []} />
+        {view === 'grid' ? (
+          !isLoaderNeeded && <CardList collections={activeCollections || []} />
         ) : (
-          <Table
+          !isLoaderNeeded && <Table
             data={activeCollections}
             columns={[
               { label: 'State' },
@@ -354,11 +354,11 @@ const CommentCollectionsList = () => {
             emptyMessage="No results"
           />
         )}
-        <p className="has-text-weight-semibold has-text-black-950 is-size-4 mt-60 p-10">
+        {!isLoaderNeeded && (<p className="has-text-weight-semibold has-text-black-950 is-size-4 mt-60 p-10">
           Other Collections{' '}
           {inactiveCollections.length ? `(${inactiveCollections.length})` : ''}
-        </p>
-        {view === 'grid' && !isLoaderNeeded ? (
+        </p>)}
+        {view === 'grid' ? ( !isLoaderNeeded &&
           <>
             <CardList
               type="others"
@@ -368,7 +368,7 @@ const CommentCollectionsList = () => {
               }
             />
           </>
-        ) : (
+        ) : ( !isLoaderNeeded &&
           <Table
             data={paginatedInactiveCollections}
             columns={[
@@ -386,7 +386,7 @@ const CommentCollectionsList = () => {
             emptyMessage="No results"
           />
         )}
-        <div className="mt-25 px-10">
+        {!isLoaderNeeded && <div className="mt-25 px-10">
           <Pagination
             currentPage={currentPage}
             totalCount={
@@ -397,7 +397,7 @@ const CommentCollectionsList = () => {
             setPageSize={setPageSize}
             onPageChange={(page) => setCurrentPage(page)}
           />
-        </div>
+        </div>}
       </div>
     </div>
   );
