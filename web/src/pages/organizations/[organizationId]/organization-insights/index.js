@@ -42,7 +42,9 @@ const FILTER_DEFAULT_STATE = {
   repo: [],
   dateOption: '',
   pageNumber: 1,
-  pageSize: 10
+  pageSize: 10,
+  requester: '',
+  reviewer: '',
 };
 
 const OrganizationInsights = () => {
@@ -211,7 +213,9 @@ const OrganizationInsights = () => {
       repoIds: filter.repo.map((p) => (p.value)),
       searchQuery: filter.search,
       pageNumber: filter.pageNumber,
-      pageSize: filter.pageSize
+      pageSize: filter.pageSize,
+      requester: filter.requester,
+      reviewer: filter.reviewer,
     }
   }
 
@@ -234,6 +238,7 @@ const OrganizationInsights = () => {
   }
 
   useEffect(() => {
+    console.log(filter)
     searchSmartComments(filter);
   }, [filter]);
 
@@ -277,9 +282,9 @@ const OrganizationInsights = () => {
 
   useEffect(() => {
     if (isActive && commentView === 'received') {
-      setFilter({ ...FILTER_DEFAULT_STATE, to: [{ value: userId }] });
+      setFilter({ ...FILTER_DEFAULT_STATE, requester: githubUser.username });
     } else if (isActive && commentView === 'given') {
-      setFilter({ ...FILTER_DEFAULT_STATE, from: [{ value: userId }] });
+      setFilter({ ...FILTER_DEFAULT_STATE, reviewer: githubUser.username });
     } else {
      setFilter(FILTER_DEFAULT_STATE)
     }

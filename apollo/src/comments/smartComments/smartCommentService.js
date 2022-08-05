@@ -680,10 +680,6 @@ export const searchSmartComments = async ({
   orgId
 }) => {
   try {
-    let findQuery = {
-      'githubMetadata.repo_id': { $in: repoIds }
-    };
-
     if (orgId) {
       if (repoIds.length) {
         findQuery = {
@@ -707,7 +703,7 @@ export const searchSmartComments = async ({
     if (dateRange) {
       findQuery = {
         ...findQuery,
-        createdAt: {
+        'source.createdAt': {
           $gte: toDate(new Date(dateRange.startDate)),
           $lte: toDate(endOfDay(new Date(dateRange.endDate)))
         }
@@ -781,7 +777,7 @@ export const searchSmartComments = async ({
     query.populate({ select: ['label'], path: 'tags' });
 
     query.skip((pageNumber - 1) * pageSize).limit(pageSize);
-    const [smartComments, total] = await Promise.all([query.sort({ createdAt: -1 }).lean(), countQuery]);
+    const [smartComments, total] = await Promise.all([query.sort({ 'source.createdAt': -1 }).lean(), countQuery]);
     return {
       smartComments,
       total
