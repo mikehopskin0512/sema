@@ -20,13 +20,13 @@ import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../../../components/snaps
 import SnapshotButton from '../../../../components/snapshots/snapshotButton';
 import ReactionLineChart from '../../../../components/stats/reactionLineChart';
 import styles from '../../../../components/organization/organizationInsights/organizationInsights.module.scss';
-import { filterRepoSmartComments } from '../../../../state/features/organizations[new]/actions';
 import { useRouter } from 'next/router';
 
 const {
   fetchOrganizationSmartCommentSummary,
   fetchOrganizationSmartCommentOverview,
-  fetchOrganizationRepos
+  fetchOrganizationRepos,
+  filterRepoSmartComments
 } = organizationsOperations;
 const { fetchReposByIds } = repositoriesOperations;
 
@@ -208,7 +208,7 @@ const OrganizationInsights = () => {
       summaries: filter.reactions.map((r) => (r.value)),
       tags: filter.tags.map((t) => (t.value)),
       pullRequests: filter.pr.map((p) => (p.value)),
-      repo: filter.repo.map((p) => (p.value)),
+      repoIds: filter.repo.map((p) => (p.value)),
       searchQuery: filter.search,
       pageNumber: filter.pageNumber,
       pageSize: filter.pageSize

@@ -183,7 +183,6 @@ export default (app, passport) => {
         searchQuery,
         pageNumber = 1,
         pageSize = 10,
-        repo,
         requester: author,
         reviewer
       } = req.body;
@@ -213,7 +212,6 @@ export default (app, passport) => {
           reviewer,
           author,
           orgId,
-          repo
         });
 
         const totalPage = Math.ceil(total/pageSize);

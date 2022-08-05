@@ -676,12 +676,33 @@ export const searchSmartComments = async ({
   pageNumber,
   pageSize,
   reviewer,
-  author
+  author,
+  orgId
 }) => {
   try {
     let findQuery = {
       'githubMetadata.repo_id': { $in: repoIds }
     };
+
+    if (orgId) {
+      if (repoIds.length) {
+        findQuery = {
+          ...findQuery,
+          'githubMetadata.repo_id': { $in: repoIds }
+        }
+      } else {
+        const organizationRepos = await getOrganizationRepos(orgId);
+        findQuery = {
+          ...findQuery,
+          'githubMetadata.repo_id': { $in: organizationRepos.map((repo) => repo.externalId) }
+        }
+      }
+    } else {
+      findQuery = {
+        ...findQuery,
+        'githubMetadata.repo_id': { $in: repoIds }
+      }
+    }
 
     if (dateRange) {
       findQuery = {
