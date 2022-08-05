@@ -63,7 +63,7 @@ describe('GET /users/:id', () => {
       expect(data.user.firstName).toBe('Ada');
       expect(data.user.lastName).toBe('Lovelace');
       expect(data.user.isActive).toBe(true);
-      expect(data.user.isVerified).toBe(false);
+      expect(data.user.isVerified).toBe(true);
       expect(data.user.isWaitlist).toBe(false);
       expect(data.user.avatarUrl).toBe('');
       expect(data.user.identities[0].provider).toBe('github');

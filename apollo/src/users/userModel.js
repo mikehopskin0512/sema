@@ -68,7 +68,8 @@ const userSchema = mongoose.Schema(
     avatarUrl: String,
     inviteCount: { type: Number, default: 10 },
     isActive: { type: Boolean, default: true },
-    isVerified: { type: Boolean, default: false },
+    // Legacy flag related to email/password signup.
+    isVerified: { type: Boolean, default: true },
     isWaitlist: { type: Boolean, default: false },
     isFastForwardOnboarding: { type: Boolean, default: false },
     isOnboarded: { type: Date, default: null },
