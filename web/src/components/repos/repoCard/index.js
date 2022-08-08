@@ -25,14 +25,13 @@ const statLabels = {
 };
 
 function RepoCard(props) {
-  const { auth: {token, user}, organizations } = useSelector(
+  const { auth: { token, user }, organizations } = useSelector(
     (state) => ({
       organizations: state.organizationsNewState.organizations,
       auth: state.authState
     }),
   );
   const dispatch = useDispatch();
-  const titleRef = useRef(null);
   const { repoSyncTab } = useFlags();
   const {
     name, externalId, _id: repoId, repoStats, users = [], column = 3, isOrganizationView = false, onRemoveRepo,
@@ -95,9 +94,10 @@ function RepoCard(props) {
                 </div>
               </Tooltip>
               <div className={`${styles['tooltip-wrapper']} is-flex ${(visibility === REPO_VISIBILITY.PRIVATE || !visibility) && 'is-flex-grow-1'}`}>
-                <OverflowTooltip ref={titleRef} text={name}>
-                  <p ref={titleRef} className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
-                </OverflowTooltip>
+                <OverflowTooltip
+                  text={name}
+                  typographyStyle={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}
+                />
               </div>
               {/* GH Sync actions will only be shown for public repos -for the time being- */}
               {repoSyncTab && visibility === REPO_VISIBILITY.PUBLIC && 

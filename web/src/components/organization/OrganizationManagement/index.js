@@ -102,13 +102,13 @@ const OrganizationManagement = ({ activeOrganization }) => {
       accessor: 'userInfo',
       className: 'pl-20 pr-50 py-10 has-background-white-50',
       Cell: ({ cell: { value } }) => {
-        const nameRef = useRef(null);
         return (
           <div className={clsx("is-flex is-align-items-center is-cursor-pointer",)}>
             <Avatar src={value.avatarUrl} size="32" round />
-            <OverflowTooltip ref={nameRef} text={value.name}>
-              <p ref={nameRef} className={clsx("ml-10 has-overflow-ellipsis", styles.name)}>{value.name}</p>
-            </OverflowTooltip>
+            <OverflowTooltip
+              text={value.name}
+              typographyStyle={clsx("ml-10 has-overflow-ellipsis", styles.name)}
+            />
           </div>
         )
       },
@@ -119,11 +119,11 @@ const OrganizationManagement = ({ activeOrganization }) => {
       accessor: 'email',
       className: 'pl-20 pr-50 py-10 has-background-gray-200',
       Cell: ({ cell: { value } }) => {
-        const emailRef = useRef(null);
         return (
-          <OverflowTooltip ref={emailRef} text={value}>
-            <p ref={emailRef} className={clsx("has-overflow-ellipsis", styles.email)}>{value}</p>
-          </OverflowTooltip>
+          <OverflowTooltip
+            text={value}
+            typographyStyle={clsx("has-overflow-ellipsis", styles.email)}
+          />
         )
       },
     },
