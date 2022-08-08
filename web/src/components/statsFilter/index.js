@@ -194,7 +194,7 @@ const StatsFilter = ({ filterRepoList, handleFilter, onSearch }) => {
             >
               <CustomSelect
                 selectProps={{
-                  options: filterRepoList,
+                  options: filterValues.repos,
                   placeholder: '',
                   isMulti: true,
                   onChange: (value) => onChangeFilter('repo', value),

@@ -664,23 +664,24 @@ export const searchSmartComments = async ({
   orgId
 }) => {
   try {
+    let findQuery = {}
     if (orgId) {
       if (repoIds.length) {
         findQuery = {
           ...findQuery,
-          'githubMetadata.repo_id': { $in: repoIds }
+          'repositoryId': { $in: repoIds }
         }
       } else {
         const organizationRepos = await getOrganizationRepos(orgId);
         findQuery = {
           ...findQuery,
-          'githubMetadata.repo_id': { $in: organizationRepos.map((repo) => repo.externalId) }
+          'repositoryId': { $in: organizationRepos.map((repo) => repo._id) }
         }
       }
-    } else {
+    } else if (repoIds.length) {
       findQuery = {
         ...findQuery,
-        'githubMetadata.repo_id': { $in: repoIds }
+        repositoryId: { $in: repoIds }
       }
     }
 

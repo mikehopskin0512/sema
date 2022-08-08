@@ -43,12 +43,16 @@ const {
 
 const PersonalInsights = () => {
   const dispatch = useDispatch();
-  const { auth, comments, searchResults, pagination } = useSelector(state => ({
+  const { auth, comments, searchResults, pagination, repositories } = useSelector(state => ({
     auth: state.authState,
     comments: state.commentsState,
     searchResults: state.commentsState.searchResults,
     pagination: state.commentsState.pagination,
+    repositories: state.repositoriesState,
   }));
+  const {
+    data: { filterValues: filterValuesState },
+  } = repositories;
   const { token, user } = auth;
   const githubUser = user.identities?.[0];
   const { isFetching } = comments;
@@ -221,7 +225,8 @@ const PersonalInsights = () => {
       pullRequests: filterData.pr.map((p) => (p.value)),
       searchQuery: filterData.search,
       pageNumber: filterData.pageNumber,
-      pageSize: filterData.pageSize
+      pageSize: filterData.pageSize,
+      repoIds: filterData.repo.length ? filterData.repo.map((r) => (r.value)) : filterValuesState.repos.map((r) => (r.value))
     }
     const { username } = githubUser;
     if (commentView === 'given') {
@@ -229,15 +234,13 @@ const PersonalInsights = () => {
     } else {
       filterValues.requester = username;
     }
-    const repoIds = filterData.repo.length ? filterData.repo.map((r) => (r.value)) : filterRepoList.map((r) => (r.value))
     dispatch(
       filterRepoSmartComments(
-        repoIds,
         token,
         filterValues
       )
     )
-  }, [filterRepoList, token, commentView]);
+  }, [token, commentView, filterValuesState, githubUser]);
 
   const renderTopReactions = () => {
     const iterate = topReactions.length >= 1 ? topReactions : EMOJIS;
@@ -279,15 +282,6 @@ const PersonalInsights = () => {
     getUserSummary(githubUser?.username);
   }, [auth]);
 
-  useEffect(() => {
-    const reposList =
-      githubUser.repositories?.map(item => ({
-        name: item.fullName,
-        label: item.fullName,
-        value: item.id
-      })) || [];
-    setFilterRepoList([...reposList]);
-  }, [githubUser]);
 
   useEffect(() => {
     const { summary } = comments;
@@ -391,7 +385,6 @@ const PersonalInsights = () => {
           </div>
         </div>
         <StatsFilter
-          filterRepoList={filterRepoList}
           handleFilter={handleFilter}
           onSearch={(search) => searchSmartComments({ ...filter, pageNumber: 1, search })}
         />
@@ -448,7 +441,7 @@ const PersonalInsights = () => {
             )}
           </div>
         </div>
-        <ActivityItemList comments={filteredComments} isLoading={isFetching} pagination={pagination} setFilter={setFilter} />
+        <ActivityItemList comments={filteredComments} isLoading={isFetching} pagination={pagination} hasPagination setFilter={setFilter} />
       </div>
     </>
   );

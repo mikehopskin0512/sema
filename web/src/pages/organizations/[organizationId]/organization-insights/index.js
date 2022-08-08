@@ -50,9 +50,10 @@ const FILTER_DEFAULT_STATE = {
 const OrganizationInsights = () => {
   const dispatch = useDispatch();
   const { query } = useRouter();
-  const { auth, organizations } = useSelector(state => ({
+  const { auth, organizations, pagination } = useSelector(state => ({
     auth: state.authState,
-    organizations: state.organizationsNewState
+    organizations: state.organizationsNewState,
+    pagination: state.organizationsNewState.insightsData.pagination,
   }))
   const { token, user, selectedOrganization } = auth;
   const { isFetching, insightsData: { searchResults: filteredComments } } = organizations;
@@ -554,7 +555,7 @@ const OrganizationInsights = () => {
             </div>
           )}
         </div>
-          <ActivityItemList comments={filteredComments} isLoading={isFetching} setFilter={setFilter} isPaginationNeeded  />
+          <ActivityItemList comments={filteredComments} isLoading={isFetching} setFilter={setFilter} pagination={pagination} hasPagination  />
         </div>
       </div>
     </div>

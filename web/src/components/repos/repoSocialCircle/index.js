@@ -55,7 +55,7 @@ function RepoSocialCircle({ repoId, isLoading }) {
         setInteractions(data.interactionsByUsers);
         setRepoName(data.repoName);
       } catch {
-        setTimeout(getInteractions, REPO_UPDATE_INTERVAL);x
+        setTimeout(getInteractions, REPO_UPDATE_INTERVAL);
       }
       if (isSyncingNow) {
         setTimeout(getInteractions, REPO_UPDATE_INTERVAL);

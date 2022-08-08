@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import CustomSelect from '../../../../activity/select';
@@ -9,19 +10,23 @@ import { ReactionList, TagList } from '../../../../../data/activity';
 import { SearchIcon } from '../../../../Icons';
 import { InputField } from 'adonis';
 import styles from './FilterBar.module.scss';
+import { DEFAULT_FILTER_STATE } from '../../../../../utils/constants/filter';
 
 const FilterBar = ({
   filter,
   startDate,
   endDate,
   onDateChange,
-  filterUserList,
   onChangeFilter,
-  filterRequesterList,
-  filterPRList,
   tab,
-  onSearch
+  onSearch,
 }) => {
+  const { repositories } = useSelector((state) => ({
+    repositories: state.repositoriesState,
+  }));
+  const {
+    data: { filterValues },
+  } = repositories;
   const [searchKeyword, setSearchKeyword] = useState('');
   const [toggleSearch, setToggleSearch] = useState(false);
 
@@ -54,7 +59,7 @@ const FilterBar = ({
               <div className="px-5 my-5">
                 <CustomSelect
                   selectProps={{
-                    options: filterUserList,
+                    options: filterValues.authors,
                     placeholder: '',
                     isMulti: true,
                     onChange: (value) => onChangeFilter('from', value),
@@ -71,7 +76,7 @@ const FilterBar = ({
               <div className="px-5 my-5">
                 <CustomSelect
                   selectProps={{
-                    options: filterRequesterList,
+                    options: filterValues.requesters,
                     placeholder: '',
                     isMulti: true,
                     onChange: (value) => onChangeFilter('to', value),
@@ -123,7 +128,7 @@ const FilterBar = ({
           <div className="px-5 my-5">
             <CustomSelect
               selectProps={{
-                options: filterPRList,
+                options: filterValues.pullRequests,
                 placeholder: '',
                 isMulti: true,
                 onChange: (value) => onChangeFilter('pr', value),
@@ -176,10 +181,7 @@ FilterBar.defaultProps = {
   startDate: new Date(),
   endDate: new Date(),
   onDateChange: () => {},
-  filterUserList: [],
   onChangeFilter: () => {},
-  filterRequesterList: [],
-  filterPRList: [],
   tab: '',
 };
 
@@ -188,10 +190,7 @@ FilterBar.propTypes = {
   startDate: PropTypes.any,
   endDate: PropTypes.any,
   onDateChange: PropTypes.func,
-  filterUserList: PropTypes.array,
   onChangeFilter: PropTypes.func,
-  filterRequesterList: PropTypes.array,
-  filterPRList: PropTypes.array,
   tab: PropTypes.string,
 };
 

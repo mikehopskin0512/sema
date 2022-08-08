@@ -19,6 +19,9 @@ import styles from './styles.module.scss';
 import { useFlags } from '../../../components/launchDarkly';
 import { DEFAULT_REPO_OVERVIEW } from '../../../state/features/repositories/reducers';
 import { requestFetchRepositoryOverviewSuccess } from '../../../state/features/repositories/actions';
+import { format } from 'date-fns';
+import { YEAR_MONTH_DAY_FORMAT } from '../../../utils/constants/date';
+import { DEFAULT_FILTER_STATE } from '../../../utils/constants/filter';
 
 
 const { fetchRepositoryOverview, fetchReposByIds, fetchRepoFilters } =
@@ -29,18 +32,6 @@ const { fetchOrganizationRepos } = organizationsOperations;
 const tabTitle = {
   stats: 'Repo Insights',
   activity: 'Activity Log',
-};
-
-const DEFAULT_FILTER_STATE = {
-  from: [],
-  to: [],
-  reactions: [],
-  tags: [],
-  search: '',
-  pr: [],
-  dateOption: '',
-  pageNumber: 1,
-  pageSize: 10
 };
 
 function RepoPage() {
@@ -86,9 +77,6 @@ function RepoPage() {
   const [isInitialRefresh, setIsInitialRefresh] = useState(true);
 
   const [filter, setFilter] = useState(DEFAULT_FILTER_STATE);
-  const [filterUserList, setFilterUserList] = useState([]);
-  const [filterRequesterList, setFilterRequesterList] = useState([]);
-  const [filterPRList, setFilterPRList] = useState([]);
   const [isOrganizationRepo, setIsOrganizationRepo] = useState(
     !isEmpty(selectedOrganization)
   );
@@ -126,7 +114,9 @@ function RepoPage() {
     }
   }, []);
 
-  const searchSmartComments = (filterData) => {
+  const searchSmartComments = useCallback((filterData) => {
+    const repo = filterValues.repos.find((o) => o.externalId === repoId)
+    if (!repo) return;
     const filter = {
       ...getDateSub(dates.startDate, dates.endDate),
       fromUserList: filterData.from.map((f) => (f.value)),
@@ -136,16 +126,16 @@ function RepoPage() {
       pullRequests: filterData.pr.map((p) => (p.value)),
       searchQuery: filterData.search,
       pageNumber: filterData.pageNumber,
-      pageSize: filterData.pageSize
+      pageSize: filterData.pageSize,
+      repoIds: [repo.value]
     }
     dispatch(
       filterRepoSmartComments(
-        repoId,
         token,
         filter
       )
     )
-  };
+  }, [token, filterValues, dates]);
 
   const refresh = useCallback(async () => {
     setIsLoading(true);
@@ -200,27 +190,19 @@ function RepoPage() {
     }
   }, [startDate, endDate]);
 
-  useEffect(() => {
-    if (!overview?.smartcomments?.length) {
-      return;
-    }
-    const {
-      pullRequests,
-      requesters,
-      authors,
-    } = filterValues;
-    setFilterRequesterList(uniqBy(requesters, 'value'));
-    setFilterUserList(uniqBy(authors, 'value'));
-    setFilterPRList(pullRequests);
-    setIsLoading(false);
-  }, [overview, filterValues]);
-
   const onDateChange = ({
     startDate: newStartDate,
     endDate: newEndDate,
   }) => {
     setStartDate(newStartDate);
     setEndDate(newEndDate);
+    const formatDate = (date) =>
+      date ? format(new Date(date), YEAR_MONTH_DAY_FORMAT) : null;
+    setFilter({
+      ...filter,
+      startDate: formatDate(newStartDate),
+      endDate: formatDate(newEndDate),
+    });
   };
 
   const onChangeFilter = (type, value) => {
@@ -255,9 +237,6 @@ function RepoPage() {
           filter={filter}
           startDate={startDate}
           endDate={endDate}
-          filterUserList={filterUserList}
-          filterRequesterList={filterRequesterList}
-          filterPRList={filterPRList}
           onChangeFilter={onChangeFilter}
           onDateChange={onDateChange}
           tab={selectedTab}

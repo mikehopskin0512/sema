@@ -262,21 +262,13 @@ const OrganizationStatsFilter = ({
   );
 };
 OrganizationStatsFilter.defaultProps = {
-  filterUserList: [],
-  filterRequesterList: [],
-  filterPRList: [],
   filteredComments: [],
-  filterRepoList: [],
   commentView: 'received',
   individualFilter: true
 };
 
 OrganizationStatsFilter.propTypes = {
-  filterUserList: PropTypes.array.isRequired,
-  filterRequesterList: PropTypes.array.isRequired,
-  filterPRList: PropTypes.array.isRequired,
   filteredComments: PropTypes.array.isRequired,
-  filterRepoList: PropTypes.array.isRequired,
   commentView: PropTypes.string,
   individualFilter: PropTypes.bool
 };

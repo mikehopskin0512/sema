@@ -5,14 +5,9 @@ import styles from '../../../components/skeletons/charts.module.scss';
 import CommentSnapSkeleton from '../../skeletons/commentSnapSkeleton';
 import { useSelector } from 'react-redux';
 import Pagination from '../../pagination';
+import { DEFAULT_PAGINATION_DATA } from '../../../utils/constants/filter';
 
-const ActivityItemList = ({ comments, isLoading, setFilter, isPaginationNeeded }) => {
-  const { organizations } = useSelector(state => ({
-    organizations: state.organizationsNewState
-  }))
-
-  const { insightsData: { pagination } } = organizations;
-
+const ActivityItemList = ({ comments, isLoading, setFilter, pagination, hasPagination }) => {
   if (isLoading) {
     return (
       <div>
@@ -39,7 +34,7 @@ const ActivityItemList = ({ comments, isLoading, setFilter, isPaginationNeeded }
               </div>
             );
           })}
-          {pagination && (
+          {hasPagination && pagination && (
             <Pagination
               currentPage={pagination.pageNumber}
               totalCount={pagination.total}
@@ -65,11 +60,14 @@ const ActivityItemList = ({ comments, isLoading, setFilter, isPaginationNeeded }
 ActivityItemList.defaultProps = {
   comments: [],
   isLoading: false,
+  pagination: DEFAULT_PAGINATION_DATA
 };
 
 ActivityItemList.propTypes = {
   comments: PropTypes.array,
   isLoading: PropTypes.bool,
+  pagination: PropTypes.object,
+  hasPagination: PropTypes.bool.isRequired
 };
 
 export default ActivityItemList;

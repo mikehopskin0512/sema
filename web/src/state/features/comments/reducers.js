@@ -1,3 +1,4 @@
+import { DEFAULT_PAGINATION_DATA } from '../../../utils/constants/filter';
 import * as types from './types';
 
 const initialState = {
@@ -9,14 +10,7 @@ const initialState = {
   summary: {},
   overview: {},
   searchResults: [],
-  pagination: {
-    pageSize: 1,
-    pageNumber: 1,
-    totalPage: 0,
-    total: 0,
-    hasNextPage: false,
-    hasPreviousPage: false
-  }
+  pagination: DEFAULT_PAGINATION_DATA
 };
 
 const reducer = (state = initialState, action) => {
