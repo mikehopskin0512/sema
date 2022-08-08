@@ -159,6 +159,9 @@ describe('GET /identities/github/cb', () => {
         ],
         isWaitlist: true,
       });
+
+      // https://semalab.atlassian.net/browse/WEST-1657
+      await user.updateOne({ isVerified: false });
     });
 
     beforeAll(async () => {
@@ -243,6 +246,16 @@ describe('GET /identities/github/cb', () => {
       it('should be marked as public', () => {
         const visibility = [...new Set(repositories.map((r) => r.visibility))];
         expect(visibility).toEqual(['public']);
+      });
+
+      describe('user', () => {
+        beforeAll(async () => {
+          user = await User.findById(user._id);
+        });
+
+        it('should be verified', () => {
+          expect(user.isVerified).toBe(true);
+        });
       });
     });
 

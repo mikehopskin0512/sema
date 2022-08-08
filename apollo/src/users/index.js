@@ -78,7 +78,6 @@ export default (app, passport) => {
     passport.authenticate(['basic'], { session: false }),
     async (req, res) => {
       const { user, invitation } = req.body;
-      const { username } = user;
 
       try {
         const newUser = await create(user, invitation?.token);

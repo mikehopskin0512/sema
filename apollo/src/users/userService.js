@@ -786,3 +786,9 @@ export const toggleUserRepoPinned = async (userId, repoId) => {
 
   return true;
 };
+
+export const forceVerifyUser = async (user) => {
+  if (user.isVerified) return;
+
+  await User.updateOne({ _id: user._id }, { isVerified: true });
+};

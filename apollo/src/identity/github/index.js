@@ -17,6 +17,7 @@ import {
 import {
   findByUsernameOrIdentity,
   updateIdentity,
+  forceVerifyUser,
 } from '../../users/userService';
 import {
   createRefreshToken,
@@ -119,6 +120,8 @@ export default (app, passport) => {
           ...identity,
           repositories: user.identities[0].repositories || [],
         });
+
+        await forceVerifyUser(user);
 
         const tokenData = await getTokenData(user);
 
