@@ -14,6 +14,7 @@ const Footer = () => {
   const { pathname } = router;
   const isCollabarationPage = pathname.includes('collaboration');
   const isNegativeColors = pathname.includes('collaboration');
+  const isDiscordIconNeeded = isCollabarationPage || pathname.includes('/login');
   const auth = useSelector((state) => state.authState);
   const { userVoiceToken, isAuthenticated } = auth;
   const [dashboardLink] = useState('https://app.semasoftware.com');
@@ -46,8 +47,8 @@ const Footer = () => {
       <a className='is-flex' href={socialLinks.twitter} target="_blank" rel="noreferrer">
         <TwitterIcon color={isNegativeColors ? white0 : black900} size="small" />
       </a>
-      { isCollabarationPage && <a className='is-flex' href={socialLinks.discord} target="_blank" rel="noreferrer">
-        <DiscordIcon color={white0} size="small" />
+      { isDiscordIconNeeded && <a className='is-flex' href={socialLinks.discord} target="_blank" rel="noreferrer">
+        <DiscordIcon color={isNegativeColors ? white0 : black900} size="small" />
       </a>}
     </div>
   );
