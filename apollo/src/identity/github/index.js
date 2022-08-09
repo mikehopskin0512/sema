@@ -35,6 +35,8 @@ import { createUserRole } from '../../userRoles/userRoleService';
 import { getTokenData } from '../../shared/utils';
 import checkEnv from '../../middlewares/checkEnv';
 
+import segmentClient from '../../shared/apiSegement';
+
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
@@ -259,6 +261,22 @@ export default (app, passport) => {
       }
     }
   );
+  
+  // todo only for testing purpose
+  route.post('/test-segment', async (req, res) => {
+    try {
+      // trigger segment event
+      await segmentClient.track({
+        event: 'USER.SEGMENT.EVENT.TEST',
+        userId: 'userId',
+      });
+      
+      return res.status(200).json('success');
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
 
   // Swagger route
   app.use(
