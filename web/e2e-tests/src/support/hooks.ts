@@ -92,10 +92,10 @@ export const hooks = {
     try {
       // This secret should be changed once we have defined which device to use
       // const SECRET_KEY = 'AXISDW77DODT233C';
-      const SECRET_KEY = 'CFUL2XGHWAMAVAQS';
-      const otp = generateToken(SECRET_KEY);
+      // const SECRET_KEY = 'CFUL2XGHWAMAVAQS';
+      // const otp = generateToken(SECRET_KEY);
 
-      console.log(otp);
+      // console.log(otp);
 
       await browser.maximizeWindow();
 
@@ -107,12 +107,13 @@ export const hooks = {
       await signupBtn.click();
 
       await $('#login_field').setValue(
-        'qateam+automationadmin@semasoftware.com'
+          'qateam+autonadmin@semasoftware.com'
       );
+
       await $('#password').setValue('Automation1Tester2#');
       await $('.js-sign-in-button').click();
-      await $('#otp').setValue(otp);
-      await $('button*=Verify');
+      // await $('#otp').setValue(otp);
+      // await $('button*=Verify');
 
       if ((await $$('button*=Authorize Sema').length) > 0) {
         console.log(`Authorizing Smart Code Reviews...`);

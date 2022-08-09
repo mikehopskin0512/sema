@@ -119,6 +119,8 @@ const TagsChart = ({
     </TooltipWrapper>
   ));
 
+  const isButtonActive = !emptyChart && !isSnapshot && onClick;
+
   return (
     <>
       <div className={clsx(`is-flex-grow-1 ${isSnapshot ? 'mb-10 pl-5' : 'mb-20 px-10'} ${className}`, containerStyles)}
@@ -127,8 +129,8 @@ const TagsChart = ({
           {!isLoading && (
             <>
               <div className='is-flex is-full-width'>
-                <p className='has-text-black-950 has-text-weight-semibold is-full-width' >Tags</p>
-                {!emptyChart && !isSnapshot && onClick && <SnapshotButton onClick={onClick} />}
+                <p className='has-text-black-950 has-text-weight-semibold is-full-width'>Overall Review Tags</p>
+                <SnapshotButton onClick={onClick} disabled={!isButtonActive} />
               </div>
               <CircularPacking
                 circlePackingData={circlePackingData}

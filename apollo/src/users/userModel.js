@@ -169,6 +169,19 @@ userSchema.index(
     },
   }
 );
+// This index mostly serving Social Circles.
+// If we ever update the SmartComment model to
+// add references to MongoDB users, we can remove this index.
+userSchema.index(
+  { 'identities.provider': 1, 'identities.username': 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      'identities.provider': { $exists: true },
+      'identities.username': { $exists: true },
+    },
+  }
+);
 
 userSchema.statics.findOrCreateByIdentity =
   async function findOrCreateByIdentity({ provider, id }, attrs) {
