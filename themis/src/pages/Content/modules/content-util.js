@@ -405,8 +405,11 @@ const getGithubId = (elementId) => {
 
 export async function writeSemaToGithub(activeElement, clickSaveSnippet = false) {
   const { _id: userId, isLoggedIn } = store.getState().user;
+  const currentRoute = window.location.pathname;
+  const isNewUserLoginPage = currentRoute?.includes('/login') || currentRoute?.includes('/oauth');
 
-  if (!userId) {
+
+  if (!userId && !isNewUserLoginPage) {
     showCreateCommentToaster();
     return;
   }
