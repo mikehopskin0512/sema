@@ -723,8 +723,10 @@ export async function getOrganizationUsersMetrics(organizationId) {
 export const findUsersByGitHubHandle = async (handles) => {
   try {
     return User.find({
-      identities: { $elemMatch: { username: { $in: handles } } },
+      'identities.provider': 'github',
+      'identities.username': { $in: handles },
     })
+      .select({ 'identities.repositories': 0, 'collections': 0 })
       .lean()
       .exec();
   } catch (err) {

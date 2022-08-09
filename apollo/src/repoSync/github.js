@@ -53,25 +53,8 @@ export default function createGitHubImporter(octokit) {
         userCache,
       });
     }
-    const existingUser = await User.find({
-      'identities.id': user.id,
-      'identities.provider': 'github',
-    });
-    if (!existingUser.length) {
-      await createGhostUser({
-        handle: user.login,
-        username: user.login,
-        identities: [
-          {
-            provider: 'github',
-            id: user.id.toString(),
-            username: user.login,
-            avatarUrl: user.avatar_url,
-          },
-        ],
-        avatarUrl: user.avatar_url,
-      });
-    }
+
+    await ensureGhostUser(user);
 
     return await createNewSmartComment({
       githubComment,
@@ -170,7 +153,7 @@ async function createNewSmartComment({
       'reaction': reaction?._id ?? SmartComment.schema.paths.reaction.default(),
       'tags': tags.map((t) => t._id),
       'source.origin': 'sync',
-      'analyzedAt': null  // we will set right timestamp of Jaxon api call in the future
+      'analyzedAt': null, // we will set right timestamp of Jaxon api call in the future
     }
   );
 }
@@ -397,4 +380,26 @@ function getRepositoryCache() {
       externalId,
     }).select('-repoStats');
   return cache;
+}
+
+async function ensureGhostUser(user) {
+  const existingUser = await User.exists({
+    'identities.id': user.id,
+    'identities.provider': 'github',
+  });
+  if (existingUser) return;
+
+  await createGhostUser({
+    handle: user.login,
+    username: user.login,
+    identities: [
+      {
+        provider: 'github',
+        id: user.id.toString(),
+        username: user.login,
+        avatarUrl: user.avatar_url,
+      },
+    ],
+    avatarUrl: user.avatar_url,
+  });
 }
