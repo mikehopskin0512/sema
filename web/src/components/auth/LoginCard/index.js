@@ -38,44 +38,14 @@ const LoginCard = () => {
         )}
         onClick={githubLogin}
       >
-        <div className="is-flex mr-16 is-hidden-mobile">
-          <GithubIcon size="large" />
-        </div>
         <span className="has-text-weight-semibold is-size-16 ">
-          Join Sema with GitHub
+          Join Sema
         </span>
       </button>
 
-      <p className={styles['through-container']}>
-        <span className={styles['text-container']}>
-          <span
-            className={clsx(
-              'has-text-weight-semibold is-size-7',
-              styles['through-text']
-            )}
-          >
-            Already have an account?
-          </span>
-        </span>
-      </p>
-
-      <button
-        type="button"
-        className={clsx(
-          'button p-25 colored-shadow-small',
-          'is-outlined',
-          styles['sign-in-button']
-        )}
-        onClick={githubLogin}
-      >
-        <GithubIcon size="large" />
-        <span className="ml-16 has-text-weight-semibold is-size-16">
-          Sign in with GitHub
-        </span>
-      </button>
       <div className={styles['terms-and-conditions']}>
         <span className="is-size-8 has-text-gray-500">
-          By joining the waitlist, you are agreeing to Sema’s &nbsp;
+          By signing in, you agree to &nbsp;
           <a href="https://www.semasoftware.com/legal/terms-conditions">
             Terms & Conditions
           </a>

@@ -89,7 +89,7 @@
 
 .neon-logo {
   position: fixed;
-  bottom: 100px;
+  bottom: 60px;
   left: 100px;
 
   @media screen and (max-width: 1407px) {
@@ -100,4 +100,34 @@
     height: 75px;
     width: 83px;
   }
+}
+
+.circle {
+  width: 58px; 
+  min-width: 58px;
+  height: 58px; 
+  border-radius: 100%;
+  border: 1px solid #35FDCC; 
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  margin-right: 20px;
+}
+
+.content-containter {
+  @media screen and (max-width: 756px) {
+    flex-wrap: wrap;
+    justify-content: center !important;
+  }
+}
+
+.left-title { 
+  font-weight: 700;
+  font-size: 32px; 
+  max-width: 80%;
+}
+
+.left-text-container {
+  max-width: 48%; 
+  font-size: 20px;
 }

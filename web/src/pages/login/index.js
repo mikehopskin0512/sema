@@ -124,12 +124,30 @@ const Login = () => {
         <section className="hero">
           <div className="hero-body mb-120">
             <div className="container">
-              <div className="mb-5 mt-40">
+              <div className="mb-5 my-40">
                 <Logo shape="horizontal" width={218} height={73} theme="dark" />
               </div>
               <div className={clsx(styles['neon-logo'], 'is-hidden-mobile')}>
                 <img src="/img/logo-neon.png" />
               </div>
+              <div className={clsx(styles['content-containter'], "is-flex is-justify-content-space-between")}>
+                <div className={clsx(styles['left-text-container'], "is-flex is-flex-wrap-wrap is-justify-content-left has-text-white mt-35")}>
+                  <p className={clsx(styles['left-title'], "mb-25")}>
+                    Write more meaningful code reviews.
+                  </p>
+                  <p className="is-flex is-flex-wrap-no-wrap mb-25">
+                    <div className={styles["circle"]}>1</div>
+                    Create a GitHub Social Circle to see who your coding collaborators are.
+                  </p>
+                  <p className="is-flex is-flex-wrap-no-wrap mb-25">
+                    <div className={styles["circle"]}>2</div>
+                    Use the Chrome Extension to make code reviews more robust and based on best practices.
+                  </p>
+                  <p className="is-flex is-flex-wrap-no-wrap mb-25">
+                    <div className={styles["circle"]}>3</div>
+                    Explore insights to see what you’ve accomplished and how you’ve grown.
+                  </p>
+                </div>
               <div className="is-flex is-flex-wrap-wrap is-justify-content-center">
                 <div className="mt-35">
                   {/** Show on WideScreens */}
@@ -161,6 +179,7 @@ const Login = () => {
                       {renderCard()}
                     </div>
                   </div>
+                </div>
                 </div>
               </div>
             </div>
