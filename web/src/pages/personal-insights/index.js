@@ -3,10 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import SnapshotBar from '../../components/snapshots/snapshotBar';
 import { InfoOutlineIcon } from '../../components/Icons';
-import { endOfDay, isWithinInterval, startOfDay } from 'date-fns';
+import { endOfDay, format, isWithinInterval, startOfDay } from 'date-fns';
 import Helmet, { PersonalInsightsHelmet } from '../../components/utils/Helmet';
 import withLayout from '../../components/layout';
-import PersonalStatsTile from '../../components/personalInsights/personalStatsTile';
 import StatsFilter from '../../components/statsFilter';
 import ReactionChart from '../../components/stats/reactionChart';
 import TagsChart from '../../components/stats/tagsChart';
@@ -34,9 +33,28 @@ import SnapshotModal, {
 import SnapshotButton from '../../components/snapshots/snapshotButton';
 import styles from './personal-insights.module.scss';
 import Avatar from 'react-avatar';
+import { DATE_RANGES } from '../../components/dateRangeSelector';
+import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants/date';
 
 const { fetchSmartCommentSummary, fetchSmartCommentOverview } =
   commentsOperations;
+
+const formatDate = date =>
+  date ? format(new Date(date), YEAR_MONTH_DAY_FORMAT) : null;
+
+const DEFAULT_FILTER = {
+  // Default values for month graphs should be predefined
+  startDate: formatDate(new Date(DATE_RANGES.last30Days.startDate)),
+  endDate: formatDate(new Date(DATE_RANGES.last30Days.endDate)),
+  search: '',
+  from: [],
+  to: [],
+  reactions: [],
+  tags: [],
+  pr: [],
+  repo: [],
+  dateOption: '',
+}
 
 const PersonalInsights = () => {
   const dispatch = useDispatch();
@@ -53,18 +71,7 @@ const PersonalInsights = () => {
   const [topReactions, setTopReactions] = useState([]);
   const [reactionChartData, setReactionChartData] = useState([]);
   const [tagsChartData, setTagsChartData] = useState({});
-  const [filter, setFilter] = useState({
-    startDate: null,
-    endDate: null,
-    search: '',
-    from: [],
-    to: [],
-    reactions: [],
-    tags: [],
-    pr: [],
-    repo: [],
-    dateOption: '',
-  });
+  const [filter, setFilter] = useState(DEFAULT_FILTER);
   const [commentView, setCommentView] = useState('received');
   const [filterRepoList, setFilterRepoList] = useState([]);
   const [filteredComments, setFilteredComments] = useState([]);

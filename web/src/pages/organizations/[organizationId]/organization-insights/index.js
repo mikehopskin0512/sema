@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { findIndex, isEmpty, uniqBy } from 'lodash';
-import { endOfDay, isWithinInterval, startOfDay } from 'date-fns';
+import { isEmpty } from 'lodash';
+import { addDays, endOfDay, format, isWithinInterval, startOfDay } from 'date-fns';
 import Avatar from 'react-avatar';
 import Helmet, { OrganizationInsightsHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
@@ -11,7 +11,7 @@ import TagsChart from '../../../../components/stats/tagsChart';
 import ActivityItemList from '../../../../components/activity/itemList';
 import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import { repositoriesOperations } from '../../../../state/features/repositories';
-import { DEFAULT_AVATAR, SEMA_FAQ_SLUGS, SEMA_INTERCOM_FAQ_URL } from '../../../../utils/constants';
+import { SEMA_FAQ_SLUGS, SEMA_INTERCOM_FAQ_URL } from '../../../../utils/constants';
 import {
   filterSmartComments,
   getEmoji,
@@ -27,6 +27,8 @@ import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../../../components/snaps
 import SnapshotButton from '../../../../components/snapshots/snapshotButton';
 import ReactionLineChart from '../../../../components/stats/reactionLineChart';
 import styles from '../../../../components/organization/organizationInsights/organizationInsights.module.scss';
+import { DATE_RANGES } from '../../../../components/dateRangeSelector';
+import { YEAR_MONTH_DAY_FORMAT } from '../../../../utils/constants/date';
 
 const {
   fetchOrganizationSmartCommentSummary,
@@ -34,6 +36,23 @@ const {
   fetchOrganizationRepos
 } = organizationsOperations;
 const { fetchReposByIds } = repositoriesOperations;
+
+const formatDate = date =>
+  date ? format(addDays(new Date(date), 1), YEAR_MONTH_DAY_FORMAT) : null;
+
+const DEFAULT_FILTER = {
+  // Default values for month graphs should be predefined
+  startDate: formatDate(new Date(DATE_RANGES.last30Days.startDate)),
+  endDate: formatDate(new Date(DATE_RANGES.last30Days.endDate)),
+  search: "",
+  from: [],
+  to: [],
+  reactions: [],
+  tags: [],
+  pr: [],
+  repo: [],
+  dateOption: "",
+}
 
 const OrganizationInsights = () => {
   const dispatch = useDispatch();
@@ -51,18 +70,7 @@ const OrganizationInsights = () => {
   const [topReactions, setTopReactions] = useState([]);
   const [reactionChartData, setReactionChartData] = useState([]);
   const [tagsChartData, setTagsChartData] = useState({});
-  const [filter, setFilter] = useState({
-    startDate: null,
-    endDate: null,
-    search: '',
-    from: [],
-    to: [],
-    reactions: [],
-    tags: [],
-    pr: [],
-    repo: [],
-    dateOption: ''
-  });
+  const [filter, setFilter] = useState(DEFAULT_FILTER);
   const [commentView, setCommentView] = useState('received');
   const [filterRepoList, setFilterRepoList] = useState([]);
   const [filteredComments, setFilteredComments] = useState([]);
