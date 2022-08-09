@@ -44,6 +44,7 @@ const CommentCollectionsList = () => {
       organizationsNewState: state.organizationsNewState,
     })
   );
+  const [isCalculatingActive, setIsCalculatingActive] = useState(true);
   const [view, setView] = useState('grid');
   const [filter, setFilter] = useState({
     labels: [],
@@ -189,20 +190,23 @@ const CommentCollectionsList = () => {
   }, [
     currentPage,
     pageSize,
-    isFetching,
-    filter,
     sortedCollections,
-    data,
-    organizationCollections,
   ]);
 
-  const activeCollections = sortedCollections.filter(
-    (collection) => collection.isActive
-  );
+  const activeCollections = useMemo(() => {
+    const result = sortedCollections.filter(
+    (collection) => collection.isActive);
+    return result || [];
+  }, [sortedCollections]);
 
-  const inactiveCollections = sortedCollections.filter(
-    (collection) => !collection.isActive
-  );
+  const inactiveCollections = useMemo(() => {
+    const result = sortedCollections.filter(
+      (collection) => !collection.isActive);
+      if(!isEmpty(organizationCollections)) {
+        setIsCalculatingActive(false);
+      }
+      return result || [];
+  }, [sortedCollections]);
 
   useEffect(() => {
     if (
@@ -244,8 +248,10 @@ const CommentCollectionsList = () => {
   };
   
   const isLoaderNeeded = isEmpty(selectedOrganization) ?
-    isFetching :
-    !organizationCollections.length && organizationsNewState.isFetching;
+    isCalculatingActive || isFetching :
+      (isCalculatingActive || 
+      isFetching || 
+      organizationsNewState.isFetching);
 
   return (
     <div>
@@ -335,7 +341,7 @@ const CommentCollectionsList = () => {
           </>
         )}
         {view === 'grid' ? (
-          !isLoaderNeeded && <CardList collections={activeCollections || []} />
+          !isLoaderNeeded && <CardList collections={activeCollections} />
         ) : (
           !isLoaderNeeded && <Table
             data={activeCollections}
