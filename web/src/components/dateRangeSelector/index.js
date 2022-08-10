@@ -49,7 +49,15 @@ export const DATE_RANGES = {
 
 const DateRangeSelector = (props) => {
   const {
-    start, end, onChange, isRight = false, buttonProps = {}, outlined, onChangeFilter, additionalStyle
+    start,
+    end,
+    onChange,
+    isRight = false,
+    buttonProps = {},
+    outlined,
+    onChangeFilter,
+    additionalStyle,
+    selectedTab,
   } = props;
   const popupRef = useRef(null);
   const [selectedRange, setSelectedRange] = useState('last30Days');
@@ -84,6 +92,10 @@ const DateRangeSelector = (props) => {
   useEffect(() => {
     setSelectedRange('last30Days');
   }, []);
+
+  useEffect(() => {
+    if (selectedTab && selectedRange !== 'last30Days') setSelectedRange('last30Days');
+  }, [selectedTab]);
 
   const setAllTime = () => {
     setSelectedRange('allTime');
@@ -196,6 +208,7 @@ DateRangeSelector.propTypes = {
   setEndDate: PropTypes.func.isRequired,
   isRight: PropTypes.bool,
   buttonProps: PropTypes.object,
+  selectedTab: PropTypes.string
 };
 
 export default DateRangeSelector;

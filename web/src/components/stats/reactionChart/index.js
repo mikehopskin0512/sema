@@ -194,6 +194,8 @@ const ReactionChart = ({
     }
   });
 
+  const isButtonActive = !emptyChart && onClick;
+
   return (
     <>
       <div className={clsx(`is-flex-grow-1 ${isSnapshot ? 'mb-10 pl-5' : 'mb-20 px-10'} ${className}`, containerStyles)} onMouseMove={handleTooltipPosition}>
@@ -201,8 +203,8 @@ const ReactionChart = ({
           {!isLoading && (
             <>
               <div className="is-flex">
-                <p className="has-text-black-950 has-text-weight-semibold">Summaries</p>
-                {!emptyChart && !isSnapshot && onClick && <SnapshotButton onClick={onClick} /> }
+                <p className="has-text-black-950 has-text-weight-semibold">Overall Repo Summaries</p>
+                {!isSnapshot && <SnapshotButton onClick={onClick} disabled={!isButtonActive} /> }
               </div>
               <BarChart
                 yAxisType={yAxisType}
