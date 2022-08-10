@@ -18,7 +18,7 @@ const list_of_external_users = [
 
 const non_sema_users = db.users.find({
     $and: [
-        { username: { $regex: /@(?!semasoftware\.com$)([^.]+\.)+.*$/ } },
+        { username: { $not: {$regex: /.*@semasoftware.com.*/ }}},
         { username: { $nin: list_of_external_users } }
     ]
 })

@@ -14,7 +14,7 @@ import { CalendarOutlineIcon } from '../Icons';
 
 console.warn = console.error = () => {};
 
-const DATE_RANGES = {
+export const DATE_RANGES = {
   last7Days: {
     name: 'Last 7 Days',
     startDate: moment(subDays(new Date(), 6)),

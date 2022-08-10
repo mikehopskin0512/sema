@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { isEmpty } from 'lodash';
-import { endOfDay, startOfDay } from 'date-fns';
+import { addDays, endOfDay, format, isWithinInterval, startOfDay } from 'date-fns';
 import Avatar from 'react-avatar';
 import Helmet, { OrganizationInsightsHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
@@ -21,6 +21,8 @@ import SnapshotButton from '../../../../components/snapshots/snapshotButton';
 import ReactionLineChart from '../../../../components/stats/reactionLineChart';
 import styles from '../../../../components/organization/organizationInsights/organizationInsights.module.scss';
 import { useRouter } from 'next/router';
+import { DATE_RANGES } from '../../../../components/dateRangeSelector';
+import { YEAR_MONTH_DAY_FORMAT } from '../../../../utils/constants/date';
 
 const {
   fetchOrganizationSmartCommentSummary,
@@ -30,22 +32,26 @@ const {
 } = organizationsOperations;
 const { fetchReposByIds } = repositoriesOperations;
 
-const FILTER_DEFAULT_STATE = {
-  startDate: null,
-  endDate: null,
-  search: '',
+const formatDate = date =>
+  date ? format(addDays(new Date(date), 1), YEAR_MONTH_DAY_FORMAT) : null;
+
+const DEFAULT_FILTER = {
+  // Default values for month graphs should be predefined
+  startDate: formatDate(new Date(DATE_RANGES.last30Days.startDate)),
+  endDate: formatDate(new Date(DATE_RANGES.last30Days.endDate)),
+  search: "",
   from: [],
   to: [],
   reactions: [],
   tags: [],
   pr: [],
   repo: [],
-  dateOption: '',
+  dateOption: "",
   pageNumber: 1,
   pageSize: 10,
   requester: '',
   reviewer: '',
-};
+}
 
 const OrganizationInsights = () => {
   const dispatch = useDispatch();
@@ -66,8 +72,7 @@ const OrganizationInsights = () => {
   const [topReactions, setTopReactions] = useState([]);
   const [reactionChartData, setReactionChartData] = useState([]);
   const [tagsChartData, setTagsChartData] = useState({});
-  const [filter, setFilter] = useState(FILTER_DEFAULT_STATE);
-
+  const [filter, setFilter] = useState(DEFAULT_FILTER);
   const [commentView, setCommentView] = useState('received');
   const [openReactionsModal, setOpenReactionsModal] = useState(false);
   const [openTagsModal, setOpenTagsModal] = useState(false);
