@@ -35,6 +35,8 @@ import styles from './personal-insights.module.scss';
 import Avatar from 'react-avatar';
 import { DATE_RANGES } from '../../components/dateRangeSelector';
 import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants/date';
+import SocialCircle from '../../components/repos/socialCycle';
+import { SOCIAL_CIRCLE_TYPES } from '../../components/repos/socialCycle/constants';
 
 const { fetchSmartCommentSummary, fetchSmartCommentOverview } =
   commentsOperations;
@@ -372,6 +374,7 @@ const PersonalInsights = () => {
           handleFilter={handleFilter}
         />
         <SnapshotBar text="New Feature! Save these charts and comments as Snapshots on your Portfolio." />
+        <SocialCircle type={SOCIAL_CIRCLE_TYPES.personal} />
         <div className="is-flex is-flex-wrap-wrap my-20">
           <ReactionChart
             className="ml-neg10"

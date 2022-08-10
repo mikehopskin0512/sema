@@ -8,6 +8,8 @@ import { PATHS, SEMA_FAQ_SLUGS, SEMA_INTERCOM_URL, SEMA_MAIN_URL } from '../../.
 import useResizeObserver from 'use-resize-observer';
 import clsx from 'clsx';
 import Footer from '../../../components/footer';
+import { SOCIAL_CIRCLE_TYPES } from '../../../components/repos/socialCycle/constants';
+import { getAllUserReposStats } from '@/components/repos/socialCycle/utils';
 
 const CollaborationPublicPage = () => {
   const {
@@ -20,11 +22,22 @@ const CollaborationPublicPage = () => {
   const {
     handle,
     repoId,
+    repos
   } = query;
   const [repoName, setRepoName] = useState('');
   const [user, setUser] = useState('');
+  const isPersonalGraph = repoId === SOCIAL_CIRCLE_TYPES.personal;
 
   useEffect(() => {
+    if (isPersonalGraph) {
+      getAllUserReposStats(handle, repos).then(({ interactions, user }) => {
+        setInteractions(interactions);
+        setUser(user);
+        setIsLoaded(true);
+      }).catch(() => {})
+      return;
+    }
+
     getRepoSocialGraph({
       handle,
       repoId,
@@ -35,11 +48,15 @@ const CollaborationPublicPage = () => {
         setUser(res?.data?.user);
         setIsLoaded(true);
       });
-  }, [repoId]);
+  }, [repoId, isPersonalGraph]);
+
+
 
   const onStartButtonClick = async () => {
     await push(`${PATHS.LOGIN}?isFastForwardOnboarding=true`);
   };
+
+  const title = repoId === SOCIAL_CIRCLE_TYPES.personal ? `${handle}'s Social Cycle` : `${handle}'s Repo Colleagues for ${repoName}`;
 
   return (
     <div className={styles['wrapper']}>
@@ -48,7 +65,7 @@ const CollaborationPublicPage = () => {
         <div className={styles['collaboration-page-wrapper']}>
           <div className={styles['collaboration-page-header']}>
             <p className={styles['collaboration-page-title']}>
-              {handle}'s Repo Colleagues for {repoName}
+              {title}
             </p>
             <a href={SEMA_MAIN_URL} target='_blank' rel='noreferrer'>
               <img className={styles['collaboration-page-logo']} alt='Sema logo' src='/img/logo-full-bright.png' />
