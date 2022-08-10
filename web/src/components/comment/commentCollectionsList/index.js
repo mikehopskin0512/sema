@@ -202,7 +202,7 @@ const CommentCollectionsList = () => {
   const inactiveCollections = useMemo(() => {
     const result = sortedCollections.filter(
       (collection) => !collection.isActive);
-      if(!isEmpty(organizationCollections)) {
+      if(!isEmpty(organizationCollections) || profileViewMode === PROFILE_VIEW_MODE.INDIVIDUAL_VIEW) {
         setIsCalculatingActive(false);
       }
       return result || [];
@@ -247,11 +247,7 @@ const CommentCollectionsList = () => {
     localStorage.setItem(SEMA_COLLECTIONS_VIEW_MODE, value);
   };
   
-  const isLoaderNeeded = isEmpty(selectedOrganization) ?
-    isCalculatingActive || isFetching :
-      (isCalculatingActive || 
-      isFetching || 
-      organizationsNewState.isFetching);
+  const isLoaderNeeded = isCalculatingActive || isFetching || ((!isEmpty(selectedOrganization) && organizationsNewState.isFetching));
 
   return (
     <div>
