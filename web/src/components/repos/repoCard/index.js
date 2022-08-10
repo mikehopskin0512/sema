@@ -17,6 +17,7 @@ import { toggleOrgRepoPinned } from '../../../state/features/organizations[new]/
 import { toggleUserRepoPinned } from '../../../state/features/auth/actions';
 import RepoSyncText from '../../repoSync/repoSyncText';
 import { useFlags } from '../../launchDarkly';
+import StatusChip from './statusChip';
 
 const statLabels = {
   smartCodeReviews: 'Pull Requests',
@@ -118,16 +119,19 @@ function RepoCard(props) {
               ))}
             </div>
           </div>
-          <div className='mx-12 py-10 is-flex is-align-items-center'>
-            <Avatar
-              name={getRepoOwner()?.name}
-              src={getRepoOwner()?.avatarUrl}
-              size="20" 
-              textSizeRatio={2.5}
-              maxInitials={2}
-              round
-            />
-            <span className='is-size-8 ml-8 has-text-black'>{getRepoOwner()?.name}</span>
+          <div className='mx-12 py-10 is-flex is-align-items-center is-justify-content-space-between'>
+            <div>
+              <Avatar
+                name={getRepoOwner()?.name}
+                src={getRepoOwner()?.avatarUrl}
+                size="20" 
+                textSizeRatio={2.5}
+                maxInitials={2}
+                round
+              />
+              <span className='is-size-8 ml-8 has-text-black'>{getRepoOwner()?.name}</span>
+            </div>
+            <StatusChip visibility={visibility || 'public'} />
           </div>
         </div>
         {isOrganizationAdmin() && (
