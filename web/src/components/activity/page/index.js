@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import ActivityItem from '../item';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../snapshots/modalWindow';
 import SnapshotBar from '../../snapshots/snapshotBar';
-import Pagination from '@/components/pagination';
+import Pagination from '../../pagination';
 
 const ActivityPage = ({ setFilter }) => {
   const { comments } = useSelector((state) => ({
