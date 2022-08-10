@@ -58,7 +58,7 @@ const mergeTwoData = (reactions, type) => {
       });
       chart.push(item);
     }
-    if (currentIndex === reactions.length - 1) {
+    if (currentIndex === reactions.length - 1 && type !== 'm') {
       chart.push(currentValue);
     }
     return currentValue;
