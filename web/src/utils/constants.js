@@ -498,6 +498,8 @@ export const getStatusLabels = (status, progress = null) => {
   }
 }
 
+export const FACEBOOK_APP_ID = '773484623805894';
+
 export const REPO_VISIBILITY = {
   ...PORTFOLIO_TYPES
 };
