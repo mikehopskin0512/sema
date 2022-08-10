@@ -2,7 +2,7 @@ import axios from 'axios';
 import Rollbar from 'rollbar';
 import { environment, rollbarToken } from '../config';
 
-const enabled = process.env.NODE_ENV === 'production';
+const enabled = process.env.NODE_ENV === 'production' && !process.stdout.isTTY;
 
 const rollbar = new Rollbar({
   accessToken: rollbarToken,
