@@ -8,7 +8,7 @@ import NoChartData from '../../noChartData';
 const LineChart = ({ data = [], renderTooltip, emptyChart }) => {
   if (emptyChart) {
     return (
-      <NoChartData type="Summaries" />
+      <NoChartData />
     );
   }
   const getDataColor = ({ id }) => {
@@ -79,7 +79,6 @@ const LineChart = ({ data = [], renderTooltip, emptyChart }) => {
           direction: 'row',
           justify: false,
           translateX: 0,
-          translateY: 90,
           itemsSpacing:7,
           itemWidth: 100,
           itemHeight: 20,

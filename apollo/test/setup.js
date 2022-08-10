@@ -29,6 +29,17 @@ afterAll(async () => {
   app.server.close();
 });
 
+// Makes Jest watch mode more reliable by shutting
+// down the server when process halts.
+process.on('exit', () => {
+  try {
+    mongoose.connection.close();
+    app.server.close();
+  } catch (error) {
+    // Ignore these errors.
+  }
+});
+
 async function clearMongoDB() {
   const collections = [...Object.values(mongoose.connection.collections)];
   await Promise.all(collections.map((collection) => collection.deleteMany()));

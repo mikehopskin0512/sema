@@ -119,7 +119,7 @@ const TagsChart = ({
     </TooltipWrapper>
   ));
 
-  const isButtonActive = !emptyChart && !isSnapshot && onClick;
+  const isButtonActive = !emptyChart && onClick;
 
   return (
     <>
@@ -130,7 +130,7 @@ const TagsChart = ({
             <>
               <div className='is-flex is-full-width'>
                 <p className='has-text-black-950 has-text-weight-semibold is-full-width'>Overall Review Tags</p>
-                <SnapshotButton onClick={onClick} disabled={!isButtonActive} />
+                {!isSnapshot && <SnapshotButton onClick={onClick} disabled={!isButtonActive} />}
               </div>
               <CircularPacking
                 circlePackingData={circlePackingData}

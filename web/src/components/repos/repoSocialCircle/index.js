@@ -13,7 +13,7 @@ import { NotSyncedRepoBanner } from "./banners/notSyncedRepoBanner";
 import { SyncInProgressRepoBanner } from "./banners/syncInProgressBanner";
 import { createDataUrl, onDownloadImage } from '../../../utils/imageHelpers';
 import { uploadInfographicsImage } from '../../../state/features/auth/api';
-import { shareWithLinkedIn, shareWithTwitter } from '../../../utils/socialMedia';
+import { shareWithLinkedIn, shareWithTwitter, shareWithFacebook } from '../../../utils/socialMedia';
 import Tooltip from "../../Tooltip";
 
 export const SYNC_STATUSES = {
@@ -96,8 +96,7 @@ function RepoSocialCircle({ repoId, isLoading }) {
 
   const socials = [
     { name: 'twitter', icon: TwitterIcon, onClick: () => shareWithTwitter({ text: 'Check out my Github Social Circle!', url: socialCircleUrl })},
-    // ToDo: return this code when facebook sharing will be fixed
-    // { name: 'facebook', icon: FacebookIcon, onClick: () => shareWithFacebook({ url: socialCircleUrl })},
+    { name: 'facebook', icon: FacebookIcon, onClick: () => shareWithFacebook({ url: socialCircleUrl })},
     { name: 'linkedin', icon: LinkedinIcon, onClick: () => shareWithLinkedIn({ url: socialCircleUrl })},
   ];
 

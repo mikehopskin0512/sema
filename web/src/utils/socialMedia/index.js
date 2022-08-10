@@ -1,4 +1,5 @@
-import { TWITTER_URL, LINKEDIN_URL, FACEBOOK_URL } from "../constants/socials"
+import { FACEBOOK_APP_ID } from "../constants";
+import { TWITTER_URL, LINKEDIN_URL, FACEBOOK_URL } from "../constants/socials";
 /*
   Redirects the user to twitter with a prepared tweet
   STRING - text - The main content
@@ -17,6 +18,6 @@ export const shareWithLinkedIn = ({ url = '' }) => {
 }
 
 export const shareWithFacebook = ({ url = '' }) => {
-  const link = `${FACEBOOK_URL}/dialog/share?href=${url}`;
+  const link = `${FACEBOOK_URL}/dialog/share?app_id=${FACEBOOK_APP_ID}&display=popup&href=${url}`;
   window.open(link, '_blank');
 }

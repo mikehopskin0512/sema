@@ -150,7 +150,7 @@ const ReactionLineChart = ({
     }
   });
 
-  const isButtonActive = !emptyChart && !isSnapshot && onClick;
+  const isButtonActive = !emptyChart && onClick;
 
   return (
     <>
@@ -160,7 +160,7 @@ const ReactionLineChart = ({
             <>
               <div className="is-flex">
                 <p className="has-text-black-950 has-text-weight-semibold">Overall Repo Summaries</p>
-                <SnapshotButton onClick={onClick} disabled={!isButtonActive} />
+                {!isSnapshot && <SnapshotButton onClick={onClick} disabled={!isButtonActive} />}
               </div>
               <LineChart
                 data={lineChartData}

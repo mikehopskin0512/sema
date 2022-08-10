@@ -6,7 +6,7 @@ import NoChartData from '../noChartData';
 const CircularPacking = ({ circlePackingData, emptyChart, renderTooltip }) => {
   if (emptyChart) {
     return (
-      <NoChartData type="Tags" />
+      <NoChartData />
     );
   }
 

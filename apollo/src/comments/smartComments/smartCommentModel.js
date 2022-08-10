@@ -84,8 +84,8 @@ const smartCommentSchema = new Schema(
     },
     analyzedAt: {
       type: Date,
-      default: null
-    }
+      default: null,
+    },
   },
   { collection: 'smartComments', timestamps: true }
 );
@@ -156,6 +156,17 @@ smartCommentSchema.index(
 );
 
 smartCommentSchema.index({ 'repositoryId': 1, 'source.createdAt': -1 });
+
+// This is for analyzing comments using a background job.
+smartCommentSchema.index(
+  { 'analyzedAt': 1, 'source.origin': 1 },
+  {
+    partialFilterExpression: {
+      'analyzedAt': { $type: 'null' },
+      'source.origin': 'sync',
+    },
+  }
+);
 
 function getCommentId({ type, id }) {
   if (!type || !id) return null;

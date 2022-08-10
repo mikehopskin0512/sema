@@ -38,6 +38,7 @@ const FilterBar = ({
               onChange={onDateChange}
               outlined
               onChangeFilter={onChangeFilter}
+              selectedTab={tab}
             />
           </div>
           {tab === 'activity' && (
@@ -126,7 +127,7 @@ const FilterBar = ({
               showCheckbox
               outlined
             />
-          </div> 
+          </div>
           <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end mt-20">
             <SearchIcon
               color={'#B7C0C6'}
