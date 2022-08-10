@@ -64,9 +64,10 @@ function RepoRow(props) {
                   {isPinned ? <StarFilledIcon color={orange400} /> : <StarOutlineScg color={hovered ? orange400 : black900} />}
                 </div>
               </Tooltip>
-              <OverflowTooltip ref={titleRef} text={name}>
-                <p ref={titleRef} className={clsx("has-text-weight-semibold is-size-6 ml-25", styles.body)}>{name}</p>
-              </OverflowTooltip>
+              <OverflowTooltip
+                text={name}
+                typographyStyle={clsx("has-text-weight-semibold is-size-6 ml-25", styles.body)}
+              />
             </div>
           </td>
           <td className="py-15 has-background-white px-10">

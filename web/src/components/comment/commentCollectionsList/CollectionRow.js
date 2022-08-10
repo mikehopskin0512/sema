@@ -21,7 +21,6 @@ const { updateCollectionIsActiveAndFetchCollections } = collectionsOperations;
 const { updateorganizationCollectionIsActiveAndFetchCollections } = organizationsOperations;
 
 const CollectionRow = ({ data }) => {
-  const titleRef = useRef();
   const dispatch = useDispatch();
   const router = useRouter();
   const { token, selectedOrganization, user } = useSelector((state) => state.authState);
@@ -117,11 +116,10 @@ const CollectionRow = ({ data }) => {
         </td>
         <td className="py-15 has-background-white px-10 is-hidden-mobile m-0" width={"27%"}>
           <div className={clsx("is-flex is-align-items-center is-justify-content-space-between m-0", styles.title)}>
-            <OverflowTooltip ref={titleRef} text={name}>
-              <p ref={titleRef} className={clsx("is-size-7 has-text-weight-semibold has-overflow-ellipsis m-0", styles.titleText)}>
-                {name}
-              </p>
-            </OverflowTooltip>
+            <OverflowTooltip
+              text={name}
+              typographyStyle={clsx("is-size-7 has-text-weight-semibold has-overflow-ellipsis m-0", styles.titleText)}
+            />
             {canAddSnippets && (
               <div
                 className={'button is-primary is-outlined is-clickable has-text-weight-semibold is-size-7'}

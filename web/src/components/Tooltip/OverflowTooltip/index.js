@@ -1,9 +1,11 @@
-import React, { useEffect, useState, forwardRef } from 'react';
+import React, { useEffect, useState, forwardRef, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { isElementOverflow } from '../../../utils';
 import Tooltip from '../index';
+import styles from "../tooltip.module.scss"
 
-const OverflowTooltip = forwardRef(({ text, children }, ref) => {
+const OverflowTooltip = ({ text, typographyStyle = '' }) => {
+  const ref = useRef()
   const [refState, setRefState] = useState(null);
 
   useEffect(() => {
@@ -18,15 +20,15 @@ const OverflowTooltip = forwardRef(({ text, children }, ref) => {
 
   return (
     <>
-      <Tooltip text={text} isActive={isElementOverflow(refState)}>
-        {children}
+      <Tooltip className={styles['overflow-tooltip']} text={text} isActive={isElementOverflow(refState)}>
+        <p ref={ref} className={typographyStyle}>{text}</p>
       </Tooltip>
     </>
   )
-});
+};
 
 OverflowTooltip.propTypes = {
-  children: PropTypes.node.isRequired,
+  typographyStyle: PropTypes.string,
   text: PropTypes.string.isRequired,
 };
 

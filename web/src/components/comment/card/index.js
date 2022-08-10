@@ -41,7 +41,6 @@ export const MENU_ITEMS_TYPES = {
 };
 
 const Card = ({ isActive, collectionData, addNewComment, type }) => {
-  const titleRef = useRef(null);
   const {
     isOrganizationAdmin,
     isOrganizationAdminOrLibraryEditor,
@@ -249,17 +248,13 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                   <TeamIcon color={orange600} size="small" />
                 </div>
               )}
-              <OverflowTooltip ref={titleRef} text={name}>
-                <p
-                  ref={titleRef}
-                  className={clsx(
-                    'has-text-black-900 has-text-weight-semibold is-size-5 pr-10',
-                    styles.title
-                  )}
-                >
-                  {name}
-                </p>
-              </OverflowTooltip>
+              <OverflowTooltip
+                text={name}
+                typographyStyle={clsx(
+                  'has-text-black-900 has-text-weight-semibold is-size-5 pr-10',
+                  styles.title
+                )}
+              />
               {asPath === PATHS.SNIPPETS._ && (
                 <div className="field" onClick={onClickChild} aria-hidden>
                   <input

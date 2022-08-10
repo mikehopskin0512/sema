@@ -95,7 +95,7 @@ export const hooks = {
       const SECRET_KEY = 'CFUL2XGHWAMAVAQS';
       const otp = generateToken(SECRET_KEY);
 
-      console.log(otp);
+      console.log("OTP: " + otp);
 
       await browser.maximizeWindow();
 
@@ -107,11 +107,13 @@ export const hooks = {
       await signupBtn.click();
 
       await $('#login_field').setValue(
-        'qateam+automationadmin@semasoftware.com'
+         // 'qateam+autonadmin@semasoftware.com'
+          'qateam+automationadmin@semasoftware.com'
       );
+
       await $('#password').setValue('Automation1Tester2#');
       await $('.js-sign-in-button').click();
-      await $('#otp').setValue(otp);
+      await $('#totp').setValue(otp);
       await $('button*=Verify');
 
       if ((await $$('button*=Authorize Sema').length) > 0) {
