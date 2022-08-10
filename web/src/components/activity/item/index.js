@@ -19,9 +19,7 @@ function ActivityItem(props) {
     tags = [],
     createdAt = '',
     userId: user,
-    source: {
-      createdAt: sourceCreatedAt = '',
-    },
+    source,
     githubMetadata: {
       title = '',
       url = '#',
@@ -34,7 +32,9 @@ function ActivityItem(props) {
     },
     isSnapshot = false,
   } = props;
-
+  const {
+    createdAt: sourceCreatedAt = '',
+  } = source || { sourceCreatedAt: ''}
   const {
     username = 'User@email.com',
     firstName = '',
