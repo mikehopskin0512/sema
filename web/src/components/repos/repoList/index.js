@@ -178,20 +178,19 @@ function RepoList({
     setFilteredRepos({ other: sortedRepos, pinned: sortedPinnedRepos });
   };
 
-  const renderCards = (repos, isPinned) =>
-    repos.map((child, i) => (
-      <RepoCard
-        {...child}
-        isOrganizationView={type !== 'MY_REPOS'}
-        isFavorite={type === 'FAVORITES'}
-        key={i}
-        onRemoveRepo={removeRepo}
-        idx={i}
-        reposLength={repos.length}
-        selectedOrganization={selectedOrganization}
-        isPinned={isPinned}
-      />
-    ));
+  const renderCards = (repos, isPinned) => repos.map((child, i) => (
+    <RepoCard
+      {...child}
+      isOrganizationView={type !== 'MY_REPOS'}
+      isFavorite={type === 'FAVORITES'}
+      key={i}
+      onRemoveRepo={removeRepo}
+      idx={i}
+      reposLength={repos.length}
+      selectedOrganization={selectedOrganization}
+      isPinned={isPinned}
+    />
+  ));
 
   const handleOnClose = () => {
     dispatch(clearAlert());
@@ -312,13 +311,28 @@ function RepoList({
                 {pinnedRepos.length > 0 &&
                   <>
                     <div className="has-text-weight-semibold is-size-5 ml-10 mb-25">{`Pinned repos (${pinnedRepos.length})`}</div>
-                    <div className={clsx("is-flex is-flex-wrap-wrap is-align-content-stretch", !filteredRepos.pinned.length && 'ml-10' )}>{!pinnedRepos.length ? 'No Pinned Repos yet. Add your first one!' : (search && filteredRepos.pinned.length === 0) ? 'No Results Found. We couldn’t find any match' : renderCards(filteredRepos.pinned, true)}</div>
+                    <div className={clsx("is-flex is-flex-wrap-wrap is-align-content-stretch", !filteredRepos.pinned.length && 'ml-10' )}>
+                      {
+                        !pinnedRepos.length ?
+                          'No Pinned Repos yet. Add your first one!' :
+                          (search && filteredRepos.pinned.length === 0) ?
+                            'No Results Found. We couldn’t find any match' :
+                            renderCards(filteredRepos.pinned, true)}
+                    </div>
                   </>
                 }
                 {otherReposCount > 0 &&
                   <>
                     <div className="has-text-weight-semibold is-size-5 ml-10 mb-25 mt-40">{`Other repos (${otherReposCount})`}</div>
-                    <div className={clsx("is-flex is-flex-wrap-wrap is-align-content-stretch", !filteredRepos.other.length && 'ml-10' )}>{!repos.length ? 'No Repos yet.' : (search && filteredRepos.other.length === 0) ? 'No Results Found. We couldn’t find any match' : renderCards(filteredRepos.other, false)}</div>
+                    <div className={clsx("is-flex is-flex-wrap-wrap is-align-content-stretch", !filteredRepos.other.length && 'ml-10' )}>
+                      {
+                        !repos.length ?
+                          'No Repos yet.' :
+                          (search && filteredRepos.other.length === 0) ?
+                            'No Results Found. We couldn’t find any match' :
+                            renderCards(filteredRepos.other, false)
+                      }
+                    </div>
                   </>
                 }
                 </div>}

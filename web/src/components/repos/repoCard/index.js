@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,7 +39,7 @@ function RepoCard(props) {
     sync, idx, reposLength, selectedOrganization, isPinned = false, visibility
   } = props;
   const { isOrganizationAdmin } = usePermission();
-  const [repoStatus] = useState(sync?.status || 'notsynced');
+  const repoStatus = sync?.status || 'notsynced';
   const progress = sync?.progress || {};
   const [isDeleteRepoModalOpen, setDeleteRepoModalOpen] = useState(false);
   const fullName = `${user.firstName} ${user.lastName}`;
