@@ -5,7 +5,7 @@ import InteractionCircleChart from '../../chart/InteractionCircleChart';
 import { blue700 } from '../../../../styles/_colors.module.scss';
 import styles from './socialCircleStyles.module.scss';
 import Tooltip from '../../Tooltip';
-import { CIRCLE_UPDATE_INTERVAL, CIRCLE_SHARE_LINK, SOCIAL_CIRCLE_TYPES } from '../../../components/repos/socialCircle/constants';
+import { CIRCLE_SHARE_LINK, CIRCLE_UPDATE_INTERVAL, SOCIAL_CIRCLE_TYPES } from '../../../components/repos/socialCircle/constants';
 import {
   getAllUserReposStats,
   getCorrectSocialCircleLink,
@@ -26,9 +26,14 @@ function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
   const [isCopied, changeIsCopied] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  const { user, token } = useSelector((state) => state.authState);
-  const { data: repoData, isFetching } = useSelector((state) => state.repositoriesState);
-
+  const {
+    user,
+    token,
+  } = useSelector((state) => state.authState);
+  const {
+    data: repoData,
+    isFetching,
+  } = useSelector((state) => state.repositoriesState);
 
   const username = user?.identities[0]?.username;
   const repos = repoData.repositories ?? [];
@@ -38,16 +43,15 @@ function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
     return getSocialCircleTitle(type, username);
   }, [type, username]);
 
-  const isAvailable = useMemo(() => getSocialCircleAvailability({
+  const isAvailable = getSocialCircleAvailability({
     type,
     repos,
-  }), [type, repos]);
+  });
 
-  const isSyncing = useMemo(() => getSocialCircleSyncState({
+  const isSyncing = getSocialCircleSyncState({
     type,
     repos,
-  }), [type, repos]);
-
+  });
 
   const calculateCircleValues = () => {
     if (type === SOCIAL_CIRCLE_TYPES.personal) {
@@ -62,7 +66,7 @@ function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
         });
     } else {
     }
-  }
+  };
 
   useEffect(() => {
     calculateCircleValues();
@@ -74,15 +78,21 @@ function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
       const { repositories: userRepos } = user.identities[0] || {};
       if (userRepos?.length && !repoData?.repositories?.length) {
         const repos = userRepos.map(r => r.id);
-        interval = setInterval(() => dispatch(fetchRepoDashboard({ externalIds: repos, query: {} }, token)), CIRCLE_UPDATE_INTERVAL);
-        dispatch(fetchRepoDashboard({ externalIds: repos, query: {} }, token));
+        interval = setInterval(() => dispatch(fetchRepoDashboard({
+          externalIds: repos,
+          query: {},
+        }, token)), CIRCLE_UPDATE_INTERVAL);
+        dispatch(fetchRepoDashboard({
+          externalIds: repos,
+          query: {},
+        }, token));
       }
     }
 
     return () => {
       if (interval) clearInterval(interval);
-    }
-  }, [user])
+    };
+  }, [user]);
 
   const onCopy = () => {
     navigator.clipboard.writeText(circleLink);
@@ -90,7 +100,11 @@ function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
     setTimeout(() => changeIsCopied(false), 3000);
   };
 
-  const actions = useMemo(() => getSocialCircleActions({ onCopy, ref: containerRef, type }), [type, containerRef.current]);
+  const actions = useMemo(() => getSocialCircleActions({
+    onCopy,
+    ref: containerRef,
+    type,
+  }), [type, containerRef.current]);
 
   const socials = useMemo(() => getCorrectSocialCircleLink(circleLink), [circleLink]);
 
@@ -117,12 +131,12 @@ function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
     </div>
   ));
 
+  if (isFetching && isInitialLoad) return null;
 
-  if (isFetching) return null;
+  if (isSyncing) return <div className='mt-20'><SyncInProgressRepoBanner /></div>;
 
-  if (isSyncing) return <div className="mt-20"><SyncInProgressRepoBanner /></div>;
-
-  if (!isAvailable && !isInitialLoad) return <div className="mt-20"><PrivateRepoBanner customText="Unable to generate social circle" /></div>;
+  console.log(repoData.repositories.length, isInitialLoad)
+  if (!isAvailable) return <div className='mt-20'><PrivateRepoBanner customText='Unable to generate social circle' /></div>;
 
   return (
     <div className={clsx(styles.card, 'is-flex is-justify-content-space-between')}>
@@ -148,13 +162,13 @@ function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
           </div>
         </div>
       </div>
-      <div className='is-flex is-flex-direction-column' style={{width: '100%'}}>
+      <div className='is-flex is-flex-direction-column' style={{ width: '100%' }}>
         <div ref={containerRef}>
           <InteractionCircleChart progress={false} interactions={interactions} user={user} />
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default SocialCircle;
