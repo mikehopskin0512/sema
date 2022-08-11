@@ -35,8 +35,8 @@ import styles from './personal-insights.module.scss';
 import Avatar from 'react-avatar';
 import { DATE_RANGES } from '../../components/dateRangeSelector';
 import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants/date';
-import SocialCircle from '../../components/repos/socialCycle';
-import { SOCIAL_CIRCLE_TYPES } from '../../components/repos/socialCycle/constants';
+import SocialCircle from '../../components/repos/socialCircle';
+import { SOCIAL_CIRCLE_TYPES } from '../../components/repos/socialCircle/constants';
 
 const { fetchSmartCommentSummary, fetchSmartCommentOverview } =
   commentsOperations;

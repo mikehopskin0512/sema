@@ -8,8 +8,8 @@ import { PATHS, SEMA_FAQ_SLUGS, SEMA_INTERCOM_URL, SEMA_MAIN_URL } from '../../.
 import useResizeObserver from 'use-resize-observer';
 import clsx from 'clsx';
 import Footer from '../../../components/footer';
-import { SOCIAL_CIRCLE_TYPES } from '../../../components/repos/socialCycle/constants';
-import { getAllUserReposStats } from '@/components/repos/socialCycle/utils';
+import { SOCIAL_CIRCLE_TYPES } from '../../../components/repos/socialCircle/constants';
+import { getAllUserReposStats } from '../../../components/repos/socialCircle/utils';
 
 const CollaborationPublicPage = () => {
   const {
@@ -56,7 +56,7 @@ const CollaborationPublicPage = () => {
     await push(`${PATHS.LOGIN}?isFastForwardOnboarding=true`);
   };
 
-  const title = repoId === SOCIAL_CIRCLE_TYPES.personal ? `${handle}'s Social Cycle` : `${handle}'s Repo Colleagues for ${repoName}`;
+  const title = repoId === SOCIAL_CIRCLE_TYPES.personal ? `${handle}'s Social Circle` : `${handle}'s Repo Colleagues for ${repoName}`;
 
   return (
     <div className={styles['wrapper']}>

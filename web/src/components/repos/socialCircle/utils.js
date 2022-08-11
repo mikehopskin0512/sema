@@ -1,10 +1,10 @@
-import { SOCIAL_CIRCLE_TYPES, SYNC_STATUSES } from '../../../components/repos/socialCycle/constants';
+import { SOCIAL_CIRCLE_TYPES, SYNC_STATUSES } from './constants';
 import { DownloadIcon, LinkedinIcon, LinkIcon, TwitterIcon } from '../../../components/Icons';
 import { onDownloadImage } from '../../../utils/imageHelpers';
 import { shareWithLinkedIn, shareWithTwitter } from '../../../utils/socialMedia';
 import { getRepoSocialGraph } from '../../../state/features/repositories/api';
 
-const getCorrectSocialCycleLink = (link) => {
+const getCorrectSocialCircleLink = (link) => {
   return [
     { name: 'twitter', icon: TwitterIcon, onClick: () => shareWithTwitter({ text: 'Check out my Github Social Circle!', url: link })},
     // { name: 'facebook', icon: FacebookIcon, onClick: () => shareWithFacebook({ url: socialCircleUrl })},
@@ -12,7 +12,7 @@ const getCorrectSocialCycleLink = (link) => {
   ];
 };
 
-const getSocialCycleActions = ({
+const getSocialCircleActions = ({
   ref,
   onCopy,
   type
@@ -33,24 +33,21 @@ const getSocialCycleActions = ({
       },
     ];
   } else {
-    // TODO: add logic for org cycle
+    // TODO: add logic for org circle
     return [];
   }
 };
 
-const getSocialCycleNetworks = () => {
-};
-
-const getSocialCycleTitle = (type, userName) => {
+const getSocialCircleTitle = (type, userName) => {
   if (type === SOCIAL_CIRCLE_TYPES.personal) {
     return `GitHub Social Circle for ${userName}`;
   } else {
-    // TODO: add logic for org cycle
+    // TODO: add logic for org circle
     return null;
   }
 };
 
-const getSocialCycleAvailability = ({
+const getSocialCircleAvailability = ({
   type,
   repos,
 }) => {
@@ -58,12 +55,12 @@ const getSocialCycleAvailability = ({
     if (!repos.length) return false;
     return repos.some(r => r.sync?.status === SYNC_STATUSES.COMPLETED);
   } else {
-    // TODO: add logic for org cycle
+    // TODO: add logic for org circle
     return false;
   }
 };
 
-const getSocialCycleSyncState = ({
+const getSocialCircleSyncState = ({
   type,
   repos,
 }) => {
@@ -71,7 +68,7 @@ const getSocialCycleSyncState = ({
     if (!repos.length) return false;
     return repos.some(r => r.sync?.status === SYNC_STATUSES.QUEUED || r.sync?.status === SYNC_STATUSES.STARTED);
   } else {
-    // TODO: add logic for org cycle
+    // TODO: add logic for org circle
     return false;
   }
 };
@@ -96,11 +93,10 @@ const getAllUserReposStats = async (username, repos) => {
 
 
 export {
-  getCorrectSocialCycleLink,
-  getSocialCycleNetworks,
-  getSocialCycleActions,
-  getSocialCycleTitle,
-  getSocialCycleAvailability,
-  getSocialCycleSyncState,
+  getCorrectSocialCircleLink,
+  getSocialCircleActions,
+  getSocialCircleTitle,
+  getSocialCircleAvailability,
+  getSocialCircleSyncState,
   getAllUserReposStats
 };

@@ -3,17 +3,17 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InteractionCircleChart from '../../chart/InteractionCircleChart';
 import { blue700 } from '../../../../styles/_colors.module.scss';
-import styles from './socialCycleStyles.module.scss';
+import styles from './socialCircleStyles.module.scss';
 import Tooltip from '../../Tooltip';
-import { CIRCLE_UPDATE_INTERVAL, CYCLE_SHARE_LINK, SOCIAL_CIRCLE_TYPES } from '../../../components/repos/socialCycle/constants';
+import { CIRCLE_UPDATE_INTERVAL, CIRCLE_SHARE_LINK, SOCIAL_CIRCLE_TYPES } from '../../../components/repos/socialCircle/constants';
 import {
   getAllUserReposStats,
-  getCorrectSocialCycleLink,
-  getSocialCycleActions,
-  getSocialCycleAvailability,
-  getSocialCycleSyncState,
-  getSocialCycleTitle,
-} from '../../../components/repos/socialCycle/utils';
+  getCorrectSocialCircleLink,
+  getSocialCircleActions,
+  getSocialCircleAvailability,
+  getSocialCircleSyncState,
+  getSocialCircleTitle,
+} from '../../../components/repos/socialCircle/utils';
 import { getUserRepositories } from '../../../state/features/repositories/operations';
 import { PrivateRepoBanner } from '../../../components/repos/repoSocialCircle/banners/privateRepoBanner';
 import { SyncInProgressRepoBanner } from '../../../components/repos/repoSocialCircle/banners/syncInProgressBanner';
@@ -32,24 +32,24 @@ function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
 
   const username = user?.identities[0]?.username;
   const repos = repoData.repositories ?? [];
-  const cycleLink = CYCLE_SHARE_LINK[type]?.(type, username, repos.map(i => i.externalId));
+  const circleLink = CIRCLE_SHARE_LINK[type]?.(type, username, repos.map(i => i.externalId));
 
-  const socialCycleTitle = useMemo(() => {
-    return getSocialCycleTitle(type, username);
+  const socialCircleTitle = useMemo(() => {
+    return getSocialCircleTitle(type, username);
   }, [type, username]);
 
-  const isAvailable = useMemo(() => getSocialCycleAvailability({
+  const isAvailable = useMemo(() => getSocialCircleAvailability({
     type,
     repos,
   }), [type, repos]);
 
-  const isSyncing = useMemo(() => getSocialCycleSyncState({
+  const isSyncing = useMemo(() => getSocialCircleSyncState({
     type,
     repos,
   }), [type, repos]);
 
 
-  const calculateCycleValues = () => {
+  const calculateCircleValues = () => {
     if (type === SOCIAL_CIRCLE_TYPES.personal) {
       getAllUserReposStats(username, repos.map(i => i.externalId))
         .then(({ interactions }) => {
@@ -66,13 +66,13 @@ function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      calculateCycleValues();
+      calculateCircleValues();
     }, CIRCLE_UPDATE_INTERVAL);
 
-    calculateCycleValues();
+    calculateCircleValues();
 
     return () => clearInterval(interval);
-  }, [repos, type]);
+  }, [JSON.stringify(repos), type]);
 
   useEffect(() => {
     if (type === SOCIAL_CIRCLE_TYPES.personal && user) {
@@ -84,14 +84,14 @@ function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
   }, [type, user])
 
   const onCopy = () => {
-    navigator.clipboard.writeText(cycleLink);
+    navigator.clipboard.writeText(circleLink);
     changeIsCopied(true);
     setTimeout(() => changeIsCopied(false), 3000);
   };
 
-  const actions = useMemo(() => getSocialCycleActions({ onCopy, ref: containerRef, type }), [type, containerRef.current]);
+  const actions = useMemo(() => getSocialCircleActions({ onCopy, ref: containerRef, type }), [type, containerRef.current]);
 
-  const socials = useMemo(() => getCorrectSocialCycleLink(cycleLink), [cycleLink]);
+  const socials = useMemo(() => getCorrectSocialCircleLink(circleLink), [circleLink]);
 
   const renderIcons = (iconsArray) => iconsArray.map(({
     onClick,
@@ -125,7 +125,7 @@ function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
   return (
     <div className={clsx(styles.card, 'is-flex is-justify-content-space-between')}>
       <div className={styles.main}>
-        <h3 className={styles.title}>{socialCycleTitle}</h3>
+        <h3 className={styles.title}>{socialCircleTitle}</h3>
         <div className={styles.text}>
           <p>
             Larger circles toward the center represent your closest collaborators. You have worked with them most over the last 12 months. Smaller
