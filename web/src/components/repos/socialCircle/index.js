@@ -14,9 +14,9 @@ import {
   getSocialCircleSyncState,
   getSocialCircleTitle,
 } from '../../../components/repos/socialCircle/utils';
-import { getUserRepositories } from '../../../state/features/repositories/operations';
 import { PrivateRepoBanner } from '../../../components/repos/repoSocialCircle/banners/privateRepoBanner';
 import { SyncInProgressRepoBanner } from '../../../components/repos/repoSocialCircle/banners/syncInProgressBanner';
+import { fetchRepoDashboard } from '../../../state/features/repositories/actions';
 
 function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
   const containerRef = useRef(null);
@@ -65,23 +65,24 @@ function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
   }
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      calculateCircleValues();
-    }, CIRCLE_UPDATE_INTERVAL);
-
     calculateCircleValues();
-
-    return () => clearInterval(interval);
-  }, [JSON.stringify(repos), type]);
+  }, [repos, type]);
 
   useEffect(() => {
+    let interval;
     if (type === SOCIAL_CIRCLE_TYPES.personal && user) {
       const { repositories: userRepos } = user.identities[0] || {};
       if (userRepos?.length && !repoData?.repositories?.length) {
-        dispatch(getUserRepositories(userRepos, token));
+        const repos = userRepos.map(r => r.id);
+        interval = setInterval(() => dispatch(fetchRepoDashboard({ externalIds: repos, query: {} }, token)), CIRCLE_UPDATE_INTERVAL);
+        dispatch(fetchRepoDashboard({ externalIds: repos, query: {} }, token));
       }
     }
-  }, [type, user])
+
+    return () => {
+      if (interval) clearInterval(interval);
+    }
+  }, [user])
 
   const onCopy = () => {
     navigator.clipboard.writeText(circleLink);
@@ -116,11 +117,12 @@ function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
     </div>
   ));
 
-  if (isFetching && isInitialLoad) return null;
+
+  if (isFetching) return null;
 
   if (isSyncing) return <div className="mt-20"><SyncInProgressRepoBanner /></div>;
 
-  if (!isAvailable) return <div className="mt-20"><PrivateRepoBanner customText="Unable to generate social circle" /></div>;
+  if (!isAvailable && !isInitialLoad) return <div className="mt-20"><PrivateRepoBanner customText="Unable to generate social circle" /></div>;
 
   return (
     <div className={clsx(styles.card, 'is-flex is-justify-content-space-between')}>

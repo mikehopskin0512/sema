@@ -12,7 +12,7 @@ export const SOCIAL_CIRCLE_TYPES = {
   org: 'org',
 }
 
-export const CIRCLE_UPDATE_INTERVAL = 5 * 1000;
+export const CIRCLE_UPDATE_INTERVAL = 30 * 1000;
 
 
 export const CIRCLE_SHARE_LINK = {
