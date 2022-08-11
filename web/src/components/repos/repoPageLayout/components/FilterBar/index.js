@@ -7,7 +7,7 @@ import { DROPDOWN_SORTING_TYPES } from '../../../../../utils/constants';
 import SearchFilter from '../SearchFilter';
 import DateRangeSelector from '../../../../dateRangeSelector';
 import { ReactionList, TagList } from '../../../../../data/activity';
-import { CloseIcon, SearchIcon } from '../../../../Icons';
+import { GhRefreshIcon, SearchIcon } from '../../../../Icons';
 import { InputField } from 'adonis';
 import styles from './FilterBar.module.scss';
 import { DEFAULT_FILTER_STATE } from '../../../../../utils/constants/filter';
@@ -168,7 +168,16 @@ const FilterBar = ({
               value={searchKeyword}
               iconLeft={<SearchIcon />}
               onKeyPress={(event) => handleKeyPress(event)}
-              iconRight={searchKeyword.length ? <CloseIcon onClick={() => setSearchKeyword('')} /> : null}
+              iconRight={searchKeyword.length ?
+                <span
+                  className='mr-100 is-clickable has-text-gray-700 is-whitespace-nowrap is-flex is-align-items-center'
+                  onClick={() => setSearchKeyword('')}
+                >
+                  <GhRefreshIcon size="small" className="mr-5" />
+                  Clear Search
+                </span>
+                : null
+              }
             />
           </div>
           {onSearch && <button class="button is-primary" onClick={() => onSearch(searchKeyword)}>Search</button>}

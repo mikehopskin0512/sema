@@ -10,7 +10,7 @@ import { DROPDOWN_SORTING_TYPES } from '../../utils/constants';
 import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants/date';
 import { ReactionList, TagList } from '../../data/activity';
 import { addDays, endOfDay, format, startOfDay } from 'date-fns';
-import { CloseIcon, SearchIcon } from '../Icons';
+import { SearchIcon, GhRefreshIcon } from '../Icons';
 import { gray500 } from '../../../styles/_colors.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { organizationsOperations } from '../../state/features/organizations[new]';
@@ -252,7 +252,16 @@ const OrganizationStatsFilter = ({
             onChange={value => setSearchString(value)}
             value={searchString}
             iconLeft={<SearchIcon />}
-            iconRight={searchString.length ? <CloseIcon onClick={() => setSearchString('')} /> : null}
+            iconRight={searchString.length ?
+                <span
+                  className='mr-100 is-clickable has-text-gray-700 is-whitespace-nowrap is-flex is-align-items-center'
+                  onClick={() => setSearchString('')}
+                >
+                  <GhRefreshIcon size="small" className="mr-5" />
+                  Clear Search
+                </span>
+                : null
+              }
           />
         </div>
       )}
