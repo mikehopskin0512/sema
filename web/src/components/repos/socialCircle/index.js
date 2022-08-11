@@ -135,7 +135,6 @@ function SocialCircle({ type = SOCIAL_CIRCLE_TYPES.personal }) {
 
   if (isSyncing) return <div className='mt-20'><SyncInProgressRepoBanner /></div>;
 
-  console.log(repoData.repositories.length, isInitialLoad)
   if (!isAvailable) return <div className='mt-20'><PrivateRepoBanner customText='Unable to generate social circle' /></div>;
 
   return (
