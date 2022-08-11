@@ -7,7 +7,7 @@ import { DROPDOWN_SORTING_TYPES } from '../../../../../utils/constants';
 import SearchFilter from '../SearchFilter';
 import DateRangeSelector from '../../../../dateRangeSelector';
 import { ReactionList, TagList } from '../../../../../data/activity';
-import { SearchIcon } from '../../../../Icons';
+import { CloseIcon, SearchIcon } from '../../../../Icons';
 import { InputField } from 'adonis';
 import styles from './FilterBar.module.scss';
 import { DEFAULT_FILTER_STATE } from '../../../../../utils/constants/filter';
@@ -168,6 +168,7 @@ const FilterBar = ({
               value={searchKeyword}
               iconLeft={<SearchIcon />}
               onKeyPress={(event) => handleKeyPress(event)}
+              iconRight={searchKeyword.length ? <CloseIcon onClick={() => setSearchKeyword('')} /> : null}
             />
           </div>
           {onSearch && <button class="button is-primary" onClick={() => onSearch(searchKeyword)}>Search</button>}

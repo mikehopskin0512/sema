@@ -10,7 +10,7 @@ import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants/date';
 import { ReactionList, TagList } from '../../data/activity';
 import { isEmpty } from 'lodash';
 import { addDays, format } from 'date-fns';
-import { SearchIcon } from '../Icons';
+import { CloseIcon, SearchIcon } from '../Icons';
 import { InputField } from 'adonis';
 import { gray500 } from '../../../styles/_colors.module.scss';
 import { repositoriesOperations } from '../../state/features/repositories';
@@ -250,6 +250,7 @@ const StatsFilter = ({ filterRepoList, handleFilter, onSearch }) => {
                   value={searchKeyword}
                   iconLeft={<SearchIcon />}
                   onKeyPress={(event) => handleKeyPress(event)}
+                  iconRight={searchKeyword.length ? <CloseIcon onClick={() => setSearchKeyword('')} /> : null}
                 />
               </div>
               {onSearch && <button class="button is-primary" onClick={() => onSearch(searchKeyword)}>Search</button>}
