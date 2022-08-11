@@ -30,6 +30,7 @@ import useLocalStorage from '../../../hooks/useLocalStorage';
 import { identitiesOperations } from '../../../state/features/identities';
 import { useRouter } from 'next/router';
 import { PATHS } from '../../../utils/constants';
+import sceletonStyles from '../../comment/commentCollectionsList/commentCollectionsList.module.scss';
 
 const githubAppName = process.env.NEXT_PUBLIC_GITHUB_APP_NAME;
 
@@ -297,12 +298,12 @@ function RepoList({
               <div
                 key={index}
                 className={clsx(
-                  'p-10 is-flex is-flex-grow-1 is-clickable',
-                  repoStyles['card-width-3c'],
+                  'p-10 is-flex is-clickable',
+                  sceletonStyles['card-wrapper']
                 )}
                 aria-hidden
               >
-                <div className={repoStyles['repo-skeleton-background']}>
+                <div className={sceletonStyles['snippet-card-wrapper']}>
                   <RepoSkeleton />
                 </div>
               </div>

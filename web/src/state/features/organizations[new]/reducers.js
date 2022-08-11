@@ -232,6 +232,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         organizations: orgs,
       };
+  case types.RESET_COLLECTIONS_TO_DEFAULT:
+    return {
+      ...state,
+      organizationCollections: [],
+    }
   default:
     return state;
   }
