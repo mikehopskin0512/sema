@@ -84,7 +84,7 @@
 }
 
 .tooltip-wrapper {
-  max-width: 70%;
+  max-width: 65%;
   > div {
     width: 100%;
   }
@@ -116,7 +116,7 @@
 }
 
 .notsynced {
-  color: $gray-900;
+  background-color: $gray-200;
 }
 
 .repo-card-header {

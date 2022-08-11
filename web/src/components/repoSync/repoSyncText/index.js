@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
 import ReactTooltip from 'react-tooltip';
-import { getStatusLabels, SYNC_STATUS } from '../../../utils/constants';
-import { green600, red500 } from '../../../../styles/_colors.module.scss'
+import { getStatusLabels, REPO_VISIBILITY, SYNC_STATUS } from '../../../utils/constants';
+import { gray700, green600, red500 } from '../../../../styles/_colors.module.scss'
 import { AlertOutlineIcon, InfoOutlineIcon, QueuedIcon, RefreshIcon, SyncCompletedIcon, SyncInactiveIcon } from '../../Icons';
 import styles from './repoSyncText.module.scss';
 
-function RepoSyncText({repoStatus, progress, completedAt, isRepoPage = false, action = null}) {
+function RepoSyncText({repoStatus, progress, completedAt, isRepoPage = false, action = null, visibility}) {
 
   const STATUS_LABELS = getStatusLabels(repoStatus, progress);
   
@@ -20,7 +20,7 @@ function RepoSyncText({repoStatus, progress, completedAt, isRepoPage = false, ac
 
   const renderStandardTooltip = () => repoStatus !== SYNC_STATUS.completed.status ? STATUS_LABELS.tooltip : null;
 
-  const syncClass = "is-flex is-align-items-center ml-12";
+  const syncClass = "is-flex is-align-items-center";
 
   useEffect(() => {
     ReactTooltip.rebuild();
@@ -77,6 +77,18 @@ function RepoSyncText({repoStatus, progress, completedAt, isRepoPage = false, ac
         </div>
       }
     </>;
+
+  if (visibility === REPO_VISIBILITY.PRIVATE) {
+    return (
+      <div className={syncClass}>
+        <SyncInactiveIcon size="small" color={gray700} />
+        <span className={clsx("ml-4 is-size-8 has-text-weight-semibold", styles.private)}>
+          {SYNC_STATUS.notsynced.label}
+        </span>
+        <InfoOutlineIcon size="small" className="ml-4" color={gray700} />
+      </div>
+    );
+  }
 
   switch (repoStatus) {
     case 'errored':
