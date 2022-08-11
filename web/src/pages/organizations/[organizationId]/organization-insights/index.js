@@ -288,11 +288,9 @@ const OrganizationInsights = () => {
 
   useEffect(() => {
     if (isActive && commentView === 'received') {
-      setFilter({ ...FILTER_DEFAULT_STATE, requester: githubUser.username });
+      setFilter((prevState) => ({ ...prevState, requester: githubUser.username }));
     } else if (isActive && commentView === 'given') {
-      setFilter({ ...FILTER_DEFAULT_STATE, reviewer: githubUser.username });
-    } else {
-     setFilter(FILTER_DEFAULT_STATE)
+      setFilter((prevState) => ({ ...prevState, reviewer: githubUser.username }));
     }
   }, [isActive, commentView])
 
