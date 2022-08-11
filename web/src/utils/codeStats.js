@@ -575,7 +575,7 @@ export const getCommentsCountLastMonth = (repository) => {
   return repository.repoStats.reactions.reduce((prev, curr) => {
     if (
       isWithinInterval(
-        new Date(curr.comment.source?.createdAt || comment.createdAt),
+        new Date(curr.comment?.source?.createdAt || comment.createdAt),
         dateRange
       )
     ) {

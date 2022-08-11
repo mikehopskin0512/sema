@@ -13,7 +13,7 @@ import Toaster from '../../../../components/toaster';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import { repositoriesOperations } from '../../../../state/features/repositories';
 
-const { fetchOrganizationRepos } = organizationsOperations;
+const { fetchOrganizationRepos, resetCollectionsToDefault } = organizationsOperations;
 const { fetchRepoDashboard } = repositoriesOperations;
 
 const OrganizationRepository = () => {
@@ -52,6 +52,10 @@ const OrganizationRepository = () => {
     fetchRepos(organizationId, token);
   }, [organizationId, token]);
 
+  useEffect(() => {
+    dispatch(resetCollectionsToDefault());
+  }, []);
+
   const onSearchChange = () => debounce((val) => {
     setSearchQuery(val);
   }, ON_INPUT_DEBOUNCE_INTERVAL_MS, { leading: true });
@@ -74,20 +78,16 @@ const OrganizationRepository = () => {
     }
   }, [userRepos]);
 
+  const isSkeletonHidden = !organizations.isFetching && !isReposLoading;
+
   return (
     <>
       {memoizedToaster}
       <>
-        {organizations.isFetching || isReposLoading ? (
-          <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
-            <Loader />
-          </div>
-        ) : (
           <div>
             <Helmet {...OrganizationReposHelmet} />
-            <ReposView type="organization" withSearch searchQuery={searchQuery} onSearchChange={onSearchChange()} />
+            <ReposView type="organization" withSearch searchQuery={searchQuery} onSearchChange={onSearchChange()} isLoaded={isSkeletonHidden}/>
           </div>
-        )}
       </>
     </>
   )
