@@ -44,6 +44,7 @@ const CommentCollectionsList = () => {
       organizationsNewState: state.organizationsNewState,
     })
   );
+  const [isCalculatingActive, setIsCalculatingActive] = useState(true);
   const [view, setView] = useState('grid');
   const [filter, setFilter] = useState({
     labels: [],
@@ -189,20 +190,23 @@ const CommentCollectionsList = () => {
   }, [
     currentPage,
     pageSize,
-    isFetching,
-    filter,
     sortedCollections,
-    data,
-    organizationCollections,
   ]);
 
-  const activeCollections = sortedCollections.filter(
-    (collection) => collection.isActive
-  );
+  const activeCollections = useMemo(() => {
+    const result = sortedCollections.filter(
+    (collection) => collection.isActive);
+    return result || [];
+  }, [sortedCollections]);
 
-  const inactiveCollections = sortedCollections.filter(
-    (collection) => !collection.isActive
-  );
+  const inactiveCollections = useMemo(() => {
+    const result = sortedCollections.filter(
+      (collection) => !collection.isActive);
+      if(!isEmpty(organizationCollections) || profileViewMode === PROFILE_VIEW_MODE.INDIVIDUAL_VIEW) {
+        setIsCalculatingActive(false);
+      }
+      return result || [];
+  }, [sortedCollections]);
 
   useEffect(() => {
     if (
@@ -243,9 +247,7 @@ const CommentCollectionsList = () => {
     localStorage.setItem(SEMA_COLLECTIONS_VIEW_MODE, value);
   };
   
-  const isLoaderNeeded = isEmpty(selectedOrganization) ?
-    isFetching :
-    !organizationCollections.length && organizationsNewState.isFetching;
+  const isLoaderNeeded = isCalculatingActive || isFetching || ((!isEmpty(selectedOrganization) && organizationsNewState.isFetching));
 
   return (
     <div>
@@ -334,10 +336,10 @@ const CommentCollectionsList = () => {
             </div>
           </>
         )}
-        {view === 'grid' && !isLoaderNeeded ? (
-          <CardList collections={activeCollections || []} />
+        {view === 'grid' ? (
+          !isLoaderNeeded && <CardList collections={activeCollections} />
         ) : (
-          <Table
+          !isLoaderNeeded && <Table
             data={activeCollections}
             columns={[
               { label: 'State' },
@@ -354,11 +356,11 @@ const CommentCollectionsList = () => {
             emptyMessage="No results"
           />
         )}
-        <p className="has-text-weight-semibold has-text-black-950 is-size-4 mt-60 p-10">
+        {!isLoaderNeeded && (<p className="has-text-weight-semibold has-text-black-950 is-size-4 mt-60 p-10">
           Other Collections{' '}
           {inactiveCollections.length ? `(${inactiveCollections.length})` : ''}
-        </p>
-        {view === 'grid' && !isLoaderNeeded ? (
+        </p>)}
+        {view === 'grid' ? ( !isLoaderNeeded &&
           <>
             <CardList
               type="others"
@@ -368,7 +370,7 @@ const CommentCollectionsList = () => {
               }
             />
           </>
-        ) : (
+        ) : ( !isLoaderNeeded &&
           <Table
             data={paginatedInactiveCollections}
             columns={[
@@ -386,7 +388,7 @@ const CommentCollectionsList = () => {
             emptyMessage="No results"
           />
         )}
-        <div className="mt-25 px-10">
+        {!isLoaderNeeded && <div className="mt-25 px-10">
           <Pagination
             currentPage={currentPage}
             totalCount={
@@ -397,7 +399,7 @@ const CommentCollectionsList = () => {
             setPageSize={setPageSize}
             onPageChange={(page) => setCurrentPage(page)}
           />
-        </div>
+        </div>}
       </div>
     </div>
   );
