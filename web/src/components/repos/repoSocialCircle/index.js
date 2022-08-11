@@ -4,16 +4,15 @@ import { useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { REPO_VISIBILITY } from '../../../utils/constants';
 import InteractionCircleChart from '../../chart/InteractionCircleChart';
-import { DownloadIcon, LinkedinIcon, LinkIcon, TwitterIcon } from '../../Icons';
+import { DownloadIcon, LinkedinIcon, LinkIcon, TwitterIcon, FacebookIcon } from '../../Icons';
 import { blue700 } from '../../../../styles/_colors.module.scss';
 import { getRepoSocialGraph } from '../../../state/features/repositories/api';
 import styles from './repoSocialCircle.module.scss';
 import { PrivateRepoBanner } from "./banners/privateRepoBanner";
 import { NotSyncedRepoBanner } from "./banners/notSyncedRepoBanner";
-import { SyncInProgressRepoBanner } from "./banners/syncInProgressBanner";
 import { createDataUrl, onDownloadImage } from '../../../utils/imageHelpers';
 import { uploadInfographicsImage } from '../../../state/features/auth/api';
-import { shareWithLinkedIn, shareWithTwitter } from '../../../utils/socialMedia';
+import { shareWithLinkedIn, shareWithTwitter, shareWithFacebook } from '../../../utils/socialMedia';
 import Tooltip from "../../Tooltip";
 
 export const SYNC_STATUSES = {
@@ -96,8 +95,7 @@ function RepoSocialCircle({ repoId, isLoading }) {
 
   const socials = [
     { name: 'twitter', icon: TwitterIcon, onClick: () => shareWithTwitter({ text: 'Check out my Github Social Circle!', url: socialCircleUrl })},
-    // ToDo: return this code when facebook sharing will be fixed
-    // { name: 'facebook', icon: FacebookIcon, onClick: () => shareWithFacebook({ url: socialCircleUrl })},
+    { name: 'facebook', icon: FacebookIcon, onClick: () => shareWithFacebook({ url: socialCircleUrl })},
     { name: 'linkedin', icon: LinkedinIcon, onClick: () => shareWithLinkedIn({ url: socialCircleUrl })},
   ];
 

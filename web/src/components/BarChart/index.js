@@ -12,7 +12,7 @@ import {
 const NivoBarChart = ({ yAxisType, emptyChart, barChartData, getDataColor, renderTooltip, maxValue, TotalLabels }) => {
   if (emptyChart) {
     return (
-      <NoChartData type="Summaries" />
+      <NoChartData />
     );
   }
 
@@ -97,7 +97,6 @@ const NivoBarChart = ({ yAxisType, emptyChart, barChartData, getDataColor, rende
           direction: 'row',
           justify: false,
           translateX: 0,
-          translateY: 90,
           itemsSpacing: 7,
           itemWidth: 100,
           itemHeight: 20,
@@ -116,7 +115,7 @@ const NivoBarChart = ({ yAxisType, emptyChart, barChartData, getDataColor, rende
           translateY: 60
         },
       ]}
- 
+
       layers={['grid', 'markers', 'axes', 'bars', 'points', 'slices', 'mesh', TotalLabels, 'legends']}
     />
   );

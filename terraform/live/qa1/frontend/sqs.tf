@@ -1,5 +1,5 @@
 locals {
-  sqs_queues        = ["import-repository", "github-webhook", "poll-repository", "poll-repositories"]
+  sqs_queues        = ["import-repository", "github-webhook", "poll-repository", "poll-repositories", "analyze-comments"]
   sqs_queues_alarms = ["poll-repository"]
   sqs_queues_arn    = [for queue in aws_sqs_queue.this : queue.arn]
 }

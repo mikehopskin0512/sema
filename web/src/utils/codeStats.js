@@ -58,7 +58,7 @@ const mergeTwoData = (reactions, type) => {
       });
       chart.push(item);
     }
-    if (currentIndex === reactions.length - 1) {
+    if (currentIndex === reactions.length - 1 && type !== 'm') {
       chart.push(currentValue);
     }
     return currentValue;
@@ -575,7 +575,7 @@ export const getCommentsCountLastMonth = (repository) => {
   return repository.repoStats.reactions.reduce((prev, curr) => {
     if (
       isWithinInterval(
-        new Date(curr.comment.source?.createdAt || comment.createdAt),
+        new Date(curr.comment?.source?.createdAt || comment.createdAt),
         dateRange
       )
     ) {

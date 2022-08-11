@@ -105,7 +105,7 @@ async function canScheduleJob(jobName, timestamp) {
   try {
     const { insertedCount } = await collection.insertOne({
       jobName,
-      timestamp,
+      timestamp: new Date(timestamp),
     });
     const acquiredLock = insertedCount === 1;
     return acquiredLock;

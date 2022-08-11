@@ -258,6 +258,11 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.error
     }
+  case types.RESET_COLLECTIONS_TO_DEFAULT:
+    return {
+      ...state,
+      organizationCollections: [],
+    }
   default:
     return state;
   }

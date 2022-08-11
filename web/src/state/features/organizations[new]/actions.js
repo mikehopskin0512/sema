@@ -213,6 +213,10 @@ export const requestTogglePinnedOrgRepoError = (payload) => ({
   payload,
 });
 
+export const resetCollectionsToDefault = () => ({
+  type: types.RESET_COLLECTIONS_TO_DEFAULT,
+});
+
 export const fetchOrganizationsOfUser = (token) => async (dispatch) => {
   try {
     dispatch(requestFetchOrganizationsOfUser());

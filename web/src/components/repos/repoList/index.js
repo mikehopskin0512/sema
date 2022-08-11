@@ -30,6 +30,7 @@ import useLocalStorage from '../../../hooks/useLocalStorage';
 import { identitiesOperations } from '../../../state/features/identities';
 import { useRouter } from 'next/router';
 import { PATHS } from '../../../utils/constants';
+import sceletonStyles from '../../comment/commentCollectionsList/commentCollectionsList.module.scss';
 
 const githubAppName = process.env.NEXT_PUBLIC_GITHUB_APP_NAME;
 
@@ -177,20 +178,19 @@ function RepoList({
     setFilteredRepos({ other: sortedRepos, pinned: sortedPinnedRepos });
   };
 
-  const renderCards = (repos, isPinned) =>
-    repos.map((child, i) => (
-      <RepoCard
-        {...child}
-        isOrganizationView={type !== 'MY_REPOS'}
-        isFavorite={type === 'FAVORITES'}
-        key={i}
-        onRemoveRepo={removeRepo}
-        idx={i}
-        reposLength={repos.length}
-        selectedOrganization={selectedOrganization}
-        isPinned={isPinned}
-      />
-    ));
+  const renderCards = (repos, isPinned) => repos.map((child, i) => (
+    <RepoCard
+      {...child}
+      isOrganizationView={type !== 'MY_REPOS'}
+      isFavorite={type === 'FAVORITES'}
+      key={i}
+      onRemoveRepo={removeRepo}
+      idx={i}
+      reposLength={repos.length}
+      selectedOrganization={selectedOrganization}
+      isPinned={isPinned}
+    />
+  ));
 
   const handleOnClose = () => {
     dispatch(clearAlert());
@@ -297,12 +297,12 @@ function RepoList({
               <div
                 key={index}
                 className={clsx(
-                  'p-10 is-flex is-flex-grow-1 is-clickable',
-                  repoStyles['card-width-3c'],
+                  'p-10 is-flex is-clickable',
+                  sceletonStyles['card-wrapper']
                 )}
                 aria-hidden
               >
-                <div className={repoStyles['repo-skeleton-background']}>
+                <div className={sceletonStyles['snippet-card-wrapper']}>
                   <RepoSkeleton />
                 </div>
               </div>
@@ -311,13 +311,28 @@ function RepoList({
                 {pinnedRepos.length > 0 &&
                   <>
                     <div className="has-text-weight-semibold is-size-5 ml-10 mb-25">{`Pinned repos (${pinnedRepos.length})`}</div>
-                    <div className={clsx("is-flex is-flex-wrap-wrap is-align-content-stretch", !filteredRepos.pinned.length && 'ml-10' )}>{!pinnedRepos.length ? 'No Pinned Repos yet. Add your first one!' : (search && filteredRepos.pinned.length === 0) ? 'No Results Found. We couldn’t find any match' : renderCards(filteredRepos.pinned, true)}</div>
+                    <div className={clsx("is-flex is-flex-wrap-wrap is-align-content-stretch", !filteredRepos.pinned.length && 'ml-10' )}>
+                      {
+                        !pinnedRepos.length ?
+                          'No Pinned Repos yet. Add your first one!' :
+                          (search && filteredRepos.pinned.length === 0) ?
+                            'No Results Found. We couldn’t find any match' :
+                            renderCards(filteredRepos.pinned, true)}
+                    </div>
                   </>
                 }
                 {otherReposCount > 0 &&
                   <>
                     <div className="has-text-weight-semibold is-size-5 ml-10 mb-25 mt-40">{`Other repos (${otherReposCount})`}</div>
-                    <div className={clsx("is-flex is-flex-wrap-wrap is-align-content-stretch", !filteredRepos.other.length && 'ml-10' )}>{!repos.length ? 'No Repos yet.' : (search && filteredRepos.other.length === 0) ? 'No Results Found. We couldn’t find any match' : renderCards(filteredRepos.other, false)}</div>
+                    <div className={clsx("is-flex is-flex-wrap-wrap is-align-content-stretch", !filteredRepos.other.length && 'ml-10' )}>
+                      {
+                        !repos.length ?
+                          'No Repos yet.' :
+                          (search && filteredRepos.other.length === 0) ?
+                            'No Results Found. We couldn’t find any match' :
+                            renderCards(filteredRepos.other, false)
+                      }
+                    </div>
                   </>
                 }
                 </div>}
