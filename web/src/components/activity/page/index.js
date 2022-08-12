@@ -1,35 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ActivityItem from '../item';
-import { filterSmartComments } from '../../../utils/parsing';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../snapshots/modalWindow';
 import SnapshotBar from '../../snapshots/snapshotBar';
+import Pagination from '../../pagination';
 
-const ActivityPage = ({ startDate, endDate, filter }) => {
-  const { repositories } = useSelector((state) => ({
-    repositories: state.repositoriesState,
+const ActivityPage = ({ setFilter }) => {
+  const { comments } = useSelector((state) => ({
+    comments: state.commentsState,
   }));
-  const { data: { overview } } = repositories;
-
-  // TODO: it will be better to use useReducer here
-  const [filteredComments, setFilteredComments] = useState([]);
-
+  const { searchResults: smartComments, pagination } = comments;
   const [isOpen, setIsOpen] = useState(false);
-  const [componentData, setComponentData] = useState({ yAxisType: 'total' });
-
-  useEffect(() => {
-    if (overview && overview.smartcomments) {
-      const filtered = filterSmartComments({ filter, smartComments: overview.smartcomments, startDate, endDate });
-      setFilteredComments(filtered);
-      setComponentData((oldState) => ({ ...oldState, smartComments: filtered, startDate, endDate }));
-    }
-  }, [overview, filter, startDate, endDate]);
 
   return (
     <>
-      {isOpen && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.ACTIVITY} active={isOpen} onClose={() => setIsOpen(false)} snapshotData={{ componentData }} />}
-      {filteredComments.length ? <SnapshotBar text="Save this as a snapshot on your Portfolio." hasActionButton onClick={() => setIsOpen(true)} /> : null}
-      {filteredComments.length ? filteredComments.map((item) => (
+      {isOpen && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.ACTIVITY} active={isOpen} onClose={() => setIsOpen(false)} snapshotData={{ smartComments }} />}
+      {smartComments.length ? <SnapshotBar text="Save this as a snapshot on your Portfolio." hasActionButton onClick={() => setIsOpen(true)} /> : null}
+      {smartComments.length ? smartComments.map((item) => (
         <div className="my-10" key={`activity-${item._id}`}>
           <ActivityItem {...item} />
         </div>
@@ -38,6 +25,13 @@ const ActivityPage = ({ startDate, endDate, filter }) => {
           <p>No activity found!</p>
         </div>
       )}
+      <Pagination
+        currentPage={pagination.pageNumber}
+        totalCount={pagination.total}
+        pageSize={pagination.pageSize}
+        setPageSize={(pageSize) => setFilter((oldState) => ({ ...oldState, pageSize }))}
+        onPageChange={(page) => setFilter((oldState) => ({ ...oldState, pageNumber: page }))}
+      />
     </>
   );
 };

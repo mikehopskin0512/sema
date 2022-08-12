@@ -10,7 +10,7 @@ import { DROPDOWN_SORTING_TYPES } from '../../utils/constants';
 import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants/date';
 import { ReactionList, TagList } from '../../data/activity';
 import { addDays, endOfDay, format, startOfDay } from 'date-fns';
-import { SearchIcon } from '../Icons';
+import { SearchIcon, GhRefreshIcon } from '../Icons';
 import { gray500 } from '../../../styles/_colors.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { organizationsOperations } from '../../state/features/organizations[new]';
@@ -22,7 +22,7 @@ const OrganizationStatsFilter = ({
   filter,
   individualFilter,
   commentView,
-  handleFilter
+  handleFilter,
 }) => {
   const dispatch = useDispatch();
   // TODO: Need to update the naming for the organizationNew related code.
@@ -68,6 +68,11 @@ const OrganizationStatsFilter = ({
   };
 
   useEffect(() => {
+    const isInitialDatesNeeded = !filter.startDate && !filter.endDate && startDate && endDate;
+    if (isInitialDatesNeeded) {
+      handleFilter({...filter, startDate, endDate})
+    }
+
     if (orgRepos.length) {
       const repoIds = orgRepos.map((repo) => repo.externalId);
       const { startDate: start, endDate: end } = filter
@@ -247,6 +252,16 @@ const OrganizationStatsFilter = ({
             onChange={value => setSearchString(value)}
             value={searchString}
             iconLeft={<SearchIcon />}
+            iconRight={searchString.length ?
+                <span
+                  className='mr-100 is-clickable has-text-gray-700 is-whitespace-nowrap is-flex is-align-items-center'
+                  onClick={() => setSearchString('')}
+                >
+                  <GhRefreshIcon size="small" className="mr-5" />
+                  Clear Search
+                </span>
+                : null
+              }
           />
         </div>
       )}
@@ -257,21 +272,13 @@ const OrganizationStatsFilter = ({
   );
 };
 OrganizationStatsFilter.defaultProps = {
-  filterUserList: [],
-  filterRequesterList: [],
-  filterPRList: [],
   filteredComments: [],
-  filterRepoList: [],
   commentView: 'received',
   individualFilter: true
 };
 
 OrganizationStatsFilter.propTypes = {
-  filterUserList: PropTypes.array.isRequired,
-  filterRequesterList: PropTypes.array.isRequired,
-  filterPRList: PropTypes.array.isRequired,
   filteredComments: PropTypes.array.isRequired,
-  filterRepoList: PropTypes.array.isRequired,
   commentView: PropTypes.string,
   individualFilter: PropTypes.bool
 };

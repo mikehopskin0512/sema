@@ -13,7 +13,7 @@ const Pagination = ({
   pageSize,
   totalCount,
   currentPage,
-  onPageChange
+  onPageChange,
 }) => {
   const isMount = useIsMount();
   const pageInputRef = useRef(null);
@@ -35,12 +35,21 @@ const Pagination = ({
     }
   };
 
+  const showPageDescription = (pageNo, currentPageSize, total) => {
+    let finalDataIndex = pageNo * currentPageSize
+    const initialDataIndex = finalDataIndex !== 0 ? finalDataIndex - (currentPageSize - 1) : 0
+    if (finalDataIndex > total) {
+      finalDataIndex = total
+    }
+    return `Showing ${initialDataIndex} to ${finalDataIndex} of ${total} comments`;
+  }
+
   return (
     <>
-      <div className="is-flex mb-20 is-justify-content-space-between is-align-items-center is-bordered p-15 has-background-white-0">
+      <div className={clsx("is-flex mb-20 is-justify-content-space-between is-align-items-center is-bordered p-15 has-background-gray-300", styles['pagination-section'])}>
         <div className="is-flex is-align-items-center">
           <div className='mr-10'>Items per page</div>
-          <div className={clsx("select", 'has-white-input')}>
+          <div className={clsx("select has-white-input mr-10")}>
             <select value={pageSize} onChange={onSelectChange}>
               {
                 PAGE_SIZES.map((item) => (
@@ -49,6 +58,7 @@ const Pagination = ({
               }
             </select>
           </div>
+          {typeof totalCount === 'number' && <div className='mr-10 has-gray-700 is-size-7'>{showPageDescription(currentPage, pageSize, totalCount)}</div>}
         </div>
         <div className="is-flex is-align-items-center">
           <nav className="pagination is-centered mb-0 mr-15" role="navigation" aria-label="pagination">

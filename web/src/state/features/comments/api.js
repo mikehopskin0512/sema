@@ -2,6 +2,7 @@ import {
   get,
   getAll,
   update,
+  create,
 } from '../../utils/api';
 
 export const getSmartComments = (params, token) => getAll('/api/proxy/comments/smart', { params }, token);
@@ -13,3 +14,4 @@ export const getAllSuggestedComments = (token) => getAll('/api/proxy/comments/co
 export const getSmartCommentSummary = (params, token) => getAll('/api/proxy/comments/smart/summary', { params }, token);
 export const getSmartCommentOverview = (params, token) => getAll('/api/proxy/comments/smart/overview', { params }, token);
 export const getOrgOverviewGraphs = (params, token) => getAll('/api/proxy/comments/smart/insights-graphs', { params }, token);
+export const searchSmartComments = (params, token) => create('/api/proxy/repositories/smart-comments/search', { ...params }, token);

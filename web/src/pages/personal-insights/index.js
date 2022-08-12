@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import SnapshotBar from '../../components/snapshots/snapshotBar';
@@ -12,7 +12,7 @@ import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from '../../state/features/comments';
 import { DEFAULT_AVATAR, EMOJIS, SEMA_FAQ_SLUGS, SEMA_INTERCOM_FAQ_URL } from '../../utils/constants';
-import { filterSmartComments, getEmoji, getEmojiLabel, getTagLabel } from '../../utils/parsing';
+import { getEmoji, getEmojiLabel, getTagLabel } from '../../utils/parsing';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { gray500 } from '../../../styles/_colors.module.scss';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../components/snapshots/modalWindow';
@@ -24,8 +24,11 @@ import { notify } from '../../components/toaster/index';
 import { DATE_RANGES } from '../../components/dateRangeSelector';
 import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants/date';
 
-const { fetchSmartCommentSummary, fetchSmartCommentOverview } =
-  commentsOperations;
+const {
+  fetchSmartCommentSummary,
+  fetchSmartCommentOverview,
+  filterRepoSmartComments,
+} = commentsOperations;
 
 const formatDate = date =>
   date ? format(new Date(date), YEAR_MONTH_DAY_FORMAT) : null;
@@ -42,14 +45,22 @@ const DEFAULT_FILTER = {
   pr: [],
   repo: [],
   dateOption: '',
+  pageNumber: 1,
+  pageSize: 10,
 }
 
 const PersonalInsights = () => {
   const dispatch = useDispatch();
-  const { auth, comments } = useSelector((state) => ({
+  const { auth, comments, searchResults, pagination, repositories } = useSelector(state => ({
     auth: state.authState,
     comments: state.commentsState,
+    searchResults: state.commentsState.searchResults,
+    pagination: state.commentsState.pagination,
+    repositories: state.repositoriesState,
   }));
+  const {
+    data: { filterValues: filterValuesState },
+  } = repositories;
   const { token, user } = auth;
   const githubUser = user.identities?.[0];
   const { isFetching } = comments;
@@ -201,7 +212,6 @@ const PersonalInsights = () => {
   const handleFilter = (value) => {
     setFilter(value);
   };
-
   const mapArrToQuery = (arr) => arr.map(i => i.value);
 
   useEffect(() => {
@@ -215,59 +225,50 @@ const PersonalInsights = () => {
     }
   }, [dateData, filteredComments]);
 
-  useEffect(() => {
-    getCommentsOverview(filter).then(() => {});
-    getGraphsData(filter);
-  }, [filter, commentView]);
-
-  useAuthEffect(() => {
-    getUserSummary(githubUser?.username);
-  }, [auth]);
-
-  useEffect(() => {
-    const reposList =
-      githubUser.repositories?.filter((item) => item.fullName).map((item) => ({
-        name: item.fullName,
-        label: item.fullName,
-        value: item.id,
-      })) || [];
-    setFilterRepoList([...reposList]);
-  }, [githubUser]);
-
-  useEffect(() => {
-    const { summary } = comments;
-    getTopReactions(summary.reactions);
-    getTopTags(summary.tags);
-    setTotalSmartComments(summary?.smartComments?.length);
-  }, [comments]);
-
-  const filterComments = (overview) => {
-    if (overview && overview.smartComments) {
+  const filterComments = smartComments => {
+    if (smartComments) {
       const { startDate, endDate } = filter;
-      const filtered = filterSmartComments({
-        filter,
-        smartComments: overview.smartComments,
-        startDate: startDate,
-        endDate: endDate,
-      });
       const isDateRange = startDate && endDate;
       const outOfRangeCommentsFilter = isDateRange
-        ? overview.smartComments.filter((comment) => {
+        ? smartComments.filter(comment => {
             return !isWithinInterval(new Date(comment.source.createdAt), {
               start: startOfDay(new Date(startDate)),
               end: endOfDay(new Date(endDate)),
             });
           })
         : [];
-      setFilteredComments(filtered);
+      setFilteredComments(smartComments);
       setOutOfRangeComments(outOfRangeCommentsFilter);
     }
   };
 
-  useEffect(() => {
-    const { overview } = comments;
-    filterComments(overview);
-  }, [comments, filter]);
+  const searchSmartComments = useCallback((filterData) => {
+    const filterValues = {
+      startDate: filterData.startDate ? startOfDay(new Date(filterData.startDate)) : undefined,
+      endDate: filterData.endDate ? endOfDay(new Date(filterData.endDate)) : undefined,
+      fromUserList: filterData.from.map((f) => (f.value)),
+      toUserList: filterData.to.map((t) => (t.value)),
+      summaries: filterData.reactions.map((r) => (r.value)),
+      tags: filterData.tags.map((t) => (t.value)),
+      pullRequests: filterData.pr.map((p) => (p.value)),
+      searchQuery: filterData.search,
+      pageNumber: filterData.pageNumber,
+      pageSize: filterData.pageSize,
+      repoIds: filterData.repo.length ? filterData.repo.map((r) => (r.value)) : filterValuesState.repos.map((r) => (r.value))
+    }
+    const { username } = githubUser;
+    if (commentView === 'given') {
+      filterValues.reviewer = username;
+    } else {
+      filterValues.requester = username;
+    }
+    dispatch(
+      filterRepoSmartComments(
+        token,
+        filterValues
+      )
+    )
+  }, [token, commentView, filterValuesState, githubUser]);
 
   const renderTopReactions = () => {
     const iterate = topReactions.length >= 1 ? topReactions : EMOJIS;
@@ -304,6 +305,28 @@ const PersonalInsights = () => {
     }
     return <span className="is-size-8 has-text-gray-500">No tags for now</span>;
   };
+
+  useAuthEffect(() => {
+    getUserSummary(githubUser?.username);
+  }, [auth]);
+
+
+  useEffect(() => {
+    const { summary } = comments;
+    getTopReactions(summary.reactions);
+    getTopTags(summary.tags);
+    setTotalSmartComments(summary?.smartComments?.length);
+  }, [comments]);
+
+  useEffect(() => {
+    getGraphsData(filter)
+    searchSmartComments(filter);
+  }, [filter, commentView]);
+
+
+  useEffect(() => {
+    filterComments(searchResults);
+  }, [searchResults]);
 
   return (
     <>
@@ -390,8 +413,8 @@ const PersonalInsights = () => {
           </div>
         </div>
         <StatsFilter
-          filterRepoList={filterRepoList}
           handleFilter={handleFilter}
+          onSearch={(search) => searchSmartComments({ ...filter, pageNumber: 1, search })}
         />
         <SnapshotBar text="New Feature! Save these charts and comments as Snapshots on your Portfolio." />
         <div className="is-flex is-flex-wrap-wrap my-20">
@@ -446,7 +469,7 @@ const PersonalInsights = () => {
             )}
           </div>
         </div>
-        <ActivityItemList comments={filteredComments} isLoading={isFetching} />
+        <ActivityItemList comments={filteredComments} isLoading={isFetching} pagination={pagination} hasPagination setFilter={setFilter} />
       </div>
     </>
   );

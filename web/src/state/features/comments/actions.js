@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import * as types from './types';
-import { getSmartComments, getAllSuggestedComments, getCollection, getSmartCommentSummary, getSmartCommentOverview, getSuggestedComments } from './api';
+import { getSmartComments, getAllSuggestedComments, getCollection, getSmartCommentSummary, getSmartCommentOverview, getSuggestedComments, searchSmartComments } from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert } = alertOperations;
@@ -87,6 +87,19 @@ const requestFetchSmartCommentOverviewError = () => ({
   type: types.REQUEST_FETCH_SMART_COMMENT_OVERVIEW_ERROR
 });
 
+const requestFilterRepoSmartComments = () => ({
+  type: types.REQUEST_FILTER_REPO_SMART_COMMENTS
+});
+
+const requestFilterRepoSmartCommentsSuccess = (results) => ({
+  type: types.REQUEST_FILTER_REPO_SMART_COMMENTS_SUCCESS,
+  results
+});
+
+const requestFilterRepoSmartCommentsError = () => ({
+  type: types.REQUEST_FILTER_REPO_SMART_COMMENTS_ERROR
+});
+
 export const getCollectionById = (id, token) => async (dispatch) => {
   try {
     dispatch(fetchCollection());
@@ -164,3 +177,20 @@ export const fetchSmartCommentOverview = (params, token) => async (dispatch) => 
   }
 };
 
+export const filterRepoSmartComments = (token, filter) => async (dispatch) => {
+  try {
+    dispatch(requestFilterRepoSmartComments());
+    const { data } = await searchSmartComments({ ...filter }, token);
+    dispatch(requestFilterRepoSmartCommentsSuccess(data));
+  } catch (error) {
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFilterRepoSmartCommentsError(errMessage));
+  }
+};
