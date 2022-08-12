@@ -23,6 +23,8 @@ import { getInsightsGraphsData } from '../../state/features/comments/operations'
 import { notify } from '../../components/toaster/index';
 import { DATE_RANGES } from '../../components/dateRangeSelector';
 import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants/date';
+import SocialCircle from '../../components/repos/socialCircle';
+import { SOCIAL_CIRCLE_TYPES } from '../../components/repos/socialCircle/constants';
 
 const {
   fetchSmartCommentSummary,
@@ -417,6 +419,7 @@ const PersonalInsights = () => {
           onSearch={(search) => searchSmartComments({ ...filter, pageNumber: 1, search })}
         />
         <SnapshotBar text="New Feature! Save these charts and comments as Snapshots on your Portfolio." />
+        <SocialCircle type={SOCIAL_CIRCLE_TYPES.personal} />
         <div className="is-flex is-flex-wrap-wrap my-20">
           <ReactionChart
             className="ml-neg10"
