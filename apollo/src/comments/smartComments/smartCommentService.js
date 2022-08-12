@@ -1,13 +1,12 @@
 import {
-  subMonths,
-  subWeeks,
-  subDays,
-  isAfter,
   format,
   formatDistanceToNowStrict,
+  isAfter,
+  subDays,
+  subMonths,
+  subWeeks,
   toDate,
   endOfDay,
-  sub,
 } from 'date-fns';
 import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
@@ -20,11 +19,7 @@ import Repository from '../../repositories/repositoryModel';
 import Reaction from '../reaction/reactionModel';
 import User from '../../users/userModel';
 
-import {
-  dateRangeFilterPipeline,
-  fullName,
-  metricsStartDate,
-} from '../../shared/utils';
+import { dateRangeFilterPipeline, fullName, metricsStartDate } from '../../shared/utils';
 import { getOrganizationRepos } from '../../organizations/organizationService';
 
 const {
@@ -102,7 +97,9 @@ export const filterSmartComments = async ({
   user,
   individual,
   fields = {},
-}) => {
+},
+  additionalQuery = {}
+) => {
   try {
     let filter = {};
     let dateFilter = { source: { createdAt: {} } };
@@ -140,7 +137,13 @@ export const filterSmartComments = async ({
     if (!isEmpty(dateFilter.createdAt)) {
       filter = Object.assign(filter, dateFilter);
     }
-    const query = SmartComment.find(filter, fields);
+
+    const resultFilter = {
+      ...filter,
+      ...additionalQuery
+    }
+
+    const query = SmartComment.find(resultFilter, fields);
     const smartComments = await query
       .lean()
       .populate('userId')
@@ -620,10 +623,11 @@ export const exportGrowthRepositoryMetrics = async () => {
   return csv;
 };
 
-export const findByRepositoryId = async (repoId, populate, createdAt) => {
+export const findByRepositoryId = async (repoId, populate, createdAt, additionalQuery = {}) => {
   try {
     let findQuery = {
       repositoryId: repoId,
+      ...additionalQuery
     };
     if (createdAt) {
       findQuery = {

@@ -1,5 +1,6 @@
 import * as actions from './actions';
 import { setActiveUserCollections } from '../auth/actions';
+import { getOrgOverviewGraphs } from './api';
 
 export const getUserComments = ({ author, requester }, token) => async (dispatch) => {
   try {
@@ -36,4 +37,10 @@ export const updateCollectionIsActiveAndFetchComments = (_id, token) => async (d
   }
 };
 
-export default { ...actions, getUserComments, updateCollectionIsActiveAndFetchComments };
+// TODO: add some redux actions for fetching when it will be needed
+export const getInsightsGraphsData = async (filter, token) => {
+  const { data } = await getOrgOverviewGraphs(filter, token);
+  return data;
+}
+
+export default { ...actions, getUserComments, updateCollectionIsActiveAndFetchComments, getInsightsGraphsData };

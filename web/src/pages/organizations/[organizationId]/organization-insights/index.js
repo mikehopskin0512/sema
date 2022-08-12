@@ -20,6 +20,8 @@ import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../../../components/snaps
 import SnapshotButton from '../../../../components/snapshots/snapshotButton';
 import ReactionLineChart from '../../../../components/stats/reactionLineChart';
 import styles from '../../../../components/organization/organizationInsights/organizationInsights.module.scss';
+import { getInsightsGraphsData } from '../../../../state/features/comments/operations';
+import { notify } from '../../../../components/toaster/index';
 import { useRouter } from 'next/router';
 import { DATE_RANGES } from '../../../../components/dateRangeSelector';
 import { YEAR_MONTH_DAY_FORMAT } from '../../../../utils/constants/date';
@@ -102,12 +104,23 @@ const OrganizationInsights = () => {
     dispatch(fetchOrganizationSmartCommentSummary(params, token));
   };
 
+  const mapArrToQuery = (arr) => arr.map(i => i.value);
+
   const getCommentsOverview = async filter => {
     const { username } = githubUser;
-    const { startDate, endDate, repo } = filter;
+    const {
+      startDate,
+      endDate,
+      repo = [],
+      from = [],
+      to = [],
+      pr = [],
+      reactions = [],
+      tags = []
+    } = filter;
     const params = {
       startDate: startDate ? startOfDay(new Date(startDate)) : undefined,
-      endDate: endDate ? endOfDay(new Date(endDate)) : undefined
+      endDate: endDate ? endOfDay(new Date(endDate)) : undefined,
     };
     if (isActive) {
       if (commentView === 'given') {
@@ -122,8 +135,40 @@ const OrganizationInsights = () => {
         params.externalIds += index === 0 ? item.value : `-${item.value}`;
       });
     }
+
     params.organizationId = selectedOrganization?.organization?._id;
     if ((startDate && endDate) || (!startDate && !endDate)) {
+      getInsightsGraphsData({
+        ...params,
+        ...filter,
+        from: mapArrToQuery(from),
+        to: mapArrToQuery(to),
+        pr: mapArrToQuery(pr),
+        repo: repo?.map(i => i?.label),
+        reactions: mapArrToQuery(reactions),
+        tags: mapArrToQuery(tags),
+      }, token)
+        .then(({
+          reactions,
+          tags,
+          groupBy,
+          dateDiff,
+          endDay,
+          startDay
+        }) => {
+          setReactionChartData(reactions);
+          setTagsChartData(tags);
+          setDateData({
+            startDate: startDay,
+            endDate: endDay,
+            dateDiff,
+            groupBy,
+          });
+        }).catch(() => {
+        setReactionChartData([]);
+        setTagsChartData([]);
+        notify("Failed to fetch graphs data", { type: 'error' });
+      });
       dispatch(fetchOrganizationSmartCommentOverview(params, token));
     }
   };
@@ -198,7 +243,7 @@ const OrganizationInsights = () => {
       return;
     }
     getCommentsOverview(filter);
-  }, [JSON.stringify(filter), commentView, isActive]);
+  }, [filter, commentView, isActive]);
 
   useAuthEffect(() => {
     const { repos } = selectedOrganization.organizations || {};

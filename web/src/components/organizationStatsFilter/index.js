@@ -97,7 +97,7 @@ const OrganizationStatsFilter = ({
                 start={startDate}
                 end={endDate}
                 onChange={onDateChange}
-                onChangeFilter={onChangeFilter} a
+                onChangeFilter={onChangeFilter}
                 additionalStyle={styles['filter-border']}
               />
             </div>

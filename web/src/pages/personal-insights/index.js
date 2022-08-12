@@ -11,28 +11,16 @@ import ReactionChart from '../../components/stats/reactionChart';
 import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from '../../state/features/comments';
-import {
-  DEFAULT_AVATAR,
-  SEMA_INTERCOM_FAQ_URL,
-  SEMA_FAQ_SLUGS,
-  EMOJIS,
-} from '../../utils/constants';
-import {
-  getEmoji,
-  getTagLabel,
-  setSmartCommentsDateRange,
-  getReactionTagsChartData,
-  filterSmartComments,
-  getEmojiLabel,
-} from '../../utils/parsing';
+import { DEFAULT_AVATAR, EMOJIS, SEMA_FAQ_SLUGS, SEMA_INTERCOM_FAQ_URL } from '../../utils/constants';
+import { filterSmartComments, getEmoji, getEmojiLabel, getTagLabel } from '../../utils/parsing';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { gray500 } from '../../../styles/_colors.module.scss';
-import SnapshotModal, {
-  SNAPSHOT_DATA_TYPES,
-} from '../../components/snapshots/modalWindow';
+import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../components/snapshots/modalWindow';
 import SnapshotButton from '../../components/snapshots/snapshotButton';
 import styles from './personal-insights.module.scss';
 import Avatar from 'react-avatar';
+import { getInsightsGraphsData } from '../../state/features/comments/operations';
+import { notify } from '../../components/toaster/index';
 import { DATE_RANGES } from '../../components/dateRangeSelector';
 import { YEAR_MONTH_DAY_FORMAT } from '../../utils/constants/date';
 
@@ -129,6 +117,63 @@ const PersonalInsights = () => {
     }
   };
 
+  const getGraphsData = (filter) => {
+    const { username } = githubUser;
+    const {
+      startDate,
+      endDate,
+      to = [],
+      from = [],
+      pr = [],
+      repo = [],
+      reactions = [],
+      tags = [],
+    } = filter;
+
+    const requestPayload = {
+      ...filter,
+      from: mapArrToQuery(from),
+      to: mapArrToQuery(to),
+      pr: mapArrToQuery(pr),
+      repo: repo?.map(i => i?.label.split('/')?.[1]),
+      reactions: mapArrToQuery(reactions),
+      tags: mapArrToQuery(tags),
+      startDate: startDate ? startOfDay(new Date(startDate)) : undefined,
+      endDate: endDate ? endOfDay(new Date(endDate)) : undefined,
+    };
+
+    commentView === 'given' ? requestPayload.reviewer = username : requestPayload.requester = username;
+
+    if (repo.length > 0) {
+      requestPayload.externalIds = mapArrToQuery(repo)
+        .join('-');
+    }
+
+    getInsightsGraphsData(requestPayload, token)
+      .then(({
+        reactions,
+        tags,
+        groupBy,
+        dateDiff,
+        endDay,
+        startDay,
+      }) => {
+        setDateData({
+          dateDiff,
+          groupBy,
+          endDate: endDay,
+          startDate: startDay,
+        });
+        setReactionChartData(reactions);
+        setTagsChartData(tags);
+      })
+      .catch(() => {
+        setReactionChartData([]);
+        setTagsChartData([]);
+        notify("Failed to fetch graphs data", { type: 'error' });
+      });
+  }
+
   const getTopReactions = (reactions) => {
     let data = [];
     if (reactions) {
@@ -167,6 +212,7 @@ const PersonalInsights = () => {
   const handleFilter = (value) => {
     setFilter(value);
   };
+  const mapArrToQuery = (arr) => arr.map(i => i.value);
 
   useEffect(() => {
     // const { overview } = comments;
@@ -190,12 +236,6 @@ const PersonalInsights = () => {
   useEffect(() => {
     const { startDate, endDate, groupBy } = dateData;
     if (startDate && endDate && groupBy) {
-      const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
-        ...dateData,
-        smartComments: [...filteredComments, ...outOfRangeComments],
-      });
-      setReactionChartData(reactionsChartData);
-      setTagsChartData(tagsChartData);
       setComponentData((oldState) => ({
         ...oldState,
         smartComments: [...filteredComments, ...outOfRangeComments],
@@ -210,7 +250,7 @@ const PersonalInsights = () => {
       const isDateRange = startDate && endDate;
       const outOfRangeCommentsFilter = isDateRange
         ? smartComments.filter(comment => {
-            return !isWithinInterval(new Date(comment.createdAt), {
+            return !isWithinInterval(new Date(comment.source.createdAt), {
               start: startOfDay(new Date(startDate)),
               end: endOfDay(new Date(endDate)),
             });
