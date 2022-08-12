@@ -12,14 +12,7 @@ import ActivityItemList from '../../../../components/activity/itemList';
 import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import { repositoriesOperations } from '../../../../state/features/repositories';
 import { SEMA_FAQ_SLUGS, SEMA_INTERCOM_FAQ_URL } from '../../../../utils/constants';
-import {
-  filterSmartComments,
-  getEmoji,
-  getEmojiLabel,
-  getReactionTagsChartData,
-  getTagLabel,
-  setSmartCommentsDateRange,
-} from '../../../../utils/parsing';
+import { filterSmartComments, getEmoji, getEmojiLabel, getTagLabel } from '../../../../utils/parsing';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import { blue600, blue700, gray500 } from '../../../../../styles/_colors.module.scss';
 import { AuthorIcon, InfoFilledIcon, TeamIcon } from '../../../../components/Icons';
@@ -27,6 +20,8 @@ import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../../../components/snaps
 import SnapshotButton from '../../../../components/snapshots/snapshotButton';
 import ReactionLineChart from '../../../../components/stats/reactionLineChart';
 import styles from '../../../../components/organization/organizationInsights/organizationInsights.module.scss';
+import { getInsightsGraphsData } from '../../../../state/features/comments/operations';
+import { notify } from '../../../../components/toaster/index';
 import { DATE_RANGES } from '../../../../components/dateRangeSelector';
 import { YEAR_MONTH_DAY_FORMAT } from '../../../../utils/constants/date';
 
@@ -70,9 +65,9 @@ const OrganizationInsights = () => {
   const [topReactions, setTopReactions] = useState([]);
   const [reactionChartData, setReactionChartData] = useState([]);
   const [tagsChartData, setTagsChartData] = useState({});
+
   const [filter, setFilter] = useState(DEFAULT_FILTER);
   const [commentView, setCommentView] = useState('received');
-  const [filterRepoList, setFilterRepoList] = useState([]);
   const [filteredComments, setFilteredComments] = useState([]);
   const [outOfRangeComments, setOutOfRangeComments] = useState([]);
   const [openReactionsModal, setOpenReactionsModal] = useState(false);
@@ -103,12 +98,23 @@ const OrganizationInsights = () => {
     dispatch(fetchOrganizationSmartCommentSummary(params, token));
   };
 
+  const mapArrToQuery = (arr) => arr.map(i => i.value);
+
   const getCommentsOverview = async filter => {
     const { username } = githubUser;
-    const { startDate, endDate, repo } = filter;
+    const {
+      startDate,
+      endDate,
+      repo = [],
+      from = [],
+      to = [],
+      pr = [],
+      reactions = [],
+      tags = []
+    } = filter;
     const params = {
       startDate: startDate ? startOfDay(new Date(startDate)) : undefined,
-      endDate: endDate ? endOfDay(new Date(endDate)) : undefined
+      endDate: endDate ? endOfDay(new Date(endDate)) : undefined,
     };
     if (isActive) {
       if (commentView === 'given') {
@@ -123,8 +129,40 @@ const OrganizationInsights = () => {
         params.externalIds += index === 0 ? item.value : `-${item.value}`;
       });
     }
+
     params.organizationId = selectedOrganization?.organization?._id;
     if ((startDate && endDate) || (!startDate && !endDate)) {
+      getInsightsGraphsData({
+        ...params,
+        ...filter,
+        from: mapArrToQuery(from),
+        to: mapArrToQuery(to),
+        pr: mapArrToQuery(pr),
+        repo: repo?.map(i => i?.label),
+        reactions: mapArrToQuery(reactions),
+        tags: mapArrToQuery(tags),
+      }, token)
+        .then(({
+          reactions,
+          tags,
+          groupBy,
+          dateDiff,
+          endDay,
+          startDay
+        }) => {
+          setReactionChartData(reactions);
+          setTagsChartData(tags);
+          setDateData({
+            startDate: startDay,
+            endDate: endDay,
+            dateDiff,
+            groupBy,
+          });
+        }).catch(() => {
+        setReactionChartData([]);
+        setTagsChartData([]);
+        notify("Failed to fetch graphs data", { type: 'error' });
+      });
       dispatch(fetchOrganizationSmartCommentOverview(params, token));
     }
   };
@@ -178,33 +216,8 @@ const OrganizationInsights = () => {
   };
 
   useEffect(() => {
-    const { overview } = organizations;
-    const { startDate, endDate } = filter;
-    if (overview?.smartComments && overview?.smartComments.length > 0) {
-      const dates = setSmartCommentsDateRange(
-        overview.smartComments,
-        startDate,
-        endDate
-      );
-      const { startDay, endDay, dateDiff, groupBy } = dates;
-      setDateData({
-        dateDiff,
-        groupBy,
-        startDate: new Date(startDay),
-        endDate: endDay
-      });
-    }
-  }, [organizations, filter]);
-
-  useEffect(() => {
     const { startDate, endDate, groupBy } = dateData;
     if (startDate && endDate && groupBy) {
-      const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
-        ...dateData,
-        smartComments: [...filteredComments, ...outOfRangeComments]
-      });
-      setReactionChartData(reactionsChartData);
-      setTagsChartData(tagsChartData);
       setComponentData(oldState => ({
         ...oldState,
         smartComments: [...filteredComments, ...outOfRangeComments],
@@ -224,16 +237,6 @@ const OrganizationInsights = () => {
   }, []);
 
   useEffect(() => {
-    const reposList =
-      organizations?.repos.map(({ name, externalId }) => ({
-        name,
-        label: name,
-        value: externalId
-      })) || [];
-    setFilterRepoList([...reposList]);
-  }, [organizations]);
-
-  useEffect(() => {
     const { summary } = organizations;
     getTopReactions(summary.reactions);
     getTopTags(summary.tags);
@@ -245,7 +248,7 @@ const OrganizationInsights = () => {
       return;
     }
     getCommentsOverview(filter);
-  }, [JSON.stringify(filter), commentView, isActive]);
+  }, [filter, commentView, isActive]);
 
   useAuthEffect(() => {
     const { repos } = selectedOrganization.organizations || {};

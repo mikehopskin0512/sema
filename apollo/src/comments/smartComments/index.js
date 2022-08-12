@@ -25,7 +25,14 @@ import {
 } from './smartCommentService';
 import checkEnv from '../../middlewares/checkEnv';
 import Organization from '../../organizations/organizationModel';
-import { createOrganization } from '../../organizations/organizationService';
+import { createOrganization, getOrganizationRepos } from '../../organizations/organizationService';
+import { getReactionTagsChartData, setSmartCommentsDateRange } from './parcing';
+import moment from 'moment';
+import mongoose from 'mongoose';
+
+const {
+  Types: { ObjectId },
+} = mongoose;
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
@@ -281,6 +288,95 @@ export default (app, passport) => {
       }
     }
   );
+
+  route.get('/insights-graphs', async (req, res) => {
+    const {
+      requester: author,
+      reviewer,
+      externalIds,
+      startDate,
+      endDate,
+      organizationId,
+      reactions,
+      tags,
+      search,
+      repo,
+      pr
+    } = req.query;
+
+    const repoIds = externalIds && externalIds.split('-');
+
+    const filter = {
+      reviewer,
+      author,
+      repoIds,
+      startDate,
+      endDate,
+      individual: false,
+    };
+
+    const query = {};
+
+    if (reactions?.length) {
+      query.reaction  = { $in: reactions.map(r => ObjectId(r))}
+    }
+
+    if (tags?.length) {
+      query.tags =  { $in: tags.map(t => ObjectId(t)) }
+    }
+
+    if (search?.length) {
+      const searchRegEx = new RegExp(search, 'ig');
+      query.comment = { $regex: searchRegEx };
+    }
+
+    if (repo?.length) {
+      query['githubMetadata.repo'] =  { $in: repo }
+    }
+
+    if (pr?.length) {
+      query['githubMetadata.pull_number'] =  { $in: pr }
+    }
+
+    if (organizationId) {
+      const organizationRepos = await getOrganizationRepos(organizationId);
+      filter.repoIds = organizationRepos.map((repo) => repo.externalId);
+    }
+
+    try {
+      const comments = await filterSmartComments(filter, query);
+
+
+      const {
+        groupBy,
+        dateDiff,
+        endDay,
+        startDay,
+      } = setSmartCommentsDateRange(comments, startDate ? moment(startDate) : null, endDate ? moment(endDate) : null);
+
+      const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
+        startDate: startDay,
+        endDate: endDay,
+        groupBy,
+        smartComments: comments,
+        dateDiff,
+      });
+
+      return res.status(200)
+        .send({
+          reactions: reactionsChartData,
+          tags: tagsChartData,
+          groupBy,
+          dateDiff,
+          endDay,
+          startDay,
+        });
+
+    } catch (err) {
+      logger.error(err);
+      return res.status(err.statusCode).send(err);
+    }
+  })
 
   route.put('/update-by-github/:id', async (req, res) => {
     try {

@@ -163,8 +163,8 @@ TagsChart.propTypes = {
   groupBy: PropTypes.string,
   isSnapshot: PropTypes.bool,
   onClick: PropTypes.func,
-  startDate: PropTypes.string.isRequired,
-  endDate: PropTypes.string.isRequired,
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
   dateOption: PropTypes.string,
   isLoading: PropTypes.bool,
 };

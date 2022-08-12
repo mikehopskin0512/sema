@@ -3,29 +3,36 @@ import { groupBy } from 'lodash';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
-import { getCollaborativeSmartComments } from '../comments/smartComments/smartCommentService';
+import moment from 'moment';
+import { findByExternalId as findSmartCommentsByExternalId, getCollaborativeSmartComments } from '../comments/smartComments/smartCommentService';
 
 import { version } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { findUsersByGitHubHandle } from '../users/userService';
-
 import {
-  createMany,
-  findByOrg,
-  sendNotification,
-  findByExternalIds,
-  findByExternalId,
   aggregateReactions,
-  aggregateTags,
   aggregateRepositories,
+  aggregateTags,
+  createMany,
+  findByExternalId,
+  findByExternalIds,
+  findByOrg,
+  getReposFilterValues,
   getRepositories,
   getRepository,
+  sendNotification,
   startSync,
-  getReposFilterValues,
 } from './repositoryService';
 import checkEnv from '../middlewares/checkEnv';
 import validateToken from '../middlewares/validateToken';
+import { endOfDay, toDate } from 'date-fns';
+import mongoose from 'mongoose';
+import { getReactionTagsChartData, setSmartCommentsDateRange } from '../comments/smartComments/parcing';
+
+const {
+  Types: { ObjectId },
+} = mongoose;
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
@@ -207,6 +214,96 @@ export default (app, passport) => {
       }
     }
   );
+
+  route.get(
+    '/charts',
+    passport.authenticate(['bearer'], { session: false }),
+    async (req, res) => {
+      const {
+        externalId,
+        startDate,
+        endDate,
+        requesters,
+        receivers,
+        search,
+        tags,
+        reactions,
+        pullRequests,
+      } = req.query;
+
+      const makeQuery = () => {
+        const query = {};
+        if (reactions?.length) {
+          query.reaction  = { $in: reactions.map(r => ObjectId(r))}
+        }
+
+        if (tags?.length) {
+          query.tags =  { $in: tags.map(t => ObjectId(t)) }
+        }
+
+        if (requesters?.length) {
+          query.userId = { $in:  requesters.map(r => ObjectId(r)) }
+        }
+
+        if (receivers?.length) {
+          query['githubMetadata.requester'] = { $in: receivers } ;
+        }
+
+        if (pullRequests?.length) {
+          query['githubMetadata.pull_number'] = { $in: pullRequests };
+        }
+
+        if (search?.length) {
+          const searchRegEx = new RegExp(search, 'ig');
+          query.comment = { $regex: searchRegEx };
+        }
+
+        return query;
+      }
+
+      try {
+        const comments = await findSmartCommentsByExternalId(
+          externalId,
+          true,
+          startDate && endDate ? {
+            $gte: toDate(new Date(startDate)),
+            $lte: toDate(endOfDay(new Date(endDate))),
+          } : undefined,
+          makeQuery()
+        );
+
+        const {
+          groupBy,
+          dateDiff,
+          endDay,
+          startDay,
+        } = setSmartCommentsDateRange(comments, startDate ? moment(startDate) : null, endDate ? moment(endDate) : null);
+
+        const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
+          startDate: startDay,
+          endDate: endDay,
+          groupBy,
+          smartComments: comments,
+          dateDiff,
+        });
+
+        return res.status(200)
+          .send({
+            reactions: reactionsChartData,
+            tags: tagsChartData,
+            groupBy,
+            dateDiff,
+            endDay,
+            startDay,
+          });
+
+
+      } catch (err) {
+        logger.error(err);
+        return res.status(err.statusCode).send(err);
+      }
+    }
+  )
 
   route.post(
     '/:id/sync',
