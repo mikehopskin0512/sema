@@ -2,12 +2,13 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { isEmpty, uniqBy } from 'lodash';
+import { filter, findIndex, isEmpty, uniqBy } from 'lodash';
 import RepoSocialCircle from '../../../components/repos/repoSocialCircle';
 import ActivityPage from '../../../components/activity/page';
 import RepoPageLayout from '../../../components/repos/repoPageLayout';
 import StatsPage from '../../../components/stats';
 import Helmet from '../../../components/utils/Helmet';
+import { commentsOperations } from '../../../state/features/comments';
 import { repositoriesOperations } from '../../../state/features/repositories';
 import { organizationsOperations } from '../../../state/features/organizations[new]';
 import { getDateSub } from '../../../utils/parsing';
@@ -18,28 +19,19 @@ import styles from './styles.module.scss';
 import { useFlags } from '../../../components/launchDarkly';
 import { DEFAULT_REPO_OVERVIEW } from '../../../state/features/repositories/reducers';
 import { requestFetchRepositoryOverviewSuccess } from '../../../state/features/repositories/actions';
+import { format } from 'date-fns';
+import { YEAR_MONTH_DAY_FORMAT } from '../../../utils/constants/date';
+import { DEFAULT_FILTER_STATE } from '../../../utils/constants/filter';
 
-const {
-  fetchRepositoryOverview,
-  fetchReposByIds,
-  fetchRepoFilters,
-} = repositoriesOperations;
 
+const { fetchRepositoryOverview, fetchReposByIds, fetchRepoFilters } =
+  repositoriesOperations;
+const { filterRepoSmartComments } = commentsOperations;
 const { fetchOrganizationRepos } = organizationsOperations;
 
 const tabTitle = {
   stats: 'Repo Insights',
   activity: 'Activity Log',
-};
-
-const defaultFilterState = {
-  from: [],
-  to: [],
-  reactions: [],
-  tags: [],
-  search: '',
-  pr: [],
-  dateOption: '',
 };
 
 function RepoPage() {
@@ -84,16 +76,13 @@ function RepoPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isInitialRefresh, setIsInitialRefresh] = useState(true);
 
-  const [filter, setFilter] = useState(defaultFilterState);
-  const [filterUserList, setFilterUserList] = useState([]);
-  const [filterRequesterList, setFilterRequesterList] = useState([]);
-  const [filterPRList, setFilterPRList] = useState([]);
+  const [filter, setFilter] = useState(DEFAULT_FILTER_STATE);
   const [isOrganizationRepo, setIsOrganizationRepo] = useState(
     !isEmpty(selectedOrganization)
   );
 
   useEffect(() => {
-    setFilter(defaultFilterState);
+    setFilter(DEFAULT_FILTER_STATE);
   }, [selectedTab]);
 
   useEffect(() => {
@@ -125,6 +114,29 @@ function RepoPage() {
     }
   }, []);
 
+  const searchSmartComments = useCallback((filterData) => {
+    const repo = filterValues.repos.find((o) => o.externalId === repoId)
+    if (!repo) return;
+    const filter = {
+      ...getDateSub(dates.startDate, dates.endDate),
+      fromUserList: filterData.from.map((f) => (f.value)),
+      toUserList: filterData.to.map((t) => (t.value)),
+      summaries: filterData.reactions.map((r) => (r.value)),
+      tags: filterData.tags.map((t) => (t.value)),
+      pullRequests: filterData.pr.map((p) => (p.value)),
+      searchQuery: filterData.search,
+      pageNumber: filterData.pageNumber,
+      pageSize: filterData.pageSize,
+      repoIds: [repo.value]
+    }
+    dispatch(
+      filterRepoSmartComments(
+        token,
+        filter
+      )
+    )
+  }, [token, filterValues, dates]);
+
   const refresh = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -132,27 +144,30 @@ function RepoPage() {
         (dates.startDate && dates.endDate) ||
         (!dates.startDate && !dates.endDate)
       ) {
-        await dispatch(fetchRepoFilters(repoId, dates, token, true));
-        await dispatch(
-          fetchRepositoryOverview(
-            repoId,
-            token,
-            dates.startDate && dates.endDate
-              ? getDateSub(dates.startDate, dates.endDate)
-              : null,
-            true
-          ),
-        );
-      }
+          dispatch(fetchRepoFilters(repoId, dates, token, true));
+          await Promise.all([
+            dispatch(
+              fetchRepositoryOverview(
+                repoId,
+                token,
+                dates.startDate && dates.endDate
+                  ? getDateSub(dates.startDate, dates.endDate)
+                  : null,
+                true
+              )
+            ),
+            searchSmartComments(filter)
+          ]);
+        }
     } finally {
       setIsLoading(false);
       setIsInitialRefresh(false);
     }
-  }, [repoId, dates, dispatch, token]);
+  }, [repoId, dates, dispatch, token, filter]);
 
   useAuthEffect(() => {
     refresh();
-  }, [repoId, dates]);
+  }, [repoId, dates, filter]);
 
   // Prevent from doing multiple calls while user is selecting dates
   useEffect(() => {
@@ -175,27 +190,19 @@ function RepoPage() {
     }
   }, [startDate, endDate]);
 
-  useEffect(() => {
-    if (!overview?.smartcomments?.length) {
-      return;
-    }
-    const {
-      pullRequests,
-      requesters,
-      authors,
-    } = filterValues;
-    setFilterRequesterList(uniqBy(requesters, 'value'));
-    setFilterUserList(uniqBy(authors, 'value'));
-    setFilterPRList(pullRequests);
-    setIsLoading(false);
-  }, [overview, filterValues]);
-
   const onDateChange = ({
     startDate: newStartDate,
     endDate: newEndDate,
   }) => {
     setStartDate(newStartDate);
     setEndDate(newEndDate);
+    const formatDate = (date) =>
+      date ? format(new Date(date), YEAR_MONTH_DAY_FORMAT) : null;
+    setFilter({
+      ...filter,
+      startDate: formatDate(newStartDate),
+      endDate: formatDate(newEndDate),
+    });
   };
 
   const onChangeFilter = (type, value) => {
@@ -230,12 +237,10 @@ function RepoPage() {
           filter={filter}
           startDate={startDate}
           endDate={endDate}
-          filterUserList={filterUserList}
-          filterRequesterList={filterRequesterList}
-          filterPRList={filterPRList}
           onChangeFilter={onChangeFilter}
           onDateChange={onDateChange}
           tab={selectedTab}
+          onSearch={(search) => searchSmartComments({ ...filter, search })}
         />
 
         <div className={clsx(styles.divider, 'my-20 mx-10')} />
@@ -249,7 +254,7 @@ function RepoPage() {
         </div>
       </div>
       {selectedTab === 'activity' && (
-        <ActivityPage startDate={startDate} endDate={endDate} filter={filter} />
+        <ActivityPage startDate={startDate} endDate={endDate} filter={filter} setFilter={setFilter} />
       )}
       {selectedTab === 'stats' && (
         <div className={styles.wrapper}>

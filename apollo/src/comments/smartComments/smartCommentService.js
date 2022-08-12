@@ -5,6 +5,8 @@ import {
   subDays,
   subMonths,
   subWeeks,
+  toDate,
+  endOfDay,
 } from 'date-fns';
 import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
@@ -650,6 +652,132 @@ export const findByRepositoryId = async (repoId, populate, createdAt, additional
   }
 };
 
+export const searchSmartComments = async ({
+  repoIds,
+  dateRange,
+  fromUserList,
+  toUserList,
+  summaries,
+  tags,
+  pullRequests,
+  searchQuery,
+  pageNumber,
+  pageSize,
+  reviewer,
+  author,
+  orgId
+}) => {
+  try {
+    let findQuery = {}
+    if (orgId) {
+      if (repoIds.length) {
+        findQuery = {
+          ...findQuery,
+          'repositoryId': { $in: repoIds }
+        }
+      } else {
+        const organizationRepos = await getOrganizationRepos(orgId);
+        findQuery = {
+          ...findQuery,
+          'repositoryId': { $in: organizationRepos.map((repo) => repo._id) }
+        }
+      }
+    } else if (repoIds.length) {
+      findQuery = {
+        ...findQuery,
+        repositoryId: { $in: repoIds }
+      }
+    }
+
+    if (dateRange) {
+      findQuery = {
+        ...findQuery,
+        'source.createdAt': {
+          $gte: toDate(new Date(dateRange.startDate)),
+          $lte: toDate(endOfDay(new Date(dateRange.endDate)))
+        }
+      };
+    }
+
+    if (reviewer) {
+      findQuery = {
+        ...findQuery,
+        'githubMetadata.user.login': reviewer
+      };
+    }
+
+    if (author) {
+      findQuery = {
+        ...findQuery,
+        'githubMetadata.requester': author
+      };
+    }
+
+    if (tags && tags.length) {
+      findQuery = {
+        ...findQuery,
+        tags: { $in: tags }
+      };
+    }
+
+    if (summaries && summaries.length) {
+      findQuery = {
+        ...findQuery,
+        reaction: { $in: summaries }
+      };
+    }
+
+    if (pullRequests && pullRequests.length) {
+      findQuery = {
+        ...findQuery,
+        'githubMetadata.pull_number': { $in: pullRequests }
+      };
+    }
+
+    if (fromUserList && fromUserList.length) {
+      findQuery = {
+        ...findQuery,
+        userId: { $in: fromUserList }
+      };
+    }
+
+    if (toUserList && toUserList.length) {
+      findQuery = {
+        ...findQuery,
+        'githubMetadata.requester': { $in: toUserList }
+      };
+    }
+
+    if (searchQuery) {
+      const escapedSearchQuery = _.escapeRegExp(searchQuery);
+      findQuery = {
+        ...findQuery,
+        comment: { $regex: new RegExp(escapedSearchQuery, 'i') }
+      };
+    }
+
+    const query = SmartComment.find(findQuery);
+    const countQuery = SmartComment.count(findQuery);
+
+    query.populate({
+      select: ['firstName', 'lastName', 'avatarUrl'],
+      path: 'userId'
+    });
+    query.populate({ select: ['label'], path: 'tags' });
+
+    query.skip((pageNumber - 1) * pageSize).limit(pageSize);
+    const [smartComments, total] = await Promise.all([query.sort({ 'source.createdAt': -1 }).lean(), countQuery]);
+    return {
+      smartComments,
+      total
+    }
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
 export const getSuggestedMetrics = async (
   { page, perPage, search, sortDesc },
   isExport = false
@@ -932,7 +1060,8 @@ export const getUniqueCommenters = async (repoIds, startDate, endDate) => {
           'user.username': 1,
           'user.avatarUrl': 1,
         },
-      },
+      }
+,
     ]).exec();
     return values;
   } catch (err) {
@@ -965,7 +1094,8 @@ export const getUniqueRequesters = async (repoIds, startDate, endDate) => {
           'githubMetadata.requesterAvatarUrl': 1,
           '_id': 0,
         },
-      },
+      }
+,
     ]).exec();
     return values;
   } catch (err) {

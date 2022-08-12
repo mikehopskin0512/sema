@@ -1,3 +1,4 @@
+import { DEFAULT_PAGINATION_DATA } from '../../../utils/constants/filter';
 import * as types from './types';
 
 const initialState = {
@@ -8,6 +9,8 @@ const initialState = {
   smartComments: [],
   summary: {},
   overview: {},
+  searchResults: [],
+  pagination: DEFAULT_PAGINATION_DATA
 };
 
 const reducer = (state = initialState, action) => {
@@ -121,6 +124,25 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.error
     }
+  case types.REQUEST_FILTER_REPO_SMART_COMMENTS:
+    return {
+      ...state,
+      isFetching: true,
+    }
+  case types.REQUEST_FILTER_REPO_SMART_COMMENTS_SUCCESS:
+    return {
+        ...state,
+        searchResults: action.results.smartComments,
+        pagination: action.results.paginationData,
+        isFetching: false,
+      }
+  case types.REQUEST_FILTER_REPO_SMART_COMMENTS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.error
+    }
+    
   default:
     return state;
   }

@@ -11,6 +11,10 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { findUsersByGitHubHandle } from '../users/userService';
 import {
+  searchSmartComments,
+} from '../comments/smartComments/smartCommentService';
+
+import {
   aggregateReactions,
   aggregateRepositories,
   aggregateTags,
@@ -162,6 +166,72 @@ export default (app, passport) => {
         );
         return res.status(201).send({
           reactions,
+        });
+      } catch (error) {
+        logger.error(error);
+        return res.status(error.statusCode).send(error);
+      }
+    });
+
+  route.post(
+    '/smart-comments/search',
+    passport.authenticate(['bearer'], { session: false }),
+    async (req, res) => {
+      const {
+        repoIds,
+        orgId,
+        startDate,
+        endDate,
+        fromUserList,
+        toUserList,
+        summaries,
+        tags,
+        pullRequests,
+        searchQuery,
+        pageNumber = 1,
+        pageSize = 10,
+        requester: author,
+        reviewer
+      } = req.body;
+
+      let dateRange = undefined;
+      if (startDate && endDate) {
+        dateRange = { startDate, endDate };
+      }
+      if (!repoIds && !orgId) {
+        return res.status(401).send({
+          message: 'Repo ID is required.'
+        })
+      }
+
+      try {
+        const { smartComments, total} = await searchSmartComments({
+          repoIds,
+          dateRange,
+          fromUserList,
+          toUserList,
+          summaries,
+          tags,
+          pullRequests,
+          searchQuery,
+          pageNumber,
+          pageSize,
+          reviewer,
+          author,
+          orgId,
+        });
+
+        const totalPage = Math.ceil(total/pageSize);
+        return res.status(201).send({
+          paginationData: {
+            pageSize,
+            pageNumber: pageNumber > totalPage ? 1 : pageNumber,
+            totalPage,
+            total,
+            hasNextPage: pageNumber < totalPage,
+            hasPreviousPage: 1 < pageNumber
+          },
+          smartComments
         });
       } catch (error) {
         logger.error(error);

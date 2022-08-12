@@ -553,11 +553,13 @@ export const getReposFilterValues = async (
       return {};
     }
 
-    const repositoryIds = (
-      await Repository.find({ externalId: repos }).select('_id').lean()
-    ).map((o) => o._id);
+    const repositories = (
+      await Repository.find({ externalId: repos }).select({ _id: 1, fullName: 1, externalId: 1 }).lean()
+    ).map((o) => ({ name: o.fullName, label: o.fullName, value: o._id, externalId: o.externalId }))
+    const repositoryIds = repositories.map((o) => o.value)
 
     return await Bluebird.props({
+      repos: repositories,
       authors: filterFields.authors
         ? await getAuthorFilterValues(repositoryIds, startDate, endDate)
         : undefined,

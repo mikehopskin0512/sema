@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import CustomSelect from '../../../../activity/select';
@@ -6,26 +7,39 @@ import { DROPDOWN_SORTING_TYPES } from '../../../../../utils/constants';
 import SearchFilter from '../SearchFilter';
 import DateRangeSelector from '../../../../dateRangeSelector';
 import { ReactionList, TagList } from '../../../../../data/activity';
-import { SearchIcon } from '../../../../Icons';
+import { GhRefreshIcon, SearchIcon } from '../../../../Icons';
 import { InputField } from 'adonis';
 import styles from './FilterBar.module.scss';
+import { DEFAULT_FILTER_STATE } from '../../../../../utils/constants/filter';
 
 const FilterBar = ({
   filter,
   startDate,
   endDate,
   onDateChange,
-  filterUserList,
   onChangeFilter,
-  filterRequesterList,
-  filterPRList,
-  tab
+  tab,
+  onSearch,
 }) => {
+  const { repositories } = useSelector((state) => ({
+    repositories: state.repositoriesState,
+  }));
+  const {
+    data: { filterValues },
+  } = repositories;
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [toggleSearch, setToggleSearch] = useState(false);
 
   const handleSearchToggle = () => {
-    setToggleSearch(toggle => !toggle);
+    setToggleSearch((toggle) => !toggle);
   };
+
+  const handleKeyPress = (event) => {
+    const isEnterKey = event?.key === 'Enter';
+    if (isEnterKey) {
+      onSearch(searchKeyword)
+    }
+  }
 
   return (
     <div>
@@ -46,11 +60,11 @@ const FilterBar = ({
               <div className="px-5 my-5">
                 <CustomSelect
                   selectProps={{
-                    options: filterUserList,
+                    options: filterValues.authors,
                     placeholder: '',
                     isMulti: true,
-                    onChange: value => onChangeFilter('from', value),
-                    value: filter.from
+                    onChange: (value) => onChangeFilter('from', value),
+                    value: filter.from,
                   }}
                   sortType={
                     DROPDOWN_SORTING_TYPES.ALPHABETICAL_USER_PRIORIY_SORT
@@ -63,11 +77,11 @@ const FilterBar = ({
               <div className="px-5 my-5">
                 <CustomSelect
                   selectProps={{
-                    options: filterRequesterList,
+                    options: filterValues.requesters,
                     placeholder: '',
                     isMulti: true,
-                    onChange: value => onChangeFilter('to', value),
-                    value: filter.to
+                    onChange: (value) => onChangeFilter('to', value),
+                    value: filter.to,
                   }}
                   sortType={
                     DROPDOWN_SORTING_TYPES.ALPHABETICAL_USER_PRIORIY_SORT
@@ -86,8 +100,8 @@ const FilterBar = ({
                 placeholder: '',
                 hideSelectedOptions: false,
                 isMulti: true,
-                onChange: value => onChangeFilter('reactions', value),
-                value: filter.reactions
+                onChange: (value) => onChangeFilter('reactions', value),
+                value: filter.reactions,
               }}
               sortType={DROPDOWN_SORTING_TYPES.NO_SORT}
               label="Summaries"
@@ -101,9 +115,9 @@ const FilterBar = ({
                 options: TagList,
                 placeholder: '',
                 isMulti: true,
-                onChange: value => onChangeFilter('tags', value),
+                onChange: (value) => onChangeFilter('tags', value),
                 value: filter.tags,
-                hideSelectedOptions: false
+                hideSelectedOptions: false,
               }}
               sortType={DROPDOWN_SORTING_TYPES.NO_SORT}
               label="Tags"
@@ -115,12 +129,12 @@ const FilterBar = ({
           <div className="px-5 my-5">
             <CustomSelect
               selectProps={{
-                options: filterPRList,
+                options: filterValues.pullRequests,
                 placeholder: '',
                 isMulti: true,
-                onChange: value => onChangeFilter('pr', value),
+                onChange: (value) => onChangeFilter('pr', value),
                 value: filter.pr,
-                hideSelectedOptions: false
+                hideSelectedOptions: false,
               }}
               sortType={DROPDOWN_SORTING_TYPES.CHRONOLOGICAL_SORT}
               label="Pull requests"
@@ -140,19 +154,33 @@ const FilterBar = ({
         </div>
       </div>
       {toggleSearch && (
-        <div
-          className={clsx(
-            `field mt-0 mx-8 is-flex-grow-1 ${styles['search-bar']}`
-          )}
-        >
-          <InputField
-            className="has-background-white"
-            type="text"
-            placeholder="Search"
-            onChange={value => onChangeFilter('search', value)}
-            value={filter.search}
-            iconLeft={<SearchIcon />}
-          />
+        <div className="is-flex">
+          <div
+            className={clsx(
+              `field mt-0 mx-8 is-flex-grow-1 ${styles['search-bar']}`
+            )}
+          >
+            <InputField
+              className="has-background-white"
+              type="text"
+              placeholder="Search"
+              onChange={(value) => setSearchKeyword(value)}
+              value={searchKeyword}
+              iconLeft={<SearchIcon />}
+              onKeyPress={(event) => handleKeyPress(event)}
+              iconRight={searchKeyword.length ?
+                <span
+                  className='mr-100 is-clickable has-text-gray-700 is-whitespace-nowrap is-flex is-align-items-center'
+                  onClick={() => setSearchKeyword('')}
+                >
+                  <GhRefreshIcon size="small" className="mr-5" />
+                  Clear Search
+                </span>
+                : null
+              }
+            />
+          </div>
+          {onSearch && <button class="button is-primary" onClick={() => onSearch(searchKeyword)}>Search</button>}
         </div>
       )}
     </div>
@@ -164,11 +192,8 @@ FilterBar.defaultProps = {
   startDate: new Date(),
   endDate: new Date(),
   onDateChange: () => {},
-  filterUserList: [],
   onChangeFilter: () => {},
-  filterRequesterList: [],
-  filterPRList: [],
-  tab: ''
+  tab: '',
 };
 
 FilterBar.propTypes = {
@@ -176,11 +201,8 @@ FilterBar.propTypes = {
   startDate: PropTypes.any,
   endDate: PropTypes.any,
   onDateChange: PropTypes.func,
-  filterUserList: PropTypes.array,
   onChangeFilter: PropTypes.func,
-  filterRequesterList: PropTypes.array,
-  filterPRList: PropTypes.array,
-  tab: PropTypes.string
+  tab: PropTypes.string,
 };
 
 export default FilterBar;

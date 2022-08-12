@@ -15,7 +15,9 @@ const InputField = ({
   isMultiLine = false,
   textSizeClassName ='',
   rows = 3,
-  className = ''
+  className = '',
+  onKeyPress,
+  ...otherProps
 }) => {
   return (
     <div className={clsx("aui-is-full-width", className)}>
@@ -41,7 +43,9 @@ const InputField = ({
             )}
             value={value}
             onChange={({ target }) => onChange(target.value)}
+            onKeyPress={(event) => onKeyPress(event)}
             placeholder={placeholder}
+            {...otherProps}
           />
         ) : (
         <input
@@ -54,7 +58,9 @@ const InputField = ({
           )}
           value={value}
           onChange={({ target }) => onChange(target.value)}
+          onKeyPress={(event) => onKeyPress(event)}
           placeholder={placeholder}
+          {...otherProps}
         />)}
         {iconLeft && (
           <span className={clsx(

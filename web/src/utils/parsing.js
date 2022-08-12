@@ -84,6 +84,9 @@ export const setSmartCommentsDateRange = (
 };
 
 export const getDateSub = (startDate, endDate) => {
+  if (isEmpty(startDate) && isEmpty(endDate)) {
+    return {}
+  }
   const dateGroup = getDateRangeGroup(startDate, endDate);
   const end = format(new Date(endDate), MONTH_DAY_YEAR_FORMAT);
   switch (dateGroup) {
@@ -120,7 +123,7 @@ export const getDateSub = (startDate, endDate) => {
         endDate: end,
       };
     default:
-      return;
+      return {};
   }
 };
 
