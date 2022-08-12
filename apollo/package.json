@@ -58,6 +58,7 @@
     "md5": "^2.3.0",
     "method-override": "^3.0.0",
     "migrate-mongo": "^8.2.3",
+    "moment": "^2.29.4",
     "mongodb-extended-json": "^1.11.1",
     "mongoose": "^5.9.15",
     "ms": "^2.1.3",

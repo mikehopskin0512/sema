@@ -190,7 +190,7 @@ ReactionLineChart.propTypes = {
   className: PropTypes.string,
   groupBy: PropTypes.string,
   isSnapshot: PropTypes.bool,
-  onClick: PropTypes.bool,
+  onClick: PropTypes.func,
   isLoading: PropTypes.bool
 };
 

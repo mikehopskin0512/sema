@@ -16,6 +16,7 @@ export const getTagsStats = (filter, token) => getAll(
   token,
 );
 export const getRepositoryOverview = (params, token) => getAll('/api/proxy/repositories/overview', { params }, token);
+export const getRepositoryCharts = (params, token) => getAll('/api/proxy/repositories/charts', { params }, token);
 export const getDashboardRepositories = (params, token) => getAll('/api/proxy/repositories/dashboard', { params }, token);
 export const getRepositoriesFilters = (params, token) => getAll('/api/proxy/repositories/filter-values', { params }, token);
 export const getRepoSocialGraph = ({ handle, repoId }) => getAll(`/api/proxy/repositories/collaboration/${handle}/${repoId}`, {});

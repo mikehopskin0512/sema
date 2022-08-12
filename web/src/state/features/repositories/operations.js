@@ -1,11 +1,12 @@
 import * as actions from './actions';
 import _ from "lodash";
+import { getRepositoryCharts } from './api';
 
 export const getUserRepositories = (repositories, token) => async (dispatch) => {
   try {
     dispatch(actions.requestGetUserRepos());
     const externalIds = repositories.map(repo => repo.id);
-    
+
     const response = await dispatch(actions.filterSemaRepositories(externalIds, token));
     if (!response) {
       dispatch(actions.requestGetUserReposSuccess(repositories));
@@ -25,4 +26,12 @@ export const getUserRepositories = (repositories, token) => async (dispatch) => 
     // return error;
   }
 };
-export default { ...actions, getUserRepositories };
+
+export const getChartsData = async (params, token) => {
+  const payload = await getRepositoryCharts(params, token);
+  const { data } = payload;
+
+  return data;
+};
+
+export default { ...actions, getUserRepositories, getChartsData };
