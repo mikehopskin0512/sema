@@ -12,7 +12,7 @@ import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from '../../state/features/comments';
 import { DEFAULT_AVATAR, EMOJIS, SEMA_FAQ_SLUGS, SEMA_INTERCOM_FAQ_URL } from '../../utils/constants';
-import { filterSmartComments, getEmoji, getEmojiLabel, getTagLabel } from '../../utils/parsing';
+import { getEmoji, getEmojiLabel, getTagLabel } from '../../utils/parsing';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { gray500 } from '../../../styles/_colors.module.scss';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../components/snapshots/modalWindow';
@@ -215,25 +215,6 @@ const PersonalInsights = () => {
   const mapArrToQuery = (arr) => arr.map(i => i.value);
 
   useEffect(() => {
-    // const { overview } = comments;
-    const { startDate, endDate } = filter;
-    if (searchResults.length > 0) {
-      const dates = setSmartCommentsDateRange(
-        searchResults,
-        startDate,
-        endDate
-      );
-      const { startDay, endDay, dateDiff, groupBy } = dates;
-      setDateData({
-        dateDiff,
-        groupBy,
-        startDate: new Date(startDay),
-        endDate: endDay,
-      });
-    }
-  }, [searchResults, filter]);
-
-  useEffect(() => {
     const { startDate, endDate, groupBy } = dateData;
     if (startDate && endDate && groupBy) {
       setComponentData((oldState) => ({
@@ -338,7 +319,7 @@ const PersonalInsights = () => {
   }, [comments]);
 
   useEffect(() => {
-    // getCommentsOverview(filter);
+    getGraphsData(filter)
     searchSmartComments(filter);
   }, [filter, commentView]);
 
