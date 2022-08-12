@@ -7,7 +7,7 @@ import InteractionCircleChart from '../../chart/InteractionCircleChart';
 import { DownloadIcon, LinkedinIcon, LinkIcon, TwitterIcon, FacebookIcon } from '../../Icons';
 import { blue700 } from '../../../../styles/_colors.module.scss';
 import { getRepoSocialGraph } from '../../../state/features/repositories/api';
-import styles from '../socialCircle/socialCycleStyles.module.scss';
+import styles from '../socialCircle/socialCircleStyles.module.scss';
 import { PrivateRepoBanner } from "./banners/privateRepoBanner";
 import { NotSyncedRepoBanner } from "./banners/notSyncedRepoBanner";
 import { createDataUrl, onDownloadImage } from '../../../utils/imageHelpers';
