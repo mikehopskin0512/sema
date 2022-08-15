@@ -4,7 +4,6 @@ import TagsChart from './tagsChart';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../snapshots/modalWindow';
 import ReactionLineChart from './reactionLineChart';
 import { repositoriesOperations } from '../../state/features/repositories';
-import { useRouter } from 'next/router';
 import { notify } from '../toaster/index';
 
 const {
@@ -17,11 +16,7 @@ const StatsPage = ({
   filter: unsafeFilter,
   isLoading,
 }) => {
-  const {
-    query: { repoId },
-  } = useRouter();
-
-  const { auth } = useSelector((state) => ({
+  const { auth, repositories } = useSelector((state) => ({
     repositories: state.repositoriesState,
     auth: state.authState,
   }));
@@ -29,6 +24,8 @@ const StatsPage = ({
   const {
     token,
   } = auth;
+
+  const { data } = repositories;
 
   const [start, setStart] = useState();
   const [end, setEnd] = useState();
@@ -61,7 +58,7 @@ const StatsPage = ({
       } = filter;
 
       const query = {
-        externalId: repoId,
+        repoId: data?.overview._id,
         startDate: startDate ? startDate.toString() : null,
         endDate: endDate ? endDate.toString() : null,
         requesters: from,

@@ -22,6 +22,7 @@ import {
   getSmartCommentsTagsReactions,
   updateByGithubId,
   deleteByGithubId,
+  filterSmartComments,
 } from './smartCommentService';
 import checkEnv from '../../middlewares/checkEnv';
 import Organization from '../../organizations/organizationModel';

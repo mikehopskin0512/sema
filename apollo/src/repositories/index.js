@@ -4,7 +4,10 @@ import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
 import moment from 'moment';
-import { findByExternalId as findSmartCommentsByExternalId, getCollaborativeSmartComments } from '../comments/smartComments/smartCommentService';
+import {
+  findByRepositoryId,
+  getCollaborativeSmartComments,
+} from '../comments/smartComments/smartCommentService';
 
 import { version } from '../config';
 import logger from '../shared/logger';
@@ -290,7 +293,7 @@ export default (app, passport) => {
     passport.authenticate(['bearer'], { session: false }),
     async (req, res) => {
       const {
-        externalId,
+        repoId,
         startDate,
         endDate,
         requesters,
@@ -332,8 +335,8 @@ export default (app, passport) => {
       }
 
       try {
-        const comments = await findSmartCommentsByExternalId(
-          externalId,
+        const comments = await findByRepositoryId(
+          repoId,
           true,
           startDate && endDate ? {
             $gte: toDate(new Date(startDate)),
