@@ -6,17 +6,13 @@ import path from 'path';
 import moment from 'moment';
 import {
   findByRepositoryId,
-  getCollaborativeSmartComments,
+  getCollaborativeSmartComments, searchSmartComments,
 } from '../comments/smartComments/smartCommentService';
 
 import { version } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { findUsersByGitHubHandle } from '../users/userService';
-import {
-  searchSmartComments,
-} from '../comments/smartComments/smartCommentService';
-
 import {
   aggregateReactions,
   aggregateRepositories,

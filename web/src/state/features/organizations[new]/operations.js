@@ -37,10 +37,10 @@ export const fetchOrgReposFilters = (repoIds, dateRange, token) => async (dispat
     dispatch(actions.requestFetchOrganizationReposFilters());
     await dispatch(fetchRepoFilters(repoIds, dateRange, token))
     const { repositoriesState: { data: { filterValues } }, organizationsNewState: { repos } } = getState();
-    const reposList = repos.map(({ name, externalId }) => ({
+    const reposList = repos.map(({ name, _id }) => ({
         name,
         label: name,
-        value: externalId
+        value: _id
       })) || [];
     dispatch(actions.requestFetchOrganizationReposFiltersSuccess({ ...filterValues, repos: reposList }));
     dispatch(requestClearRepoFilters());

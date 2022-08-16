@@ -73,7 +73,6 @@ const PersonalInsights = () => {
   const [tagsChartData, setTagsChartData] = useState({});
   const [filter, setFilter] = useState(DEFAULT_FILTER);
   const [commentView, setCommentView] = useState('received');
-  const [filterRepoList, setFilterRepoList] = useState([]);
   const [filteredComments, setFilteredComments] = useState([]);
   const [outOfRangeComments, setOutOfRangeComments] = useState([]);
   const [dateData, setDateData] = useState({
@@ -227,22 +226,21 @@ const PersonalInsights = () => {
     }
   }, [dateData, filteredComments]);
 
-  const filterComments = smartComments => {
-    if (smartComments) {
-      const { startDate, endDate } = filter;
-      const isDateRange = startDate && endDate;
-      const outOfRangeCommentsFilter = isDateRange
-        ? smartComments.filter(comment => {
-            return !isWithinInterval(new Date(comment.source.createdAt), {
-              start: startOfDay(new Date(startDate)),
-              end: endOfDay(new Date(endDate)),
-            });
-          })
-        : [];
-      setFilteredComments(smartComments);
-      setOutOfRangeComments(outOfRangeCommentsFilter);
-    }
-  };
+  useEffect(() => {
+    getCommentsOverview(filter).then(() => {});
+    getGraphsData(filter);
+  }, [filter, commentView]);
+
+  useAuthEffect(() => {
+    getUserSummary(githubUser?.username);
+  }, [auth]);
+
+  useEffect(() => {
+    const { summary } = comments;
+    getTopReactions(summary.reactions);
+    getTopTags(summary.tags);
+    setTotalSmartComments(summary?.smartComments?.length);
+  }, [comments]);
 
   const searchSmartComments = useCallback((filterData) => {
     const filterValues = {
@@ -324,11 +322,6 @@ const PersonalInsights = () => {
     getGraphsData(filter)
     searchSmartComments(filter);
   }, [filter, commentView]);
-
-
-  useEffect(() => {
-    filterComments(searchResults);
-  }, [searchResults]);
 
   return (
     <>
@@ -472,7 +465,7 @@ const PersonalInsights = () => {
             )}
           </div>
         </div>
-        <ActivityItemList comments={filteredComments} isLoading={isFetching} pagination={pagination} hasPagination setFilter={setFilter} />
+        <ActivityItemList comments={searchResults} isLoading={isFetching} pagination={pagination} hasPagination setFilter={setFilter} />
       </div>
     </>
   );

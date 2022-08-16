@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { isEmpty } from 'lodash';
-import { addDays, endOfDay, format, isWithinInterval, startOfDay } from 'date-fns';
+import { addDays, endOfDay, format, startOfDay } from 'date-fns';
 import Avatar from 'react-avatar';
 import Helmet, { OrganizationInsightsHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
@@ -67,15 +67,16 @@ const OrganizationInsights = () => {
   const { isFetching, insightsData: { searchResults: filteredComments } } = organizations;
   const githubUser = user.identities?.[0];
   const fullName = `${user.firstName} ${user.lastName}`;
-  const userId = user._id;
 
   const [totalSmartComments, setTotalSmartComments] = useState(0);
   const [topTags, setTopTags] = useState([]);
   const [topReactions, setTopReactions] = useState([]);
   const [reactionChartData, setReactionChartData] = useState([]);
   const [tagsChartData, setTagsChartData] = useState({});
+
   const [filter, setFilter] = useState(DEFAULT_FILTER);
   const [commentView, setCommentView] = useState('received');
+  const [outOfRangeComments, setOutOfRangeComments] = useState([]);
   const [openReactionsModal, setOpenReactionsModal] = useState(false);
   const [openTagsModal, setOpenTagsModal] = useState(false);
   const [openCommentsModal, setOpenCommentsModal] = useState(false);
@@ -129,10 +130,11 @@ const OrganizationInsights = () => {
         params.requester = username;
       }
     }
+
     if (repo.length > 0) {
-      params.externalIds = '';
+      params.repoIds = '';
       repo.forEach((item, index) => {
-        params.externalIds += index === 0 ? item.value : `-${item.value}`;
+        params.repoIds += index === 0 ? item.value : `-${item.value}`;
       });
     }
 
@@ -221,6 +223,17 @@ const OrganizationInsights = () => {
     setFilter(value);
   };
 
+  useEffect(() => {
+    const { startDate, endDate, groupBy } = dateData;
+    if (startDate && endDate && groupBy) {
+      setComponentData(oldState => ({
+        ...oldState,
+        smartComments: [...filteredComments, ...outOfRangeComments],
+        ...dateData
+      }));
+    }
+  }, [dateData, filteredComments]);
+
   useAuthEffect(() => {
     getUserSummary(githubUser?.username);
   }, [auth, isActive]);
@@ -269,7 +282,6 @@ const OrganizationInsights = () => {
       reviewer: filter.reviewer,
     }
   }
-
   const searchSmartComments = (filterData) => {
     const filter = {
       ...mapFilterValuesToAPI(filterData)
@@ -289,7 +301,6 @@ const OrganizationInsights = () => {
   }
 
   useEffect(() => {
-    console.log(filter)
     searchSmartComments(filter);
   }, [filter]);
 

@@ -302,6 +302,8 @@ export default (app, passport) => {
       tags,
       search,
       repo,
+      from,
+      to,
       pr
     } = req.query;
 
@@ -339,9 +341,17 @@ export default (app, passport) => {
       query['githubMetadata.pull_number'] =  { $in: pr }
     }
 
+    if (from?.length) {
+      query['userId'] = { $in: from }
+    }
+
+    if (to?.length) {
+      query['githubMetadata.requester'] = { $in: to }
+    }
+
     if (organizationId) {
       const organizationRepos = await getOrganizationRepos(organizationId);
-      filter.repoIds = organizationRepos.map((repo) => repo.externalId);
+      filter.repoIds = organizationRepos.map((repo) => repo.repositoryId);
     }
 
     try {

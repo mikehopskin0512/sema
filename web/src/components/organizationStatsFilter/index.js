@@ -74,7 +74,7 @@ const OrganizationStatsFilter = ({
     }
 
     if (orgRepos.length) {
-      const repoIds = orgRepos.map((repo) => repo.externalId);
+      const repoIds = orgRepos.map((repo) => repo._id);
       const { startDate: start, endDate: end } = filter
       if ((start && end) || (!start && !end)) {
         const sDate = start ? startOfDay(new Date(start)) : undefined;

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { filter, findIndex, isEmpty, uniqBy } from 'lodash';
+import { isEmpty } from 'lodash';
 import RepoSocialCircle from '../../../components/repos/repoSocialCircle';
 import ActivityPage from '../../../components/activity/page';
 import RepoPageLayout from '../../../components/repos/repoPageLayout';
