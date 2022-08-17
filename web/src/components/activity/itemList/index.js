@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import ActivityItem from '../item';
 import styles from '../../../components/skeletons/charts.module.scss';
 import CommentSnapSkeleton from '../../skeletons/commentSnapSkeleton';
-import { useSelector } from 'react-redux';
 import Pagination from '../../pagination';
 import { DEFAULT_PAGINATION_DATA } from '../../../utils/constants/filter';
 

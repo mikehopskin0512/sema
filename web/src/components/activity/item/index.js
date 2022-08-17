@@ -3,7 +3,6 @@ import React, { useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import { capitalize, find, isEmpty } from 'lodash';
-import PropTypes from 'prop-types';
 import Markdown from 'markdown-to-jsx';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import { DATE_TIME_FORMAT } from '../../../utils/constants/date';
@@ -13,13 +12,12 @@ import { DotIcon } from '../../Icons';
 
 function ActivityItem(props) {
   const {
-    className,
+    className = '',
     comment = '',
     reaction = '',
     tags = [],
     createdAt = '',
     userId: user,
-    source,
     githubMetadata: {
       title = '',
       url = '#',
@@ -27,14 +25,11 @@ function ActivityItem(props) {
       pull_number: pullNumber = '',
       commentId = '',
       requester = 'Github User',
-      repo,
+      repo = '',
       created_at = ''
     },
     isSnapshot = false,
   } = props;
-  const {
-    createdAt: sourceCreatedAt = '',
-  } = source || { sourceCreatedAt: ''}
   const {
     username = 'User@email.com',
     firstName = '',
@@ -43,12 +38,12 @@ function ActivityItem(props) {
   } = user || {};
 
   const dateCreated = useMemo(() => {
-    const date = isEmpty(created_at) ? sourceCreatedAt : created_at;
+    const date = isEmpty(created_at) ? createdAt : created_at;
     if (!isEmpty(date)) {
       return format(new Date(date), DATE_TIME_FORMAT)
     }
     return ''
-  }, [created_at, sourceCreatedAt])
+  }, [created_at, createdAt])
 
   const getPRName = (number, name) => {
     let prName = '';
@@ -187,18 +182,17 @@ function ActivityItem(props) {
         </div>
         <div className="mt-8 is-flex is-align-items-center is-flex-wrap-wrap">
           <div className="is-size-5 is-flex">{renderEmoji()}</div>
-          {tags.length > 0 ? (
+          {(tags.length > 0 && !tags.includes(null)) ? (
             <>
               <DotIcon size="tiny" className="mx-24 has-text-black-950" />
               <div className="is-flex is-flex-wrap-wrap">
-                {tags.map(({ label }) => (
-                  <span
+                {tags.map(({ label }) => (<span
                     key={`tag-${label}`}
                     className="tag has-background-gray-200 has-text-black-950 has-text-weight-bold is-size-7 mr-5 my-2"
                   >
                     {label}
-                  </span>
-                ))}
+                  </span>)
+                )}
               </div>
             </>
           ) : (
@@ -212,38 +206,13 @@ function ActivityItem(props) {
             styles['item-comment']
           )}
         >
-          <Markdown>{comment}</Markdown>
+          <Markdown>
+            {comment}
+          </Markdown>
         </div>
       </div>
     </div>
   );
 }
-
-ActivityItem.defaultProps = {
-  className: '',
-  tags: [],
-  user: {
-    firstName: '',
-    lastName: '',
-    avatarUrl: '',
-  },
-  githubMetadata: {
-    title: '',
-    url: '',
-  },
-  isSnapshot: false,
-};
-
-ActivityItem.propTypes = {
-  className: PropTypes.string,
-  comment: PropTypes.string.isRequired,
-  reaction: PropTypes.string.isRequired,
-  tags: PropTypes.array,
-  createdAt: PropTypes.string.isRequired,
-  user: PropTypes.object,
-  githubMetadata: PropTypes.object,
-  userId: PropTypes.string.isRequired,
-  isSnapshot: PropTypes.bool,
-};
 
 export default ActivityItem;

@@ -123,12 +123,18 @@ const OrganizationInsights = () => {
       startDate: startDate ? startOfDay(new Date(startDate)) : undefined,
       endDate: endDate ? endOfDay(new Date(endDate)) : undefined,
     };
+    
     if (isActive) {
       if (commentView === 'given') {
         params.reviewer = username;
+        params.requester = '';
       } else {
         params.requester = username;
+        params.reviewer = '';
       }
+    } else {
+      params.requester = '';
+      params.reviewer = '';
     }
 
     if (repo.length > 0) {
@@ -171,7 +177,6 @@ const OrganizationInsights = () => {
         setTagsChartData([]);
         notify("Failed to fetch graphs data", { type: 'error' });
       });
-      dispatch(fetchOrganizationSmartCommentOverview(params, token));
     }
   };
 
@@ -295,58 +300,18 @@ const OrganizationInsights = () => {
     )
   };
 
-  const getCommentsBounds = (comments) => {
-    const sorted = comments.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)) ?? [];
-    return { start: sorted[0]?.createdAt, finish: sorted[sorted.length - 1]?.createdAt }
-  }
-
   useEffect(() => {
     searchSmartComments(filter);
   }, [filter]);
 
   useEffect(() => {
-    const { start, finish } = getCommentsBounds(filteredComments);
-    const dates = setSmartCommentsDateRange(
-      filteredComments,
-      filter?.startDate ?? start,
-      filter?.endDate ?? finish,
-    );
-    const {
-      startDay,
-      endDay,
-      dateDiff,
-      groupBy,
-    } = dates;
-    setDateData({
-      dateDiff,
-      groupBy,
-      startDate: new Date(startDay),
-      endDate: endDay,
-    });
-  }, [filteredComments])
-
-  useEffect(() => {
-    const { startDate, endDate, groupBy } = dateData;
-    if (startDate && endDate && groupBy) {
-      const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
-        ...dateData,
-        smartComments: [...filteredComments]
-      });
-      setReactionChartData(reactionsChartData);
-      setTagsChartData(tagsChartData);
-      setComponentData(oldState => ({
-        ...oldState,
-        smartComments: [...filteredComments],
-        ...dateData
-      }));
+    if (!isActive) {
+      setFilter((prevState) => ({ ...prevState, reviewer: '', requester: '' }));
     }
-  }, [dateData, filteredComments]);
-
-  useEffect(() => {
     if (isActive && commentView === 'received') {
-      setFilter((prevState) => ({ ...prevState, requester: githubUser.username }));
+      setFilter((prevState) => ({ ...prevState, requester: githubUser.username, reviewer: '' }));
     } else if (isActive && commentView === 'given') {
-      setFilter((prevState) => ({ ...prevState, reviewer: githubUser.username }));
+      setFilter((prevState) => ({ ...prevState, reviewer: githubUser.username, requester: '' }));
     }
   }, [isActive, commentView])
 

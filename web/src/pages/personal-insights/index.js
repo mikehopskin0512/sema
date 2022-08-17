@@ -95,29 +95,6 @@ const PersonalInsights = () => {
     dispatch(fetchSmartCommentSummary(params, token));
   };
 
-  const getCommentsOverview = async (filter) => {
-    const { username } = githubUser;
-    const { startDate, endDate, repo } = filter;
-    const params = {
-      startDate: startDate ? startOfDay(new Date(startDate)) : undefined,
-      endDate: endDate ? endOfDay(new Date(endDate)) : undefined,
-    };
-    if (commentView === 'given') {
-      params.reviewer = username;
-    } else {
-      params.requester = username;
-    }
-    if (repo.length > 0) {
-      params.externalIds = '';
-      repo.forEach((item, index) => {
-        params.externalIds += index === 0 ? item.value : `-${item.value}`;
-      });
-    }
-    if ((startDate && endDate) || (!startDate && !endDate)) {
-      dispatch(fetchSmartCommentOverview(params, token));
-    }
-  };
-
   const getGraphsData = (filter) => {
     const { username } = githubUser;
     const {
@@ -226,11 +203,6 @@ const PersonalInsights = () => {
     }
   }, [dateData, filteredComments]);
 
-  useEffect(() => {
-    getCommentsOverview(filter).then(() => {});
-    getGraphsData(filter);
-  }, [filter, commentView]);
-
   useAuthEffect(() => {
     getUserSummary(githubUser?.username);
   }, [auth]);
@@ -305,18 +277,6 @@ const PersonalInsights = () => {
     }
     return <span className="is-size-8 has-text-gray-500">No tags for now</span>;
   };
-
-  useAuthEffect(() => {
-    getUserSummary(githubUser?.username);
-  }, [auth]);
-
-
-  useEffect(() => {
-    const { summary } = comments;
-    getTopReactions(summary.reactions);
-    getTopTags(summary.tags);
-    setTotalSmartComments(summary?.smartComments?.length);
-  }, [comments]);
 
   useEffect(() => {
     getGraphsData(filter)
