@@ -5,7 +5,6 @@ import collections from './comments/collections';
 import credentials from './credentials';
 import endGuides from './comments/engGuides';
 import github from './identity/github';
-import health from './shared/health';
 import invitations from './invitations';
 import notifications from './notifications';
 import organizations from './organizations';
@@ -35,7 +34,6 @@ export default function attachRoutes(app, passport) {
   tags(app, passport);
   credentials(app, passport);
   github(app, passport);
-  health(app);
   invitations(app, passport);
   notifications(app, passport);
   organizations(app, passport);
